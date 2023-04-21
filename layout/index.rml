@@ -1,0 +1,131 @@
+<!rml>
+<railway name="kalkbreite.com">
+	<area name="fiddle-yard-east">
+		<area name="northbound">
+			<power-districts>
+				<power-district name="north" />
+				<power-district name="body" />
+				<power-district name="south" />
+			</power-districts>
+			
+			<section name="stem-north-branch-1-1" power-district="body">
+				<tracks>
+					<track length="1000.5" path="910,215,5220 915,205,5220" />
+				</tracks>
+				
+				<next section="stem-north-branch-1" />
+			</section>
+			
+			<router name="stem-north-branch-1">
+				<route name="left" source="stem-north-branch-1-1" destination="stem-north-branch-1-2" overlap="2000" />
+			</router>
+			
+			<section name="stem-north-branch-1-2" power-district="body">
+				<tracks>
+					<track length="1000.5" path="915,205,5220 910,165,5220" />
+				</tracks>
+				
+				<next router="stem-north-branch-2">
+					<route name="straight" section="stem-north-branch-3" overlap="2000">
+				</next>
+			</section>
+			
+			<section name="stem-north-branch-2" power-district="body">
+				<tracks>
+					<track length="2001" path="910,165,5220 905,160,5220" />
+				</tracks>
+				
+				<next router="stem-north-branch-2">
+					<route name="straight" section="stem-north-branch-3" overlap="2000">
+				</next>
+			</section>
+			
+			<section name="stem-north-branch-3" power-district="body">
+				<tracks>
+					<track length="2001" path="905,160,5220 900,155,5220" />
+				</tracks>
+				
+				<next router="stem-north-branch-3">
+					<route name="straight" section="stem-north-branch-4" overlap="2000">
+				</next>
+			</section>
+			
+			<section name="stem-north-branch-4" power-district="body">
+				<tracks>
+					<track length="2001" path="900,155,5220 895,150,5220" />
+				</tracks>
+				
+				<next router="stem-north-branch-4">
+					<route name="straight" section="stem-north-branch-5" overlap="2000">
+				</next>
+			</section>
+			
+			<section name="stem-north-branch-5" power-district="body">
+				<tracks>
+					<track length="2001" path="895,150,5220 890,130,5220" />
+				</tracks>
+				
+				<next router="stem-north-branch-5">
+					<route name="straight" section="stem-north-passover" overlap="2000">
+				</next>
+			</section>
+			
+			<section name="stem-north-passover" power-district="body">
+				<tracks>
+					<track length="6324.9" path="890,130,5220 830,60,5220" />
+					<track length="58081.2" path="830,60,5220 190,60,5220" />
+					<track length="2018.4" path="190,60,5220 160,60,5220" />
+				</tracks>
+				
+				<next route="left" section="stem-north-passover" overlap="2000" />
+			</section>
+			
+			<section name="stem-north-passover" power-district="body">
+				<tracks>
+					<track length="9700.5" path="160,60,5220 50,30,5220" />
+				</tracks>
+				
+				<next route="right" section="stem-north-1" overlap="2000" />
+			</section>
+			
+			<section name="stem-north-1" power-district="body">
+				<tracks>
+					<track length="6820.8" path="50,30,5220 30,80,5220" />
+					<track length="2436" path="30,80,5220 30,310,5220" />
+				</tracks>
+				
+				<next router="stem-north-lanyard-c">
+					<route name="left" section="stem-north-crossing-1" overlap="2000" />
+				</next>
+			</section>
+			
+			<section name="stem-north-crossing-1" power-district="body">
+				<tracks>
+					<track length="2018.4" path="30,310,5220 40,340,5220" />
+					<track length="1000.5" path="40,340,5220 45,350,5220" />
+				</tracks>
+				
+				<next section="stem-north-crossing" />
+			</section>
+			
+			<router name="stem-north-crossing">
+				<route name="straight" source="stem-north-crossing-1" destination="stem-north-crossing-2" overlap="2000" />
+			</router>
+			
+			<section name="stem-north-crossing-2" power-district="body">
+				<tracks>
+					<track length="1000.5" path="45,350,5220 50,360,5220" />
+				</tracks>
+				
+				<next section="stem-north-2" />
+			</section>
+			
+			<section name="stem-north-2" power-district="north">
+				<tracks>
+					<track length="17730.6" path="20,160,5220 20,330,5220 50,360,5220" />
+					<track length="7194.9" path="50,360,5220 130,360,5220" />
+				</tracks>
+			</section>
+		</section>
+	</area>
+</railway>
