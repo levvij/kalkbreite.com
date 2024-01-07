@@ -811,7 +811,14 @@
 		<area name="automatic-distribution-unit">
 			<section name="source">
 				<tracks>
-					<track length="341.301" />
+					<track length="341.301">
+						<positioners>
+							<point device="etherrail-magnetic-balise-1000-eb0a994964594bf93ab6d891531f4019">
+								<locator type="magnet:south" />
+								<locator type="magnet:north" />
+							</point>
+						</positioners>
+					</track>
 				</tracks>
 
 				<tile x="9" y="29" pattern="cc-cr" />
