@@ -813,10 +813,8 @@
 				<tracks>
 					<track length="341.301">
 						<positioners>
-							<point device="etherrail-magnetic-balise-1000-eb0a994964594bf93ab6d891531f4019">
-								<locator type="magnet:south" />
-								<locator type="magnet:north" />
-							</point>
+							<point offset="337" device="etherrail-magnetic-balise-1000-eb0a994964594bf93ab6d891531f4019" channel="magnet-1" type="magnet:north" />
+							<point offset="337" device="etherrail-magnetic-balise-1000-eb0a994964594bf93ab6d891531f4019" channel="magnet-1" type="magnet:north" />
 						</positioners>
 					</track>
 				</tracks>
