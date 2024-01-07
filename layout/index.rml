@@ -1,7 +1,7 @@
 <!rml>
 <railway name="kalkbreite.com" version="1">
-	<area name="fiddle-yard-east">
-		<area name="northbound">
+	<district name="fiddle-yard-east">
+		<district name="northbound">
 			<power-districts>
 				<power-district name="north" />
 				<power-district name="body" />
@@ -553,9 +553,9 @@
 				
 				<out section="southbound.north-split-buffer" />
 			</section>
-		</area>
+		</district>
 		
-		<area name="southbound">
+		<district name="southbound">
 			<power-districts>
 				<power-district name="north" />
 				<power-district name="body" />
@@ -806,15 +806,15 @@
 				
 				<out section="northbound.south-loop-2" />
 			</section>
-		</area>
+		</district>
 		
-		<area name="automatic-distribution-unit">
+		<district name="automatic-distribution-unit">
 			<section name="source">
 				<tracks>
 					<track length="341.301">
 						<positioners>
-							<point offset="337" device="etherrail-magnetic-balise-1000-eb0a994964594bf93ab6d891531f4019" channel="magnet-1" type="magnet:north" />
-							<point offset="337" device="etherrail-magnetic-balise-1000-eb0a994964594bf93ab6d891531f4019" channel="magnet-1" type="magnet:north" />
+							<point offset="337" device="etherrail-magnetic-balise-1000-eb0a994964594bf93ab6d891531f4019" channel="magnet-1" responder="magnet:north" />
+							<point offset="337" device="etherrail-magnetic-balise-1000-eb0a994964594bf93ab6d891531f4019" channel="magnet-1" responder="magnet:north" />
 						</positioners>
 					</track>
 				</tracks>
@@ -843,6 +843,6 @@
 				
 				<out section="southbound.loop-collector" />
 			</section>
-		</area>
-	</area>
+		</district>
+	</district>
 </railway>
