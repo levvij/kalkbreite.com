@@ -444,10 +444,6 @@
 				<tile x="4" y="1" pattern="br-cc" />
 			</section>
 			
-			<router name="stem-north-passover-storage-merge">
-				<route name="right" in="stem-north-passover" out="stem-north-1" />
-			</router>
-			
 			<section name="storage-merge-buffer-1-2" power-district="body">
 				<tracks>
 					<track length="42.369" />
@@ -474,6 +470,7 @@
 			
 			<router name="stem-north-passover-storage-merge">
 				<route name="straight" in="storage-exit-buffer" out="stem-north-1" />
+				<route name="right" in="stem-north-passover" out="stem-north-1" />
 			</router>
 			
 			<section name="stem-north-1" power-district="body">
@@ -680,7 +677,12 @@
 			
 			<section name="stem-body">
 				<tracks>
-					<track length="564.978" />
+					<track length="564.978">
+						<positioners>
+							<point offset="500" device="etherrail-magnetic-balise-1000-424d3f4347a6a6b8eaf3eaeb7803a0d5" channel="north" responder="magnet:north" />
+							<point offset="500" device="etherrail-magnetic-balise-1000-424d3f4347a6a6b8eaf3eaeb7803a0d5" channel="south" responder="magnet:south" />
+						</positioners>
+					</track>
 				</tracks>
 
 				<tile x="11" y="15" pattern="cc-br" />
@@ -813,8 +815,8 @@
 				<tracks>
 					<track length="341.301">
 						<positioners>
-							<point offset="337" device="etherrail-magnetic-balise-1000-eb0a994964594bf93ab6d891531f4019" channel="magnet-1" responder="magnet:north" />
-							<point offset="337" device="etherrail-magnetic-balise-1000-eb0a994964594bf93ab6d891531f4019" channel="magnet-1" responder="magnet:north" />
+							<point offset="337" device="etherrail-magnetic-balise-1000-eb0a994964594bf93ab6d891531f4019" channel="north" responder="magnet:north" />
+							<point offset="337" device="etherrail-magnetic-balise-1000-eb0a994964594bf93ab6d891531f4019" channel="south" responder="magnet:south" />
 						</positioners>
 					</track>
 				</tracks>
