@@ -7,7 +7,7 @@
 				<power-district name="body" />
 				<power-district name="south" />
 			</power-districts>
-			
+
 			<section name="south-loop-2">
 				<tracks>
 					<track length="20.01" />
@@ -29,11 +29,11 @@
 				<tile x="17" y="29" pattern="cl-cr" />
 				<tile x="18" y="29" pattern="cl-cc" />
 			</section>
-			
+
 			<router name="loop-halifax-a-merge">
 				<route name="left" in="south-loop-2" out="loop-halifax-a-merge-buffer" />
 			</router>
-			
+
 			<section name="loop-halifax-a-merge-buffer">
 				<tracks>
 					<track length="20.01" />
@@ -42,11 +42,11 @@
 				<tile x="18" y="29" pattern="cc-cr" />
 				<tile x="19" y="29" pattern="cl-cc" />
 			</section>
-			
+
 			<router name="stem-western-yard-merge">
 				<route name="left" in="loop-halifax-a-merge-buffer" out="stem-south" />
 			</router>
-			
+
 			<section name="stem-south">
 				<tracks>
 					<track length="188.703" />
@@ -72,11 +72,11 @@
 
 				<tile x="26" y="19" pattern="bc-cc" />
 			</section>
-			
+
 			<router name="stem-service-split">
 				<route name="straight" in="stem-south" out="stem-south-branch-1-1" />
 			</router>
-			
+
 			<section name="stem-south-branch-1-1" power-district="body">
 				<tracks>
 					<track length="10.005" path="910,215,5220 915,205,5220" />
@@ -86,7 +86,7 @@
 				<tile x="26" y="18" pattern="bc-tc" />
 				<tile x="26" y="17" pattern="bc-cc" />
 			</section>
-			
+
 			<router name="stem-south-branch-1">
 				<route name="left-left" in="stem-south-branch-1-1" out="stem-south-branch-1-2" overlap="2000" />
 				<route name="left-right" in="stem-south-branch-1-1" out="storage-1" overlap="2000" />
@@ -100,7 +100,7 @@
 				<tile x="26" y="17" pattern="cc-tl" />
 				<tile x="25" y="16" pattern="br-cc" />
 			</section>
-			
+
 			<section name="storage-1" power-district="body">
 				<tracks>
 					<track length="808.752" />
@@ -141,7 +141,7 @@
 				<tile x="7" y="1" pattern="cr-cl" />
 				<tile x="6" y="1" pattern="cr-cc" />
 			</section>
-			
+
 			<section name="storage-2" power-district="body">
 				<tracks>
 					<track length="790.221" />
@@ -180,7 +180,7 @@
 				<tile x="7" y="2" pattern="cr-tl" />
 				<tile x="6" y="1" pattern="br-cc" />
 			</section>
-			
+
 			<section name="storage-3" power-district="body">
 				<tracks>
 					<track length="738.456" />
@@ -215,7 +215,7 @@
 				<tile x="9" y="3" pattern="cr-cl" />
 				<tile x="8" y="3" pattern="cr-cc" />
 			</section>
-			
+
 			<section name="storage-4" power-district="body">
 				<tracks>
 					<track length="710.268" />
@@ -243,7 +243,7 @@
 				<tile x="9" y="4" pattern="cr-tl" />
 				<tile x="8" y="3" pattern="br-cc" />
 			</section>
-			
+
 			<section name="storage-5-6-buffer" power-district="body">
 				<tracks>
 					<track length="77.256" />
@@ -255,12 +255,12 @@
 				<tile x="21" y="5" pattern="br-cl" />
 				<tile x="20" y="5" pattern="cr-cc" />
 			</section>
-			
+
 			<router name="storage-5-6-in-split">
 				<route name="straight" in="storage-5-6-buffer" out="storage-5" />
 				<route name="left" in="storage-5-6-buffer" out="storage-6" />
 			</router>
-			
+
 			<section name="storage-5" power-district="body">
 				<tracks>
 					<track length="590.73" />
@@ -280,7 +280,7 @@
 				<tile x="9" y="5" pattern="cr-cl" />
 				<tile x="8" y="5" pattern="cr-cc" />
 			</section>
-			
+
 			<section name="storage-6" power-district="body">
 				<tracks>
 					<track length="590.817" />
@@ -305,7 +305,7 @@
 				<route name="straight" in="stem-south-branch-1-2" out="stem-south-buffer-2" overlap="2000" />
 				<route name="right" in="stem-south-branch-1-2" out="storage-2" overlap="2000" />
 			</router>
-			
+
 			<section name="stem-south-buffer-2" power-district="body">
 				<tracks>
 					<track length="20.01" path="910,165,5220 905,160,5220" />
@@ -314,12 +314,12 @@
 				<tile x="25" y="16" pattern="cc-tl" />
 				<tile x="24" y="15" pattern="br-cc" />
 			</section>
-			
+
 			<router name="stem-south-branch-3">
 				<route name="straight" in="stem-south-buffer-2" out="stem-south-buffer-3" overlap="2000" />
 				<route name="right" in="stem-south-buffer-2" out="storage-3" overlap="2000" />
 			</router>
-			
+
 			<section name="stem-south-buffer-3" power-district="body">
 				<tracks>
 					<track length="20.01" path="905,160,5220 900,155,5220" />
@@ -333,12 +333,12 @@
 				<tile x="23" y="10" pattern="bc-tc" />
 				<tile x="23" y="9" pattern="bc-cc" />
 			</section>
-			
+
 			<router name="stem-south-branch-4">
 				<route name="straight" in="stem-south-buffer-3" out="stem-south-buffer-4" overlap="2000" />
 				<route name="right" in="stem-south-buffer-3" out="storage-4" overlap="2000" />
 			</router>
-			
+
 			<section name="stem-south-buffer-4" power-district="body">
 				<tracks>
 					<track length="20.01" path="900,155,5220 895,150,5220" />
@@ -347,12 +347,12 @@
 				<tile x="23" y="9" pattern="cc-tl" />
 				<tile x="22" y="8" pattern="br-cc" />
 			</section>
-			
+
 			<router name="stem-south-branch-5">
 				<route name="straight" in="stem-south-buffer-4" out="stem-body" overlap="2000" />
 				<route name="right" in="stem-south-buffer-4" out="storage-5-6-buffer" overlap="2000" />
 			</router>
-			
+
 			<section name="stem-body" power-district="body">
 				<tracks>
 					<track length="63.249" path="890,130,5220 830,60,5220" />
@@ -375,11 +375,11 @@
 				<tile x="10" y="7" pattern="cr-cl" />
 				<tile x="9" y="7" pattern="cr-cc" />
 			</section>
-			
+
 			<router name="stem-storage-reverse-merge">
 				<route name="left" in="stem-body" out="stem-north-passover" />
 			</router>
-			
+
 			<section name="stem-north-passover" power-district="body">
 				<tracks>
 					<track length="97.005" path="160,60,5220 50,30,5220" />
@@ -393,17 +393,17 @@
 				<tile x="4" y="2" pattern="br-tl" />
 				<tile x="3" y="1" pattern="br-cc" />
 			</section>
-			
+
 			<router name="storage-merge-1-2">
 				<route name="left" in="storage-1" out="storage-merge-buffer-1-2" />
 				<route name="straight" in="storage-2" out="storage-merge-buffer-1-2" />
 			</router>
-			
+
 			<router name="storage-merge-3-4">
 				<route name="left" in="storage-3" out="storage-merge-buffer-3-4" />
 				<route name="straight" in="storage-4" out="storage-merge-buffer-3-4" />
 			</router>
-			
+
 			<section name="storage-merge-buffer-3-4" power-district="body">
 				<tracks>
 					<track length="30.102" />
@@ -413,12 +413,12 @@
 				<tile x="7" y="3" pattern="cr-cl" />
 				<tile x="6" y="3" pattern="cr-cc" />
 			</section>
-			
+
 			<router name="storage-merge-5-6">
 				<route name="left" in="storage-5" out="storage-merge-buffer-5-6" />
 				<route name="straight" in="storage-6" out="storage-merge-buffer-5-6" />
 			</router>
-			
+
 			<section name="storage-merge-buffer-5-6" power-district="body">
 				<tracks>
 					<track length="45.153" />
@@ -428,12 +428,12 @@
 				<tile x="7" y="4" pattern="br-tl" />
 				<tile x="6" y="3" pattern="br-cc" />
 			</section>
-			
+
 			<router name="storage-merge-3-6">
 				<route name="left" in="storage-merge-buffer-3-4" out="storage-merge-buffer-3-6" />
 				<route name="straight" in="storage-merge-buffer-5-6" out="storage-merge-buffer-3-6" />
 			</router>
-			
+
 			<section name="storage-merge-buffer-3-6" power-district="body">
 				<tracks>
 					<track length="36.018" />
@@ -443,7 +443,7 @@
 				<tile x="5" y="2" pattern="br-tl" />
 				<tile x="4" y="1" pattern="br-cc" />
 			</section>
-			
+
 			<section name="storage-merge-buffer-1-2" power-district="body">
 				<tracks>
 					<track length="42.369" />
@@ -453,12 +453,12 @@
 				<tile x="5" y="1" pattern="cr-cl" />
 				<tile x="4" y="1" pattern="cr-cc" />
 			</section>
-			
+
 			<router name="storage-exit-merge">
 				<route name="straight" in="storage-merge-buffer-1-2" out="storage-exit-buffer" />
 				<route name="right" in="storage-merge-buffer-3-6" out="storage-exit-buffer" />
 			</router>
-			
+
 			<section name="storage-exit-buffer" power-district="body">
 				<tracks>
 					<track length="20.01" />
@@ -467,12 +467,12 @@
 				<tile x="4" y="1" pattern="cc-cl" />
 				<tile x="3" y="1" pattern="cr-cc" />
 			</section>
-			
+
 			<router name="stem-north-passover-storage-merge">
 				<route name="straight" in="storage-exit-buffer" out="stem-north-1" />
 				<route name="right" in="stem-north-passover" out="stem-north-1" />
 			</router>
-			
+
 			<section name="stem-north-1" power-district="body">
 				<tracks>
 					<track length="68.208" path="50,30,5220 30,80,5220" />
@@ -490,11 +490,11 @@
 				<tile x="1" y="8" pattern="tc-bc" />
 				<tile x="1" y="9" pattern="tc-cc" />
 			</section>
-			
+
 			<router name="stem-north-lanyard-c">
 				<route name="left" in="stem-north-1" out="stem-north-crossing-1" overlap="2000" />
 			</router>
-			
+
 			<section name="stem-north-crossing-1" power-district="body">
 				<tracks>
 					<track length="20.184" path="30,310,5220 40,340,5220" />
@@ -504,11 +504,11 @@
 				<tile x="1" y="9" pattern="cc-br" />
 				<tile x="2" y="10" pattern="tl-cc" />
 			</section>
-			
+
 			<router name="stem-north-crossing-lanyard-d">
 				<route name="right-left" in="stem-north-crossing-1" out="stem-north-crossing-2" overlap="2000" />
 			</router>
-			
+
 			<section name="stem-north-crossing-2" power-district="body">
 				<tracks>
 					<track length="10.005" path="45,350,5220 50,360,5220" />
@@ -516,10 +516,10 @@
 
 				<tile x="2" y="10" pattern="cc-br" />
 				<tile x="3" y="11" pattern="tl-cc" />
-				
+
 				<out section="stem-north-2" />
 			</section>
-			
+
 			<section name="stem-north-2" power-district="north">
 				<tracks>
 					<track length="177.306" path="20,160,5220 20,330,5220 50,360,5220" />
@@ -547,18 +547,18 @@
 				<tile x="4" y="28" pattern="tl-br" />
 				<tile x="5" y="29" pattern="tl-cr" />
 				<tile x="6" y="29" pattern="cl-cc" />
-				
+
 				<out section="southbound.north-split-buffer" />
 			</section>
 		</district>
-		
+
 		<district name="southbound">
 			<power-districts>
 				<power-district name="north" />
 				<power-district name="body" />
 				<power-district name="south" />
 			</power-districts>
-		
+
 			<section name="north-split-buffer" power-district="north">
 				<tracks>
 					<track length="29.754" />
@@ -569,12 +569,12 @@
 				<tile x="8" y="29" pattern="cl-cr" />
 				<tile x="9" y="29" pattern="cl-cc" />
 			</section>
-			
+
 			<router name="north-split">
 				<route name="left" in="north-split-buffer" out="loop" />
 				<route name="straight" in="north-split-buffer" out="automatic-distribution-unit.source" />
 			</router>
-			
+
 			<section name="loop" power-district="north">
 				<tracks>
 					<track length="358.092" />
@@ -589,7 +589,7 @@
 				<tile x="10" y="25" pattern="cr-cl" />
 				<tile x="9" y="25" pattern="cr-cc" />
 			</section>
-			
+
 			<section name="loop-collector">
 				<tracks>
 					<track length="20.01" />
@@ -597,12 +597,12 @@
 
 				<tile x="9" y="25" pattern="tr-cc" />
 			</section>
-			
+
 			<router name="adu-join">
 				<route name="left" in="loop-collector" out="loop-buffer" />
 				<route name="straight" in="loop" out="loop-buffer" />
 			</router>
-			
+
 			<section name="loop-buffer">
 				<tracks>
 					<track length="60.552" />
@@ -612,11 +612,11 @@
 				<tile x="8" y="25" pattern="cr-bl" />
 				<tile x="7" y="26" pattern="tr-cc" />
 			</section>
-			
+
 			<router name="north-crossing">
 				<route name="right-right" in="loop-buffer" out="north-passage" />
 			</router>
-			
+
 			<section name="north-passage">
 				<tracks>
 					<track length="344.085" />
@@ -642,11 +642,11 @@
 				<tile x="6" y="11" pattern="bl-cr" />
 				<tile x="7" y="11" pattern="cl-cc" />
 			</section>
-			
+
 			<router name="stem-branch-1">
 				<route name="right" in="north-passage" out="stem-branch-1-buffer" />
 			</router>
-			
+
 			<section name="stem-branch-1-buffer">
 				<tracks>
 					<track length="30.015" />
@@ -656,11 +656,11 @@
 				<tile x="8" y="12" pattern="tl-br" />
 				<tile x="9" y="13" pattern="tl-cc" />
 			</section>
-			
+
 			<router name="stem-branch-2">
 				<route name="straight" in="stem-branch-1-buffer" out="stem-adu-locomotive-merge-buffer" />
 			</router>
-			
+
 			<section name="stem-adu-locomotive-merge-buffer">
 				<tracks>
 					<track length="55.158" />
@@ -670,17 +670,17 @@
 				<tile x="10" y="14" pattern="tl-br" />
 				<tile x="11" y="15" pattern="tl-cc" />
 			</section>
-			
+
 			<router name="stem-adu-locomotive-merge">
 				<route name="left-right" in="stem-adu-locomotive-merge-buffer" out="stem-body" />
 			</router>
-			
+
 			<section name="stem-body">
 				<tracks>
 					<track length="564.978">
 						<positioners>
-							<point offset="500" device="etherrail-magnetic-balise-1000-424d3f4347a6a6b8eaf3eaeb7803a0d5" channel="north" responder="magnet:north" />
-							<point offset="500" device="etherrail-magnetic-balise-1000-424d3f4347a6a6b8eaf3eaeb7803a0d5" channel="south" responder="magnet:south" />
+							<point offset="89" device="etherrail-ir-pointer-02eda750534b" channel="any" responder="infrared:cover" />
+							<point offset="169" device="etherrail-magnetic-balise-1000-424d3f4347a6a6b8eaf3eaeb7803a0d5" channel="any" responder="infrared:cover" />
 						</positioners>
 					</track>
 				</tracks>
@@ -696,11 +696,11 @@
 				<tile x="19" y="16" pattern="cl-tr" />
 				<tile x="20" y="15" pattern="bl-cc" />
 			</section>
-			
+
 			<router name="stem-storage-5-merge">
 				<route name="left" in="stem-body" out="stem-storage-5-merge-buffer" />
 			</router>
-			
+
 			<section name="stem-storage-5-merge-buffer">
 				<tracks>
 					<track length="82.7805" />
@@ -709,11 +709,11 @@
 				<tile x="20" y="15" pattern="cc-cr" />
 				<tile x="21" y="15" pattern="cl-bc" />
 			</section>
-			
+
 			<router name="stem-storage-merge">
 				<route name="left" in="stem-storage-5-merge-buffer" out="stem-storage-merge-buffer" />
 			</router>
-			
+
 			<section name="stem-storage-merge-buffer">
 				<tracks>
 					<track length="25.056" />
@@ -723,11 +723,11 @@
 				<tile x="22" y="17" pattern="tl-br" />
 				<tile x="23" y="18" pattern="tl-cc" />
 			</section>
-			
+
 			<router name="stem-adu-merge">
 				<route name="straight" in="stem-storage-merge-buffer" out="stem-south-buffer-1" />
 			</router>
-			
+
 			<section name="stem-south-buffer-1">
 				<tracks>
 					<track length="35.061" />
@@ -735,10 +735,10 @@
 
 				<tile x="23" y="18" pattern="cc-br" />
 				<tile x="24" y="19" pattern="tl-br" />
-				
+
 				<out section="stem-south-buffer-2" />
 			</section>
-			
+
 			<section name="stem-south-buffer-2">
 				<tracks>
 					<track length="20.01" />
@@ -746,11 +746,11 @@
 
 				<tile x="25" y="20" pattern="tl-cc" />
 			</section>
-			
+
 			<router name="stem-service-merge">
 				<route name="left" in="stem-south-buffer-2" out="stem-south-2" />
 			</router>
-			
+
 			<section name="stem-south-2">
 				<tracks>
 					<track length="137.373" />
@@ -768,11 +768,11 @@
 
 				<tile x="23" y="27" pattern="cr-cc" />
 			</section>
-			
+
 			<router name="stem-south-halifax-b">
 				<route name="right" in="stem-south-2" out="stem-south-halifax-b-buffer" />
 			</router>
-			
+
 			<section name="stem-south-halifax-b-buffer">
 				<tracks>
 					<track length="30.015" />
@@ -781,11 +781,11 @@
 				<tile x="23" y="27" pattern="cc-tl" />
 				<tile x="22" y="26" pattern="br-cc" />
 			</section>
-			
+
 			<router name="stem-south-halifax-c">
 				<route name="left-right" in="stem-south-halifax-b-buffer" out="stem-south-reverse-buffer" />
 			</router>
-			
+
 			<section name="stem-south-reverse-buffer">
 				<tracks>
 					<track length="30.015" />
@@ -794,22 +794,22 @@
 				<tile x="22" y="26" pattern="cc-tl" />
 				<tile x="21" y="25" pattern="br-cc" />
 			</section>
-			
+
 			<router name="stem-south-reverse">
 				<route name="left-left" in="stem-south-reverse-buffer" out="south-loop-1" />
 			</router>
-			
+
 			<section name="south-loop-1">
 				<tracks>
 					<track length="507.906" />
 				</tracks>
 
 				<tile x="21" y="25" pattern="cc-cl" />
-				
+
 				<out section="northbound.south-loop-2" />
 			</section>
 		</district>
-		
+
 		<district name="automatic-distribution-unit">
 			<section name="source">
 				<tracks>
@@ -831,18 +831,18 @@
 				<tile x="11" y="24" pattern="br-cl" />
 				<tile x="10" y="24" pattern="cr-cc" />
 			</section>
-			
+
 			<router name="loop-branch">
 				<route name="left" in="source" out="loop-drain" />
 			</router>
-			
+
 			<section name="loop-drain">
 				<tracks>
 					<track length="20.01" />
 				</tracks>
 
 				<tile x="10" y="24" pattern="cc-bl" />
-				
+
 				<out section="southbound.loop-collector" />
 			</section>
 		</district>
