@@ -1,0 +1,26 @@
+<!rti>
+<train-index railway="kalkbreite.com" version="1">
+	<train name="test-train-1">
+		<head section="stem-body.northbound.fiddle-yard-east.kalkbreite.com" offset="100" reversed="false" />
+
+		<railcar name="taurus-railjet-1116-230-4" length="19.14" max-deceleration="2.3" max-speed="320">
+			<traction max-acceleration="1.3" max-speed=290" />
+
+			<controller device="etherrail-traction-controller-84fce60054b" channel="main" />
+
+			<coupler side="tail" type="fpc" backlash="0.25" />
+		</railcar>
+	</train>
+
+	<x-train name="test-train-2">
+		<head section="loop.southbound.fiddle-yard-east.kalkbreite.com" offset="1" reversed="false" />
+
+		<railcar name="re620-11681" length="24.5" max-deceleration="0.9" max-speed="180">
+			<traction max-acceleration="1" max-speed="120" />
+
+			<coupler side="head" type="fpc" backlash="0.25" />
+			<coupler side="tail" type="fpc" backlash="0.25" />
+		<
+		/railcar>
+	</x-train>
+</train-index>

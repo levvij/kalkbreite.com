@@ -1,5 +1,7 @@
 <!rml>
 <railway name="kalkbreite.com" version="1">
+	<monitor device="monitor-master"></monitor>
+
 	<district name="fiddle-yard-east">
 		<district name="northbound">
 			<power-districts>
@@ -12,19 +14,6 @@
 				<tracks>
 					<track length="20.01" />
 				</tracks>
-
-				<tile x="20" y="25" pattern="cr-cl" />
-				<tile x="19" y="25" pattern="cr-cl" />
-				<tile x="18" y="25" pattern="cr-cl" />
-				<tile x="17" y="25" pattern="cr-cl" />
-
-				<tile x="16" y="25" pattern="cr-bl" />
-				<tile x="15" y="26" pattern="tr-bc" />
-
-				<tile x="15" y="27" pattern="tc-bc" />
-
-				<tile x="15" y="28" pattern="tc-br" />
-				<tile x="16" y="29" pattern="tl-cr" />
 
 				<tile x="17" y="29" pattern="cl-cr" />
 				<tile x="18" y="29" pattern="cl-cc" />
@@ -679,8 +668,10 @@
 				<tracks>
 					<track length="564.978">
 						<positioners>
+							<point offset="5" device="etherrail-ir-pointer-024d42505032" channel="any" responder="infrared:cover" />
+
 							<point offset="89" device="etherrail-ir-pointer-02eda750534b" channel="any" responder="infrared:cover" />
-							<point offset="169" device="etherrail-magnetic-balise-1000-424d3f4347a6a6b8eaf3eaeb7803a0d5" channel="any" responder="infrared:cover" />
+							<point offset="169" device="etherrail-ir-pointer-020aeb50534b" channel="any" responder="infrared:cover" />
 						</positioners>
 					</track>
 				</tracks>
@@ -805,6 +796,19 @@
 				</tracks>
 
 				<tile x="21" y="25" pattern="cc-cl" />
+
+				<tile x="20" y="25" pattern="cr-cl" />
+				<tile x="19" y="25" pattern="cr-cl" />
+				<tile x="18" y="25" pattern="cr-cl" />
+				<tile x="17" y="25" pattern="cr-cl" />
+
+				<tile x="16" y="25" pattern="cr-bl" />
+				<tile x="15" y="26" pattern="tr-bc" />
+
+				<tile x="15" y="27" pattern="tc-bc" />
+
+				<tile x="15" y="28" pattern="tc-br" />
+				<tile x="16" y="29" pattern="tl-cr" />
 
 				<out section="northbound.south-loop-2" />
 			</section>
