@@ -1,0 +1,25 @@
+{
+	"scripts": {
+		"build": "npx vlserver compile && esbuild index.ts --bundle --outfile=.built/index.js --platform=node --target=es2018 && vlquery compile",
+		"start": "npm run build && environment node .built/index.js",
+		"typecheck": "npx vlserver compile && tsc --noEmit",
+		"database:update": "environment vlquery create-context"
+	},
+	"environment": {
+		"pghost": "Database Host",
+		"pgdatabase": "Database Database",
+		"pguser": "Database User",
+		"pgpassword": "Database Password"
+	},
+	"dependencies": {
+		"@acryps/environment": "^2.7.2",
+		"bwip-js": "^4.5.1",
+		"vlquery": "^7.2.0",
+		"vlserver": "^4.9.2"
+	},
+	"devDependencies": {
+		"@types/node": "^18.11.15",
+		"esbuild": "^0.20.1",
+		"typescript": "^5.2.2"
+	}
+}
