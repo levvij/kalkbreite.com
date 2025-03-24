@@ -1,6 +1,7 @@
 <!rml>
 <railway name="kalkbreite.com" version="1">
 	<monitor device="monitor-master"></monitor>
+	<throttle device="throttle-master"></throttle>
 
 	<district name="fiddle-yard-east">
 		<district name="northbound">
@@ -77,7 +78,7 @@
 			</section>
 
 			<router name="stem-south-branch-1">
-				<route name="left-left" in="stem-south-branch-1-1" out="stem-south-branch-1-2" overlap="2000" />
+				<route name="left-left" in="stem-south-branch-1-1" out="stem-south-branch-1-2" overlap="2000" active />
 				<route name="left-right" in="stem-south-branch-1-1" out="storage-1" overlap="2000" />
 			</router>
 
@@ -291,7 +292,7 @@
 			</section>
 
 			<router name="stem-south-branch-2">
-				<route name="straight" in="stem-south-branch-1-2" out="stem-south-buffer-2" overlap="2000" />
+				<route name="straight" in="stem-south-branch-1-2" out="stem-south-buffer-2" overlap="2000" active />
 				<route name="right" in="stem-south-branch-1-2" out="storage-2" overlap="2000" />
 			</router>
 
@@ -305,7 +306,7 @@
 			</section>
 
 			<router name="stem-south-branch-3">
-				<route name="straight" in="stem-south-buffer-2" out="stem-south-buffer-3" overlap="2000" />
+				<route name="straight" in="stem-south-buffer-2" out="stem-south-buffer-3" overlap="2000" active />
 				<route name="right" in="stem-south-buffer-2" out="storage-3" overlap="2000" />
 			</router>
 
@@ -324,7 +325,7 @@
 			</section>
 
 			<router name="stem-south-branch-4">
-				<route name="straight" in="stem-south-buffer-3" out="stem-south-buffer-4" overlap="2000" />
+				<route name="straight" in="stem-south-buffer-3" out="stem-south-buffer-4" overlap="2000" active />
 				<route name="right" in="stem-south-buffer-3" out="storage-4" overlap="2000" />
 			</router>
 
@@ -338,7 +339,7 @@
 			</section>
 
 			<router name="stem-south-branch-5">
-				<route name="straight" in="stem-south-buffer-4" out="stem-body" overlap="2000" />
+				<route name="straight" in="stem-south-buffer-4" out="stem-body" overlap="2000" active />
 				<route name="right" in="stem-south-buffer-4" out="storage-5-6-buffer" overlap="2000" />
 			</router>
 
@@ -390,7 +391,7 @@
 
 			<router name="storage-merge-3-4">
 				<route name="left" in="storage-3" out="storage-merge-buffer-3-4" />
-				<route name="straight" in="storage-4" out="storage-merge-buffer-3-4" />
+				<route name="straight" in="storage-4" out="storage-merge-buffer-3-4" active />
 			</router>
 
 			<section name="storage-merge-buffer-3-4" power-district="body">
@@ -459,7 +460,7 @@
 
 			<router name="stem-north-passover-storage-merge">
 				<route name="straight" in="storage-exit-buffer" out="stem-north-1" />
-				<route name="right" in="stem-north-passover" out="stem-north-1" />
+				<route name="right" in="stem-north-passover" out="stem-north-1" active />
 			</router>
 
 			<section name="stem-north-1" power-district="body">
@@ -560,7 +561,7 @@
 			</section>
 
 			<router name="north-split">
-				<route name="left" in="north-split-buffer" out="loop" />
+				<route name="left" in="north-split-buffer" out="loop" active />
 				<route name="straight" in="north-split-buffer" out="automatic-distribution-unit.source" />
 			</router>
 
@@ -589,7 +590,7 @@
 
 			<router name="adu-join">
 				<route name="left" in="loop-collector" out="loop-buffer" />
-				<route name="straight" in="loop" out="loop-buffer" />
+				<route name="straight" in="loop" out="loop-buffer" active />
 			</router>
 
 			<section name="loop-buffer">
