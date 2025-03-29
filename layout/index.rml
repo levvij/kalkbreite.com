@@ -77,8 +77,8 @@
 				<tile x="26" y="17" pattern="bc-cc" />
 			</section>
 
-			<router name="stem-south-branch-1">
-				<route name="left-left" in="stem-south-branch-1-1" out="stem-south-branch-1-2" overlap="2000" active />
+			<router name="stem-south-branch-1" active="left-left">
+				<route name="left-left" in="stem-south-branch-1-1" out="stem-south-branch-1-2" overlap="2000" />
 				<route name="left-right" in="stem-south-branch-1-1" out="storage-1" overlap="2000" />
 			</router>
 
@@ -291,8 +291,8 @@
 				<tile x="8" y="5" pattern="br-cc" />
 			</section>
 
-			<router name="stem-south-branch-2">
-				<route name="straight" in="stem-south-branch-1-2" out="stem-south-buffer-2" overlap="2000" active />
+			<router name="stem-south-branch-2" active="straight">
+				<route name="straight" in="stem-south-branch-1-2" out="stem-south-buffer-2" overlap="2000" />
 				<route name="right" in="stem-south-branch-1-2" out="storage-2" overlap="2000" />
 			</router>
 
@@ -305,8 +305,8 @@
 				<tile x="24" y="15" pattern="br-cc" />
 			</section>
 
-			<router name="stem-south-branch-3">
-				<route name="straight" in="stem-south-buffer-2" out="stem-south-buffer-3" overlap="2000" active />
+			<router name="stem-south-branch-3" active="straight">
+				<route name="straight" in="stem-south-buffer-2" out="stem-south-buffer-3" overlap="2000" />
 				<route name="right" in="stem-south-buffer-2" out="storage-3" overlap="2000" />
 			</router>
 
@@ -324,8 +324,8 @@
 				<tile x="23" y="9" pattern="bc-cc" />
 			</section>
 
-			<router name="stem-south-branch-4">
-				<route name="straight" in="stem-south-buffer-3" out="stem-south-buffer-4" overlap="2000" active />
+			<router name="stem-south-branch-4" active="straight">
+				<route name="straight" in="stem-south-buffer-3" out="stem-south-buffer-4" overlap="2000" />
 				<route name="right" in="stem-south-buffer-3" out="storage-4" overlap="2000" />
 			</router>
 
@@ -338,8 +338,8 @@
 				<tile x="22" y="8" pattern="br-cc" />
 			</section>
 
-			<router name="stem-south-branch-5">
-				<route name="straight" in="stem-south-buffer-4" out="stem-body" overlap="2000" active />
+			<router name="stem-south-branch-5" active="straight">
+				<route name="straight" in="stem-south-buffer-4" out="stem-body" overlap="2000" />
 				<route name="right" in="stem-south-buffer-4" out="storage-5-6-buffer" overlap="2000" />
 			</router>
 
@@ -389,9 +389,9 @@
 				<route name="straight" in="storage-2" out="storage-merge-buffer-1-2" />
 			</router>
 
-			<router name="storage-merge-3-4">
+			<router name="storage-merge-3-4" active="straight">
 				<route name="left" in="storage-3" out="storage-merge-buffer-3-4" />
-				<route name="straight" in="storage-4" out="storage-merge-buffer-3-4" active />
+				<route name="straight" in="storage-4" out="storage-merge-buffer-3-4" />
 			</router>
 
 			<section name="storage-merge-buffer-3-4" power-district="body">
@@ -458,9 +458,9 @@
 				<tile x="3" y="1" pattern="cr-cc" />
 			</section>
 
-			<router name="stem-north-passover-storage-merge">
+			<router name="stem-north-passover-storage-merge" active="right">
 				<route name="straight" in="storage-exit-buffer" out="stem-north-1" />
-				<route name="right" in="stem-north-passover" out="stem-north-1" active />
+				<route name="right" in="stem-north-passover" out="stem-north-1" />
 			</router>
 
 			<section name="stem-north-1" power-district="body">
@@ -560,8 +560,8 @@
 				<tile x="9" y="29" pattern="cl-cc" />
 			</section>
 
-			<router name="north-split">
-				<route name="left" in="north-split-buffer" out="loop" active />
+			<router name="north-split" active="left">
+				<route name="left" in="north-split-buffer" out="loop" />
 				<route name="straight" in="north-split-buffer" out="automatic-distribution-unit.source" />
 			</router>
 
@@ -588,9 +588,9 @@
 				<tile x="9" y="25" pattern="tr-cc" />
 			</section>
 
-			<router name="adu-join">
+			<router name="adu-join" active="straight">
 				<route name="left" in="loop-collector" out="loop-buffer" />
-				<route name="straight" in="loop" out="loop-buffer" active />
+				<route name="straight" in="loop" out="loop-buffer" />
 			</router>
 
 			<section name="loop-buffer">

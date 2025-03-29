@@ -1,6 +1,6 @@
 <!rti>
 <train-index railway="kalkbreite.com" version="1">
-	<train name="test-train-1">
+	<x-train name="test-train-1">
 		<head section="stem-body.northbound.fiddle-yard-east.kalkbreite.com" offset="100" reversed="false" />
 
 		<railcar name="taurus-railjet-1116-230-4" length="19.14" max-deceleration="2.3" max-speed="320">
@@ -9,18 +9,80 @@
 			<controller device="etherrail-traction-controller-84fce60054b" channel="main" />
 
 			<coupler side="tail" type="fpc" backlash="0.25" />
+
+			<actions>
+				<toggle action="blower" name="Blower" />
+				<button action="uncouple" name="Uncouple" />
+			</actions>
 		</railcar>
-	</train>
+	</x-train>
 
-	<x-train name="test-train-2">
-		<head section="loop.southbound.fiddle-yard-east.kalkbreite.com" offset="1" reversed="false" />
+	<train name="test-train-1">
+		<head section="stem-body.northbound.fiddle-yard-east.kalkbreite.com" offset="100" reversed="false" />
 
-		<railcar name="re620-11681" length="24.5" max-deceleration="0.9" max-speed="180">
+		<railcar name="re620-11699" length="24.5" max-deceleration="0.9" max-speed="180">
+			<traction max-acceleration="1" max-speed="120" />
 			<traction max-acceleration="1" max-speed="120" />
 
 			<coupler side="head" type="fpc" backlash="0.25" />
 			<coupler side="tail" type="fpc" backlash="0.25" />
-		<
-		/railcar>
-	</x-train>
+		</railcar>
+
+		<railcar name="re420-11641" length="19.5" max-deceleration="0.9" max-speed="210">
+			<traction max-acceleration="1" max-speed="120" />
+
+			<coupler side="head" type="fpc" backlash="0.25" />
+			<coupler side="tail" type="fpc" backlash="0.25" />
+		</railcar>
+
+		<railcar name="tagnpss-1" length="27" max-speed="170" max-deceleration="0.9">
+			<coupler side="head" type="fpc" backlash="0.25" />
+			<coupler side="tail" type="fpc" backlash="0.25" />
+		</railcar>
+
+		<railcar name="tagnpss-2" length="27" max-speed="170" max-deceleration="0.9">
+			<coupler side="head" type="fpc" backlash="0.25" />
+			<coupler side="tail" type="fpc" backlash="0.25" />
+		</railcar>
+
+		<railcar name="tagnpss-3" length="27" max-speed="170" max-deceleration="0.9">
+			<coupler side="head" type="fpc" backlash="0.25" />
+			<coupler side="tail" type="fpc" backlash="0.25" />
+		</railcar>
+
+		<railcar name="tagnpss-4" length="27" max-speed="170" max-deceleration="0.9">
+			<coupler side="head" type="fpc" backlash="0.25" />
+			<coupler side="tail" type="fpc" backlash="0.25" />
+		</railcar>
+
+		<railcar name="tagnpss-5" length="27" max-speed="170" max-deceleration="0.9">
+			<coupler side="head" type="fpc" backlash="0.25" />
+			<coupler side="tail" type="fpc" backlash="0.25" />
+		</railcar>
+
+		<railcar name="tagnpss-6" length="27" max-speed="170" max-deceleration="0.9">
+			<coupler side="head" type="fpc" backlash="0.25" />
+			<coupler side="tail" type="fpc" backlash="0.25" />
+		</railcar>
+
+		<railcar name="tagnpss-7" length="27" max-speed="170" max-deceleration="0.9">
+			<coupler side="head" type="fpc" backlash="0.25" />
+			<coupler side="tail" type="fpc" backlash="0.25" />
+		</railcar>
+
+		<railcar name="tagnpss-8" length="27" max-speed="170" max-deceleration="0.9">
+			<coupler side="head" type="fpc" backlash="0.25" />
+			<coupler side="tail" type="fpc" backlash="0.25" />
+		</railcar>
+
+		<railcar name="tagnpss-9" length="27" max-speed="170" max-deceleration="0.9">
+			<coupler side="head" type="fpc" backlash="0.25" />
+			<coupler side="tail" type="fpc" backlash="0.25" />
+		</railcar>
+
+		<railcar name="tagnpss-10" length="27" max-speed="170" max-deceleration="0.9">
+			<coupler side="head" type="fpc" backlash="0.25" />
+			<coupler side="tail" type="fpc" backlash="0.25" />
+		</railcar>
+	</train>
 </train-index>
