@@ -20,7 +20,7 @@
 				<tile x="18" y="29" pattern="cl-cc" />
 			</section>
 
-			<router name="loop-halifax-a-merge">
+			<router name="loop-halifax-a-merge" active="left">
 				<route name="left" in="south-loop-2" out="loop-halifax-a-merge-buffer" />
 			</router>
 
@@ -33,7 +33,7 @@
 				<tile x="19" y="29" pattern="cl-cc" />
 			</section>
 
-			<router name="stem-western-yard-merge">
+			<router name="stem-western-yard-merge" active="left">
 				<route name="left" in="loop-halifax-a-merge-buffer" out="stem-south" />
 			</router>
 
@@ -63,7 +63,7 @@
 				<tile x="26" y="19" pattern="bc-cc" />
 			</section>
 
-			<router name="stem-service-split">
+			<router name="stem-service-split" active="straight">
 				<route name="straight" in="stem-south" out="stem-south-branch-1-1" />
 			</router>
 
@@ -366,7 +366,7 @@
 				<tile x="9" y="7" pattern="cr-cc" />
 			</section>
 
-			<router name="stem-storage-reverse-merge">
+			<router name="stem-storage-reverse-merge" active="left">
 				<route name="left" in="stem-body" out="stem-north-passover" />
 			</router>
 
@@ -481,7 +481,7 @@
 				<tile x="1" y="9" pattern="tc-cc" />
 			</section>
 
-			<router name="stem-north-lanyard-c">
+			<router name="stem-north-lanyard-c" active="left">
 				<route name="left" in="stem-north-1" out="stem-north-crossing-1" overlap="2000" />
 			</router>
 
@@ -495,7 +495,7 @@
 				<tile x="2" y="10" pattern="tl-cc" />
 			</section>
 
-			<router name="stem-north-crossing-lanyard-d">
+			<router name="stem-north-crossing-lanyard-d" active="right-left">
 				<route name="right-left" in="stem-north-crossing-1" out="stem-north-crossing-2" overlap="2000" />
 			</router>
 
@@ -603,7 +603,7 @@
 				<tile x="7" y="26" pattern="tr-cc" />
 			</section>
 
-			<router name="north-crossing">
+			<router name="north-crossing" active="right-right">
 				<route name="right-right" in="loop-buffer" out="north-passage" />
 			</router>
 
@@ -633,7 +633,7 @@
 				<tile x="7" y="11" pattern="cl-cc" />
 			</section>
 
-			<router name="stem-branch-1">
+			<router name="stem-branch-1" active="right">
 				<route name="right" in="north-passage" out="stem-branch-1-buffer" />
 			</router>
 
@@ -647,7 +647,7 @@
 				<tile x="9" y="13" pattern="tl-cc" />
 			</section>
 
-			<router name="stem-branch-2">
+			<router name="stem-branch-2" active="straight">
 				<route name="straight" in="stem-branch-1-buffer" out="stem-adu-locomotive-merge-buffer" />
 			</router>
 
@@ -661,7 +661,7 @@
 				<tile x="11" y="15" pattern="tl-cc" />
 			</section>
 
-			<router name="stem-adu-locomotive-merge">
+			<router name="stem-adu-locomotive-merge" active="left-right">
 				<route name="left-right" in="stem-adu-locomotive-merge-buffer" out="stem-body" />
 			</router>
 
@@ -689,7 +689,7 @@
 				<tile x="20" y="15" pattern="bl-cc" />
 			</section>
 
-			<router name="stem-storage-5-merge">
+			<router name="stem-storage-5-merge" active="left">
 				<route name="left" in="stem-body" out="stem-storage-5-merge-buffer" />
 			</router>
 
@@ -702,7 +702,7 @@
 				<tile x="21" y="15" pattern="cl-bc" />
 			</section>
 
-			<router name="stem-storage-merge">
+			<router name="stem-storage-merge" active="left">
 				<route name="left" in="stem-storage-5-merge-buffer" out="stem-storage-merge-buffer" />
 			</router>
 
@@ -716,7 +716,7 @@
 				<tile x="23" y="18" pattern="tl-cc" />
 			</section>
 
-			<router name="stem-adu-merge">
+			<router name="stem-adu-merge" active="straight">
 				<route name="straight" in="stem-storage-merge-buffer" out="stem-south-buffer-1" />
 			</router>
 
@@ -739,7 +739,7 @@
 				<tile x="25" y="20" pattern="tl-cc" />
 			</section>
 
-			<router name="stem-service-merge">
+			<router name="stem-service-merge" active="left">
 				<route name="left" in="stem-south-buffer-2" out="stem-south-2" />
 			</router>
 
@@ -761,7 +761,7 @@
 				<tile x="23" y="27" pattern="cr-cc" />
 			</section>
 
-			<router name="stem-south-halifax-b">
+			<router name="stem-south-halifax-b" active="right">
 				<route name="right" in="stem-south-2" out="stem-south-halifax-b-buffer" />
 			</router>
 
@@ -774,7 +774,7 @@
 				<tile x="22" y="26" pattern="br-cc" />
 			</section>
 
-			<router name="stem-south-halifax-c">
+			<router name="stem-south-halifax-c" active="left-right">
 				<route name="left-right" in="stem-south-halifax-b-buffer" out="stem-south-reverse-buffer" />
 			</router>
 
@@ -787,7 +787,7 @@
 				<tile x="21" y="25" pattern="br-cc" />
 			</section>
 
-			<router name="stem-south-reverse">
+			<router name="stem-south-reverse" active="left-left">
 				<route name="left-left" in="stem-south-reverse-buffer" out="south-loop-1" />
 			</router>
 
@@ -837,7 +837,7 @@
 				<tile x="10" y="24" pattern="cr-cc" />
 			</section>
 
-			<router name="loop-branch">
+			<router name="loop-branch" active="left">
 				<route name="left" in="source" out="loop-drain" />
 			</router>
 
