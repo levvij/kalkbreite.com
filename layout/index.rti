@@ -17,7 +17,7 @@
 		</railcar>
 	</train>
 
-	<train name="sbb-cargo-mixed-train">
+	<train name="sbbc-lx54">
 		<head section="stem-body.northbound.fiddle-yard-east.kalkbreite.com" offset="100" reversed="false" />
 
 		<railcar name="re620-11699" length="24.5" max-deceleration="0.9" max-speed="180">
