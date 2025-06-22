@@ -66,4 +66,17 @@
 			<coupler side="tail" type="fpc" backlash="0.25" />
 		</railcar>
 	</train>
+
+	<train name="xrl-ruth">
+		<head section="stem-body.northbound.fiddle-yard-east.kalkbreite.com" offset="201" reversed="false" />
+
+		<railcar name="br185-ruth" length="77.1" max-deceleration="0.9" max-speed="120">
+			<traction max-acceleration="1" max-speed="120" />
+
+			<controller device="dcc-ex-mainline" channel="14" />
+
+			<coupler side="head" type="sfb" backlash="0" />
+			<coupler side="tail" type="sfb" backlash="0" />
+		</railcar>
+	</train>
 </train-index>
