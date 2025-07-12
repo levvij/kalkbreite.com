@@ -1,9 +1,15 @@
 import { Entity, DbSet, RunContext, QueryUUID, QueryProxy, QueryString, QueryJSON, QueryTimeStamp, QueryNumber, QueryTime, QueryDate, QueryBoolean, QueryBuffer, QueryEnum, ForeignReference, PrimaryReference, View, ViewSet } from 'vlquery';
 
+export class RailcarDirection extends QueryEnum {
+	static readonly forward = "forward";
+	static readonly reverse = "reverse";
+}
+
 export class CaptureQueryProxy extends QueryProxy {
 	get railcar(): Partial<RailcarQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get captured(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get data(): Partial<QueryBuffer> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get direction(): "forward" | "reverse" { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get mimeType(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get railcarId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
@@ -12,6 +18,7 @@ export class Capture extends Entity<CaptureQueryProxy> {
 	get railcar(): Partial<ForeignReference<Railcar>> { return this.$railcar; }
 	captured: Date;
 	data: Buffer;
+	direction: RailcarDirection;
 	declare id: string;
 	mimeType: string;
 	railcarId: string;
@@ -21,6 +28,7 @@ export class Capture extends Entity<CaptureQueryProxy> {
 		columns: {
 			captured: { type: "timestamp", name: "captured" },
 			data: { type: "bytea", name: "data" },
+			direction: { type: "railcar_direction", name: "direction" },
 			id: { type: "uuid", name: "id" },
 			mimeType: { type: "text", name: "mime_type" },
 			railcarId: { type: "uuid", name: "railcar_id" }
@@ -168,6 +176,7 @@ export class RailcarQueryProxy extends QueryProxy {
 	get model(): Partial<RailcarModelQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get operator(): Partial<CompanyQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get owner(): Partial<CompanyQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get storageContainer(): Partial<StorageContainerQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get aquired(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get givenName(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get manufacturerId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -177,6 +186,7 @@ export class RailcarQueryProxy extends QueryProxy {
 	get ownerId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get runningNumber(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get salePrice(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get storageContainerId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get tag(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
 
@@ -186,7 +196,8 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 	get operator(): Partial<ForeignReference<Company>> { return this.$operator; }
 	get owner(): Partial<ForeignReference<Company>> { return this.$owner; }
 	captures: PrimaryReference<Capture, CaptureQueryProxy>;
-		aquired: Date;
+		get storageContainer(): Partial<ForeignReference<StorageContainer>> { return this.$storageContainer; }
+	aquired: Date;
 	givenName: string;
 	declare id: string;
 	manufacturerId: string;
@@ -196,6 +207,7 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 	ownerId: string;
 	runningNumber: string;
 	salePrice: number;
+	storageContainerId: string;
 	tag: string;
 	
 	$$meta = {
@@ -211,6 +223,7 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 			ownerId: { type: "uuid", name: "owner_id" },
 			runningNumber: { type: "text", name: "running_number" },
 			salePrice: { type: "float4", name: "sale_price" },
+			storageContainerId: { type: "uuid", name: "storage_container_id" },
 			tag: { type: "text", name: "tag" }
 		},
 		get set(): DbSet<Railcar, RailcarQueryProxy> { 
@@ -226,6 +239,7 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 	this.$operator = new ForeignReference<Company>(this, "operatorId", Company);
 	this.$owner = new ForeignReference<Company>(this, "ownerId", Company);
 	this.captures = new PrimaryReference<Capture, CaptureQueryProxy>(this, "railcarId", Capture);
+		this.$storageContainer = new ForeignReference<StorageContainer>(this, "storageContainerId", StorageContainer);
 	}
 	
 	private $manufacturer: ForeignReference<Company>;
@@ -276,6 +290,18 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 		}
 	}
 
+	private $storageContainer: ForeignReference<StorageContainer>;
+
+	set storageContainer(value: Partial<ForeignReference<StorageContainer>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.storageContainerId = value.id as string;
+		} else {
+			this.storageContainerId = null;
+		}
+	}
+
 	
 }
 			
@@ -315,6 +341,36 @@ export class RailcarModel extends Entity<RailcarModelQueryProxy> {
 	}
 }
 			
+export class StorageContainerQueryProxy extends QueryProxy {
+	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get tag(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class StorageContainer extends Entity<StorageContainerQueryProxy> {
+	railcars: PrimaryReference<Railcar, RailcarQueryProxy>;
+		declare id: string;
+	name: string;
+	tag: string;
+	
+	$$meta = {
+		source: "storage_container",
+		columns: {
+			id: { type: "uuid", name: "id" },
+			name: { type: "text", name: "name" },
+			tag: { type: "text", name: "tag" }
+		},
+		get set(): DbSet<StorageContainer, StorageContainerQueryProxy> { 
+			return new DbSet<StorageContainer, StorageContainerQueryProxy>(StorageContainer, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.railcars = new PrimaryReference<Railcar, RailcarQueryProxy>(this, "storageContainerId", Railcar);
+	}
+}
+			
 
 export class DbContext {
 	capture: DbSet<Capture, CaptureQueryProxy>;
@@ -322,6 +378,7 @@ export class DbContext {
 	companyLogo: DbSet<CompanyLogo, CompanyLogoQueryProxy>;
 	railcar: DbSet<Railcar, RailcarQueryProxy>;
 	railcarModel: DbSet<RailcarModel, RailcarModelQueryProxy>;
+	storageContainer: DbSet<StorageContainer, StorageContainerQueryProxy>;
 
 	constructor(private runContext: RunContext) {
 		this.capture = new DbSet<Capture, CaptureQueryProxy>(Capture, this.runContext);
@@ -329,6 +386,7 @@ export class DbContext {
 		this.companyLogo = new DbSet<CompanyLogo, CompanyLogoQueryProxy>(CompanyLogo, this.runContext);
 		this.railcar = new DbSet<Railcar, RailcarQueryProxy>(Railcar, this.runContext);
 		this.railcarModel = new DbSet<RailcarModel, RailcarModelQueryProxy>(RailcarModel, this.runContext);
+		this.storageContainer = new DbSet<StorageContainer, StorageContainerQueryProxy>(StorageContainer, this.runContext);
 	}
 
 	findSet(modelType) {

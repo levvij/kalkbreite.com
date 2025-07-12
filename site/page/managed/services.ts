@@ -45,6 +45,19 @@ export class RailcarSummaryModel {
 	}
 }
 
+export class StorageContainerSummaryModel {
+	id: string;
+	tag: string;
+
+	private static $build(raw) {
+		const item = new StorageContainerSummaryModel();
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
+		
+		return item;
+	}
+}
+
 export class RailcarModelViewModel {
 	id: string;
 	lengthIncludingBuffers: number;
@@ -69,6 +82,7 @@ export class RailcarViewModel {
 	model: RailcarModelViewModel;
 	operator: CompanySummaryModel;
 	owner: CompanySummaryModel;
+	storageContainer: StorageContainerSummaryModel;
 	aquired: Date;
 	givenName: string;
 	id: string;
@@ -82,11 +96,27 @@ export class RailcarViewModel {
 		raw.model === undefined || (item.model = raw.model ? RailcarModelViewModel["$build"](raw.model) : null)
 		raw.operator === undefined || (item.operator = raw.operator ? CompanySummaryModel["$build"](raw.operator) : null)
 		raw.owner === undefined || (item.owner = raw.owner ? CompanySummaryModel["$build"](raw.owner) : null)
+		raw.storageContainer === undefined || (item.storageContainer = raw.storageContainer ? StorageContainerSummaryModel["$build"](raw.storageContainer) : null)
 		raw.aquired === undefined || (item.aquired = raw.aquired ? new Date(raw.aquired) : null)
 		raw.givenName === undefined || (item.givenName = raw.givenName === null ? null : `${raw.givenName}`)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.note === undefined || (item.note = raw.note === null ? null : `${raw.note}`)
 		raw.runningNumber === undefined || (item.runningNumber = raw.runningNumber === null ? null : `${raw.runningNumber}`)
+		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
+		
+		return item;
+	}
+}
+
+export class StorageContainerViewModel {
+	railcars: RailcarSummaryModel[];
+	id: string;
+	tag: string;
+
+	private static $build(raw) {
+		const item = new StorageContainerViewModel();
+		raw.railcars === undefined || (item.railcars = raw.railcars ? raw.railcars.map(i => RailcarSummaryModel["$build"](i)) : null)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
 		
 		return item;

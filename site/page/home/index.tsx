@@ -1,5 +1,6 @@
 import { Component } from "@acryps/page";
 import { RailcarService, RailcarSummaryModel } from "../managed/services";
+import { ReaderComponent } from "./reader";
 
 export class HomePage extends Component {
 	railcars: RailcarSummaryModel[];
@@ -13,6 +14,8 @@ export class HomePage extends Component {
 			<ui-guide>
 				Welcome to Kalkbreite Model Railway.
 			</ui-guide>
+
+			{new ReaderComponent()}
 
 			<ui-railcars>
 				{this.railcars.map(railcar => <ui-railcar ui-href={`/railcar/${railcar.tag}`}>

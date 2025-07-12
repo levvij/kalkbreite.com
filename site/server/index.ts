@@ -6,6 +6,9 @@ import { DbClient, RunContext } from "vlquery";
 import { registerCaptureInterface } from "./capture/interface";
 import { registerTagInterface } from "./railcar/tag";
 import { registerLogoInterface } from "./company/logo";
+import { createServer } from "https";
+import { readFileSync } from "fs";
+import path from "path/posix";
 
 DbClient.connectedClient = new DbClient({});
 
@@ -31,5 +34,11 @@ DbClient.connectedClient.connect().then(async () => {
 
 	ViewModel.globalFetchingContext = database;
 
-	app.start(+process.env.PORT! || 8004);
+	const port = +process.env.PORT! || 8004;
+	app.start(port);
+
+	createServer({
+		key: readFileSync(process.env.SSL_KEY),
+		cert: readFileSync(process.env.SSL_CERTIFICATE),
+	}, app.app).listen(port + 1);
 });

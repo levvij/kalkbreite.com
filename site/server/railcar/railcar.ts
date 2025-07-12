@@ -2,6 +2,7 @@ import { ViewModel } from "vlserver";
 import { Railcar } from "../managed/database";
 import { RailcarModelSummaryModel, RailcarModelViewModel } from "./model";
 import { CompanySummaryModel } from "../company/company";
+import { StorageContainerSummaryModel } from "../storage/storage-contaiuner";
 
 export class RailcarSummaryModel extends ViewModel<Railcar> {
 	id;
@@ -22,4 +23,6 @@ export class RailcarViewModel extends RailcarSummaryModel {
 	owner: CompanySummaryModel;
 	operator: CompanySummaryModel;
 	manufacturer: CompanySummaryModel;
+
+	storageContainer: StorageContainerSummaryModel;
 }

@@ -1,6 +1,7 @@
 import { Component } from "@acryps/page";
 import { CompanySummaryModel, RailcarService, RailcarViewModel } from "../managed/services";
 import { lengthIncludingBuffersIcon, lengthIncludingCouplersIcon } from "../assets/icons/managed";
+import { MetaProduct } from "@acryps/metadata";
 
 export class RailcarPage extends Component {
 	declare parameters: { tag };
@@ -9,6 +10,12 @@ export class RailcarPage extends Component {
 
 	async onload() {
 		this.railcar = await new RailcarService().get(this.parameters.tag);
+
+		new MetaProduct({
+			name: this.railcar.givenName ?? this.railcar.model?.name ?? '-',
+			sku: this.railcar.tag,
+			image: `/capture/${this.railcar.id}`
+		}).apply();
 	}
 
 	render() {

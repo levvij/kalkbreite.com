@@ -7,10 +7,13 @@ import { RailcarSummaryModel } from "././../railcar/railcar";
 import { RailcarViewModel } from "././../railcar/railcar";
 import { RailcarService } from "././../railcar/index";
 import { RailcarModelSummaryModel } from "./../railcar/model";
+import { StorageContainerSummaryModel } from "./../storage/storage-contaiuner";
 import { RailcarModelViewModel } from "./../railcar/model";
+import { StorageContainerViewModel } from "./../storage/storage-contaiuner";
 import { Company } from "./../managed/database";
 import { RailcarModel } from "./../managed/database";
 import { Railcar } from "./../managed/database";
+import { StorageContainer } from "./../managed/database";
 
 Inject.mappings = {
 	"CompanyService": {
@@ -270,6 +273,68 @@ ViewModel.mappings = {
 			return model;
 		}
 	},
+	[StorageContainerSummaryModel.name]: class ComposedStorageContainerSummaryModel extends StorageContainerSummaryModel {
+		async map() {
+			return {
+				id: this.$$model.id,
+				tag: this.$$model.tag
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				id: true,
+				tag: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new StorageContainerSummaryModel(null);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: StorageContainerSummaryModel) {
+			let model: StorageContainer;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(StorageContainer).find(viewModel.id)
+			} else {
+				model = new StorageContainer();
+			}
+			
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
+
+			return model;
+		}
+	},
 	[RailcarModelViewModel.name]: class ComposedRailcarModelViewModel extends RailcarModelViewModel {
 		async map() {
 			return {
@@ -351,6 +416,7 @@ ViewModel.mappings = {
 				model: new RailcarModelViewModel(await BaseServer.unwrap(this.$$model.model)),
 				operator: new CompanySummaryModel(await BaseServer.unwrap(this.$$model.operator)),
 				owner: new CompanySummaryModel(await BaseServer.unwrap(this.$$model.owner)),
+				storageContainer: new StorageContainerSummaryModel(await BaseServer.unwrap(this.$$model.storageContainer)),
 				aquired: this.$$model.aquired,
 				givenName: this.$$model.givenName,
 				id: this.$$model.id,
@@ -410,6 +476,12 @@ ViewModel.mappings = {
 						[...parents, "owner-RailcarViewModel"]
 					);
 				},
+				get storageContainer() {
+					return ViewModel.mappings[StorageContainerSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "storageContainer-RailcarViewModel"]
+					);
+				},
 				aquired: true,
 				givenName: true,
 				id: true,
@@ -425,6 +497,7 @@ ViewModel.mappings = {
 			"model" in data && (item.model = data.model && ViewModel.mappings[RailcarModelViewModel.name].toViewModel(data.model));
 			"operator" in data && (item.operator = data.operator && ViewModel.mappings[CompanySummaryModel.name].toViewModel(data.operator));
 			"owner" in data && (item.owner = data.owner && ViewModel.mappings[CompanySummaryModel.name].toViewModel(data.owner));
+			"storageContainer" in data && (item.storageContainer = data.storageContainer && ViewModel.mappings[StorageContainerSummaryModel.name].toViewModel(data.storageContainer));
 			"aquired" in data && (item.aquired = data.aquired === null ? null : new Date(data.aquired));
 			"givenName" in data && (item.givenName = data.givenName === null ? null : `${data.givenName}`);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
@@ -448,11 +521,83 @@ ViewModel.mappings = {
 			"model" in viewModel && (model.model.id = viewModel.model ? viewModel.model.id : null);
 			"operator" in viewModel && (model.operator.id = viewModel.operator ? viewModel.operator.id : null);
 			"owner" in viewModel && (model.owner.id = viewModel.owner ? viewModel.owner.id : null);
+			"storageContainer" in viewModel && (model.storageContainer.id = viewModel.storageContainer ? viewModel.storageContainer.id : null);
 			"aquired" in viewModel && (model.aquired = viewModel.aquired === null ? null : new Date(viewModel.aquired));
 			"givenName" in viewModel && (model.givenName = viewModel.givenName === null ? null : `${viewModel.givenName}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"note" in viewModel && (model.note = viewModel.note === null ? null : `${viewModel.note}`);
 			"runningNumber" in viewModel && (model.runningNumber = viewModel.runningNumber === null ? null : `${viewModel.runningNumber}`);
+			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
+
+			return model;
+		}
+	},
+	[StorageContainerViewModel.name]: class ComposedStorageContainerViewModel extends StorageContainerViewModel {
+		async map() {
+			return {
+				railcars: (await this.$$model.railcars.includeTree(ViewModel.mappings[RailcarSummaryModel.name].items).toArray()).map(item => new RailcarSummaryModel(item)),
+				id: this.$$model.id,
+				tag: this.$$model.tag
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				get railcars() {
+					return ViewModel.mappings[RailcarSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "railcars-StorageContainerViewModel"]
+					);
+				},
+				id: true,
+				tag: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new StorageContainerViewModel(null);
+			"railcars" in data && (item.railcars = data.railcars && [...data.railcars].map(i => ViewModel.mappings[RailcarSummaryModel.name].toViewModel(i)));
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: StorageContainerViewModel) {
+			let model: StorageContainer;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(StorageContainer).find(viewModel.id)
+			} else {
+				model = new StorageContainer();
+			}
+			
+			"railcars" in viewModel && (null);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
 
 			return model;

@@ -78,13 +78,8 @@
 			</section>
 
 			<router name="stem-south-branch-1" active="left-left">
-				<route name="left-left" in="stem-south-branch-1-1" out="stem-south-branch-1-2" overlap="2000">
-					<controller device="dcc-ex-mainline" channel="5" direction="1" />
-				</route>
-
-				<route name="left-right" in="stem-south-branch-1-1" out="storage-1" overlap="2000">
-					<controller device="dcc-ex-mainline" channel="5" direction="0" />
-				</route>
+				<route name="left-left" in="stem-south-branch-1-1" out="stem-south-branch-1-2" overlap="2000" />
+				<route name="left-right" in="stem-south-branch-1-1" out="storage-1" overlap="2000" />
 			</router>
 
 			<section name="stem-south-branch-1-2" power-district="body">
@@ -639,7 +634,10 @@
 			</section>
 
 			<router name="stem-branch-1" active="right">
-				<route name="right" in="north-passage" out="stem-branch-1-buffer" />
+				<controller device="dcc-ex-mainline" channel="6" />
+
+				<route name="right" in="north-passage" out="stem-branch-1-buffer" command="1" />
+				<route name="straight" in="north-passage" out="storage-1-2-buffer" command="0" />
 			</router>
 
 			<section name="storage-1-2-buffer">
@@ -648,8 +646,10 @@
 			</section>
 
 			<router name="storage-1-2-in-split" active="left">
-				<route name="left" in="storage-1-2-buffer" out="storage-1" />
-				<route name="straight" in="storage-1-2-buffer" out="storage-2" />
+				<controller device="dcc-ex-mainline" channel="7" />
+
+				<route name="left" in="storage-1-2-buffer" out="storage-1" command="1" />
+				<route name="straight" in="storage-1-2-buffer" out="storage-2" command="0" />
 			</router>
 
 			<section name="storage-1">
@@ -696,8 +696,10 @@
 			</section>
 
 			<router name="stem-branch-2" active="straight">
-				<route name="straight" in="stem-branch-1-buffer" out="stem-adu-locomotive-merge-buffer" />
-				<route name="left" in="stem-branch-1-buffer" out="storage-3-4-buffer" />
+				<controller device="dcc-ex-mainline" channel="4" />
+
+				<route name="straight" in="stem-branch-1-buffer" out="stem-adu-locomotive-merge-buffer" command="1" />
+				<route name="left" in="stem-branch-1-buffer" out="storage-3-4-buffer" command="0" />
 			</router>
 
 			<section name="storage-3-4-buffer">
@@ -750,8 +752,13 @@
 			</section>
 
 			<router name="stem-adu-locomotive-merge" active="left-right">
-				<route name="left-right" in="stem-adu-locomotive-merge-buffer" out="stem-body" />
-				<route name="left-left" in="stem-adu-locomotive-merge-buffer" out="storage-5" />
+				<route name="left-right" in="stem-adu-locomotive-merge-buffer" out="stem-body">
+					<controller device="dcc-ex-mainline" channel="5" command="0" />
+				</route>
+
+				<route name="left-left" in="stem-adu-locomotive-merge-buffer" out="storage-5">
+					<controller device="dcc-ex-mainline" channel="5" command="1" />
+				</route>
 			</router>
 
 			<section name="storage-5">
@@ -837,8 +844,10 @@
 			</section>
 
 			<router name="stem-storage-merge" active="left">
-				<route name="straight" in="storage-1-4-merge-buffer" out="stem-storage-merge-buffer" />
-				<route name="left" in="stem-storage-5-merge-buffer" out="stem-storage-merge-buffer" />
+				<controller device="dcc-ex-mainline" channel="8" />
+
+				<route name="straight" in="storage-1-4-merge-buffer" out="stem-storage-merge-buffer" command="0" />
+				<route name="left" in="stem-storage-5-merge-buffer" out="stem-storage-merge-buffer" command="1" />
 			</router>
 
 			<section name="stem-storage-merge-buffer">
