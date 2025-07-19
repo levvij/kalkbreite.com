@@ -1,4 +1,4 @@
-FROM node:18-slim
+FROM node:22
 
 # install git to run rev-parse
 RUN apt-get update && apt-get install -y git
