@@ -38,9 +38,4 @@ DbClient.connectedClient.connect().then(async () => {
 
 	const port = +process.env.PORT! || 8004;
 	app.start(port);
-
-	createServer({
-		key: readFileSync(process.env.SSL_KEY),
-		cert: readFileSync(process.env.SSL_CERTIFICATE),
-	}, app.app).listen(port + 1);
 });

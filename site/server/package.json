@@ -9,11 +9,7 @@
 		"pghost": "Database Host",
 		"pgdatabase": "Database Database",
 		"pguser": "Database User",
-		"pgpassword": "Database Password",
-		"ssl": {
-			"key": "SSL Key",
-			"certificate": "SSL Certificate"
-		}
+		"pgpassword": "Database Password"
 	},
 	"dependencies": {
 		"@acryps/environment": "^2.7.2",
