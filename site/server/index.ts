@@ -8,7 +8,8 @@ import { registerTagInterface } from "./railcar/tag";
 import { registerLogoInterface } from "./company/logo";
 import { createServer } from "https";
 import { readFileSync } from "fs";
-import path from "path/posix";
+import { updateThumbnail } from "./capture/thumbnail";
+import { registerStorageTagInterface } from "./storage/tag";
 
 DbClient.connectedClient = new DbClient({});
 
@@ -27,6 +28,7 @@ DbClient.connectedClient.connect().then(async () => {
 	registerTagInterface(app);
 	registerCaptureInterface(app, database);
 	registerLogoInterface(app, database);
+	registerStorageTagInterface(app);
 
 	app.prepareRoutes();
 

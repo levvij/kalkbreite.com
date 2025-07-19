@@ -1,6 +1,7 @@
 import { Component } from "@acryps/page";
 import { RailcarService, RailcarSummaryModel } from "../managed/services";
 import { ReaderComponent } from "./reader";
+import { RailcarCollectionComponent } from "../shared/railcar-collection";
 
 export class HomePage extends Component {
 	railcars: RailcarSummaryModel[];
@@ -17,25 +18,7 @@ export class HomePage extends Component {
 
 			{new ReaderComponent()}
 
-			<ui-railcars>
-				{this.railcars.map(railcar => <ui-railcar ui-href={`/railcar/${railcar.tag}`}>
-					<img src={`/capture/${railcar.id}`} />
-
-					<ui-header>
-						<ui-name>
-							{railcar.givenName ?? railcar.model?.name ?? '-'}
-						</ui-name>
-
-						<ui-tag>
-							{railcar.tag}
-						</ui-tag>
-					</ui-header>
-
-					<ui-running-number>
-						{railcar.runningNumber}
-					</ui-running-number>
-				</ui-railcar>)}
-			</ui-railcars>
+			{new RailcarCollectionComponent(this.railcars)}
 		</ui-home>
 	}
 }

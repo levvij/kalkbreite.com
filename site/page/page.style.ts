@@ -6,6 +6,7 @@ import { railcarStyle } from "./railcar/index.style";
 import { displayFont, monospacedFont } from "./assets/font";
 import { iconFont, icons } from "./assets/icons/managed";
 import { companyStyle } from "./company/index.style";
+import { storageContainerStyle } from "./storage-container/index.style";
 
 export const applicationStyle = () => root(
 	monospacedFont,
@@ -26,6 +27,7 @@ export const applicationStyle = () => root(
 			homeStyle(),
 			railcarStyle(),
 			companyStyle(),
+			storageContainerStyle(),
 
 			display('block'),
 

@@ -6,10 +6,11 @@ import { CompanyService } from "././../company/index";
 import { RailcarSummaryModel } from "././../railcar/railcar";
 import { RailcarViewModel } from "././../railcar/railcar";
 import { RailcarService } from "././../railcar/index";
+import { StorageContainerViewModel } from "././../storage/storage-contaiuner";
+import { StorageService } from "././../storage/index";
 import { RailcarModelSummaryModel } from "./../railcar/model";
 import { StorageContainerSummaryModel } from "./../storage/storage-contaiuner";
 import { RailcarModelViewModel } from "./../railcar/model";
-import { StorageContainerViewModel } from "./../storage/storage-contaiuner";
 import { Company } from "./../managed/database";
 import { RailcarModel } from "./../managed/database";
 import { Railcar } from "./../managed/database";
@@ -26,6 +27,10 @@ Inject.mappings = {
 	},
 	"RailcarService": {
 		objectConstructor: RailcarService,
+		parameters: ["DbContext"]
+	},
+	"StorageService": {
+		objectConstructor: StorageService,
 		parameters: ["DbContext"]
 	}
 };
@@ -60,6 +65,17 @@ export class ManagedServer extends BaseServer {
 			inject => inject.construct(RailcarService),
 			(controller, params) => controller.get(
 				params["J6ZnUwOHpxNDN2eHlpdjlvcjBtZXRtaH"]
+			)
+		);
+
+		this.expose(
+			"g2eDZmZWdoZjN3YWV5M2k0a2FocWFod2",
+			{
+			"FpNz1jaHk2emZvY2Z4dDdvOGZ2Zml4eD": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(StorageService),
+			(controller, params) => controller.getContainer(
+				params["FpNz1jaHk2emZvY2Z4dDdvOGZ2Zml4eD"]
 			)
 		)
 	}
@@ -277,6 +293,7 @@ ViewModel.mappings = {
 		async map() {
 			return {
 				id: this.$$model.id,
+				name: this.$$model.name,
 				tag: this.$$model.tag
 			}
 		};
@@ -308,6 +325,7 @@ ViewModel.mappings = {
 
 			return {
 				id: true,
+				name: true,
 				tag: true
 			};
 		};
@@ -315,6 +333,7 @@ ViewModel.mappings = {
 		static toViewModel(data) {
 			const item = new StorageContainerSummaryModel(null);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
 
 			return item;
@@ -330,6 +349,7 @@ ViewModel.mappings = {
 			}
 			
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
 
 			return model;
@@ -537,6 +557,7 @@ ViewModel.mappings = {
 			return {
 				railcars: (await this.$$model.railcars.includeTree(ViewModel.mappings[RailcarSummaryModel.name].items).toArray()).map(item => new RailcarSummaryModel(item)),
 				id: this.$$model.id,
+				name: this.$$model.name,
 				tag: this.$$model.tag
 			}
 		};
@@ -574,6 +595,7 @@ ViewModel.mappings = {
 					);
 				},
 				id: true,
+				name: true,
 				tag: true
 			};
 		};
@@ -582,6 +604,7 @@ ViewModel.mappings = {
 			const item = new StorageContainerViewModel(null);
 			"railcars" in data && (item.railcars = data.railcars && [...data.railcars].map(i => ViewModel.mappings[RailcarSummaryModel.name].toViewModel(i)));
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
 
 			return item;
@@ -598,6 +621,7 @@ ViewModel.mappings = {
 			
 			"railcars" in viewModel && (null);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
 
 			return model;

@@ -2,11 +2,11 @@ import { select, style, content, Font, fontFamily, fontWeight, fontStyle } from 
 
 
 export const iconFont = new Font('icons', fontWeight('normal'), fontStyle('normal'))
-	.addSource('/assets/icons/managed/font/index.eot?7a211dd59f01', 'embedded-opentype')
-	.addSource('/assets/icons/managed/font/index.svg?76f33c393458', 'svg')
-	.addSource('/assets/icons/managed/font/index.ttf?1b68d2ad3bea', 'truetype')
-	.addSource('/assets/icons/managed/font/index.woff?35001065ef24', 'woff')
-	.addSource('/assets/icons/managed/font/index.woff2?1713a4754285', 'woff2');
+	.addSource('/assets/icons/managed/font/index.eot?506f4b55e5ea', 'embedded-opentype')
+	.addSource('/assets/icons/managed/font/index.svg?731705337681', 'svg')
+	.addSource('/assets/icons/managed/font/index.ttf?53bd092c05ab', 'truetype')
+	.addSource('/assets/icons/managed/font/index.woff?d83733b129db', 'woff')
+	.addSource('/assets/icons/managed/font/index.woff2?6328304c7695', 'woff2');
 
 export const icons = () => select('ui-icon',
 	fontFamily(iconFont.name),
@@ -14,8 +14,9 @@ export const icons = () => select('ui-icon',
 
 	style(':empty').before('?'),
 
-	style('[ui-length-including-buffers]').before('\f101'),
-	style('[ui-length-including-couplers]').before('\f102'),
+	style('[ui-container]').before('\f101'),
+	style('[ui-length-including-buffers]').before('\f102'),
+	style('[ui-length-including-couplers]').before('\f103'),
 );
 
 const createIconElement = (name: string) => {
@@ -25,5 +26,6 @@ const createIconElement = (name: string) => {
 	return element;
 };
 
+export const containerIcon = () => createIconElement('container');
 export const lengthIncludingBuffersIcon = () => createIconElement('length-including-buffers');
 export const lengthIncludingCouplersIcon = () => createIconElement('length-including-couplers');

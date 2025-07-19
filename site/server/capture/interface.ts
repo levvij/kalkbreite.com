@@ -1,17 +1,20 @@
 import { Capture, DbContext, RailcarDirection } from "../managed/database";
 import { ManagedServer } from "../managed/server";
+import { updateThumbnail } from "./thumbnail";
 
 export const registerCaptureInterface = (server: ManagedServer, database: DbContext) => {
-	const cache = new Map<string, Capture>();
+	const thumbnailCache = new Map<string, Capture>();
+	const imageCache = new Map<string, Capture>();
 
 	server.app.get('/capture/:id', async (request, response) => {
 		const id = request.params.id;
 
-		let capture = cache.get(id);
+		let capture = thumbnailCache.get(id);
 
 		if (!capture) {
 			capture = await database.capture
 				.orderByDescending(capture => capture.captured)
+				.includeTree({ thumbnail: true })
 				.first(capture => capture.railcarId == id);
 
 			if (!capture) {
@@ -21,7 +24,32 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 				return;
 			}
 
-			cache.set(id, capture);
+			thumbnailCache.set(id, capture);
+		}
+
+		response.contentType('image/jpeg');
+		response.end(capture.thumbnail);
+	});
+
+	server.app.get('/capture/:id/full', async (request, response) => {
+		const id = request.params.id;
+
+		let capture = imageCache.get(id);
+
+		if (!capture) {
+			capture = await database.capture
+				.orderByDescending(capture => capture.captured)
+				.includeTree({ mimeType: true, data: true })
+				.first(capture => capture.railcarId == id);
+
+			if (!capture) {
+				response.status(404);
+				response.end('capture not found');
+
+				return;
+			}
+
+			imageCache.set(id, capture);
 		}
 
 		response.contentType(capture.mimeType);
@@ -52,6 +80,7 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 			capture.data = Buffer.concat(chunks);
 
 			await capture.update();
+			await updateThumbnail(capture);
 
 			response.sendStatus(200).end();
 		});

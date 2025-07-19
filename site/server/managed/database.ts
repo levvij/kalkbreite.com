@@ -12,6 +12,7 @@ export class CaptureQueryProxy extends QueryProxy {
 	get direction(): "forward" | "reverse" { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get mimeType(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get railcarId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get thumbnail(): Partial<QueryBuffer> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
 
 export class Capture extends Entity<CaptureQueryProxy> {
@@ -22,6 +23,7 @@ export class Capture extends Entity<CaptureQueryProxy> {
 	declare id: string;
 	mimeType: string;
 	railcarId: string;
+	thumbnail: Buffer;
 	
 	$$meta = {
 		source: "capture",
@@ -31,7 +33,8 @@ export class Capture extends Entity<CaptureQueryProxy> {
 			direction: { type: "railcar_direction", name: "direction" },
 			id: { type: "uuid", name: "id" },
 			mimeType: { type: "text", name: "mime_type" },
-			railcarId: { type: "uuid", name: "railcar_id" }
+			railcarId: { type: "uuid", name: "railcar_id" },
+			thumbnail: { type: "bytea", name: "thumbnail" }
 		},
 		get set(): DbSet<Capture, CaptureQueryProxy> { 
 			return new DbSet<Capture, CaptureQueryProxy>(Capture, null);

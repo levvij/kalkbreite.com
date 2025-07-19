@@ -1,6 +1,6 @@
 {
 	"scripts": {
-		"build": "npx vlserver compile && esbuild index.ts --bundle --outfile=.built/index.js --platform=node --target=es2018 && vlquery compile",
+		"build": "npx vlserver compile && esbuild index.ts --bundle --outfile=.built/index.js --platform=node --target=es2018 --external:skia-canvas && vlquery compile",
 		"start": "npm run build && environment node .built/index.js",
 		"typecheck": "npx vlserver compile && tsc --noEmit",
 		"database:update": "environment vlquery create-context"
@@ -10,7 +10,6 @@
 		"pgdatabase": "Database Database",
 		"pguser": "Database User",
 		"pgpassword": "Database Password",
-
 		"ssl": {
 			"key": "SSL Key",
 			"certificate": "SSL Certificate"
@@ -19,6 +18,7 @@
 	"dependencies": {
 		"@acryps/environment": "^2.7.2",
 		"bwip-js": "^4.5.1",
+		"skia-canvas": "^2.0.2",
 		"vlquery": "^7.2.0",
 		"vlserver": "^4.9.2"
 	},

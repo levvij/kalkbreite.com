@@ -47,11 +47,13 @@ export class RailcarSummaryModel {
 
 export class StorageContainerSummaryModel {
 	id: string;
+	name: string;
 	tag: string;
 
 	private static $build(raw) {
 		const item = new StorageContainerSummaryModel();
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
 		
 		return item;
@@ -111,12 +113,14 @@ export class RailcarViewModel {
 export class StorageContainerViewModel {
 	railcars: RailcarSummaryModel[];
 	id: string;
+	name: string;
 	tag: string;
 
 	private static $build(raw) {
 		const item = new StorageContainerViewModel();
 		raw.railcars === undefined || (item.railcars = raw.railcars ? raw.railcars.map(i => RailcarSummaryModel["$build"](i)) : null)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
 		
 		return item;
@@ -217,6 +221,29 @@ export class RailcarService {
 				const d = r.data;
 
 				return d === null ? null : RailcarViewModel["$build"](d);
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+}
+
+export class StorageService {
+	async getContainer(tag: string): Promise<StorageContainerViewModel> {
+		const $data = new FormData();
+		$data.append("FpNz1jaHk2emZvY2Z4dDdvOGZ2Zml4eD", Service.stringify(tag))
+
+		return await fetch(Service.toURL("g2eDZmZWdoZjN3YWV5M2k0a2FocWFod2"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d === null ? null : StorageContainerViewModel["$build"](d);
 			} else if ("aborted" in r) {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {

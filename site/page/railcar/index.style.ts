@@ -1,7 +1,9 @@
-import { alignItems, aspectRatio, backgroundColor, child, color, display, Dvi, em, filter, flexGrow, fontFamily, fontSize, gap, height, hex, imageRendering, invert, justifyContent, lineHeight, marginBottom, marginRight, objectFit, padding, paddingBlock, paddingInline, percentage, ratio, rem, textAlign, width } from "@acryps/style";
+import { alignItems, aspectRatio, backgroundColor, child, color, cursor, display, Dvi, em, filter, flexGrow, flexShrink, fontFamily, fontSize, gap, height, hex, imageRendering, invert, justifyContent, lineHeight, marginBottom, marginInline, marginRight, objectFit, padding, paddingBlock, paddingInline, percentage, ratio, rem, textAlign, width } from "@acryps/style";
 import { boxed } from "../shared/boxed";
 import { captureAspectRatio, captureBackgroundColor, knockoutColor, knockoutContrastColor, pageGutter, pageSpacing, runningNumberFont, tagFont } from "../index.style";
 import { collection, collectionItem } from "../shared/collection";
+import { monospacedFont } from "../assets/font";
+import { storageContainerTagStyle } from "../shared/storage-container-tag/index.style";
 
 export const railcarStyle = () => child('ui-railcar',
 	display('block'),
@@ -124,6 +126,8 @@ export const railcarStyle = () => child('ui-railcar',
 					filter(invert(1))
 				)
 			)
-		)
+		),
+
+		storageContainerTagStyle()
 	)
 )

@@ -6,6 +6,8 @@ import { applicationStyle } from './page.style';
 import { RailcarPage } from './railcar';
 import { Service } from './managed/services';
 import { CompanyPage } from './company';
+import { StorageContainerPage } from './storage-container';
+import { PrintStorageContainerTagPage } from './storage-container/print';
 
 // injected by esbuild
 declare const buildDate: string;
@@ -22,6 +24,9 @@ export class Application {
 
 			.route('/railcar/:tag', RailcarPage)
 			.route('/company/:id', CompanyPage)
+
+			.route('/storage-container/print', PrintStorageContainerTagPage)
+			.route('/storage-container/:tag', StorageContainerPage)
 		);
 
 		registerDirectives(Component, this.router);

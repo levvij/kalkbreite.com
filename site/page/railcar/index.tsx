@@ -1,7 +1,8 @@
 import { Component } from "@acryps/page";
 import { CompanySummaryModel, RailcarService, RailcarViewModel } from "../managed/services";
-import { lengthIncludingBuffersIcon, lengthIncludingCouplersIcon } from "../assets/icons/managed";
+import { containerIcon, lengthIncludingBuffersIcon, lengthIncludingCouplersIcon } from "../assets/icons/managed";
 import { MetaProduct } from "@acryps/metadata";
+import { StorageContainerTagComponent } from "../shared/storage-container-tag";
 
 export class RailcarPage extends Component {
 	declare parameters: { tag };
@@ -40,7 +41,7 @@ export class RailcarPage extends Component {
 
 			<ui-capture>
 				<ui-image>
-					<img src={`/capture/${this.railcar.id}`} />
+					<img src={`/capture/${this.railcar.id}`} ui-click={() => open(`/capture/${this.railcar.id}/full`)} />
 				</ui-image>
 			</ui-capture>
 
@@ -59,6 +60,8 @@ export class RailcarPage extends Component {
 					{this.renderStakeholder(this.railcar.operator, 'Operator')}
 					{this.renderStakeholder(this.railcar.manufacturer, 'Manufacturer')}
 				</ui-stakeholders>
+
+				{this.railcar.storageContainer && new StorageContainerTagComponent(this.railcar.storageContainer)}
 			</ui-detail>
 		</ui-railcar>;
 	}
