@@ -1,6 +1,6 @@
-import { root, child, padding, margin, display, position, top, backgroundColor, color, fontSize, rem, fontFamily } from "@acryps/style";
+import { root, child, padding, margin, display, position, top, backgroundColor, color, fontSize, rem, fontFamily, borderBottom, px, paddingBlock, paddingInline } from "@acryps/style";
 import { homeStyle } from "./home/index.style";
-import { pageColor, pageContrastColor, pageSpacing } from "./index.style";
+import { pageColor, pageContrastColor, pageGutter, pageSpacing, primaryColor, primaryContrastColor } from "./index.style";
 import { boxed } from "./shared/boxed";
 import { railcarStyle } from "./railcar/index.style";
 import { displayFont, monospacedFont } from "./assets/font";
@@ -35,12 +35,21 @@ export const applicationStyle = () => root(
 				position('sticky'),
 				top(0),
 
-				boxed(),
+				display('block'),
 
-				padding(pageSpacing),
+				color(pageContrastColor),
+				backgroundColor(pageColor),
 
-				fontSize(rem(1.5)),
-				backgroundColor(pageColor)
+				borderBottom(px(2), 'solid', primaryColor),
+
+				child('ui-content',
+					boxed(),
+
+					paddingBlock(pageGutter),
+					paddingInline(pageSpacing),
+
+					fontSize(rem(1.5))
+				)
 			)
 		)
 	)

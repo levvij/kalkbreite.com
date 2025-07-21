@@ -1,5 +1,6 @@
 import { Component } from "@acryps/page";
 import { BrowserMultiFormatReader, BarcodeFormat } from "@zxing/library";
+import { readerIcon } from "../assets/icons/managed";
 
 export class ReaderComponent extends Component {
 	reader = new BrowserMultiFormatReader();
@@ -7,11 +8,11 @@ export class ReaderComponent extends Component {
 
 	render() {
 		if (!this.device) {
-			return <ui-reader ui-click={() => {
+			return <ui-action ui-click={() => {
 				this.setup();
 			}}>
-				Read Tag
-			</ui-reader>;
+				{readerIcon()} Read Tag
+			</ui-action>;
 		}
 
 		this.reader.reset();

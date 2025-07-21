@@ -2,6 +2,7 @@ import { Component } from "@acryps/page";
 import { RailcarService, RailcarSummaryModel } from "../managed/services";
 import { ReaderComponent } from "./reader";
 import { RailcarCollectionComponent } from "../shared/railcar-collection";
+import { SlideshowComponent } from "./slideshow";
 
 export class HomePage extends Component {
 	railcars: RailcarSummaryModel[];
@@ -12,13 +13,19 @@ export class HomePage extends Component {
 
 	render() {
 		return <ui-home>
-			<ui-guide>
-				Welcome to Kalkbreite Model Railway.
-			</ui-guide>
+			{new SlideshowComponent()}
 
-			{new ReaderComponent()}
+			<ui-content>
+				<ui-guide>
+					Welcome to Kalkbreite Model Railway. A playground for railway operations, electronics, software and street art.
+				</ui-guide>
 
-			{new RailcarCollectionComponent(this.railcars)}
+				<ui-actions>
+					{new ReaderComponent()}
+				</ui-actions>
+
+				{new RailcarCollectionComponent(this.railcars)}
+			</ui-content>
 		</ui-home>
 	}
 }

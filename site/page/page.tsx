@@ -4,7 +4,9 @@ export class PageComponent extends Component {
 	render(child) {
 		return <ui-page>
 			<ui-navigation ui-href='/'>
-				Kalkbreite
+				<ui-content>
+					Kalkbreite
+				</ui-content>
 			</ui-navigation>
 
 			{child}

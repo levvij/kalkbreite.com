@@ -6,6 +6,20 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 	const thumbnailCache = new Map<string, Capture>();
 	const imageCache = new Map<string, Capture>();
 
+	server.app.get('/capture/random', async (request, response) => {
+		const captureQuery = () => database.capture;
+
+		const count = await captureQuery().count();
+
+		const capture = await captureQuery()
+			.skip(Math.floor(Math.random() * count))
+			.includeTree({ thumbnail: true })
+			.first();
+
+		response.contentType('image/jpeg');
+		response.end(capture.thumbnail);
+	});
+
 	server.app.get('/capture/:id', async (request, response) => {
 		const id = request.params.id;
 

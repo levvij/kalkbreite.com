@@ -1,8 +1,9 @@
 import { aspectRatio, hex, ratio, rem } from "@acryps/style";
 import { monospacedFont } from "./assets/font";
 
-export const primaryColor = hex('000');
+export const primaryColor = hex('64ab7d');
 export const primaryContrastColor = hex('fff');
+export const primaryOutlineColor = hex('428a5a');
 
 export const knockoutColor = hex('222');
 export const knockoutContrastColor = hex('fff');
@@ -13,14 +14,15 @@ export const warningContrastColor = hex('000');
 export const dangerColor = hex('ba3d3b');
 export const dangerContrastColor = hex('fff');
 
-export const pageColor = hex('64ab7d');
-export const pageContrastColor = hex('fff');
+export const pageColor = hex('fff');
+export const pageContrastColor = hex('000');
 
-export const pageSpacing = rem(2);
-export const pageGutter = rem(1);
+export const pageSpacing = rem(1.25);
+export const pageGutter = rem(0.75);
+export const radius = rem(0.25);
 
 export const captureAspectRatio = ratio(3, 1);
-export const captureBackgroundColor = hex('fff');
+export const captureBackgroundColor = hex('eee');
 
 export const runningNumberFont = monospacedFont.name;
 export const tagFont = monospacedFont.name;

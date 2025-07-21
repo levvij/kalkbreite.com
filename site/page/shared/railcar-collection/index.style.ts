@@ -1,10 +1,10 @@
-import { alignItems, aspectRatio, backgroundColor, child, color, display, flexDirection, flexGrow, fontFamily, fontSize, fontWeight, height, justifyContent, justifySelf, marginBlock, marginBottom, objectFit, padding, percentage, ratio, rem, width } from "@acryps/style";
-import { captureAspectRatio, captureBackgroundColor, pageGutter, pageSpacing, primaryColor, runningNumberFont, tagFont } from "../../index.style";
+import { alignItems, aspectRatio, backgroundColor, border, borderRadius, child, color, display, flexDirection, flexGrow, fontFamily, fontSize, fontWeight, gap, height, justifyContent, justifySelf, marginBlock, marginBottom, objectFit, overflow, padding, paddingBottom, paddingInline, percentage, px, ratio, rem, width } from "@acryps/style";
+import { captureAspectRatio, captureBackgroundColor, pageGutter, pageSpacing, primaryColor, radius, runningNumberFont, tagFont } from "../../index.style";
 import { boxed } from "../../shared/boxed";
 import { collection, collectionItem } from "../../shared/collection";
 
 export const railcarCollectionStyle = () => child('ui-railcars',
-	collection(rem(15)),
+	collection(rem(8)),
 
 	child('ui-railcar',
 		collectionItem(),
@@ -12,6 +12,10 @@ export const railcarCollectionStyle = () => child('ui-railcars',
 		display('flex'),
 		flexDirection('column'),
 		height(percentage(100)),
+
+		border(px(1), 'solid', primaryColor),
+		borderRadius(radius),
+		overflow('hidden'),
 
 		child('img',
 			width(percentage(100)),
@@ -26,11 +30,15 @@ export const railcarCollectionStyle = () => child('ui-railcars',
 
 			display('flex'),
 			justifyContent('space-between'),
+			gap(rem(0.5)),
+			padding(pageGutter),
 
 			marginBlock(pageGutter.divide(2)),
 
 			child('ui-name',
-				fontSize(rem(1.2))
+				fontSize(rem(1.2)),
+
+				overflow('hidden')
 			),
 
 			child('ui-tag',
@@ -40,8 +48,11 @@ export const railcarCollectionStyle = () => child('ui-railcars',
 
 		child('ui-running-number',
 			display('block'),
+			paddingInline(pageGutter),
+			paddingBottom(pageGutter),
 
-			fontFamily(runningNumberFont)
+			fontFamily(runningNumberFont),
+			fontSize(rem(0.8))
 		)
 	)
 )
