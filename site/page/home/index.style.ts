@@ -4,23 +4,13 @@ import { boxed } from "../shared/boxed";
 import { collection, collectionItem } from "../shared/collection";
 import { railcarCollectionStyle } from "../shared/railcar-collection/index.style";
 import { buttonGroupStyle, buttonStyle } from "../shared/button";
+import { SlideshowComponent } from "../shared/slideshow";
+import { slideshowStyle } from "../shared/slideshow/index.style";
 
 export const homeStyle = () => child('ui-home',
 	display('block'),
 
-	child('ui-slideshow',
-		display('block'),
-		aspectRatio(captureAspectRatio),
-
-		backgroundColor(captureBackgroundColor),
-
-		child('img',
-			width(percentage(100)),
-			height(percentage(100)),
-
-			objectFit('contain')
-		)
-	),
+	slideshowStyle(),
 
 	child('ui-content',
 		boxed(),

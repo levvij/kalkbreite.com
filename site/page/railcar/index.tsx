@@ -3,6 +3,8 @@ import { CompanySummaryModel, RailcarService, RailcarViewModel } from "../manage
 import { containerIcon, lengthIncludingBuffersIcon, lengthIncludingCouplersIcon } from "../assets/icons/managed";
 import { MetaProduct } from "@acryps/metadata";
 import { StorageContainerTagComponent } from "../shared/storage-container-tag";
+import { SlideshowComponent } from "../shared/slideshow";
+import { GraffitiCollectionComponent } from "../shared/graffiti-collection";
 
 export class RailcarPage extends Component {
 	declare parameters: { tag };
@@ -39,11 +41,7 @@ export class RailcarPage extends Component {
 				</ui-identifiers>
 			</ui-header>
 
-			<ui-capture>
-				<ui-image>
-					<img src={`/capture/${this.railcar.id}`} ui-click={() => open(`/capture/${this.railcar.id}/full`)} />
-				</ui-image>
-			</ui-capture>
+			{this.railcar.captures.length != 0 && new SlideshowComponent(index => `/capture/${this.railcar.captures[index % this.railcar.captures.length]?.id}`)}
 
 			<ui-detail>
 				{this.railcar.note && <ui-note>
@@ -62,6 +60,8 @@ export class RailcarPage extends Component {
 				</ui-stakeholders>
 
 				{this.railcar.storageContainer && new StorageContainerTagComponent(this.railcar.storageContainer)}
+
+				{new GraffitiCollectionComponent(this.railcar.graffitis)}
 			</ui-detail>
 		</ui-railcar>;
 	}

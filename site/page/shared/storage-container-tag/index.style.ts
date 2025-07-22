@@ -4,7 +4,7 @@ import { monospacedFont } from "../../assets/font";
 
 const spacing = rem(1.5);
 
-export const storageContainerTagStyle = () => child('ui-storage-container-tag',
+export const storageContainerTagStyle = (extras = []) => child('ui-storage-container-tag',
 	display('flex'),
 	gap(spacing),
 	padding(pageGutter),
@@ -16,6 +16,8 @@ export const storageContainerTagStyle = () => child('ui-storage-container-tag',
 	lineHeight(1),
 
 	cursor('pointer'),
+
+	extras,
 
 	child('img',
 		flexShrink(0),

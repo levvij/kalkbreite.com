@@ -1,3 +1,23 @@
+export enum RailcarDirection {
+	forward = "forward",
+	reverse = "reverse"
+}
+
+export class CaptureViewModel {
+	captured: Date;
+	direction: RailcarDirection;
+	id: string;
+
+	private static $build(raw) {
+		const item = new CaptureViewModel();
+		raw.captured === undefined || (item.captured = raw.captured ? new Date(raw.captured) : null)
+		raw.direction === undefined || (item.direction = raw.direction)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		
+		return item;
+	}
+}
+
 export class CompanySummaryModel {
 	id: string;
 	name: string;
@@ -6,6 +26,61 @@ export class CompanySummaryModel {
 		const item = new CompanySummaryModel();
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		
+		return item;
+	}
+}
+
+export class ArtistSummaryModel {
+	id: string;
+	logo: string;
+	name: string;
+
+	private static $build(raw) {
+		const item = new ArtistSummaryModel();
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.logo === undefined || (item.logo = raw.logo === null ? null : `${raw.logo}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		
+		return item;
+	}
+}
+
+export class GraffitiSummaryModel {
+	artist: ArtistSummaryModel;
+	captures: GraffitiCaptureViewModel[];
+	id: string;
+	name: string;
+	painted: Date;
+
+	private static $build(raw) {
+		const item = new GraffitiSummaryModel();
+		raw.artist === undefined || (item.artist = raw.artist ? ArtistSummaryModel["$build"](raw.artist) : null)
+		raw.captures === undefined || (item.captures = raw.captures ? raw.captures.map(i => GraffitiCaptureViewModel["$build"](i)) : null)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		raw.painted === undefined || (item.painted = raw.painted ? new Date(raw.painted) : null)
+		
+		return item;
+	}
+}
+
+export class GraffitiCaptureViewModel {
+	height: number;
+	id: string;
+	left: number;
+	sourceId: string;
+	top: number;
+	width: number;
+
+	private static $build(raw) {
+		const item = new GraffitiCaptureViewModel();
+		raw.height === undefined || (item.height = raw.height === null ? null : +raw.height)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.left === undefined || (item.left = raw.left === null ? null : +raw.left)
+		raw.sourceId === undefined || (item.sourceId = raw.sourceId === null ? null : `${raw.sourceId}`)
+		raw.top === undefined || (item.top = raw.top === null ? null : +raw.top)
+		raw.width === undefined || (item.width = raw.width === null ? null : +raw.width)
 		
 		return item;
 	}
@@ -60,6 +135,31 @@ export class StorageContainerSummaryModel {
 	}
 }
 
+export class GraffitiViewModel {
+	artist: ArtistSummaryModel;
+	captures: GraffitiCaptureViewModel[];
+	railcar: RailcarSummaryModel;
+	description: string;
+	direction: RailcarDirection;
+	id: string;
+	name: string;
+	painted: Date;
+
+	private static $build(raw) {
+		const item = new GraffitiViewModel();
+		raw.artist === undefined || (item.artist = raw.artist ? ArtistSummaryModel["$build"](raw.artist) : null)
+		raw.captures === undefined || (item.captures = raw.captures ? raw.captures.map(i => GraffitiCaptureViewModel["$build"](i)) : null)
+		raw.railcar === undefined || (item.railcar = raw.railcar ? RailcarSummaryModel["$build"](raw.railcar) : null)
+		raw.description === undefined || (item.description = raw.description === null ? null : `${raw.description}`)
+		raw.direction === undefined || (item.direction = raw.direction)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		raw.painted === undefined || (item.painted = raw.painted ? new Date(raw.painted) : null)
+		
+		return item;
+	}
+}
+
 export class RailcarModelViewModel {
 	id: string;
 	lengthIncludingBuffers: number;
@@ -84,6 +184,8 @@ export class RailcarViewModel {
 	model: RailcarModelViewModel;
 	operator: CompanySummaryModel;
 	owner: CompanySummaryModel;
+	captures: CaptureViewModel[];
+	graffitis: GraffitiSummaryModel[];
 	storageContainer: StorageContainerSummaryModel;
 	aquired: Date;
 	givenName: string;
@@ -98,6 +200,8 @@ export class RailcarViewModel {
 		raw.model === undefined || (item.model = raw.model ? RailcarModelViewModel["$build"](raw.model) : null)
 		raw.operator === undefined || (item.operator = raw.operator ? CompanySummaryModel["$build"](raw.operator) : null)
 		raw.owner === undefined || (item.owner = raw.owner ? CompanySummaryModel["$build"](raw.owner) : null)
+		raw.captures === undefined || (item.captures = raw.captures ? raw.captures.map(i => CaptureViewModel["$build"](i)) : null)
+		raw.graffitis === undefined || (item.graffitis = raw.graffitis ? raw.graffitis.map(i => GraffitiSummaryModel["$build"](i)) : null)
 		raw.storageContainer === undefined || (item.storageContainer = raw.storageContainer ? StorageContainerSummaryModel["$build"](raw.storageContainer) : null)
 		raw.aquired === undefined || (item.aquired = raw.aquired ? new Date(raw.aquired) : null)
 		raw.givenName === undefined || (item.givenName = raw.givenName === null ? null : `${raw.givenName}`)
@@ -177,6 +281,29 @@ export class CompanyService {
 				const d = r.data;
 
 				return d === null ? null : CompanySummaryModel["$build"](d);
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+}
+
+export class GraffitiService {
+	async getGraffiti(id: string): Promise<GraffitiViewModel> {
+		const $data = new FormData();
+		$data.append("M2d2xyaXJydHNjcGh4bW14dXM5dGU2NH", Service.stringify(id))
+
+		return await fetch(Service.toURL("luZHczemxzMjVweHloYmg2MWIxdnhxaD"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d === null ? null : GraffitiViewModel["$build"](d);
 			} else if ("aborted" in r) {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {

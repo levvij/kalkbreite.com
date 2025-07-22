@@ -4,6 +4,8 @@ import { captureAspectRatio, captureBackgroundColor, knockoutColor, knockoutCont
 import { collection, collectionItem } from "../shared/collection";
 import { monospacedFont } from "../assets/font";
 import { storageContainerTagStyle } from "../shared/storage-container-tag/index.style";
+import { slideshowStyle } from "../shared/slideshow/index.style";
+import { graffitiCollectionStyle } from "../shared/graffiti-collection/index.style";
 
 export const railcarStyle = () => child('ui-railcar',
 	display('block'),
@@ -49,30 +51,11 @@ export const railcarStyle = () => child('ui-railcar',
 		)
 	),
 
-	child('ui-capture',
-		display('block'),
-		marginBottom(pageGutter),
-		paddingInline(pageSpacing),
-		paddingBlock(pageGutter),
-		fontSize(0),
-
-		backgroundColor(captureBackgroundColor),
-
-		child('ui-image',
-			boxed(),
-
-			child('img',
-				width(percentage(100)),
-				aspectRatio(captureAspectRatio),
-
-				objectFit('contain')
-			)
-		)
-	),
+	slideshowStyle(),
 
 	child('ui-detail',
 		boxed(),
-		paddingInline(pageSpacing),
+		padding(pageSpacing),
 
 		child('ui-note',
 			display('block'),
@@ -128,6 +111,10 @@ export const railcarStyle = () => child('ui-railcar',
 			)
 		),
 
-		storageContainerTagStyle()
+		storageContainerTagStyle(
+			marginBottom(pageGutter)
+		),
+
+		graffitiCollectionStyle()
 	)
 )

@@ -4,14 +4,21 @@ export class SlideshowComponent extends Component {
 	declare rootNode: HTMLElement;
 
 	active: HTMLImageElement;
+	index = 0;
+
+	constructor(
+		private nextLink: (index: number) => string
+	) {
+		super();
+	}
 
 	render() {
-		requestAnimationFrame(() => this.loadImage());
+		requestAnimationFrame(() => this.nextImage());
 
 		return <ui-slideshow></ui-slideshow>;
 	}
 
-	async loadImage() {
+	async nextImage() {
 		const image = new Image();
 
 		image.onload = () => {
@@ -20,9 +27,9 @@ export class SlideshowComponent extends Component {
 			this.active?.remove();
 			this.active = image;
 
-			setTimeout(() => this.loadImage(), 1000 * 5);
+			setTimeout(() => this.nextImage(), 1000 * 5);
 		};
 
-		image.src = '/capture/random';
+		image.src = this.nextLink(this.index++);
 	}
 }

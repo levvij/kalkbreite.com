@@ -2,7 +2,7 @@ import { Component } from "@acryps/page";
 import { RailcarService, RailcarSummaryModel } from "../managed/services";
 import { ReaderComponent } from "./reader";
 import { RailcarCollectionComponent } from "../shared/railcar-collection";
-import { SlideshowComponent } from "./slideshow";
+import { SlideshowComponent } from "../shared/slideshow";
 
 export class HomePage extends Component {
 	railcars: RailcarSummaryModel[];
@@ -13,7 +13,7 @@ export class HomePage extends Component {
 
 	render() {
 		return <ui-home>
-			{new SlideshowComponent()}
+			{new SlideshowComponent(() => '/capture/random')}
 
 			<ui-content>
 				<ui-guide>

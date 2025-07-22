@@ -5,6 +5,45 @@ export class RailcarDirection extends QueryEnum {
 	static readonly reverse = "reverse";
 }
 
+export class ArtistQueryProxy extends QueryProxy {
+	get description(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get logo(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get origin(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get real(): Partial<QueryBoolean> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class Artist extends Entity<ArtistQueryProxy> {
+	graffitis: PrimaryReference<Graffiti, GraffitiQueryProxy>;
+		description: string;
+	declare id: string;
+	logo: string;
+	name: string;
+	origin: string;
+	real: boolean;
+	
+	$$meta = {
+		source: "artist",
+		columns: {
+			description: { type: "text", name: "description" },
+			id: { type: "uuid", name: "id" },
+			logo: { type: "text", name: "logo" },
+			name: { type: "text", name: "name" },
+			origin: { type: "text", name: "origin" },
+			real: { type: "bool", name: "real" }
+		},
+		get set(): DbSet<Artist, ArtistQueryProxy> { 
+			return new DbSet<Artist, ArtistQueryProxy>(Artist, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.graffitis = new PrimaryReference<Graffiti, GraffitiQueryProxy>(this, "artistId", Graffiti);
+	}
+}
+			
 export class CaptureQueryProxy extends QueryProxy {
 	get railcar(): Partial<RailcarQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get captured(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -174,6 +213,203 @@ export class CompanyLogo extends Entity<CompanyLogoQueryProxy> {
 	};
 }
 			
+export class GraffitiQueryProxy extends QueryProxy {
+	get artist(): Partial<ArtistQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get railcar(): Partial<RailcarQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get type(): Partial<GraffitiTypeQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get artistId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get description(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get direction(): "forward" | "reverse" { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get painted(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get railcarId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get typeId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class Graffiti extends Entity<GraffitiQueryProxy> {
+	get artist(): Partial<ForeignReference<Artist>> { return this.$artist; }
+	captures: PrimaryReference<GraffitiCapture, GraffitiCaptureQueryProxy>;
+		get railcar(): Partial<ForeignReference<Railcar>> { return this.$railcar; }
+	get type(): Partial<ForeignReference<GraffitiType>> { return this.$type; }
+	artistId: string;
+	description: string;
+	direction: RailcarDirection;
+	declare id: string;
+	name: string;
+	painted: Date;
+	railcarId: string;
+	typeId: string;
+	
+	$$meta = {
+		source: "graffiti",
+		columns: {
+			artistId: { type: "uuid", name: "artist_id" },
+			description: { type: "text", name: "description" },
+			direction: { type: "railcar_direction", name: "direction" },
+			id: { type: "uuid", name: "id" },
+			name: { type: "text", name: "name" },
+			painted: { type: "timestamp", name: "painted" },
+			railcarId: { type: "uuid", name: "railcar_id" },
+			typeId: { type: "uuid", name: "type_id" }
+		},
+		get set(): DbSet<Graffiti, GraffitiQueryProxy> { 
+			return new DbSet<Graffiti, GraffitiQueryProxy>(Graffiti, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.$artist = new ForeignReference<Artist>(this, "artistId", Artist);
+	this.captures = new PrimaryReference<GraffitiCapture, GraffitiCaptureQueryProxy>(this, "graffitiId", GraffitiCapture);
+		this.$railcar = new ForeignReference<Railcar>(this, "railcarId", Railcar);
+	this.$type = new ForeignReference<GraffitiType>(this, "typeId", GraffitiType);
+	}
+	
+	private $artist: ForeignReference<Artist>;
+
+	set artist(value: Partial<ForeignReference<Artist>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.artistId = value.id as string;
+		} else {
+			this.artistId = null;
+		}
+	}
+
+	private $railcar: ForeignReference<Railcar>;
+
+	set railcar(value: Partial<ForeignReference<Railcar>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.railcarId = value.id as string;
+		} else {
+			this.railcarId = null;
+		}
+	}
+
+	private $type: ForeignReference<GraffitiType>;
+
+	set type(value: Partial<ForeignReference<GraffitiType>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.typeId = value.id as string;
+		} else {
+			this.typeId = null;
+		}
+	}
+
+	
+}
+			
+export class GraffitiCaptureQueryProxy extends QueryProxy {
+	get capture(): Partial<CaptureQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get graffiti(): Partial<GraffitiQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get graffitiId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get height(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get left(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get sourceId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get thumbnail(): Partial<QueryBuffer> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get top(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get width(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class GraffitiCapture extends Entity<GraffitiCaptureQueryProxy> {
+	get capture(): Partial<ForeignReference<Capture>> { return this.$capture; }
+	get graffiti(): Partial<ForeignReference<Graffiti>> { return this.$graffiti; }
+	graffitiId: string;
+	height: number;
+	declare id: string;
+	left: number;
+	sourceId: string;
+	thumbnail: Buffer;
+	top: number;
+	width: number;
+	
+	$$meta = {
+		source: "graffiti_capture",
+		columns: {
+			graffitiId: { type: "uuid", name: "graffiti_id" },
+			height: { type: "float4", name: "height" },
+			id: { type: "uuid", name: "id" },
+			left: { type: "float4", name: "left" },
+			sourceId: { type: "uuid", name: "source_id" },
+			thumbnail: { type: "bytea", name: "thumbnail" },
+			top: { type: "float4", name: "top" },
+			width: { type: "float4", name: "width" }
+		},
+		get set(): DbSet<GraffitiCapture, GraffitiCaptureQueryProxy> { 
+			return new DbSet<GraffitiCapture, GraffitiCaptureQueryProxy>(GraffitiCapture, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.$capture = new ForeignReference<Capture>(this, "sourceId", Capture);
+	this.$graffiti = new ForeignReference<Graffiti>(this, "graffitiId", Graffiti);
+	}
+	
+	private $capture: ForeignReference<Capture>;
+
+	set capture(value: Partial<ForeignReference<Capture>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.sourceId = value.id as string;
+		} else {
+			this.sourceId = null;
+		}
+	}
+
+	private $graffiti: ForeignReference<Graffiti>;
+
+	set graffiti(value: Partial<ForeignReference<Graffiti>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.graffitiId = value.id as string;
+		} else {
+			this.graffitiId = null;
+		}
+	}
+
+	
+}
+			
+export class GraffitiTypeQueryProxy extends QueryProxy {
+	get complexity(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class GraffitiType extends Entity<GraffitiTypeQueryProxy> {
+	graffitis: PrimaryReference<Graffiti, GraffitiQueryProxy>;
+		complexity: number;
+	declare id: string;
+	name: string;
+	
+	$$meta = {
+		source: "graffiti_type",
+		columns: {
+			complexity: { type: "int4", name: "complexity" },
+			id: { type: "uuid", name: "id" },
+			name: { type: "text", name: "name" }
+		},
+		get set(): DbSet<GraffitiType, GraffitiTypeQueryProxy> { 
+			return new DbSet<GraffitiType, GraffitiTypeQueryProxy>(GraffitiType, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.graffitis = new PrimaryReference<Graffiti, GraffitiQueryProxy>(this, "typeId", Graffiti);
+	}
+}
+			
 export class RailcarQueryProxy extends QueryProxy {
 	get manufacturer(): Partial<CompanyQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get model(): Partial<RailcarModelQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -199,6 +435,7 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 	get operator(): Partial<ForeignReference<Company>> { return this.$operator; }
 	get owner(): Partial<ForeignReference<Company>> { return this.$owner; }
 	captures: PrimaryReference<Capture, CaptureQueryProxy>;
+		graffitis: PrimaryReference<Graffiti, GraffitiQueryProxy>;
 		get storageContainer(): Partial<ForeignReference<StorageContainer>> { return this.$storageContainer; }
 	aquired: Date;
 	givenName: string;
@@ -242,6 +479,7 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 	this.$operator = new ForeignReference<Company>(this, "operatorId", Company);
 	this.$owner = new ForeignReference<Company>(this, "ownerId", Company);
 	this.captures = new PrimaryReference<Capture, CaptureQueryProxy>(this, "railcarId", Capture);
+		this.graffitis = new PrimaryReference<Graffiti, GraffitiQueryProxy>(this, "railcarId", Graffiti);
 		this.$storageContainer = new ForeignReference<StorageContainer>(this, "storageContainerId", StorageContainer);
 	}
 	
@@ -376,17 +614,25 @@ export class StorageContainer extends Entity<StorageContainerQueryProxy> {
 			
 
 export class DbContext {
+	artist: DbSet<Artist, ArtistQueryProxy>;
 	capture: DbSet<Capture, CaptureQueryProxy>;
 	company: DbSet<Company, CompanyQueryProxy>;
 	companyLogo: DbSet<CompanyLogo, CompanyLogoQueryProxy>;
+	graffiti: DbSet<Graffiti, GraffitiQueryProxy>;
+	graffitiCapture: DbSet<GraffitiCapture, GraffitiCaptureQueryProxy>;
+	graffitiType: DbSet<GraffitiType, GraffitiTypeQueryProxy>;
 	railcar: DbSet<Railcar, RailcarQueryProxy>;
 	railcarModel: DbSet<RailcarModel, RailcarModelQueryProxy>;
 	storageContainer: DbSet<StorageContainer, StorageContainerQueryProxy>;
 
 	constructor(private runContext: RunContext) {
+		this.artist = new DbSet<Artist, ArtistQueryProxy>(Artist, this.runContext);
 		this.capture = new DbSet<Capture, CaptureQueryProxy>(Capture, this.runContext);
 		this.company = new DbSet<Company, CompanyQueryProxy>(Company, this.runContext);
 		this.companyLogo = new DbSet<CompanyLogo, CompanyLogoQueryProxy>(CompanyLogo, this.runContext);
+		this.graffiti = new DbSet<Graffiti, GraffitiQueryProxy>(Graffiti, this.runContext);
+		this.graffitiCapture = new DbSet<GraffitiCapture, GraffitiCaptureQueryProxy>(GraffitiCapture, this.runContext);
+		this.graffitiType = new DbSet<GraffitiType, GraffitiTypeQueryProxy>(GraffitiType, this.runContext);
 		this.railcar = new DbSet<Railcar, RailcarQueryProxy>(Railcar, this.runContext);
 		this.railcarModel = new DbSet<RailcarModel, RailcarModelQueryProxy>(RailcarModel, this.runContext);
 		this.storageContainer = new DbSet<StorageContainer, StorageContainerQueryProxy>(StorageContainer, this.runContext);

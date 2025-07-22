@@ -27,9 +27,8 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 
 		if (!capture) {
 			capture = await database.capture
-				.orderByDescending(capture => capture.captured)
 				.includeTree({ thumbnail: true })
-				.first(capture => capture.railcarId == id);
+				.first(capture => capture.id == id);
 
 			if (!capture) {
 				response.status(404);
@@ -45,6 +44,35 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 		response.end(capture.thumbnail);
 	});
 
+	server.app.get('/capture/railcar/:id', async (request, response) => {
+		const id = request.params.id;
+
+		const lastCapture = await database.capture
+			.orderByDescending(capture => capture.captured)
+			.includeTree({ id: true })
+			.first(capture => capture.railcarId == id);
+
+		if (!lastCapture) {
+			response.status(404);
+			response.end('capture not found');
+
+			return;
+		}
+
+		let capture = thumbnailCache.get(lastCapture.id);
+
+		if (!capture) {
+			capture = await database.capture
+				.includeTree({ thumbnail: true })
+				.first(capture => capture.id == lastCapture.id);
+
+			thumbnailCache.set(lastCapture.id, capture);
+		}
+
+		response.contentType('image/jpeg');
+		response.end(capture.thumbnail);
+	});
+
 	server.app.get('/capture/:id/full', async (request, response) => {
 		const id = request.params.id;
 
@@ -54,7 +82,7 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 			capture = await database.capture
 				.orderByDescending(capture => capture.captured)
 				.includeTree({ mimeType: true, data: true })
-				.first(capture => capture.railcarId == id);
+				.first(capture => capture.id == id);
 
 			if (!capture) {
 				response.status(404);
