@@ -17,7 +17,11 @@ export const companyStyle = () => child('ui-company',
 			marginBottom(pageGutter),
 
 			child('img',
-				height(rem(3))
+				height(rem(3)),
+				maxWidth(percentage(100)),
+
+				objectFit('contain'),
+				objectPosition('left')
 			)
 		),
 
