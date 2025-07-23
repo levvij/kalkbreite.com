@@ -2,6 +2,7 @@ import { alignItems, aspectRatio, backgroundColor, border, borderRadius, child, 
 import { captureAspectRatio, captureBackgroundColor, pageGutter, pageSpacing, primaryColor, radius, runningNumberFont, tagFont } from "../../index.style";
 import { boxed } from "../../shared/boxed";
 import { collection, collectionItem } from "../../shared/collection";
+import { clickable } from "../interaction";
 
 export const railcarCollectionStyle = () => child('ui-railcars',
 	collection(rem(8)),
@@ -16,6 +17,8 @@ export const railcarCollectionStyle = () => child('ui-railcars',
 		border(px(1), 'solid', primaryColor),
 		borderRadius(radius),
 		overflow('hidden'),
+
+		clickable(),
 
 		child('img',
 			width(percentage(100)),

@@ -52,13 +52,13 @@ Inject.mappings = {
 export class ManagedServer extends BaseServer {
 	prepareRoutes() {
 		this.expose(
-			"NjNGlzN2NsdGhuc3ZicmVsNmF4YXA5d2",
+			"lnbWJha3E2MHt2dHRsZXQwY2J2MmMwaz",
 			{
-			"k4cXRkMG9nYndhaGU1ajV3Yzh5dWd4Nm": { type: "string", isArray: false, isOptional: false }
+			"phNGE2NjU4OTc3bTJrZnI0dT13ZD5mNj": { type: "string", isArray: false, isOptional: false }
 			},
 			inject => inject.construct(CompanyService),
 			(controller, params) => controller.get(
-				params["k4cXRkMG9nYndhaGU1ajV3Yzh5dWd4Nm"]
+				params["phNGE2NjU4OTc3bTJrZnI0dT13ZD5mNj"]
 			)
 		);
 
@@ -177,7 +177,9 @@ ViewModel.mappings = {
 		async map() {
 			return {
 				id: this.$$model.id,
-				name: this.$$model.name
+				name: this.$$model.name,
+				shortname: this.$$model.shortname,
+				tag: this.$$model.tag
 			}
 		};
 
@@ -208,7 +210,9 @@ ViewModel.mappings = {
 
 			return {
 				id: true,
-				name: true
+				name: true,
+				shortname: true,
+				tag: true
 			};
 		};
 
@@ -216,6 +220,8 @@ ViewModel.mappings = {
 			const item = new CompanySummaryModel(null);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+			"shortname" in data && (item.shortname = data.shortname === null ? null : `${data.shortname}`);
+			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
 
 			return item;
 		}
@@ -231,6 +237,8 @@ ViewModel.mappings = {
 			
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
+			"shortname" in viewModel && (model.shortname = viewModel.shortname === null ? null : `${viewModel.shortname}`);
+			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
 
 			return model;
 		}
@@ -468,7 +476,8 @@ ViewModel.mappings = {
 			return {
 				id: this.$$model.id,
 				name: this.$$model.name,
-				shortname: this.$$model.shortname
+				shortname: this.$$model.shortname,
+				tag: this.$$model.tag
 			}
 		};
 
@@ -500,7 +509,8 @@ ViewModel.mappings = {
 			return {
 				id: true,
 				name: true,
-				shortname: true
+				shortname: true,
+				tag: true
 			};
 		};
 
@@ -509,6 +519,7 @@ ViewModel.mappings = {
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"shortname" in data && (item.shortname = data.shortname === null ? null : `${data.shortname}`);
+			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
 
 			return item;
 		}
@@ -525,6 +536,7 @@ ViewModel.mappings = {
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"shortname" in viewModel && (model.shortname = viewModel.shortname === null ? null : `${viewModel.shortname}`);
+			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
 
 			return model;
 		}
@@ -782,7 +794,9 @@ ViewModel.mappings = {
 				lengthIncludingBuffers: this.$$model.lengthIncludingBuffers,
 				lengthIncludingCouplers: this.$$model.lengthIncludingCouplers,
 				name: this.$$model.name,
-				shortname: this.$$model.shortname
+				shortname: this.$$model.shortname,
+				summary: this.$$model.summary,
+				tag: this.$$model.tag
 			}
 		};
 
@@ -816,7 +830,9 @@ ViewModel.mappings = {
 				lengthIncludingBuffers: true,
 				lengthIncludingCouplers: true,
 				name: true,
-				shortname: true
+				shortname: true,
+				summary: true,
+				tag: true
 			};
 		};
 
@@ -827,6 +843,8 @@ ViewModel.mappings = {
 			"lengthIncludingCouplers" in data && (item.lengthIncludingCouplers = data.lengthIncludingCouplers === null ? null : +data.lengthIncludingCouplers);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"shortname" in data && (item.shortname = data.shortname === null ? null : `${data.shortname}`);
+			"summary" in data && (item.summary = data.summary === null ? null : `${data.summary}`);
+			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
 
 			return item;
 		}
@@ -845,6 +863,8 @@ ViewModel.mappings = {
 			"lengthIncludingCouplers" in viewModel && (model.lengthIncludingCouplers = viewModel.lengthIncludingCouplers === null ? null : +viewModel.lengthIncludingCouplers);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"shortname" in viewModel && (model.shortname = viewModel.shortname === null ? null : `${viewModel.shortname}`);
+			"summary" in viewModel && (model.summary = viewModel.summary === null ? null : `${viewModel.summary}`);
+			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
 
 			return model;
 		}

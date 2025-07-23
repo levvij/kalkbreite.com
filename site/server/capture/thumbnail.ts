@@ -8,7 +8,7 @@ export const updateThumbnail = async (source: Capture) => {
 
 	const image = await loadImage(source.data);
 
-	const width = 1000;
+	const width = 2000;
 	const height = width / image.width * image.height;
 
 	const canvas = new Canvas(width, height);

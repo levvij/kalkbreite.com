@@ -109,6 +109,8 @@ export class CompanyQueryProxy extends QueryProxy {
 	get logoId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get parentId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get shortname(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get tag(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
 
 export class Company extends Entity<CompanyQueryProxy> {
@@ -124,6 +126,8 @@ export class Company extends Entity<CompanyQueryProxy> {
 	logoId: string;
 	name: string;
 	parentId: string;
+	shortname: string;
+	tag: string;
 	
 	$$meta = {
 		source: "company",
@@ -132,7 +136,9 @@ export class Company extends Entity<CompanyQueryProxy> {
 			id: { type: "uuid", name: "id" },
 			logoId: { type: "uuid", name: "logo_id" },
 			name: { type: "text", name: "name" },
-			parentId: { type: "uuid", name: "parent_id" }
+			parentId: { type: "uuid", name: "parent_id" },
+			shortname: { type: "text", name: "shortname" },
+			tag: { type: "text", name: "tag" }
 		},
 		get set(): DbSet<Company, CompanyQueryProxy> { 
 			return new DbSet<Company, CompanyQueryProxy>(Company, null);
@@ -547,28 +553,37 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 }
 			
 export class RailcarModelQueryProxy extends QueryProxy {
+	get description(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get lengthIncludingBuffers(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get lengthIncludingCouplers(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get shortname(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get summary(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get tag(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
 
 export class RailcarModel extends Entity<RailcarModelQueryProxy> {
 	railcars: PrimaryReference<Railcar, RailcarQueryProxy>;
-		declare id: string;
+		description: string;
+	declare id: string;
 	lengthIncludingBuffers: number;
 	lengthIncludingCouplers: number;
 	name: string;
 	shortname: string;
+	summary: string;
+	tag: string;
 	
 	$$meta = {
 		source: "railcar_model",
 		columns: {
+			description: { type: "text", name: "description" },
 			id: { type: "uuid", name: "id" },
 			lengthIncludingBuffers: { type: "float4", name: "length_including_buffers" },
 			lengthIncludingCouplers: { type: "float4", name: "length_including_couplers" },
 			name: { type: "text", name: "name" },
-			shortname: { type: "text", name: "shortname" }
+			shortname: { type: "text", name: "shortname" },
+			summary: { type: "text", name: "summary" },
+			tag: { type: "text", name: "tag" }
 		},
 		get set(): DbSet<RailcarModel, RailcarModelQueryProxy> { 
 			return new DbSet<RailcarModel, RailcarModelQueryProxy>(RailcarModel, null);

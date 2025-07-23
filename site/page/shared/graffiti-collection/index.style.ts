@@ -3,9 +3,12 @@ import { captureAspectRatio, captureBackgroundColor, pageGutter, pageSpacing, pr
 import { boxed } from "../../shared/boxed";
 import { collection, collectionItem } from "../../shared/collection";
 import { graffitiPreviewStyle } from "../graffiti-preview/index.style";
+import { clickable } from "../interaction";
 
-export const graffitiCollectionStyle = () => child('ui-graffitis',
+export const graffitiCollectionStyle = (...extras) => child('ui-graffitis',
 	collection(rem(16)),
+
+	extras,
 
 	child('ui-graffiti',
 		collectionItem(),
@@ -17,6 +20,8 @@ export const graffitiCollectionStyle = () => child('ui-graffitis',
 		border(px(1), 'solid', primaryColor),
 		borderRadius(radius),
 		overflow('hidden'),
+
+		clickable(),
 
 		graffitiPreviewStyle(),
 

@@ -21,11 +21,15 @@ export class CaptureViewModel {
 export class CompanySummaryModel {
 	id: string;
 	name: string;
+	shortname: string;
+	tag: string;
 
 	private static $build(raw) {
 		const item = new CompanySummaryModel();
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		raw.shortname === undefined || (item.shortname = raw.shortname === null ? null : `${raw.shortname}`)
+		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
 		
 		return item;
 	}
@@ -90,12 +94,14 @@ export class RailcarModelSummaryModel {
 	id: string;
 	name: string;
 	shortname: string;
+	tag: string;
 
 	private static $build(raw) {
 		const item = new RailcarModelSummaryModel();
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		raw.shortname === undefined || (item.shortname = raw.shortname === null ? null : `${raw.shortname}`)
+		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
 		
 		return item;
 	}
@@ -166,6 +172,8 @@ export class RailcarModelViewModel {
 	lengthIncludingCouplers: number;
 	name: string;
 	shortname: string;
+	summary: string;
+	tag: string;
 
 	private static $build(raw) {
 		const item = new RailcarModelViewModel();
@@ -174,6 +182,8 @@ export class RailcarModelViewModel {
 		raw.lengthIncludingCouplers === undefined || (item.lengthIncludingCouplers = raw.lengthIncludingCouplers === null ? null : +raw.lengthIncludingCouplers)
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		raw.shortname === undefined || (item.shortname = raw.shortname === null ? null : `${raw.shortname}`)
+		raw.summary === undefined || (item.summary = raw.summary === null ? null : `${raw.summary}`)
+		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
 		
 		return item;
 	}
@@ -268,11 +278,11 @@ export class Service {
 }
 
 export class CompanyService {
-	async get(id: string): Promise<CompanySummaryModel> {
+	async get(tag: string): Promise<CompanySummaryModel> {
 		const $data = new FormData();
-		$data.append("k4cXRkMG9nYndhaGU1ajV3Yzh5dWd4Nm", Service.stringify(id))
+		$data.append("phNGE2NjU4OTc3bTJrZnI0dT13ZD5mNj", Service.stringify(tag))
 
-		return await fetch(Service.toURL("NjNGlzN2NsdGhuc3ZicmVsNmF4YXA5d2"), {
+		return await fetch(Service.toURL("lnbWJha3E2MHt2dHRsZXQwY2J2MmMwaz"), {
 			method: "post",
 			credentials: "include",
 			body: $data

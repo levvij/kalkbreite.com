@@ -17,8 +17,6 @@ export class StorageContainerPage extends Component {
 		return <ui-storage-container>
 			{new StorageContainerTagComponent(this.storageContainer)}
 
-			{new RailcarCollectionComponent(this.storageContainer.railcars)}
-
 			<ui-actions>
 				<ui-action ui-click={() => PrintStorageContainerTagPage.addToQueue(this.storageContainer.tag)}>
 					Add to label printing queue
@@ -28,6 +26,8 @@ export class StorageContainerPage extends Component {
 					Print labels
 				</ui-action>
 			</ui-actions>
+
+			{new RailcarCollectionComponent(this.storageContainer.railcars)}
 		</ui-storage-container>
 	}
 }

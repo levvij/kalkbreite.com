@@ -2,12 +2,12 @@ import { Component } from "@acryps/page";
 import { CompanyService, CompanySummaryModel } from "../managed/services";
 
 export class CompanyPage extends Component {
-	declare parameters: { id };
+	declare parameters: { tag };
 
 	company: CompanySummaryModel;
 
 	async onload() {
-		this.company = await new CompanyService().get(this.parameters.id);
+		this.company = await new CompanyService().get(this.parameters.tag);
 	}
 
 	render() {

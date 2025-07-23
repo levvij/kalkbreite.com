@@ -1,4 +1,4 @@
-import { aspectRatio, hex, ratio, rem } from "@acryps/style";
+import { aspectRatio, backgroundImage, colorStop, hex, linearGradient, percentage, ratio, rem, turn } from "@acryps/style";
 import { monospacedFont } from "./assets/font";
 
 export const primaryColor = hex('64ab7d');

@@ -9,7 +9,7 @@ export class CompanyService extends Service {
 		super();
 	}
 
-	async get(id: string) {
-		return new CompanySummaryModel(await this.database.company.find(id));
+	async get(tag: string) {
+		return new CompanySummaryModel(await this.database.company.first(company => company.tag.valueOf() == tag));
 	}
 }

@@ -1,5 +1,6 @@
 import { alignItems, alignSelf, backgroundColor, border, borderRadius, boxShadow, color, cursor, display, flexWrap, gap, lineHeight, marginBlock, marginBottom, padding, px, rem, style } from "@acryps/style";
 import { pageGutter, primaryColor, primaryContrastColor, primaryOutlineColor, radius } from "../index.style";
+import { clickable } from "./interaction";
 
 export const buttonDepth = px(4);
 
@@ -17,7 +18,7 @@ export const buttonStyle = () => [
 	marginBottom(buttonDepth),
 
 	lineHeight(1),
-	cursor('pointer'),
+	clickable(),
 
 	style(':hover',
 		boxShadow(primaryOutlineColor, 0, buttonDepth.divide(2), 0, 0),

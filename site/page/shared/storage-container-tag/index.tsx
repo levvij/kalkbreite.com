@@ -10,7 +10,7 @@ export class StorageContainerTagComponent extends Component {
 
 	render() {
 		return <ui-storage-container-tag ui-href={`/storage-container/${this.storageContainer.tag}`}>
-			<img src={`/tag/storage/${StorageContainerTagComponent.wrap(this.storageContainer)}`} />
+			{innerWidth > 1000 && <img src={`/tag/storage/${StorageContainerTagComponent.wrap(this.storageContainer)}`} />}
 
 			<ui-name>
 				{this.storageContainer.name}

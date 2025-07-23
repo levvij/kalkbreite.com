@@ -1,8 +1,14 @@
+import { Canvas } from "skia-canvas";
 import { Capture, DbContext, RailcarDirection } from "../managed/database";
 import { ManagedServer } from "../managed/server";
 import { updateThumbnail } from "./thumbnail";
 
 export const registerCaptureInterface = (server: ManagedServer, database: DbContext) => {
+	const emptyCanvas = new Canvas(1, 1);
+	emptyCanvas.getContext('2d');
+
+	const empty = emptyCanvas.toBufferSync('png');
+
 	const thumbnailCache = new Map<string, Capture>();
 	const imageCache = new Map<string, Capture>();
 
@@ -31,8 +37,8 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 				.first(capture => capture.id == id);
 
 			if (!capture) {
-				response.status(404);
-				response.end('capture not found');
+				response.contentType('image/png');
+				response.end(empty);
 
 				return;
 			}
@@ -53,8 +59,8 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 			.first(capture => capture.railcarId == id);
 
 		if (!lastCapture) {
-			response.status(404);
-			response.end('capture not found');
+			response.contentType('image/png');
+			response.end(empty);
 
 			return;
 		}
@@ -85,8 +91,8 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 				.first(capture => capture.id == id);
 
 			if (!capture) {
-				response.status(404);
-				response.end('capture not found');
+				response.contentType('image/png');
+				response.end(empty);
 
 				return;
 			}

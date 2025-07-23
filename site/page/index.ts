@@ -20,12 +20,16 @@ export class Application {
 	static async main() {
 		Service.baseUrl = '/';
 
+		if (location.pathname == '/') {
+			location.pathname = '/home';
+		}
+
 		this.router = new PathRouter(PageComponent
-			.route('/', HomePage)
+			.route('/home', HomePage)
 
 			.route('/railcar/:tag', RailcarPage)
 
-			.route('/company/:id', CompanyPage)
+			.route('/company/:tag', CompanyPage)
 
 			.route('/storage-container/print', PrintStorageContainerTagPage)
 			.route('/storage-container/:tag', StorageContainerPage)
