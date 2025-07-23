@@ -8,6 +8,7 @@ import { iconFont, icons } from "./assets/icons/managed";
 import { companyStyle } from "./company/index.style";
 import { storageContainerStyle } from "./storage-container/index.style";
 import { graffitiStyle } from "./graffiti/index.style";
+import { artistStyle } from "./artist/index.style";
 
 export const applicationStyle = () => root(
 	monospacedFont,
@@ -26,6 +27,7 @@ export const applicationStyle = () => root(
 
 		child('ui-page',
 			homeStyle(),
+			artistStyle(),
 			railcarStyle(),
 			companyStyle(),
 			graffitiStyle(),

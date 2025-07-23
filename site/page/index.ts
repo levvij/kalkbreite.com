@@ -10,6 +10,7 @@ import { StorageContainerPage } from './storage-container';
 import { PrintStorageContainerTagPage } from './storage-container/print';
 import { GraffitiPage } from './graffiti';
 import { AssignGraffitiBoundsPage } from './graffiti/assign';
+import { ArtistPage } from './artist';
 
 // injected by esbuild
 declare const buildDate: string;
@@ -27,6 +28,8 @@ export class Application {
 
 		this.router = new PathRouter(PageComponent
 			.route('/home', HomePage)
+
+			.route('/artist/:tag', ArtistPage)
 
 			.route('/railcar/:tag', RailcarPage)
 

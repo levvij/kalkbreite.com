@@ -191,6 +191,31 @@ export class CompanyViewModel {
 	}
 }
 
+export class ArtistViewModel {
+	graffitis: GraffitiSummaryModel[];
+	description: string;
+	id: string;
+	logo: string;
+	name: string;
+	origin: string;
+	summary: string;
+	tag: string;
+
+	private static $build(raw) {
+		const item = new ArtistViewModel();
+		raw.graffitis === undefined || (item.graffitis = raw.graffitis ? raw.graffitis.map(i => GraffitiSummaryModel["$build"](i)) : null)
+		raw.description === undefined || (item.description = raw.description === null ? null : `${raw.description}`)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.logo === undefined || (item.logo = raw.logo === null ? null : `${raw.logo}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		raw.origin === undefined || (item.origin = raw.origin === null ? null : `${raw.origin}`)
+		raw.summary === undefined || (item.summary = raw.summary === null ? null : `${raw.summary}`)
+		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
+		
+		return item;
+	}
+}
+
 export class GraffitiViewModel {
 	artist: ArtistSummaryModel;
 	captures: GraffitiCaptureViewModel[];
@@ -366,6 +391,27 @@ export class GraffitiService {
 				const d = r.data;
 
 				return d === null ? null : GraffitiViewModel["$build"](d);
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async getArtist(tag: string): Promise<ArtistViewModel> {
+		const $data = new FormData();
+		$data.append("c4dDRvd2cwaGEzYWc1dHF3Z2BvensyNT", Service.stringify(tag))
+
+		return await fetch(Service.toURL("FqYnJwcDw5NmFybzY5ajIyamFheHZodm"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d === null ? null : ArtistViewModel["$build"](d);
 			} else if ("aborted" in r) {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {

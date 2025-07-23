@@ -3,6 +3,7 @@ import { Component } from "@acryps/page";
 export class SlideshowComponent extends Component {
 	declare rootNode: HTMLElement;
 
+	lastSource: string;
 	active: HTMLImageElement;
 	index = 0;
 
@@ -27,9 +28,17 @@ export class SlideshowComponent extends Component {
 			this.active?.remove();
 			this.active = image;
 
-			setTimeout(() => this.nextImage(), 1000 * 5);
+			if (document.contains(this.rootNode)) {
+				setTimeout(() => this.nextImage(), 1000 * 2);
+			}
 		};
 
-		image.src = this.nextLink(this.index++);
+		const next = this.nextLink(this.index++);
+
+		if (next == this.lastSource) {
+			return;
+		}
+
+		image.src = this.lastSource = next;
 	}
 }

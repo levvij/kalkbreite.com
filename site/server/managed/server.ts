@@ -8,6 +8,7 @@ import { GraffitiCaptureViewModel } from "././../graffiti/graffiti";
 import { GraffitiViewModel } from "././../graffiti/graffiti";
 import { CaptureViewModel } from "././../capture/capture";
 import { cropGraffiti } from "././../../shared/crop-graffiti";
+import { ArtistViewModel } from "././../graffiti/artist";
 import { GraffitiService } from "././../graffiti/index";
 import { RailcarSummaryModel } from "././../railcar/railcar";
 import { RailcarViewModel } from "././../railcar/railcar";
@@ -74,6 +75,17 @@ export class ManagedServer extends BaseServer {
 			inject => inject.construct(GraffitiService),
 			(controller, params) => controller.getGraffiti(
 				params["M2d2xyaXJydHNjcGh4bW14dXM5dGU2NH"]
+			)
+		);
+
+		this.expose(
+			"FqYnJwcDw5NmFybzY5ajIyamFheHZodm",
+			{
+			"c4dDRvd2cwaGEzYWc1dHF3Z2BvensyNT": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(GraffitiService),
+			(controller, params) => controller.getArtist(
+				params["c4dDRvd2cwaGEzYWc1dHF3Z2BvensyNT"]
 			)
 		);
 
@@ -906,6 +918,97 @@ ViewModel.mappings = {
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"shortname" in viewModel && (model.shortname = viewModel.shortname === null ? null : `${viewModel.shortname}`);
+			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
+
+			return model;
+		}
+	},
+	[ArtistViewModel.name]: class ComposedArtistViewModel extends ArtistViewModel {
+		async map() {
+			return {
+				graffitis: (await this.$$model.graffitis.includeTree(ViewModel.mappings[GraffitiSummaryModel.name].items).toArray()).map(item => new GraffitiSummaryModel(item)),
+				description: this.$$model.description,
+				id: this.$$model.id,
+				logo: this.$$model.logo,
+				name: this.$$model.name,
+				origin: this.$$model.origin,
+				summary: this.$$model.summary,
+				tag: this.$$model.tag
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				get graffitis() {
+					return ViewModel.mappings[GraffitiSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "graffitis-ArtistViewModel"]
+					);
+				},
+				description: true,
+				id: true,
+				logo: true,
+				name: true,
+				origin: true,
+				summary: true,
+				tag: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new ArtistViewModel(null);
+			"graffitis" in data && (item.graffitis = data.graffitis && [...data.graffitis].map(i => ViewModel.mappings[GraffitiSummaryModel.name].toViewModel(i)));
+			"description" in data && (item.description = data.description === null ? null : `${data.description}`);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"logo" in data && (item.logo = data.logo === null ? null : `${data.logo}`);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+			"origin" in data && (item.origin = data.origin === null ? null : `${data.origin}`);
+			"summary" in data && (item.summary = data.summary === null ? null : `${data.summary}`);
+			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: ArtistViewModel) {
+			let model: Artist;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(Artist).find(viewModel.id)
+			} else {
+				model = new Artist();
+			}
+			
+			"graffitis" in viewModel && (null);
+			"description" in viewModel && (model.description = viewModel.description === null ? null : `${viewModel.description}`);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"logo" in viewModel && (model.logo = viewModel.logo === null ? null : `${viewModel.logo}`);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
+			"origin" in viewModel && (model.origin = viewModel.origin === null ? null : `${viewModel.origin}`);
+			"summary" in viewModel && (model.summary = viewModel.summary === null ? null : `${viewModel.summary}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
 
 			return model;

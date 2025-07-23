@@ -4,6 +4,7 @@ import { GraffitiCaptureViewModel, GraffitiViewModel } from "./graffiti";
 import { CaptureViewModel } from "../capture/capture";
 import { Canvas, loadImage } from "skia-canvas";
 import { cropGraffiti } from "../../shared/crop-graffiti";
+import { ArtistViewModel } from "./artist";
 
 export class GraffitiService extends Service {
 	constructor(
@@ -15,6 +16,12 @@ export class GraffitiService extends Service {
 	async getGraffiti(id: string) {
 		return new GraffitiViewModel(
 			await this.database.graffiti.find(id)
+		);
+	}
+
+	async getArtist(tag: string) {
+		return new ArtistViewModel(
+			await this.database.artist.first(artist => artist.tag.valueOf() == tag)
 		);
 	}
 
