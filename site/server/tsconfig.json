@@ -5,5 +5,9 @@
 		"moduleResolution": "node",
 		"target": "es6",
 		"allowSyntheticDefaultImports": true
-	}
+	},
+	"include": [
+		".",
+		"../shared"
+	]
 }

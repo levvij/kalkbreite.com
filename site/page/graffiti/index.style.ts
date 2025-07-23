@@ -1,12 +1,20 @@
-import { backgroundColor, child, color, display, filter, fontSize, fontWeight, height, invert, marginBottom, padding, rem } from "@acryps/style";
+import { aspectRatio, backgroundColor, border, borderRadius, child, color, display, filter, flexDirection, fontSize, fontWeight, height, invert, marginBottom, marginTop, objectFit, objectPosition, overflow, padding, paddingBlock, paddingInline, percentage, px, rem, width } from "@acryps/style";
 import { boxed } from "../shared/boxed";
-import { graffitiPreviewStyle } from "../shared/graffiti-preview/index.style";
-import { knockoutColor, knockoutContrastColor, pageGutter, pageSpacing } from "../index.style";
+import { captureAspectRatio, captureBackgroundColor, knockoutColor, knockoutContrastColor, pageGutter, pageSpacing, primaryColor, radius } from "../index.style";
+import { detailSectionStyle } from "../shared/detail-section/index.style";
+import { clickable } from "../shared/interaction";
+import { endDivider } from "../shared/divider";
+import { collection, collectionItem } from "../shared/collection";
+import { buttonGroupStyle, buttonStyle } from "../shared/button";
+import { assignStyle } from "./assign/index.style";
+import { slideshowStyle } from "../shared/slideshow/index.style";
 
 export const graffitiStyle = () => child('ui-graffiti',
 	boxed(),
 
-	graffitiPreviewStyle(),
+	assignStyle(),
+
+	slideshowStyle(),
 
 	child('ui-detail',
 		display('block'),
@@ -22,25 +30,65 @@ export const graffitiStyle = () => child('ui-graffiti',
 
 		child('ui-description',
 			display('block'),
-			marginBottom(pageGutter)
+			marginBottom(pageSpacing)
 		),
 
-		child('ui-artist',
-			display('inline-block'),
-			padding(pageGutter),
+		detailSectionStyle(
+			endDivider(),
 
-			color(knockoutContrastColor),
-			backgroundColor(knockoutColor),
+			child('ui-artist',
+				clickable(),
 
-			child('img',
-				height(rem(5)),
-				marginBottom(pageGutter),
+				child('img',
+					height(rem(3))
+				),
 
-				filter(invert(1))
-			),
+				child('ui-name',
+					fontSize(rem(2))
+				),
 
-			child('ui-name',
-				display('block')
+				child('ui-summary',
+					display('block'),
+					marginTop(rem(0.5))
+				)
+			)
+		),
+
+		child('ui-captures',
+			collection(rem(15)),
+
+			child('ui-capture',
+				collectionItem(),
+
+				display('flex'),
+				flexDirection('column'),
+				height(percentage(100)),
+
+				border(px(1), 'solid', primaryColor),
+				borderRadius(radius),
+				overflow('hidden'),
+
+				child('img',
+					width(percentage(100)),
+					aspectRatio(captureAspectRatio),
+					backgroundColor(captureBackgroundColor),
+
+					objectFit('contain')
+				),
+
+				child('ui-detail',
+					paddingInline(pageSpacing),
+					paddingBlock(pageSpacing.divide(2)),
+
+					child('ui-actions',
+						buttonGroupStyle(),
+						marginTop(pageSpacing.divide(2)),
+
+						child('ui-action',
+							buttonStyle()
+						)
+					)
+				)
 			)
 		)
 	)

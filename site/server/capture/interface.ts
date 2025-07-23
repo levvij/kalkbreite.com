@@ -1,5 +1,5 @@
 import { Canvas } from "skia-canvas";
-import { Capture, DbContext, RailcarDirection } from "../managed/database";
+import { Capture, DbContext, GraffitiCapture, RailcarDirection } from "../managed/database";
 import { ManagedServer } from "../managed/server";
 import { updateThumbnail } from "./thumbnail";
 
@@ -9,7 +9,7 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 
 	const empty = emptyCanvas.toBufferSync('png');
 
-	const thumbnailCache = new Map<string, Capture>();
+	const thumbnailCache = new Map<string, Capture | GraffitiCapture>();
 	const imageCache = new Map<string, Capture>();
 
 	server.app.get('/capture/random', async (request, response) => {
@@ -34,6 +34,56 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 		if (!capture) {
 			capture = await database.capture
 				.includeTree({ thumbnail: true })
+				.first(capture => capture.id == id);
+
+			if (!capture) {
+				response.contentType('image/png');
+				response.end(empty);
+
+				return;
+			}
+
+			thumbnailCache.set(id, capture);
+		}
+
+		response.contentType('image/jpeg');
+		response.end(capture.thumbnail);
+	});
+
+	server.app.get('/capture/graffiti/:id', async (request, response) => {
+		const id = request.params.id;
+
+		let capture = thumbnailCache.get(id);
+
+		if (!capture) {
+			capture = await database.graffitiCapture
+				.includeTree({ thumbnail: true })
+				.orderByDescending(capture => capture.capture.captured)
+				.first(capture => capture.graffitiId == id);
+
+			if (!capture) {
+				response.contentType('image/png');
+				response.end(empty);
+
+				return;
+			}
+
+			thumbnailCache.set(id, capture);
+		}
+
+		response.contentType('image/jpeg');
+		response.end(capture.thumbnail);
+	});
+
+	server.app.get('/capture/graffiti/capture/:id', async (request, response) => {
+		const id = request.params.id;
+
+		let capture = thumbnailCache.get(id);
+
+		if (!capture) {
+			capture = await database.graffitiCapture
+				.includeTree({ thumbnail: true })
+				.orderByDescending(capture => capture.capture.captured)
 				.first(capture => capture.id == id);
 
 			if (!capture) {

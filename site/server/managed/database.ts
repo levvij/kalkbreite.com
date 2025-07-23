@@ -11,6 +11,8 @@ export class ArtistQueryProxy extends QueryProxy {
 	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get origin(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get real(): Partial<QueryBoolean> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get summary(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get tag(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
 
 export class Artist extends Entity<ArtistQueryProxy> {
@@ -21,6 +23,8 @@ export class Artist extends Entity<ArtistQueryProxy> {
 	name: string;
 	origin: string;
 	real: boolean;
+	summary: string;
+	tag: string;
 	
 	$$meta = {
 		source: "artist",
@@ -30,7 +34,9 @@ export class Artist extends Entity<ArtistQueryProxy> {
 			logo: { type: "text", name: "logo" },
 			name: { type: "text", name: "name" },
 			origin: { type: "text", name: "origin" },
-			real: { type: "bool", name: "real" }
+			real: { type: "bool", name: "real" },
+			summary: { type: "text", name: "summary" },
+			tag: { type: "text", name: "tag" }
 		},
 		get set(): DbSet<Artist, ArtistQueryProxy> { 
 			return new DbSet<Artist, ArtistQueryProxy>(Artist, null);
@@ -105,6 +111,7 @@ export class CompanyQueryProxy extends QueryProxy {
 	get icon(): Partial<CompanyLogoQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get logo(): Partial<CompanyLogoQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get parent(): Partial<CompanyQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get description(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get iconId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get logoId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -121,7 +128,8 @@ export class Company extends Entity<CompanyQueryProxy> {
 		ownedRailcars: PrimaryReference<Railcar, RailcarQueryProxy>;
 		get parent(): Partial<ForeignReference<Company>> { return this.$parent; }
 	children: PrimaryReference<Company, CompanyQueryProxy>;
-		iconId: string;
+		description: string;
+	iconId: string;
 	declare id: string;
 	logoId: string;
 	name: string;
@@ -132,6 +140,7 @@ export class Company extends Entity<CompanyQueryProxy> {
 	$$meta = {
 		source: "company",
 		columns: {
+			description: { type: "text", name: "description" },
 			iconId: { type: "uuid", name: "icon_id" },
 			id: { type: "uuid", name: "id" },
 			logoId: { type: "uuid", name: "logo_id" },

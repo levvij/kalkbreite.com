@@ -8,6 +8,7 @@ import { slideshowStyle } from "../shared/slideshow/index.style";
 import { graffitiCollectionStyle } from "../shared/graffiti-collection/index.style";
 import { endDivider } from "../shared/divider";
 import { clickable } from "../shared/interaction";
+import { detailSectionStyle } from "../shared/detail-section/index.style";
 
 export const railcarStyle = () => child('ui-railcar',
 	display('block'),
@@ -61,20 +62,13 @@ export const railcarStyle = () => child('ui-railcar',
 
 		child('ui-note',
 			display('block'),
-			marginBottom(pageGutter),
+			marginBottom(pageSpacing),
 		),
 
-		child('ui-section',
-			display('flex'),
-			alignItems('flex-start'),
-			flexWrap('wrap'),
-			gap(pageSpacing),
+		detailSectionStyle(
 			endDivider(),
 
 			child('ui-model',
-				display('block'),
-				width(min(percentage(100), rem(20))),
-
 				clickable(),
 
 				child('ui-name',
@@ -87,9 +81,6 @@ export const railcarStyle = () => child('ui-railcar',
 			),
 
 			child('ui-miniature-manufacturer',
-				display('block'),
-				width(min(percentage(100), rem(20))),
-
 				clickable(),
 
 				child('img',
@@ -104,58 +95,6 @@ export const railcarStyle = () => child('ui-railcar',
 					display('block')
 				)
 			),
-
-			child('ui-metrics',
-				flexGrow(1),
-				collection(rem(20)),
-
-				child('ui-metric',
-					collectionItem(),
-
-					display('flex'),
-					justifyContent('space-between'),
-					alignItems('center'),
-
-					child('ui-name',
-						display('flex'),
-						alignItems('center'),
-						gap(rem(0.5))
-					),
-
-					child('ui-value',
-						monospacedFont
-					)
-				),
-
-				child('ui-stakeholder',
-					collectionItem(),
-
-					display('flex'),
-					justifyContent('space-between'),
-					alignItems('center'),
-
-					child('ui-name',
-						display('flex'),
-						alignItems('center'),
-						gap(rem(0.5))
-					),
-
-					child('ui-company',
-						display('flex'),
-						alignItems('center'),
-
-						clickable(),
-
-						child('img',
-							height(rem(1)),
-							maxWidth(rem(6)),
-							marginRight(rem(0.75)),
-
-							objectFit('contain')
-						)
-					)
-				),
-			)
 		),
 
 

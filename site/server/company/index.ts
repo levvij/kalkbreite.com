@@ -1,6 +1,6 @@
 import { Service } from "vlserver";
 import { DbContext } from "../managed/database";
-import { CompanySummaryModel } from "./company";
+import { CompanySummaryModel, CompanyViewModel } from "./company";
 
 export class CompanyService extends Service {
 	constructor(
@@ -10,6 +10,6 @@ export class CompanyService extends Service {
 	}
 
 	async get(tag: string) {
-		return new CompanySummaryModel(await this.database.company.first(company => company.tag.valueOf() == tag));
+		return new CompanyViewModel(await this.database.company.first(company => company.tag.valueOf() == tag));
 	}
 }

@@ -1,6 +1,5 @@
 import { Component } from "@acryps/page";
 import { ArtistSummaryModel, GraffitiSummaryModel, RailcarSummaryModel } from "../../managed/services";
-import { GraffitiPreviewComponent } from "../graffiti-preview";
 
 export class GraffitiCollectionComponent extends Component {
 	constructor(
@@ -12,15 +11,17 @@ export class GraffitiCollectionComponent extends Component {
 	render() {
 		return <ui-graffitis>
 			{this.graffitis.map(graffiti => <ui-graffiti ui-href={`/graffiti/${graffiti.id}`}>
-				{graffiti.captures[0] && new GraffitiPreviewComponent(graffiti.captures[0])}
+				{graffiti.captures[0] && <img src={`/capture/graffiti/${graffiti.id}`} />}
 
-				<ui-artist>
-					{graffiti.artist.name}
-				</ui-artist>
+				<ui-detail>
+					{graffiti.artist && <ui-artist>
+						{graffiti.artist.name}
+					</ui-artist>}
 
-				{graffiti.name && <ui-name>
-					{graffiti.name}
-				</ui-name>}
+					{graffiti.name && <ui-name>
+						{graffiti.name}
+					</ui-name>}
+				</ui-detail>
 			</ui-graffiti>)}
 		</ui-graffitis>;
 	}

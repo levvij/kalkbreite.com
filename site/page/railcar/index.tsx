@@ -6,6 +6,7 @@ import { StorageContainerTagComponent } from "../shared/storage-container-tag";
 import { SlideshowComponent } from "../shared/slideshow";
 import { GraffitiCollectionComponent } from "../shared/graffiti-collection";
 import { ContentAppendable } from "@acryps/style";
+import { DetailSectionComponent } from "../shared/detail-section";
 
 export class RailcarPage extends Component {
 	declare parameters: { tag };
@@ -49,78 +50,37 @@ export class RailcarPage extends Component {
 					{this.railcar.note}
 				</ui-note>}
 
-				<ui-section>
-					<ui-model ui-href={`/model/${this.railcar.model.tag}`}>
-						<ui-name>
-							{this.railcar.model.shortname}
-						</ui-name>
+				{this.railcar.model && new DetailSectionComponent(<ui-model ui-href={`/model/${this.railcar.model.tag}`}>
+					<ui-name>
+						{this.railcar.model.shortname}
+					</ui-name>
 
-						<ui-summary>
-							{this.railcar.model.summary}
-						</ui-summary>
-					</ui-model>
+					<ui-summary>
+						{this.railcar.model.summary}
+					</ui-summary>
+				</ui-model>)
+					.addMetric('Length including Buffers', () => `${this.railcar.model.lengthIncludingBuffers}m`)
+					.addMetric('Length between couplers', () => `${this.railcar.model.lengthIncludingCouplers}m`)
+					.addStakeholder('Operator', this.railcar.operator)
+					.addStakeholder('Owner', this.railcar.owner)
+				}
 
-					<ui-metrics>
-						{this.renderMetric('Length including Buffers', `${this.railcar.model.lengthIncludingBuffers}m`)}
-						{this.renderMetric('Length between couplers', `${this.railcar.model.lengthIncludingCouplers}m`)}
-						{this.renderStakeholder(this.railcar.operator, 'Operator')}
-						{this.renderStakeholder(this.railcar.owner, 'Owner')}
-					</ui-metrics>
-				</ui-section>
+				{new DetailSectionComponent(<ui-miniature-manufacturer ui-href={`/company/${this.railcar.manufacturer?.tag}`}>
+					{this.railcar.manufacturer && <img src={`/company/icon/${this.railcar.manufacturer?.id}`} />}
 
-				<ui-section>
-					<ui-miniature-manufacturer ui-href={`/company/${this.railcar.manufacturer?.tag}`}>
-						<img src={`/company/icon/${this.railcar.manufacturer?.id}`} />
-
-						<ui-name>
-							Miniature by {this.railcar.manufacturer?.name}
-						</ui-name>
-					</ui-miniature-manufacturer>
-
-					<ui-metrics>
-						{this.renderMetric('Aquired', this.railcar.aquired.toLocaleDateString())}
-						{this.renderMetric('Capture count', this.railcar.captures.length.toString())}
-
-						{this.renderMetric([lengthIncludingCouplersIcon(), 'Length between couplers'], `${(this.railcar.model.lengthIncludingCouplers / 0.087).toFixed(0)}mm`)}
-					</ui-metrics>
-				</ui-section>
+					<ui-name>
+						Miniature by {this.railcar.manufacturer?.shortname ?? this.railcar.manufacturer?.name}
+					</ui-name>
+				</ui-miniature-manufacturer>)
+					.addMetric('Aquired', () => this.railcar.aquired.toLocaleDateString())
+					.addMetric('Capture Count', () => this.railcar.captures.length.toString())
+					.addMetric('Scale Length Between Couplers', () => `${(this.railcar.model.lengthIncludingCouplers / 0.087).toFixed(0)}mm`)
+				}
 
 				{this.railcar.graffitis.length != 0 && new GraffitiCollectionComponent(this.railcar.graffitis)}
 
 				{this.railcar.storageContainer && new StorageContainerTagComponent(this.railcar.storageContainer)}
 			</ui-detail>
 		</ui-railcar>;
-	}
-
-	renderMetric(name: ComponentContent, value: ContentAppendable) {
-		return <ui-metric>
-			<ui-name>
-				{name}
-			</ui-name>
-
-			<ui-value>
-				{value}
-			</ui-value>
-		</ui-metric>;
-	}
-
-	renderStakeholder(company: CompanySummaryModel, role: string) {
-		if (!company) {
-			return;
-		}
-
-		return <ui-stakeholder>
-			<ui-role>
-				{role}
-			</ui-role>
-
-			<ui-company ui-href={`/company/${company.tag}`}>
-				<img src={`/company/icon/${company.id}`} />
-
-				{company.shortname && <ui-name>
-					{company.shortname}
-				</ui-name>}
-			</ui-company>
-		</ui-stakeholder>
 	}
 }

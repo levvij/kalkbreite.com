@@ -19,6 +19,7 @@ export class CaptureViewModel {
 }
 
 export class CompanySummaryModel {
+	iconId: string;
 	id: string;
 	name: string;
 	shortname: string;
@@ -26,6 +27,7 @@ export class CompanySummaryModel {
 
 	private static $build(raw) {
 		const item = new CompanySummaryModel();
+		raw.iconId === undefined || (item.iconId = raw.iconId === null ? null : `${raw.iconId}`)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		raw.shortname === undefined || (item.shortname = raw.shortname === null ? null : `${raw.shortname}`)
@@ -39,12 +41,16 @@ export class ArtistSummaryModel {
 	id: string;
 	logo: string;
 	name: string;
+	summary: string;
+	tag: string;
 
 	private static $build(raw) {
 		const item = new ArtistSummaryModel();
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.logo === undefined || (item.logo = raw.logo === null ? null : `${raw.logo}`)
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		raw.summary === undefined || (item.summary = raw.summary === null ? null : `${raw.summary}`)
+		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
 		
 		return item;
 	}
@@ -53,6 +59,7 @@ export class ArtistSummaryModel {
 export class GraffitiSummaryModel {
 	artist: ArtistSummaryModel;
 	captures: GraffitiCaptureViewModel[];
+	type: GraffitiTypeViewModel;
 	id: string;
 	name: string;
 	painted: Date;
@@ -61,6 +68,7 @@ export class GraffitiSummaryModel {
 		const item = new GraffitiSummaryModel();
 		raw.artist === undefined || (item.artist = raw.artist ? ArtistSummaryModel["$build"](raw.artist) : null)
 		raw.captures === undefined || (item.captures = raw.captures ? raw.captures.map(i => GraffitiCaptureViewModel["$build"](i)) : null)
+		raw.type === undefined || (item.type = raw.type ? GraffitiTypeViewModel["$build"](raw.type) : null)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		raw.painted === undefined || (item.painted = raw.painted ? new Date(raw.painted) : null)
@@ -85,6 +93,19 @@ export class GraffitiCaptureViewModel {
 		raw.sourceId === undefined || (item.sourceId = raw.sourceId === null ? null : `${raw.sourceId}`)
 		raw.top === undefined || (item.top = raw.top === null ? null : +raw.top)
 		raw.width === undefined || (item.width = raw.width === null ? null : +raw.width)
+		
+		return item;
+	}
+}
+
+export class GraffitiTypeViewModel {
+	id: string;
+	name: string;
+
+	private static $build(raw) {
+		const item = new GraffitiTypeViewModel();
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		
 		return item;
 	}
@@ -141,10 +162,40 @@ export class StorageContainerSummaryModel {
 	}
 }
 
+export class CompanyViewModel {
+	manufacturedRailcars: RailcarSummaryModel[];
+	operatedRailcars: RailcarSummaryModel[];
+	ownedRailcars: RailcarSummaryModel[];
+	parent: CompanySummaryModel;
+	description: string;
+	iconId: string;
+	id: string;
+	name: string;
+	shortname: string;
+	tag: string;
+
+	private static $build(raw) {
+		const item = new CompanyViewModel();
+		raw.manufacturedRailcars === undefined || (item.manufacturedRailcars = raw.manufacturedRailcars ? raw.manufacturedRailcars.map(i => RailcarSummaryModel["$build"](i)) : null)
+		raw.operatedRailcars === undefined || (item.operatedRailcars = raw.operatedRailcars ? raw.operatedRailcars.map(i => RailcarSummaryModel["$build"](i)) : null)
+		raw.ownedRailcars === undefined || (item.ownedRailcars = raw.ownedRailcars ? raw.ownedRailcars.map(i => RailcarSummaryModel["$build"](i)) : null)
+		raw.parent === undefined || (item.parent = raw.parent ? CompanySummaryModel["$build"](raw.parent) : null)
+		raw.description === undefined || (item.description = raw.description === null ? null : `${raw.description}`)
+		raw.iconId === undefined || (item.iconId = raw.iconId === null ? null : `${raw.iconId}`)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		raw.shortname === undefined || (item.shortname = raw.shortname === null ? null : `${raw.shortname}`)
+		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
+		
+		return item;
+	}
+}
+
 export class GraffitiViewModel {
 	artist: ArtistSummaryModel;
 	captures: GraffitiCaptureViewModel[];
 	railcar: RailcarSummaryModel;
+	type: GraffitiTypeViewModel;
 	description: string;
 	direction: RailcarDirection;
 	id: string;
@@ -156,6 +207,7 @@ export class GraffitiViewModel {
 		raw.artist === undefined || (item.artist = raw.artist ? ArtistSummaryModel["$build"](raw.artist) : null)
 		raw.captures === undefined || (item.captures = raw.captures ? raw.captures.map(i => GraffitiCaptureViewModel["$build"](i)) : null)
 		raw.railcar === undefined || (item.railcar = raw.railcar ? RailcarSummaryModel["$build"](raw.railcar) : null)
+		raw.type === undefined || (item.type = raw.type ? GraffitiTypeViewModel["$build"](raw.type) : null)
 		raw.description === undefined || (item.description = raw.description === null ? null : `${raw.description}`)
 		raw.direction === undefined || (item.direction = raw.direction)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
@@ -278,11 +330,11 @@ export class Service {
 }
 
 export class CompanyService {
-	async get(tag: string): Promise<CompanySummaryModel> {
+	async get(tag: string): Promise<CompanyViewModel> {
 		const $data = new FormData();
-		$data.append("phNGE2NjU4OTc3bTJrZnI0dT13ZD5mNj", Service.stringify(tag))
+		$data.append("p3ZXR5aTF5cjJtMjlxd2BvamozNDRmMm", Service.stringify(tag))
 
-		return await fetch(Service.toURL("lnbWJha3E2MHt2dHRsZXQwY2J2MmMwaz"), {
+		return await fetch(Service.toURL("UwcGBkdXY5NjVteXZ3NmF1bXZlMjcxM2"), {
 			method: "post",
 			credentials: "include",
 			body: $data
@@ -290,7 +342,7 @@ export class CompanyService {
 			if ("data" in r) {
 				const d = r.data;
 
-				return d === null ? null : CompanySummaryModel["$build"](d);
+				return d === null ? null : CompanyViewModel["$build"](d);
 			} else if ("aborted" in r) {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {
@@ -318,6 +370,47 @@ export class GraffitiService {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {
 				throw new Error(r.error);
+			}
+		});
+	}
+
+	async getSourceCaptures(id: string): Promise<Array<CaptureViewModel>> {
+		const $data = new FormData();
+		$data.append("1kemNjbGd5YXdxMHkyc2t6eHo3emNyeW", Service.stringify(id))
+
+		return await fetch(Service.toURL("lnejh3dXVsb2BiYTp4bDI2aHRqYWdpdX"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : CaptureViewModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async assign(graffitiId: string, captureModel: GraffitiCaptureViewModel): Promise<void> {
+		const $data = new FormData();
+		$data.append("hiZHpkejpldXlraD1xOGZ1dnB2MWV4eG", Service.stringify(graffitiId))
+		$data.append("9ianV0d2QxZ2QzM2p4NmMyaGE2ZGZzdm", Service.stringify(captureModel))
+
+		return await fetch(Service.toURL("JsMnZhdDB2aDQxNnZqNmZoeTBoejd2MT"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("error" in r) {
+				throw new Error(r.error);
+			}
+
+			if ("aborted" in r) {
+				throw new Error("request aborted by server");
 			}
 		});
 	}

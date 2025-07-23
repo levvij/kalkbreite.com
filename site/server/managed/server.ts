@@ -2,18 +2,21 @@ import { BaseServer, ViewModel, Inject } from "vlserver";
 
 import { DbContext } from "././database";
 import { CompanySummaryModel } from "././../company/company";
+import { CompanyViewModel } from "././../company/company";
 import { CompanyService } from "././../company/index";
+import { GraffitiCaptureViewModel } from "././../graffiti/graffiti";
 import { GraffitiViewModel } from "././../graffiti/graffiti";
+import { CaptureViewModel } from "././../capture/capture";
+import { cropGraffiti } from "././../../shared/crop-graffiti";
 import { GraffitiService } from "././../graffiti/index";
 import { RailcarSummaryModel } from "././../railcar/railcar";
 import { RailcarViewModel } from "././../railcar/railcar";
 import { RailcarService } from "././../railcar/index";
 import { StorageContainerViewModel } from "././../storage/storage-contaiuner";
 import { StorageService } from "././../storage/index";
-import { CaptureViewModel } from "./../capture/capture";
 import { ArtistSummaryModel } from "./../graffiti/artist";
 import { GraffitiSummaryModel } from "./../graffiti/graffiti";
-import { GraffitiCaptureViewModel } from "./../graffiti/graffiti";
+import { GraffitiTypeViewModel } from "./../graffiti/graffiti";
 import { RailcarModelSummaryModel } from "./../railcar/model";
 import { StorageContainerSummaryModel } from "./../storage/storage-contaiuner";
 import { RailcarModelViewModel } from "./../railcar/model";
@@ -22,6 +25,7 @@ import { Company } from "./../managed/database";
 import { Artist } from "./../managed/database";
 import { Graffiti } from "./../managed/database";
 import { GraffitiCapture } from "./../managed/database";
+import { GraffitiType } from "./../managed/database";
 import { RailcarModel } from "./../managed/database";
 import { Railcar } from "./../managed/database";
 import { StorageContainer } from "./../managed/database";
@@ -52,13 +56,13 @@ Inject.mappings = {
 export class ManagedServer extends BaseServer {
 	prepareRoutes() {
 		this.expose(
-			"lnbWJha3E2MHt2dHRsZXQwY2J2MmMwaz",
+			"UwcGBkdXY5NjVteXZ3NmF1bXZlMjcxM2",
 			{
-			"phNGE2NjU4OTc3bTJrZnI0dT13ZD5mNj": { type: "string", isArray: false, isOptional: false }
+			"p3ZXR5aTF5cjJtMjlxd2BvamozNDRmMm": { type: "string", isArray: false, isOptional: false }
 			},
 			inject => inject.construct(CompanyService),
 			(controller, params) => controller.get(
-				params["phNGE2NjU4OTc3bTJrZnI0dT13ZD5mNj"]
+				params["p3ZXR5aTF5cjJtMjlxd2BvamozNDRmMm"]
 			)
 		);
 
@@ -70,6 +74,30 @@ export class ManagedServer extends BaseServer {
 			inject => inject.construct(GraffitiService),
 			(controller, params) => controller.getGraffiti(
 				params["M2d2xyaXJydHNjcGh4bW14dXM5dGU2NH"]
+			)
+		);
+
+		this.expose(
+			"lnejh3dXVsb2BiYTp4bDI2aHRqYWdpdX",
+			{
+			"1kemNjbGd5YXdxMHkyc2t6eHo3emNyeW": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(GraffitiService),
+			(controller, params) => controller.getSourceCaptures(
+				params["1kemNjbGd5YXdxMHkyc2t6eHo3emNyeW"]
+			)
+		);
+
+		this.expose(
+			"JsMnZhdDB2aDQxNnZqNmZoeTBoejd2MT",
+			{
+			"hiZHpkejpldXlraD1xOGZ1dnB2MWV4eG": { type: "string", isArray: false, isOptional: false },
+				"9ianV0d2QxZ2QzM2p4NmMyaGE2ZGZzdm": { type: GraffitiCaptureViewModel, isArray: false, isOptional: false }
+			},
+			inject => inject.construct(GraffitiService),
+			(controller, params) => controller.assign(
+				params["hiZHpkejpldXlraD1xOGZ1dnB2MWV4eG"],
+				params["9ianV0d2QxZ2QzM2p4NmMyaGE2ZGZzdm"]
 			)
 		);
 
@@ -176,6 +204,7 @@ ViewModel.mappings = {
 	[CompanySummaryModel.name]: class ComposedCompanySummaryModel extends CompanySummaryModel {
 		async map() {
 			return {
+				iconId: this.$$model.iconId,
 				id: this.$$model.id,
 				name: this.$$model.name,
 				shortname: this.$$model.shortname,
@@ -209,6 +238,7 @@ ViewModel.mappings = {
 			}
 
 			return {
+				iconId: true,
 				id: true,
 				name: true,
 				shortname: true,
@@ -218,6 +248,7 @@ ViewModel.mappings = {
 
 		static toViewModel(data) {
 			const item = new CompanySummaryModel(null);
+			"iconId" in data && (item.iconId = data.iconId === null ? null : `${data.iconId}`);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"shortname" in data && (item.shortname = data.shortname === null ? null : `${data.shortname}`);
@@ -235,6 +266,7 @@ ViewModel.mappings = {
 				model = new Company();
 			}
 			
+			"iconId" in viewModel && (model.iconId = viewModel.iconId === null ? null : `${viewModel.iconId}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"shortname" in viewModel && (model.shortname = viewModel.shortname === null ? null : `${viewModel.shortname}`);
@@ -248,7 +280,9 @@ ViewModel.mappings = {
 			return {
 				id: this.$$model.id,
 				logo: this.$$model.logo,
-				name: this.$$model.name
+				name: this.$$model.name,
+				summary: this.$$model.summary,
+				tag: this.$$model.tag
 			}
 		};
 
@@ -280,7 +314,9 @@ ViewModel.mappings = {
 			return {
 				id: true,
 				logo: true,
-				name: true
+				name: true,
+				summary: true,
+				tag: true
 			};
 		};
 
@@ -289,6 +325,8 @@ ViewModel.mappings = {
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"logo" in data && (item.logo = data.logo === null ? null : `${data.logo}`);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+			"summary" in data && (item.summary = data.summary === null ? null : `${data.summary}`);
+			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
 
 			return item;
 		}
@@ -305,6 +343,8 @@ ViewModel.mappings = {
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"logo" in viewModel && (model.logo = viewModel.logo === null ? null : `${viewModel.logo}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
+			"summary" in viewModel && (model.summary = viewModel.summary === null ? null : `${viewModel.summary}`);
+			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
 
 			return model;
 		}
@@ -314,6 +354,7 @@ ViewModel.mappings = {
 			return {
 				artist: new ArtistSummaryModel(await BaseServer.unwrap(this.$$model.artist)),
 				captures: (await this.$$model.captures.includeTree(ViewModel.mappings[GraffitiCaptureViewModel.name].items).toArray()).map(item => new GraffitiCaptureViewModel(item)),
+				type: new GraffitiTypeViewModel(await BaseServer.unwrap(this.$$model.type)),
 				id: this.$$model.id,
 				name: this.$$model.name,
 				painted: this.$$model.painted
@@ -358,6 +399,12 @@ ViewModel.mappings = {
 						[...parents, "captures-GraffitiSummaryModel"]
 					);
 				},
+				get type() {
+					return ViewModel.mappings[GraffitiTypeViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "type-GraffitiSummaryModel"]
+					);
+				},
 				id: true,
 				name: true,
 				painted: true
@@ -368,6 +415,7 @@ ViewModel.mappings = {
 			const item = new GraffitiSummaryModel(null);
 			"artist" in data && (item.artist = data.artist && ViewModel.mappings[ArtistSummaryModel.name].toViewModel(data.artist));
 			"captures" in data && (item.captures = data.captures && [...data.captures].map(i => ViewModel.mappings[GraffitiCaptureViewModel.name].toViewModel(i)));
+			"type" in data && (item.type = data.type && ViewModel.mappings[GraffitiTypeViewModel.name].toViewModel(data.type));
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"painted" in data && (item.painted = data.painted === null ? null : new Date(data.painted));
@@ -386,6 +434,7 @@ ViewModel.mappings = {
 			
 			"artist" in viewModel && (model.artist.id = viewModel.artist ? viewModel.artist.id : null);
 			"captures" in viewModel && (null);
+			"type" in viewModel && (model.type.id = viewModel.type ? viewModel.type.id : null);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"painted" in viewModel && (model.painted = viewModel.painted === null ? null : new Date(viewModel.painted));
@@ -467,6 +516,68 @@ ViewModel.mappings = {
 			"sourceId" in viewModel && (model.sourceId = viewModel.sourceId === null ? null : `${viewModel.sourceId}`);
 			"top" in viewModel && (model.top = viewModel.top === null ? null : +viewModel.top);
 			"width" in viewModel && (model.width = viewModel.width === null ? null : +viewModel.width);
+
+			return model;
+		}
+	},
+	[GraffitiTypeViewModel.name]: class ComposedGraffitiTypeViewModel extends GraffitiTypeViewModel {
+		async map() {
+			return {
+				id: this.$$model.id,
+				name: this.$$model.name
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				id: true,
+				name: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new GraffitiTypeViewModel(null);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: GraffitiTypeViewModel) {
+			let model: GraffitiType;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(GraffitiType).find(viewModel.id)
+			} else {
+				model = new GraffitiType();
+			}
+			
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 
 			return model;
 		}
@@ -686,12 +797,127 @@ ViewModel.mappings = {
 			return model;
 		}
 	},
+	[CompanyViewModel.name]: class ComposedCompanyViewModel extends CompanyViewModel {
+		async map() {
+			return {
+				manufacturedRailcars: (await this.$$model.manufacturedRailcars.includeTree(ViewModel.mappings[RailcarSummaryModel.name].items).toArray()).map(item => new RailcarSummaryModel(item)),
+				operatedRailcars: (await this.$$model.operatedRailcars.includeTree(ViewModel.mappings[RailcarSummaryModel.name].items).toArray()).map(item => new RailcarSummaryModel(item)),
+				ownedRailcars: (await this.$$model.ownedRailcars.includeTree(ViewModel.mappings[RailcarSummaryModel.name].items).toArray()).map(item => new RailcarSummaryModel(item)),
+				parent: new CompanySummaryModel(await BaseServer.unwrap(this.$$model.parent)),
+				description: this.$$model.description,
+				iconId: this.$$model.iconId,
+				id: this.$$model.id,
+				name: this.$$model.name,
+				shortname: this.$$model.shortname,
+				tag: this.$$model.tag
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				get manufacturedRailcars() {
+					return ViewModel.mappings[RailcarSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "manufacturedRailcars-CompanyViewModel"]
+					);
+				},
+				get operatedRailcars() {
+					return ViewModel.mappings[RailcarSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "operatedRailcars-CompanyViewModel"]
+					);
+				},
+				get ownedRailcars() {
+					return ViewModel.mappings[RailcarSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "ownedRailcars-CompanyViewModel"]
+					);
+				},
+				get parent() {
+					return ViewModel.mappings[CompanySummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "parent-CompanyViewModel"]
+					);
+				},
+				description: true,
+				iconId: true,
+				id: true,
+				name: true,
+				shortname: true,
+				tag: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new CompanyViewModel(null);
+			"manufacturedRailcars" in data && (item.manufacturedRailcars = data.manufacturedRailcars && [...data.manufacturedRailcars].map(i => ViewModel.mappings[RailcarSummaryModel.name].toViewModel(i)));
+			"operatedRailcars" in data && (item.operatedRailcars = data.operatedRailcars && [...data.operatedRailcars].map(i => ViewModel.mappings[RailcarSummaryModel.name].toViewModel(i)));
+			"ownedRailcars" in data && (item.ownedRailcars = data.ownedRailcars && [...data.ownedRailcars].map(i => ViewModel.mappings[RailcarSummaryModel.name].toViewModel(i)));
+			"parent" in data && (item.parent = data.parent && ViewModel.mappings[CompanySummaryModel.name].toViewModel(data.parent));
+			"description" in data && (item.description = data.description === null ? null : `${data.description}`);
+			"iconId" in data && (item.iconId = data.iconId === null ? null : `${data.iconId}`);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+			"shortname" in data && (item.shortname = data.shortname === null ? null : `${data.shortname}`);
+			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: CompanyViewModel) {
+			let model: Company;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(Company).find(viewModel.id)
+			} else {
+				model = new Company();
+			}
+			
+			"manufacturedRailcars" in viewModel && (null);
+			"operatedRailcars" in viewModel && (null);
+			"ownedRailcars" in viewModel && (null);
+			"parent" in viewModel && (model.parent.id = viewModel.parent ? viewModel.parent.id : null);
+			"description" in viewModel && (model.description = viewModel.description === null ? null : `${viewModel.description}`);
+			"iconId" in viewModel && (model.iconId = viewModel.iconId === null ? null : `${viewModel.iconId}`);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
+			"shortname" in viewModel && (model.shortname = viewModel.shortname === null ? null : `${viewModel.shortname}`);
+			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
+
+			return model;
+		}
+	},
 	[GraffitiViewModel.name]: class ComposedGraffitiViewModel extends GraffitiViewModel {
 		async map() {
 			return {
 				artist: new ArtistSummaryModel(await BaseServer.unwrap(this.$$model.artist)),
 				captures: (await this.$$model.captures.includeTree(ViewModel.mappings[GraffitiCaptureViewModel.name].items).toArray()).map(item => new GraffitiCaptureViewModel(item)),
 				railcar: new RailcarSummaryModel(await BaseServer.unwrap(this.$$model.railcar)),
+				type: new GraffitiTypeViewModel(await BaseServer.unwrap(this.$$model.type)),
 				description: this.$$model.description,
 				direction: this.$$model.direction,
 				id: this.$$model.id,
@@ -744,6 +970,12 @@ ViewModel.mappings = {
 						[...parents, "railcar-GraffitiViewModel"]
 					);
 				},
+				get type() {
+					return ViewModel.mappings[GraffitiTypeViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "type-GraffitiViewModel"]
+					);
+				},
 				description: true,
 				direction: true,
 				id: true,
@@ -757,6 +989,7 @@ ViewModel.mappings = {
 			"artist" in data && (item.artist = data.artist && ViewModel.mappings[ArtistSummaryModel.name].toViewModel(data.artist));
 			"captures" in data && (item.captures = data.captures && [...data.captures].map(i => ViewModel.mappings[GraffitiCaptureViewModel.name].toViewModel(i)));
 			"railcar" in data && (item.railcar = data.railcar && ViewModel.mappings[RailcarSummaryModel.name].toViewModel(data.railcar));
+			"type" in data && (item.type = data.type && ViewModel.mappings[GraffitiTypeViewModel.name].toViewModel(data.type));
 			"description" in data && (item.description = data.description === null ? null : `${data.description}`);
 			"direction" in data && (item.direction = data.direction === null ? null : data.direction);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
@@ -778,6 +1011,7 @@ ViewModel.mappings = {
 			"artist" in viewModel && (model.artist.id = viewModel.artist ? viewModel.artist.id : null);
 			"captures" in viewModel && (null);
 			"railcar" in viewModel && (model.railcar.id = viewModel.railcar ? viewModel.railcar.id : null);
+			"type" in viewModel && (model.type.id = viewModel.type ? viewModel.type.id : null);
 			"description" in viewModel && (model.description = viewModel.description === null ? null : `${viewModel.description}`);
 			"direction" in viewModel && (model.direction = viewModel.direction === null ? null : viewModel.direction);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);

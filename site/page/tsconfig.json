@@ -10,5 +10,9 @@
 			"esnext",
 		 	"dom"
 		]
-	}
+	},
+	"include": [
+		".",
+		"../shared"
+	]
 }

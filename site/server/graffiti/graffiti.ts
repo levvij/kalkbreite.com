@@ -1,5 +1,5 @@
 import { ViewModel } from "vlserver";
-import { Graffiti, GraffitiCapture } from "../managed/database";
+import { Graffiti, GraffitiCapture, GraffitiType } from "../managed/database";
 import { exit } from "process";
 import { ArtistSummaryModel } from "./artist";
 import { RailcarSummaryModel } from "../railcar/railcar";
@@ -12,6 +12,7 @@ export class GraffitiSummaryModel extends ViewModel<Graffiti> {
 
 	artist: ArtistSummaryModel;
 	captures: GraffitiCaptureViewModel[];
+	type: GraffitiTypeViewModel;
 }
 
 export class GraffitiViewModel extends GraffitiSummaryModel {
@@ -30,4 +31,10 @@ export class GraffitiCaptureViewModel extends ViewModel<GraffitiCapture> {
 	left;
 	width;
 	height;
+}
+
+export class GraffitiTypeViewModel extends ViewModel<GraffitiType> {
+	id;
+
+	name;
 }

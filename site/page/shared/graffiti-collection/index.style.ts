@@ -2,7 +2,6 @@ import { alignItems, aspectRatio, backgroundColor, border, borderRadius, child, 
 import { captureAspectRatio, captureBackgroundColor, pageGutter, pageSpacing, primaryColor, radius, runningNumberFont, tagFont } from "../../index.style";
 import { boxed } from "../../shared/boxed";
 import { collection, collectionItem } from "../../shared/collection";
-import { graffitiPreviewStyle } from "../graffiti-preview/index.style";
 import { clickable } from "../interaction";
 
 export const graffitiCollectionStyle = (...extras) => child('ui-graffitis',
@@ -23,19 +22,29 @@ export const graffitiCollectionStyle = (...extras) => child('ui-graffitis',
 
 		clickable(),
 
-		graffitiPreviewStyle(),
+		child('img',
+			flexGrow(1),
 
-		child('ui-artist',
-			display('block'),
-			padding(pageGutter)
+			objectFit('contain'),
+			backgroundColor(captureBackgroundColor)
 		),
 
-		child('ui-name',
-			paddingInline(pageGutter),
-			paddingBottom(pageGutter),
+		child('ui-detail',
+			display('flex'),
+			flexDirection('column'),
+			gap(rem(0.75)),
+			padding(pageGutter),
 
-			fontSize(rem(0.8)),
-			overflow('hidden')
+			child('ui-artist',
+				display('block')
+			),
+
+			child('ui-name',
+				display('block'),
+
+				fontSize(rem(0.8)),
+				overflow('hidden')
+			)
 		)
 	)
 )

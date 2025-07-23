@@ -1,42 +1,54 @@
-import { alignItems, aspectRatio, backgroundColor, child, display, fontSize, justifyContent, marginBottom, marginInline, maxHeight, maxWidth, objectFit, objectPosition, paddingBlock, paddingInline, percentage, rem, vh, width } from "@acryps/style";
+import { alignItems, aspectRatio, backgroundColor, child, display, fontSize, height, justifyContent, marginBottom, marginInline, marginTop, maxHeight, maxWidth, objectFit, objectPosition, padding, paddingBlock, paddingInline, percentage, rem, textDecorationLine, vh, width } from "@acryps/style";
 import { pageGutter, pageSpacing, captureBackgroundColor, captureAspectRatio } from "../index.style";
 import { boxed } from "../shared/boxed";
+import { railcarCollectionStyle } from "../shared/railcar-collection/index.style";
+import { clickable } from "../shared/interaction";
 
 export const companyStyle = () => child('ui-company',
-	display('block'),
+	boxed(),
+	padding(pageSpacing),
 
-	child('ui-logo',
+	child('ui-header',
 		display('block'),
-		marginBottom(pageGutter),
-		paddingInline(pageSpacing),
-		paddingBlock(pageGutter),
-		fontSize(0),
+		marginBottom(pageSpacing),
 
-		backgroundColor(captureBackgroundColor),
-
-		child('ui-image',
-			boxed(),
+		child('ui-logo',
+			display('block'),
+			marginBottom(pageGutter),
 
 			child('img',
-				width(percentage(100)),
-				maxHeight(vh(30)),
-				maxWidth(rem(30)),
-
-				objectFit('contain'),
-				objectPosition('left')
+				height(rem(3))
 			)
+		),
+
+		child('ui-name',
+			display('block'),
+
+			fontSize(rem(2))
+		),
+
+		child('ui-shortname',
+			display('block'),
+			marginTop(pageGutter)
+		),
+
+		child('ui-parent',
+			display('block'),
+			marginTop(rem(0.25)),
+
+			clickable(),
+			textDecorationLine('underline')
 		)
 	),
 
 	child('ui-detail',
-		boxed(),
-		paddingInline(pageSpacing),
+		display('block'),
 
-		child('ui-name',
+		child('ui-description',
 			display('block'),
-			marginBottom(pageGutter),
-
-			fontSize(rem(2))
+			marginBottom(pageSpacing)
 		),
+
+		railcarCollectionStyle()
 	)
 );

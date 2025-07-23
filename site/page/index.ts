@@ -9,6 +9,7 @@ import { CompanyPage } from './company';
 import { StorageContainerPage } from './storage-container';
 import { PrintStorageContainerTagPage } from './storage-container/print';
 import { GraffitiPage } from './graffiti';
+import { AssignGraffitiBoundsPage } from './graffiti/assign';
 
 // injected by esbuild
 declare const buildDate: string;
@@ -34,7 +35,9 @@ export class Application {
 			.route('/storage-container/print', PrintStorageContainerTagPage)
 			.route('/storage-container/:tag', StorageContainerPage)
 
-			.route('/graffiti/:id', GraffitiPage)
+			.route('/graffiti/:id', GraffitiPage
+				.route('/assign/:captureId', AssignGraffitiBoundsPage)
+			)
 		);
 
 		registerDirectives(Component, this.router);
