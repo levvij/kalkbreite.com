@@ -24,7 +24,7 @@
 			<traction max-acceleration="1" max-speed="120" />
 			<traction max-acceleration="1" max-speed="120" />
 
-			<controller device="dcc-ex-mainline" channel="8" />
+			<controller device="dcc-ex-mainline" channel="4" />
 
 			<coupler side="head" type="fpc" backlash="0.25" />
 			<coupler side="tail" type="fpc" backlash="0.25" />

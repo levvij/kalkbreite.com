@@ -22,6 +22,11 @@ DbClient.connectedClient.connect().then(async () => {
 		DbContext: database
 	});
 
+	// fill in missing thumbnails
+	for (let capture of await database.capture.where(capture => capture.thumbnail == null).toArray()) {
+		await updateThumbnail(capture);
+	}
+
 	app.use(new StaticFileRoute('/assets/', join(process.cwd(), '..', 'page', 'assets')));
 	app.use(new StaticFileRoute('/bundle/', join(process.cwd(), '..', 'page', '.built')));
 

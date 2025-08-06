@@ -1,4 +1,4 @@
-import { alignItems, aspectRatio, backgroundColor, border, borderRadius, child, color, display, flexDirection, flexGrow, fontFamily, fontSize, fontWeight, gap, height, justifyContent, justifySelf, marginBlock, marginBottom, objectFit, overflow, padding, paddingBottom, paddingInline, percentage, px, ratio, rem, width } from "@acryps/style";
+import { alignItems, aspectRatio, backgroundColor, border, borderRadius, child, color, display, flexDirection, flexGrow, fontFamily, fontSize, fontWeight, gap, height, justifyContent, justifySelf, marginBlock, marginBottom, objectFit, objectPosition, overflow, padding, paddingBottom, paddingInline, percentage, px, ratio, rem, width } from "@acryps/style";
 import { captureAspectRatio, captureBackgroundColor, pageGutter, pageSpacing, primaryColor, radius, runningNumberFont, tagFont } from "../../index.style";
 import { boxed } from "../../shared/boxed";
 import { collection, collectionItem } from "../../shared/collection";
@@ -25,7 +25,8 @@ export const railcarCollectionStyle = () => child('ui-railcars',
 			aspectRatio(captureAspectRatio),
 			backgroundColor(captureBackgroundColor),
 
-			objectFit('contain')
+			objectFit('cover'),
+			objectPosition('left')
 		),
 
 		child('ui-header',
