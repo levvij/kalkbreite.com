@@ -129,6 +129,37 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 		response.end(capture.thumbnail);
 	});
 
+	server.app.get('/capture/railcar/:id/:side', async (request, response) => {
+		const id = request.params.id;
+		const direction = request.params.side as RailcarDirection;
+
+		const lastCapture = await database.capture
+			.orderByDescending(capture => capture.captured)
+			.includeTree({ id: true })
+			.where(capture => capture.direction == direction)
+			.first(capture => capture.railcarId == id);
+
+		if (!lastCapture) {
+			response.contentType('image/png');
+			response.end(empty);
+
+			return;
+		}
+
+		let capture = thumbnailCache.get(lastCapture.id);
+
+		if (!capture) {
+			capture = await database.capture
+				.includeTree({ thumbnail: true })
+				.first(capture => capture.id == lastCapture.id);
+
+			thumbnailCache.set(lastCapture.id, capture);
+		}
+
+		response.contentType('image/jpeg');
+		response.end(capture.thumbnail);
+	});
+
 	server.app.get('/capture/:id/full', async (request, response) => {
 		const id = request.params.id;
 

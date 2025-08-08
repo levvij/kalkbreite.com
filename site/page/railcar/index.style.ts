@@ -9,6 +9,8 @@ import { graffitiCollectionStyle } from "../shared/graffiti-collection/index.sty
 import { endDivider } from "../shared/divider";
 import { clickable } from "../shared/interaction";
 import { detailSectionStyle } from "../shared/detail-section/index.style";
+import { buttonGroupStyle, buttonStyle } from "../shared/button";
+import { registerGraffitiStyle } from "./register-graffiti/index.style";
 
 export const railcarStyle = () => child('ui-railcar',
 	display('block'),
@@ -56,6 +58,8 @@ export const railcarStyle = () => child('ui-railcar',
 
 	slideshowStyle(),
 
+	registerGraffitiStyle(),
+
 	child('ui-detail',
 		boxed(),
 		padding(pageSpacing),
@@ -63,6 +67,15 @@ export const railcarStyle = () => child('ui-railcar',
 		child('ui-note',
 			display('block'),
 			marginBottom(pageSpacing),
+		),
+
+		child('ui-actions',
+			buttonGroupStyle(),
+			marginBottom(pageSpacing),
+
+			child('ui-action',
+				buttonStyle()
+			)
 		),
 
 		detailSectionStyle(

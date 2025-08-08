@@ -12,6 +12,7 @@ import { GraffitiPage } from './graffiti';
 import { AssignGraffitiBoundsPage } from './graffiti/assign';
 import { ArtistPage } from './artist';
 import { LoginPage } from './login';
+import { RegisterGraffitiPage } from './railcar/register-graffiti';
 
 // injected by esbuild
 declare const buildDate: string;
@@ -37,7 +38,9 @@ export class Application {
 
 			.route('/artist/:tag', ArtistPage)
 
-			.route('/railcar/:tag', RailcarPage)
+			.route('/railcar/:tag', RailcarPage
+				.route('/register-graffiti', RegisterGraffitiPage)
+			)
 
 			.route('/company/:tag', CompanyPage)
 

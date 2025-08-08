@@ -4,7 +4,10 @@ import { DbContext } from "././database";
 import { CompanySummaryModel } from "././../company/company";
 import { CompanyViewModel } from "././../company/company";
 import { CompanyService } from "././../company/index";
+import { Graffiti } from "././database";
+import { RailcarDirection } from "././database";
 import { GraffitiCaptureViewModel } from "././../graffiti/graffiti";
+import { GraffitiTypeViewModel } from "././../graffiti/graffiti";
 import { GraffitiViewModel } from "././../graffiti/graffiti";
 import { CaptureViewModel } from "././../capture/capture";
 import { cropGraffiti } from "././../../shared/crop-graffiti";
@@ -22,7 +25,6 @@ import { StorageContainerViewModel } from "././../storage/storage-contaiuner";
 import { StorageService } from "././../storage/index";
 import { ArtistSummaryModel } from "./../graffiti/artist";
 import { GraffitiSummaryModel } from "./../graffiti/graffiti";
-import { GraffitiTypeViewModel } from "./../graffiti/graffiti";
 import { RailcarModelSummaryModel } from "./../railcar/model";
 import { AccountViewModel } from "./../session/session";
 import { StorageContainerSummaryModel } from "./../storage/storage-contaiuner";
@@ -30,7 +32,6 @@ import { RailcarModelViewModel } from "./../railcar/model";
 import { Capture } from "./../managed/database";
 import { Company } from "./../managed/database";
 import { Artist } from "./../managed/database";
-import { Graffiti } from "./../managed/database";
 import { GraffitiCapture } from "./../managed/database";
 import { GraffitiType } from "./../managed/database";
 import { RailcarModel } from "./../managed/database";
@@ -109,6 +110,15 @@ export class ManagedServer extends BaseServer {
 		);
 
 		this.expose(
+			"Q1eDA2YTg2dWFwMzhtY2FwOWR3cDNobX",
+			{},
+			inject => inject.construct(GraffitiService),
+			(controller, params) => controller.getArtists(
+				
+			)
+		);
+
+		this.expose(
 			"lnejh3dXVsb2BiYTp4bDI2aHRqYWdpdX",
 			{
 			"1kemNjbGd5YXdxMHkyc2t6eHo3emNyeW": { type: "string", isArray: false, isOptional: false }
@@ -116,6 +126,38 @@ export class ManagedServer extends BaseServer {
 			inject => inject.construct(GraffitiService),
 			(controller, params) => controller.getSourceCaptures(
 				params["1kemNjbGd5YXdxMHkyc2t6eHo3emNyeW"]
+			)
+		);
+
+		this.expose(
+			"VzNzA2emFmaWRheTQzemhpeXR0bWJ2dX",
+			{},
+			inject => inject.construct(GraffitiService),
+			(controller, params) => controller.getTypes(
+				
+			)
+		);
+
+		this.expose(
+			"dsZWVqY3M1cHFiZTU1c2VscWdxZWJ4dz",
+			{
+			"hqNGlzN3A1aXRleTU4dnF5bWtrMDM5eT": { type: "string", isArray: false, isOptional: false },
+				"M4ZTZnb3NhbWI0OGNtdWY3YmJxbGh5OD": { type: "string", isArray: false, isOptional: false },
+				"NsN3kxbX5saWVya3dyeWdjYTU3dmNsdj": { type: "string", isArray: false, isOptional: false },
+				"VsMXdleXQ5NWE2YmZvZTFlOTlxaXVoaW": { type: "string", isArray: false, isOptional: false },
+				"dmNmE5dm9ta3c4NmgyZmw4NnllZTFpaT": { type: "date", isArray: false, isOptional: false },
+				"Z2bTc0MWJ5OWJjZWpsbjszdXk1aXhmZn": { type: "string", isArray: false, isOptional: false },
+				"RuYjZhM2J3aWQ5NXU4YmVhamY5ZnUyOT": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(GraffitiService),
+			(controller, params) => controller.register(
+				params["hqNGlzN3A1aXRleTU4dnF5bWtrMDM5eT"],
+				params["M4ZTZnb3NhbWI0OGNtdWY3YmJxbGh5OD"],
+				params["NsN3kxbX5saWVya3dyeWdjYTU3dmNsdj"],
+				params["VsMXdleXQ5NWE2YmZvZTFlOTlxaXVoaW"],
+				params["dmNmE5dm9ta3c4NmgyZmw4NnllZTFpaT"],
+				params["Z2bTc0MWJ5OWJjZWpsbjszdXk1aXhmZn"],
+				params["RuYjZhM2J3aWQ5NXU4YmVhamY5ZnUyOT"]
 			)
 		);
 

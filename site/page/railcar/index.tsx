@@ -7,6 +7,7 @@ import { SlideshowComponent } from "../shared/slideshow";
 import { GraffitiCollectionComponent } from "../shared/graffiti-collection";
 import { ContentAppendable } from "@acryps/style";
 import { DetailSectionComponent } from "../shared/detail-section";
+import { Application } from "..";
 
 export class RailcarPage extends Component {
 	declare parameters: { tag };
@@ -23,7 +24,7 @@ export class RailcarPage extends Component {
 		}).apply();
 	}
 
-	render() {
+	render(child) {
 		return <ui-railcar>
 			<ui-header>
 				<ui-name>
@@ -45,10 +46,16 @@ export class RailcarPage extends Component {
 
 			{this.railcar.captures.length != 0 && new SlideshowComponent(index => `/capture/${this.railcar.captures[index % this.railcar.captures.length]?.id}`)}
 
-			<ui-detail>
+			{child ?? <ui-detail>
 				{this.railcar.note && <ui-note>
 					{this.railcar.note}
 				</ui-note>}
+
+				{Application.session?.account && <ui-actions>
+					<ui-action ui-href='register-graffiti'>
+						Register Graffiti
+					</ui-action>
+				</ui-actions>}
 
 				{this.railcar.model && new DetailSectionComponent(<ui-model ui-href={`/model/${this.railcar.model.tag}`}>
 					<ui-name>
@@ -80,7 +87,7 @@ export class RailcarPage extends Component {
 				{this.railcar.graffitis.length != 0 && new GraffitiCollectionComponent(this.railcar.graffitis)}
 
 				{this.railcar.storageContainer && new StorageContainerTagComponent(this.railcar.storageContainer)}
-			</ui-detail>
+			</ui-detail>}
 		</ui-railcar>;
 	}
 }
