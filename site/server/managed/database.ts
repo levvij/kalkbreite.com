@@ -5,6 +5,42 @@ export class RailcarDirection extends QueryEnum {
 	static readonly reverse = "reverse";
 }
 
+export class AccountQueryProxy extends QueryProxy {
+	get email(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get passwordHash(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get salt(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class Account extends Entity<AccountQueryProxy> {
+	sessions: PrimaryReference<Session, SessionQueryProxy>;
+		email: string;
+	declare id: string;
+	name: string;
+	passwordHash: string;
+	salt: string;
+	
+	$$meta = {
+		source: "account",
+		columns: {
+			email: { type: "text", name: "email" },
+			id: { type: "uuid", name: "id" },
+			name: { type: "text", name: "name" },
+			passwordHash: { type: "text", name: "password_hash" },
+			salt: { type: "text", name: "salt" }
+		},
+		get set(): DbSet<Account, AccountQueryProxy> { 
+			return new DbSet<Account, AccountQueryProxy>(Account, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.sessions = new PrimaryReference<Session, SessionQueryProxy>(this, "accountId", Session);
+	}
+}
+			
 export class ArtistQueryProxy extends QueryProxy {
 	get description(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get logo(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -606,6 +642,54 @@ export class RailcarModel extends Entity<RailcarModelQueryProxy> {
 	}
 }
 			
+export class SessionQueryProxy extends QueryProxy {
+	get account(): Partial<AccountQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get accountId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get key(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get opened(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class Session extends Entity<SessionQueryProxy> {
+	get account(): Partial<ForeignReference<Account>> { return this.$account; }
+	accountId: string;
+	declare id: string;
+	key: string;
+	opened: Date;
+	
+	$$meta = {
+		source: "session",
+		columns: {
+			accountId: { type: "uuid", name: "account_id" },
+			id: { type: "uuid", name: "id" },
+			key: { type: "text", name: "key" },
+			opened: { type: "timestamp", name: "opened" }
+		},
+		get set(): DbSet<Session, SessionQueryProxy> { 
+			return new DbSet<Session, SessionQueryProxy>(Session, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.$account = new ForeignReference<Account>(this, "accountId", Account);
+	}
+	
+	private $account: ForeignReference<Account>;
+
+	set account(value: Partial<ForeignReference<Account>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.accountId = value.id as string;
+		} else {
+			this.accountId = null;
+		}
+	}
+
+	
+}
+			
 export class StorageContainerQueryProxy extends QueryProxy {
 	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get tag(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -638,6 +722,7 @@ export class StorageContainer extends Entity<StorageContainerQueryProxy> {
 			
 
 export class DbContext {
+	account: DbSet<Account, AccountQueryProxy>;
 	artist: DbSet<Artist, ArtistQueryProxy>;
 	capture: DbSet<Capture, CaptureQueryProxy>;
 	company: DbSet<Company, CompanyQueryProxy>;
@@ -647,9 +732,11 @@ export class DbContext {
 	graffitiType: DbSet<GraffitiType, GraffitiTypeQueryProxy>;
 	railcar: DbSet<Railcar, RailcarQueryProxy>;
 	railcarModel: DbSet<RailcarModel, RailcarModelQueryProxy>;
+	session: DbSet<Session, SessionQueryProxy>;
 	storageContainer: DbSet<StorageContainer, StorageContainerQueryProxy>;
 
 	constructor(private runContext: RunContext) {
+		this.account = new DbSet<Account, AccountQueryProxy>(Account, this.runContext);
 		this.artist = new DbSet<Artist, ArtistQueryProxy>(Artist, this.runContext);
 		this.capture = new DbSet<Capture, CaptureQueryProxy>(Capture, this.runContext);
 		this.company = new DbSet<Company, CompanyQueryProxy>(Company, this.runContext);
@@ -659,6 +746,7 @@ export class DbContext {
 		this.graffitiType = new DbSet<GraffitiType, GraffitiTypeQueryProxy>(GraffitiType, this.runContext);
 		this.railcar = new DbSet<Railcar, RailcarQueryProxy>(Railcar, this.runContext);
 		this.railcarModel = new DbSet<RailcarModel, RailcarModelQueryProxy>(RailcarModel, this.runContext);
+		this.session = new DbSet<Session, SessionQueryProxy>(Session, this.runContext);
 		this.storageContainer = new DbSet<StorageContainer, StorageContainerQueryProxy>(StorageContainer, this.runContext);
 	}
 

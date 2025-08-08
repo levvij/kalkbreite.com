@@ -147,6 +147,32 @@ export class RailcarSummaryModel {
 	}
 }
 
+export class SessionViewModel {
+	account: AccountViewModel;
+	id: string;
+
+	private static $build(raw) {
+		const item = new SessionViewModel();
+		raw.account === undefined || (item.account = raw.account ? AccountViewModel["$build"](raw.account) : null)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		
+		return item;
+	}
+}
+
+export class AccountViewModel {
+	id: string;
+	name: string;
+
+	private static $build(raw) {
+		const item = new AccountViewModel();
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		
+		return item;
+	}
+}
+
 export class StorageContainerSummaryModel {
 	id: string;
 	name: string;
@@ -497,6 +523,51 @@ export class RailcarService {
 				const d = r.data;
 
 				return d === null ? null : RailcarViewModel["$build"](d);
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+}
+
+export class SessionService {
+	async getSession(): Promise<SessionViewModel> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("NhbXltY3IxcnBmNWM2eDpoZ2Joc3FpaX"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d === null ? null : SessionViewModel["$build"](d);
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async login(mail: string, password: string): Promise<SessionViewModel> {
+		const $data = new FormData();
+		$data.append("R4a2VuMGZ0MmlnNmkyZGdxZDFwMWBjbz", Service.stringify(mail))
+		$data.append("JoOGpqNGkyMTV6OTVxeWZpZDI2NnA3MG", Service.stringify(password))
+
+		return await fetch(Service.toURL("p5bTdkd2J2OGNnaXxicmt5amdpZXExcW"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d === null ? null : SessionViewModel["$build"](d);
 			} else if ("aborted" in r) {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {

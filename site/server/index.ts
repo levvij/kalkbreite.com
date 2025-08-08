@@ -10,6 +10,8 @@ import { createServer } from "https";
 import { readFileSync } from "fs";
 import { updateThumbnail } from "./capture/thumbnail";
 import { registerStorageTagInterface } from "./storage/tag";
+import cookieParser from 'cookie-parser';
+import { RequestContext } from "./session/context";
 
 DbClient.connectedClient = new DbClient({});
 
@@ -17,15 +19,25 @@ DbClient.connectedClient.connect().then(async () => {
 	const app = new ManagedServer();
 	const database = new DbContext(new RunContext());
 
-	app.createInjector = context => new Inject({
-		Context: context,
-		DbContext: database
-	});
-
 	// fill in missing thumbnails
 	for (let capture of await database.capture.where(capture => capture.thumbnail == null).toArray()) {
 		await updateThumbnail(capture);
 	}
+
+	app.app.use(cookieParser());
+
+	app.app.use(async (request, response, next) => {
+		const context = await RequestContext.create(request, response, database);
+		app.createRunContext = () => context;
+
+		next();
+	});
+
+	app.createInjector = (context: RequestContext) => new Inject({
+		DbContext: database,
+		Session: context.session,
+		Authentication: context.authentication
+	});
 
 	app.use(new StaticFileRoute('/assets/', join(process.cwd(), '..', 'page', 'assets')));
 	app.use(new StaticFileRoute('/bundle/', join(process.cwd(), '..', 'page', '.built')));

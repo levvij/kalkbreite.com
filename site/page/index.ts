@@ -4,13 +4,14 @@ import { PageComponent } from './page';
 import { HomePage } from './home';
 import { applicationStyle } from './page.style';
 import { RailcarPage } from './railcar';
-import { Service } from './managed/services';
+import { Service, SessionService, SessionViewModel } from './managed/services';
 import { CompanyPage } from './company';
 import { StorageContainerPage } from './storage-container';
 import { PrintStorageContainerTagPage } from './storage-container/print';
 import { GraffitiPage } from './graffiti';
 import { AssignGraffitiBoundsPage } from './graffiti/assign';
 import { ArtistPage } from './artist';
+import { LoginPage } from './login';
 
 // injected by esbuild
 declare const buildDate: string;
@@ -19,6 +20,8 @@ declare const buildCommit: string;
 export class Application {
 	static router: Router;
 
+	static session: SessionViewModel;
+
 	static async main() {
 		Service.baseUrl = '/';
 
@@ -26,8 +29,11 @@ export class Application {
 			location.pathname = '/home';
 		}
 
+		this.session = await new SessionService().getSession();
+
 		this.router = new PathRouter(PageComponent
 			.route('/home', HomePage)
+			.route('/login', LoginPage)
 
 			.route('/artist/:tag', ArtistPage)
 

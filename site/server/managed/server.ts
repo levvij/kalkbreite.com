@@ -13,12 +13,18 @@ import { GraffitiService } from "././../graffiti/index";
 import { RailcarSummaryModel } from "././../railcar/railcar";
 import { RailcarViewModel } from "././../railcar/railcar";
 import { RailcarService } from "././../railcar/index";
+import { Session } from "././database";
+import { SessionViewModel } from "././../session/session";
+import { RequestContext } from "././../session/context";
+import { Authentication } from "././../session/authentication";
+import { SessionService } from "././../session/index";
 import { StorageContainerViewModel } from "././../storage/storage-contaiuner";
 import { StorageService } from "././../storage/index";
 import { ArtistSummaryModel } from "./../graffiti/artist";
 import { GraffitiSummaryModel } from "./../graffiti/graffiti";
 import { GraffitiTypeViewModel } from "./../graffiti/graffiti";
 import { RailcarModelSummaryModel } from "./../railcar/model";
+import { AccountViewModel } from "./../session/session";
 import { StorageContainerSummaryModel } from "./../storage/storage-contaiuner";
 import { RailcarModelViewModel } from "./../railcar/model";
 import { Capture } from "./../managed/database";
@@ -29,6 +35,7 @@ import { GraffitiCapture } from "./../managed/database";
 import { GraffitiType } from "./../managed/database";
 import { RailcarModel } from "./../managed/database";
 import { Railcar } from "./../managed/database";
+import { Account } from "./../managed/database";
 import { StorageContainer } from "./../managed/database";
 
 Inject.mappings = {
@@ -47,6 +54,18 @@ Inject.mappings = {
 	"RailcarService": {
 		objectConstructor: RailcarService,
 		parameters: ["DbContext"]
+	},
+	"SessionService": {
+		objectConstructor: SessionService,
+		parameters: ["DbContext","Session","Authentication"]
+	},
+	"Session": {
+		objectConstructor: Session,
+		parameters: []
+	},
+	"Authentication": {
+		objectConstructor: Authentication,
+		parameters: ["Account"]
 	},
 	"StorageService": {
 		objectConstructor: StorageService,
@@ -130,6 +149,28 @@ export class ManagedServer extends BaseServer {
 			inject => inject.construct(RailcarService),
 			(controller, params) => controller.get(
 				params["J6ZnUwOHpxNDN2eHlpdjlvcjBtZXRtaH"]
+			)
+		);
+
+		this.expose(
+			"NhbXltY3IxcnBmNWM2eDpoZ2Joc3FpaX",
+			{},
+			inject => inject.construct(SessionService),
+			(controller, params) => controller.getSession(
+				
+			)
+		);
+
+		this.expose(
+			"p5bTdkd2J2OGNnaXxicmt5amdpZXExcW",
+			{
+			"R4a2VuMGZ0MmlnNmkyZGdxZDFwMWBjbz": { type: "string", isArray: false, isOptional: false },
+				"JoOGpqNGkyMTV6OTVxeWZpZDI2NnA3MG": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(SessionService),
+			(controller, params) => controller.login(
+				params["R4a2VuMGZ0MmlnNmkyZGdxZDFwMWBjbz"],
+				params["JoOGpqNGkyMTV6OTVxeWZpZDI2NnA3MG"]
 			)
 		);
 
@@ -739,6 +780,135 @@ ViewModel.mappings = {
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"runningNumber" in viewModel && (model.runningNumber = viewModel.runningNumber === null ? null : `${viewModel.runningNumber}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
+
+			return model;
+		}
+	},
+	[SessionViewModel.name]: class ComposedSessionViewModel extends SessionViewModel {
+		async map() {
+			return {
+				account: new AccountViewModel(await BaseServer.unwrap(this.$$model.account)),
+				id: this.$$model.id
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				get account() {
+					return ViewModel.mappings[AccountViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "account-SessionViewModel"]
+					);
+				},
+				id: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new SessionViewModel(null);
+			"account" in data && (item.account = data.account && ViewModel.mappings[AccountViewModel.name].toViewModel(data.account));
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: SessionViewModel) {
+			let model: Session;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(Session).find(viewModel.id)
+			} else {
+				model = new Session();
+			}
+			
+			"account" in viewModel && (model.account.id = viewModel.account ? viewModel.account.id : null);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+
+			return model;
+		}
+	},
+	[AccountViewModel.name]: class ComposedAccountViewModel extends AccountViewModel {
+		async map() {
+			return {
+				id: this.$$model.id,
+				name: this.$$model.name
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				id: true,
+				name: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new AccountViewModel(null);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: AccountViewModel) {
+			let model: Account;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(Account).find(viewModel.id)
+			} else {
+				model = new Account();
+			}
+			
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 
 			return model;
 		}
