@@ -66,6 +66,10 @@ export class RegisterGraffitiPage extends Component {
 				<label>Artist</label>
 
 				<select $ui-value={this.artist}>
+					<option ui-value={null}>
+						Unknown Artist
+					</option>
+
 					{this.artists.map(artist => <option ui-value={artist}>
 						{artist.name}
 					</option>)}
@@ -74,7 +78,7 @@ export class RegisterGraffitiPage extends Component {
 
 			<ui-actions>
 				<ui-action ui-click={async () => {
-					const id = await new GraffitiService().register(this.parent.railcar.id, this.name, this.description, this.type.id, this.painted, this.side, this.artist.id);
+					const id = await new GraffitiService().register(this.parent.railcar.id, this.name, this.description, this.type.id, this.painted, this.side, this.artist?.id ?? null);
 
 					this.navigate(`/graffiti/${id}`);
 				}}>
