@@ -1,6 +1,6 @@
 import { Service } from "vlserver";
-import { DbContext } from "../managed/database";
-import { GraffitiCaptureViewModel, GraffitiViewModel } from "./graffiti";
+import { DbContext, Graffiti, RailcarDirection } from "../managed/database";
+import { GraffitiCaptureViewModel, GraffitiTypeViewModel, GraffitiViewModel } from "./graffiti";
 import { CaptureViewModel } from "../capture/capture";
 import { Canvas, loadImage } from "skia-canvas";
 import { cropGraffiti } from "../../shared/crop-graffiti";
@@ -25,6 +25,12 @@ export class GraffitiService extends Service {
 		);
 	}
 
+	async getArtists() {
+		return ArtistViewModel.from(
+			this.database.artist.orderByAscending(artist => artist.name)
+		)
+	}
+
 	async getSourceCaptures(id: string) {
 		const graffiti = await this.database.graffiti.find(id);
 
@@ -34,6 +40,28 @@ export class GraffitiService extends Service {
 				.where(capture => capture.direction == graffiti.direction)
 				.where(capture => capture.railcarId == graffiti.railcarId)
 		);
+	}
+
+	async getTypes() {
+		return GraffitiTypeViewModel.from(
+			this.database.graffitiType
+				.orderByAscending(type => type.complexity)
+		)
+	}
+
+	async register(railcarId: string, name: string, description: string, typeId: string, painted: Date, side: string, artistId: string) {
+		const graffiti = new Graffiti();
+		graffiti.railcarId = railcarId;
+		graffiti.name = name;
+		graffiti.description = description;
+		graffiti.typeId = typeId;
+		graffiti.painted = painted;
+		graffiti.direction = side;
+		graffiti.artistId = artistId;
+
+		await graffiti.create();
+
+		return graffiti.id;
 	}
 
 	async assign(graffitiId: string, captureModel: GraffitiCaptureViewModel) {

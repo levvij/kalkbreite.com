@@ -1,4 +1,4 @@
-import { alignItems, alignSelf, backgroundColor, border, borderRadius, boxShadow, color, cursor, display, flexWrap, gap, lineHeight, marginBlock, marginBottom, padding, px, rem, style } from "@acryps/style";
+import { alignItems, alignSelf, backgroundColor, border, borderRadius, boxShadow, color, cursor, display, flexWrap, gap, justifyContent, lineHeight, marginBlock, marginBottom, padding, px, rem, style, textAlign } from "@acryps/style";
 import { pageGutter, primaryColor, primaryContrastColor, primaryOutlineColor, radius } from "../index.style";
 import { clickable } from "./interaction";
 
@@ -7,6 +7,7 @@ export const buttonDepth = px(4);
 export const buttonStyle = () => [
 	display('flex'),
 	alignItems('center'),
+	justifyContent('center'),
 	gap(pageGutter.multiply(0.75)),
 
 	padding(pageGutter),

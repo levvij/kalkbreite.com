@@ -147,6 +147,32 @@ export class RailcarSummaryModel {
 	}
 }
 
+export class SessionViewModel {
+	account: AccountViewModel;
+	id: string;
+
+	private static $build(raw) {
+		const item = new SessionViewModel();
+		raw.account === undefined || (item.account = raw.account ? AccountViewModel["$build"](raw.account) : null)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		
+		return item;
+	}
+}
+
+export class AccountViewModel {
+	id: string;
+	name: string;
+
+	private static $build(raw) {
+		const item = new AccountViewModel();
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		
+		return item;
+	}
+}
+
 export class StorageContainerSummaryModel {
 	id: string;
 	name: string;
@@ -420,6 +446,27 @@ export class GraffitiService {
 		});
 	}
 
+	async getArtists(): Promise<Array<ArtistViewModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("Q1eDA2YTg2dWFwMzhtY2FwOWR3cDNobX"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : ArtistViewModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
 	async getSourceCaptures(id: string): Promise<Array<CaptureViewModel>> {
 		const $data = new FormData();
 		$data.append("1kemNjbGd5YXdxMHkyc2t6eHo3emNyeW", Service.stringify(id))
@@ -433,6 +480,54 @@ export class GraffitiService {
 				const d = r.data;
 
 				return d.map(d => d === null ? null : CaptureViewModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async getTypes(): Promise<Array<GraffitiTypeViewModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("VzNzA2emFmaWRheTQzemhpeXR0bWJ2dX"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : GraffitiTypeViewModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async register(railcarId: string, name: string, description: string, typeId: string, painted: Date, side: string, artistId: string): Promise<string> {
+		const $data = new FormData();
+		$data.append("hqNGlzN3A1aXRleTU4dnF5bWtrMDM5eT", Service.stringify(railcarId))
+		$data.append("M4ZTZnb3NhbWI0OGNtdWY3YmJxbGh5OD", Service.stringify(name))
+		$data.append("NsN3kxbX5saWVya3dyeWdjYTU3dmNsdj", Service.stringify(description))
+		$data.append("VsMXdleXQ5NWE2YmZvZTFlOTlxaXVoaW", Service.stringify(typeId))
+		$data.append("dmNmE5dm9ta3c4NmgyZmw4NnllZTFpaT", Service.stringify(painted))
+		$data.append("Z2bTc0MWJ5OWJjZWpsbjszdXk1aXhmZn", Service.stringify(side))
+		$data.append("RuYjZhM2J3aWQ5NXU4YmVhamY5ZnUyOT", Service.stringify(artistId))
+
+		return await fetch(Service.toURL("dsZWVqY3M1cHFiZTU1c2VscWdxZWJ4dz"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d === null ? null : `${d}`;
 			} else if ("aborted" in r) {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {
@@ -497,6 +592,51 @@ export class RailcarService {
 				const d = r.data;
 
 				return d === null ? null : RailcarViewModel["$build"](d);
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+}
+
+export class SessionService {
+	async getSession(): Promise<SessionViewModel> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("NhbXltY3IxcnBmNWM2eDpoZ2Joc3FpaX"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d === null ? null : SessionViewModel["$build"](d);
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async login(mail: string, password: string): Promise<SessionViewModel> {
+		const $data = new FormData();
+		$data.append("R4a2VuMGZ0MmlnNmkyZGdxZDFwMWBjbz", Service.stringify(mail))
+		$data.append("JoOGpqNGkyMTV6OTVxeWZpZDI2NnA3MG", Service.stringify(password))
+
+		return await fetch(Service.toURL("p5bTdkd2J2OGNnaXxicmt5amdpZXExcW"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d === null ? null : SessionViewModel["$build"](d);
 			} else if ("aborted" in r) {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {
