@@ -25,6 +25,8 @@ export class RailcarPage extends Component {
 	}
 
 	render(child) {
+		const captures = this.railcar.captures.sort((a, b) => a.captured > b.captured ? -1 : 1);
+
 		return <ui-railcar>
 			<ui-header>
 				<ui-name>
@@ -44,7 +46,7 @@ export class RailcarPage extends Component {
 				</ui-identifiers>
 			</ui-header>
 
-			{this.railcar.captures.length != 0 && new SlideshowComponent(index => `/capture/${this.railcar.captures[index % this.railcar.captures.length]?.id}`)}
+			{captures.length != 0 && new SlideshowComponent(index => `/capture/${captures[index % captures.length]?.id}`)}
 
 			{child ?? <ui-detail>
 				{this.railcar.note && <ui-note>
