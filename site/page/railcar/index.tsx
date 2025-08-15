@@ -9,6 +9,7 @@ import { ContentAppendable } from "@acryps/style";
 import { DetailSectionComponent } from "../shared/detail-section";
 import { Application } from "..";
 import { CaptureTimelineComponent } from "./capture-timeline";
+import { anchorShift } from "../../shared/anchor-shift";
 
 export class RailcarPage extends Component {
 	declare parameters: { tag };

@@ -1,6 +1,7 @@
 import { Service } from "vlserver";
 import { DbContext } from "../managed/database";
 import { RailcarSummaryModel, RailcarViewModel } from "./railcar";
+import { updateThumbnail } from "../capture/thumbnail";
 
 export class RailcarService extends Service {
 	constructor(
@@ -23,6 +24,6 @@ export class RailcarService extends Service {
 		const capture = await this.database.capture.find(captureId);
 		capture.bufferAnchorOffset = offset;
 
-		await capture.update();
+		await updateThumbnail(capture);
 	}
 }

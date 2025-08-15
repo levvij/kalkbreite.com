@@ -19,6 +19,7 @@ import { GraffitiInspirationViewModel } from "././../graffiti/inspiration";
 import { GraffitiService } from "././../graffiti/index";
 import { RailcarSummaryModel } from "././../railcar/railcar";
 import { RailcarViewModel } from "././../railcar/railcar";
+import { updateThumbnail } from "././../capture/thumbnail";
 import { RailcarService } from "././../railcar/index";
 import { Session } from "././database";
 import { SessionViewModel } from "././../session/session";
