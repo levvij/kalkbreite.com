@@ -1,4 +1,4 @@
-import { alignItems, alignSelf, aspectRatio, backgroundColor, child, color, cursor, display, Dvi, em, filter, flexBasis, flexGrow, flexShrink, flexWrap, fontFamily, fontSize, fontWeight, gap, height, hex, imageRendering, invert, justifyContent, lineHeight, marginBottom, marginInline, marginRight, maxWidth, min, objectFit, padding, paddingBlock, paddingBottom, paddingInline, percentage, ratio, rem, textAlign, width } from "@acryps/style";
+import { alignItems, alignSelf, aspectRatio, backgroundColor, child, color, cursor, display, Dvi, em, filter, flexBasis, flexGrow, flexShrink, flexWrap, fontFamily, fontSize, fontWeight, gap, height, hex, imageRendering, invert, justifyContent, lineHeight, marginBottom, marginInline, marginRight, maxWidth, min, objectFit, opacity, padding, paddingBlock, paddingBottom, paddingInline, percentage, ratio, rem, textAlign, width } from "@acryps/style";
 import { boxed } from "../shared/boxed";
 import { captureAspectRatio, captureBackgroundColor, knockoutColor, knockoutContrastColor, pageGutter, pageSpacing, runningNumberFont, tagFont } from "../index.style";
 import { collection, collectionItem } from "../shared/collection";
@@ -6,7 +6,7 @@ import { monospacedFont } from "../assets/font";
 import { storageContainerTagStyle } from "../shared/storage-container-tag/index.style";
 import { slideshowStyle } from "../shared/slideshow/index.style";
 import { graffitiCollectionStyle } from "../shared/graffiti-collection/index.style";
-import { endDivider } from "../shared/divider";
+import { endDivider, startDivider } from "../shared/divider";
 import { clickable } from "../shared/interaction";
 import { detailSectionStyle } from "../shared/detail-section/index.style";
 import { buttonGroupStyle, buttonStyle } from "../shared/button";
@@ -110,12 +110,41 @@ export const railcarStyle = () => child('ui-railcar',
 			),
 		),
 
-
+		graffitiCollectionStyle(
+			endDivider()
+		),
 
 		storageContainerTagStyle(),
 
-		graffitiCollectionStyle(
-			endDivider()
+		child('ui-timeline',
+			display('block'),
+
+			startDivider(),
+
+			child('img',
+				aspectRatio(captureAspectRatio),
+				width(percentage(100)),
+
+				objectFit('contain')
+			),
+
+			child('ui-captures',
+				collection(rem(6)),
+
+				child('ui-capture',
+					collectionItem(),
+
+					opacity(0.5),
+
+					child('img',
+						aspectRatio(captureAspectRatio),
+						width(percentage(100)),
+					)
+				)
+					.attribute('ui-active',
+						opacity(1)
+					)
+			)
 		)
 	)
 )

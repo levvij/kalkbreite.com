@@ -1,5 +1,5 @@
 import { Component, ComponentContent } from "@acryps/page";
-import { CompanySummaryModel, RailcarService, RailcarViewModel } from "../managed/services";
+import { CompanySummaryModel, RailcarDirection, RailcarService, RailcarViewModel } from "../managed/services";
 import { containerIcon, goIcon, lengthIncludingBuffersIcon, lengthIncludingCouplersIcon } from "../assets/icons/managed";
 import { MetaProduct } from "@acryps/metadata";
 import { StorageContainerTagComponent } from "../shared/storage-container-tag";
@@ -8,6 +8,7 @@ import { GraffitiCollectionComponent } from "../shared/graffiti-collection";
 import { ContentAppendable } from "@acryps/style";
 import { DetailSectionComponent } from "../shared/detail-section";
 import { Application } from "..";
+import { CaptureTimelineComponent } from "./capture-timeline";
 
 export class RailcarPage extends Component {
 	declare parameters: { tag };
@@ -25,7 +26,15 @@ export class RailcarPage extends Component {
 	}
 
 	render(child) {
-		const captures = this.railcar.captures.sort((a, b) => a.captured > b.captured ? -1 : 1);
+		const forwardCaptures = this.railcar.captures
+			.filter(capture => capture.direction == RailcarDirection.forward)
+			.sort((a, b) => a.captured > b.captured ? -1 : 1);
+
+		const reverseCaptures = this.railcar.captures
+			.filter(capture => capture.direction == RailcarDirection.reverse)
+			.sort((a, b) => a.captured > b.captured ? -1 : 1);
+
+		const newestSideCaptures = [forwardCaptures[0], reverseCaptures[0]].filter(capture => capture);
 
 		return <ui-railcar>
 			<ui-header>
@@ -46,7 +55,7 @@ export class RailcarPage extends Component {
 				</ui-identifiers>
 			</ui-header>
 
-			{captures.length != 0 && new SlideshowComponent(index => `/capture/${captures[index % captures.length]?.id}`)}
+			{newestSideCaptures.length != 0 && new SlideshowComponent(index => `/capture/${newestSideCaptures[index % newestSideCaptures.length]?.id}`)}
 
 			{child ?? <ui-detail>
 				{this.railcar.note && <ui-note>
@@ -89,6 +98,9 @@ export class RailcarPage extends Component {
 				{this.railcar.graffitis.length != 0 && new GraffitiCollectionComponent(this.railcar.graffitis)}
 
 				{this.railcar.storageContainer && new StorageContainerTagComponent(this.railcar.storageContainer)}
+
+				{forwardCaptures.length > 1 && new CaptureTimelineComponent(forwardCaptures)}
+				{reverseCaptures.length > 1 && new CaptureTimelineComponent(reverseCaptures)}
 			</ui-detail>}
 		</ui-railcar>;
 	}
