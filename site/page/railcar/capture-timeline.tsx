@@ -1,5 +1,6 @@
 import { Component } from "@acryps/page";
 import { CaptureViewModel } from "../managed/services";
+import { Application } from "..";
 
 export class CaptureTimelineComponent extends Component {
 	image = new Image();
@@ -28,6 +29,12 @@ export class CaptureTimelineComponent extends Component {
 					<ui-date>
 						{capture.captured.toLocaleDateString()}
 					</ui-date>
+
+					{Application.session.account && <ui-actions>
+						{capture.bufferAnchorOffset == null && <ui-action ui-href={`anchor/${capture.id}`}>
+							Anchor
+						</ui-action>}
+					</ui-actions>}
 				</ui-capture>)}
 			</ui-captures>
 		</ui-timeline>;

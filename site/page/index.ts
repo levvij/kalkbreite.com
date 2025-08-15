@@ -15,6 +15,7 @@ import { LoginPage } from './login';
 import { RegisterGraffitiPage } from './railcar/register-graffiti';
 import { GraffitiInspirationsPage } from './graffiti-inspirations';
 import { GraffitiInspirationPage } from './graffiti-inspiration';
+import { CaptureAnchorPage } from './railcar/anchor';
 
 // injected by esbuild
 declare const buildDate: string;
@@ -41,6 +42,7 @@ export class Application {
 			.route('/artist/:tag', ArtistPage)
 
 			.route('/railcar/:tag', RailcarPage
+				.route('/anchor/:captureId', CaptureAnchorPage)
 				.route('/register-graffiti', RegisterGraffitiPage)
 			)
 

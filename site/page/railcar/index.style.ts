@@ -11,6 +11,7 @@ import { clickable } from "../shared/interaction";
 import { detailSectionStyle } from "../shared/detail-section/index.style";
 import { buttonGroupStyle, buttonStyle } from "../shared/button";
 import { registerGraffitiStyle } from "./register-graffiti/index.style";
+import { anchorStyle } from "./anchor/index.style";
 
 export const railcarStyle = () => child('ui-railcar',
 	display('block'),
@@ -58,6 +59,7 @@ export const railcarStyle = () => child('ui-railcar',
 
 	slideshowStyle(),
 
+	anchorStyle(),
 	registerGraffitiStyle(),
 
 	child('ui-detail',
@@ -139,6 +141,18 @@ export const railcarStyle = () => child('ui-railcar',
 					child('img',
 						aspectRatio(captureAspectRatio),
 						width(percentage(100)),
+					),
+
+					child('ui-date',
+						display('block')
+					),
+
+					child('ui-actions',
+						display('block'),
+
+						child('ui-action',
+							buttonStyle()
+						)
 					)
 				)
 					.attribute('ui-active',

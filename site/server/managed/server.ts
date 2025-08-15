@@ -247,6 +247,19 @@ export class ManagedServer extends BaseServer {
 		);
 
 		this.expose(
+			"M4a3A2amg4emIxeD5jNjFycTRmYXQxcD",
+			{
+			"JieHJpcHhvaTJ6bHMzMHJtY3F1bnl4MT": { type: "string", isArray: false, isOptional: false },
+				"x0MWg5aTlsZ2hlNDFsdzJicGBsdnp1Nm": { type: "number", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(RailcarService),
+			(controller, params) => controller.setAnchor(
+				params["JieHJpcHhvaTJ6bHMzMHJtY3F1bnl4MT"],
+				params["x0MWg5aTlsZ2hlNDFsdzJicGBsdnp1Nm"]
+			)
+		);
+
+		this.expose(
 			"NhbXltY3IxcnBmNWM2eDpoZ2Joc3FpaX",
 			{},
 			inject => inject.construct(SessionService),
@@ -285,7 +298,9 @@ ViewModel.mappings = {
 	[CaptureViewModel.name]: class ComposedCaptureViewModel extends CaptureViewModel {
 		async map() {
 			return {
+				bufferAnchorOffset: this.$$model.bufferAnchorOffset,
 				captured: this.$$model.captured,
+				corrupted: this.$$model.corrupted,
 				direction: this.$$model.direction,
 				id: this.$$model.id
 			}
@@ -317,7 +332,9 @@ ViewModel.mappings = {
 			}
 
 			return {
+				bufferAnchorOffset: true,
 				captured: true,
+				corrupted: true,
 				direction: true,
 				id: true
 			};
@@ -325,7 +342,9 @@ ViewModel.mappings = {
 
 		static toViewModel(data) {
 			const item = new CaptureViewModel(null);
+			"bufferAnchorOffset" in data && (item.bufferAnchorOffset = data.bufferAnchorOffset === null ? null : +data.bufferAnchorOffset);
 			"captured" in data && (item.captured = data.captured === null ? null : new Date(data.captured));
+			"corrupted" in data && (item.corrupted = !!data.corrupted);
 			"direction" in data && (item.direction = data.direction === null ? null : data.direction);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 
@@ -341,7 +360,9 @@ ViewModel.mappings = {
 				model = new Capture();
 			}
 			
+			"bufferAnchorOffset" in viewModel && (model.bufferAnchorOffset = viewModel.bufferAnchorOffset === null ? null : +viewModel.bufferAnchorOffset);
 			"captured" in viewModel && (model.captured = viewModel.captured === null ? null : new Date(viewModel.captured));
+			"corrupted" in viewModel && (model.corrupted = !!viewModel.corrupted);
 			"direction" in viewModel && (model.direction = viewModel.direction === null ? null : viewModel.direction);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 

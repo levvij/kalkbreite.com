@@ -99,8 +99,8 @@ export class RailcarPage extends Component {
 
 				{this.railcar.storageContainer && new StorageContainerTagComponent(this.railcar.storageContainer)}
 
-				{forwardCaptures.length > 1 && new CaptureTimelineComponent(forwardCaptures)}
-				{reverseCaptures.length > 1 && new CaptureTimelineComponent(reverseCaptures)}
+				{forwardCaptures.length != 0 && new CaptureTimelineComponent(forwardCaptures)}
+				{reverseCaptures.length != 0 && new CaptureTimelineComponent(reverseCaptures)}
 			</ui-detail>}
 		</ui-railcar>;
 	}

@@ -90,7 +90,9 @@ export class Artist extends Entity<ArtistQueryProxy> {
 			
 export class CaptureQueryProxy extends QueryProxy {
 	get railcar(): Partial<RailcarQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get bufferAnchorOffset(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get captured(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get corrupted(): Partial<QueryBoolean> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get data(): Partial<QueryBuffer> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get direction(): "forward" | "reverse" { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get mimeType(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -100,7 +102,9 @@ export class CaptureQueryProxy extends QueryProxy {
 
 export class Capture extends Entity<CaptureQueryProxy> {
 	get railcar(): Partial<ForeignReference<Railcar>> { return this.$railcar; }
+	bufferAnchorOffset: number;
 	captured: Date;
+	corrupted: boolean;
 	data: Buffer;
 	direction: RailcarDirection;
 	declare id: string;
@@ -111,7 +115,9 @@ export class Capture extends Entity<CaptureQueryProxy> {
 	$$meta = {
 		source: "capture",
 		columns: {
+			bufferAnchorOffset: { type: "float4", name: "buffer_anchor_offset" },
 			captured: { type: "timestamp", name: "captured" },
+			corrupted: { type: "bool", name: "corrupted" },
 			data: { type: "bytea", name: "data" },
 			direction: { type: "railcar_direction", name: "direction" },
 			id: { type: "uuid", name: "id" },

@@ -18,4 +18,11 @@ export class RailcarService extends Service {
 	async get(tag: string) {
 		return new RailcarViewModel(await this.database.railcar.first(railcar => railcar.tag.valueOf() == tag));
 	}
+
+	async setAnchor(captureId: string, offset: number) {
+		const capture = await this.database.capture.find(captureId);
+		capture.bufferAnchorOffset = offset;
+
+		await capture.update();
+	}
 }

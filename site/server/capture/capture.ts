@@ -6,4 +6,6 @@ export class CaptureViewModel extends ViewModel<Capture> {
 
 	captured;
 	direction;
+	corrupted;
+	bufferAnchorOffset;
 }

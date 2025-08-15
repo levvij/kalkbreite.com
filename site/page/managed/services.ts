@@ -4,13 +4,17 @@ export enum RailcarDirection {
 }
 
 export class CaptureViewModel {
+	bufferAnchorOffset: number;
 	captured: Date;
+	corrupted: boolean;
 	direction: RailcarDirection;
 	id: string;
 
 	private static $build(raw) {
 		const item = new CaptureViewModel();
+		raw.bufferAnchorOffset === undefined || (item.bufferAnchorOffset = raw.bufferAnchorOffset === null ? null : +raw.bufferAnchorOffset)
 		raw.captured === undefined || (item.captured = raw.captured ? new Date(raw.captured) : null)
+		raw.corrupted === undefined || (item.corrupted = !!raw.corrupted)
 		raw.direction === undefined || (item.direction = raw.direction)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		
@@ -764,6 +768,26 @@ export class RailcarService {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {
 				throw new Error(r.error);
+			}
+		});
+	}
+
+	async setAnchor(captureId: string, offset: number): Promise<void> {
+		const $data = new FormData();
+		$data.append("JieHJpcHhvaTJ6bHMzMHJtY3F1bnl4MT", Service.stringify(captureId))
+		$data.append("x0MWg5aTlsZ2hlNDFsdzJicGBsdnp1Nm", Service.stringify(offset))
+
+		return await fetch(Service.toURL("M4a3A2amg4emIxeD5jNjFycTRmYXQxcD"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("error" in r) {
+				throw new Error(r.error);
+			}
+
+			if ("aborted" in r) {
+				throw new Error("request aborted by server");
 			}
 		});
 	}
