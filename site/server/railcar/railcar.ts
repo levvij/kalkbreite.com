@@ -16,6 +16,10 @@ export class RailcarSummaryModel extends ViewModel<Railcar> {
 	model: RailcarModelSummaryModel;
 }
 
+export class GraffitiRailcarViewModel extends RailcarSummaryModel {
+	graffitis: GraffitiSummaryModel[];
+}
+
 export class RailcarViewModel extends RailcarSummaryModel {
 	aquired;
 	note;

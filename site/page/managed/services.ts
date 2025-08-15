@@ -60,6 +60,7 @@ export class GraffitiSummaryModel {
 	artist: ArtistSummaryModel;
 	captures: GraffitiCaptureViewModel[];
 	type: GraffitiTypeViewModel;
+	direction: RailcarDirection;
 	id: string;
 	name: string;
 	painted: Date;
@@ -69,6 +70,7 @@ export class GraffitiSummaryModel {
 		raw.artist === undefined || (item.artist = raw.artist ? ArtistSummaryModel["$build"](raw.artist) : null)
 		raw.captures === undefined || (item.captures = raw.captures ? raw.captures.map(i => GraffitiCaptureViewModel["$build"](i)) : null)
 		raw.type === undefined || (item.type = raw.type ? GraffitiTypeViewModel["$build"](raw.type) : null)
+		raw.direction === undefined || (item.direction = raw.direction)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		raw.painted === undefined || (item.painted = raw.painted ? new Date(raw.painted) : null)
@@ -277,7 +279,7 @@ export class ArtistViewModel {
 export class GraffitiViewModel {
 	artist: ArtistSummaryModel;
 	captures: GraffitiCaptureViewModel[];
-	railcar: RailcarSummaryModel;
+	railcar: GraffitiRailcarViewModel;
 	type: GraffitiTypeViewModel;
 	description: string;
 	direction: RailcarDirection;
@@ -289,7 +291,7 @@ export class GraffitiViewModel {
 		const item = new GraffitiViewModel();
 		raw.artist === undefined || (item.artist = raw.artist ? ArtistSummaryModel["$build"](raw.artist) : null)
 		raw.captures === undefined || (item.captures = raw.captures ? raw.captures.map(i => GraffitiCaptureViewModel["$build"](i)) : null)
-		raw.railcar === undefined || (item.railcar = raw.railcar ? RailcarSummaryModel["$build"](raw.railcar) : null)
+		raw.railcar === undefined || (item.railcar = raw.railcar ? GraffitiRailcarViewModel["$build"](raw.railcar) : null)
 		raw.type === undefined || (item.type = raw.type ? GraffitiTypeViewModel["$build"](raw.type) : null)
 		raw.description === undefined || (item.description = raw.description === null ? null : `${raw.description}`)
 		raw.direction === undefined || (item.direction = raw.direction)
@@ -347,6 +349,27 @@ export class RailcarModelViewModel {
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		raw.shortname === undefined || (item.shortname = raw.shortname === null ? null : `${raw.shortname}`)
 		raw.summary === undefined || (item.summary = raw.summary === null ? null : `${raw.summary}`)
+		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
+		
+		return item;
+	}
+}
+
+export class GraffitiRailcarViewModel {
+	model: RailcarModelSummaryModel;
+	graffitis: GraffitiSummaryModel[];
+	givenName: string;
+	id: string;
+	runningNumber: string;
+	tag: string;
+
+	private static $build(raw) {
+		const item = new GraffitiRailcarViewModel();
+		raw.model === undefined || (item.model = raw.model ? RailcarModelSummaryModel["$build"](raw.model) : null)
+		raw.graffitis === undefined || (item.graffitis = raw.graffitis ? raw.graffitis.map(i => GraffitiSummaryModel["$build"](i)) : null)
+		raw.givenName === undefined || (item.givenName = raw.givenName === null ? null : `${raw.givenName}`)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.runningNumber === undefined || (item.runningNumber = raw.runningNumber === null ? null : `${raw.runningNumber}`)
 		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
 		
 		return item;

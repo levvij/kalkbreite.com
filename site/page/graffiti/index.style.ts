@@ -54,6 +54,12 @@ export const graffitiStyle = () => child('ui-graffiti',
 			)
 		),
 
+		child('ui-crosses',
+			display('block'),
+
+			endDivider()
+		),
+
 		child('ui-captures',
 			collection(rem(15)),
 

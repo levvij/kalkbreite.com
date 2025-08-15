@@ -2,6 +2,7 @@ import { Component } from "@acryps/page";
 import { CaptureViewModel, GraffitiService, GraffitiViewModel, RailcarDirection } from "../managed/services";
 import { DetailSectionComponent } from "../shared/detail-section";
 import { SlideshowComponent } from "../shared/slideshow";
+import { GraffitiCrossComponent } from "./cross";
 
 export class GraffitiPage extends Component {
 	declare parameters: { id };
@@ -48,6 +49,8 @@ export class GraffitiPage extends Component {
 					.addMetric('Railcar Side', () => this.graffiti.direction == RailcarDirection.forward ? 'Left' : 'Right')
 					.addMetric('Captures', () => this.graffiti.captures.length.toString())
 				}
+
+				{new GraffitiCrossComponent(this.graffiti)}
 
 				<ui-captures>
 					{this.sourceCaptures.map(capture => {

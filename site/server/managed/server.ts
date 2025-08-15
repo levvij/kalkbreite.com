@@ -34,6 +34,7 @@ import { RailcarModelSummaryModel } from "./../railcar/model";
 import { AccountViewModel } from "./../session/session";
 import { StorageContainerSummaryModel } from "./../storage/storage-contaiuner";
 import { RailcarModelViewModel } from "./../railcar/model";
+import { GraffitiRailcarViewModel } from "./../railcar/railcar";
 import { Capture } from "./../managed/database";
 import { Company } from "./../managed/database";
 import { Artist } from "./../managed/database";
@@ -501,6 +502,7 @@ ViewModel.mappings = {
 				artist: new ArtistSummaryModel(await BaseServer.unwrap(this.$$model.artist)),
 				captures: (await this.$$model.captures.includeTree(ViewModel.mappings[GraffitiCaptureViewModel.name].items).toArray()).map(item => new GraffitiCaptureViewModel(item)),
 				type: new GraffitiTypeViewModel(await BaseServer.unwrap(this.$$model.type)),
+				direction: this.$$model.direction,
 				id: this.$$model.id,
 				name: this.$$model.name,
 				painted: this.$$model.painted
@@ -551,6 +553,7 @@ ViewModel.mappings = {
 						[...parents, "type-GraffitiSummaryModel"]
 					);
 				},
+				direction: true,
 				id: true,
 				name: true,
 				painted: true
@@ -562,6 +565,7 @@ ViewModel.mappings = {
 			"artist" in data && (item.artist = data.artist && ViewModel.mappings[ArtistSummaryModel.name].toViewModel(data.artist));
 			"captures" in data && (item.captures = data.captures && [...data.captures].map(i => ViewModel.mappings[GraffitiCaptureViewModel.name].toViewModel(i)));
 			"type" in data && (item.type = data.type && ViewModel.mappings[GraffitiTypeViewModel.name].toViewModel(data.type));
+			"direction" in data && (item.direction = data.direction === null ? null : data.direction);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"painted" in data && (item.painted = data.painted === null ? null : new Date(data.painted));
@@ -581,6 +585,7 @@ ViewModel.mappings = {
 			"artist" in viewModel && (model.artist.id = viewModel.artist ? viewModel.artist.id : null);
 			"captures" in viewModel && (null);
 			"type" in viewModel && (model.type.id = viewModel.type ? viewModel.type.id : null);
+			"direction" in viewModel && (model.direction = viewModel.direction === null ? null : viewModel.direction);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"painted" in viewModel && (model.painted = viewModel.painted === null ? null : new Date(viewModel.painted));
@@ -1418,7 +1423,7 @@ ViewModel.mappings = {
 			return {
 				artist: new ArtistSummaryModel(await BaseServer.unwrap(this.$$model.artist)),
 				captures: (await this.$$model.captures.includeTree(ViewModel.mappings[GraffitiCaptureViewModel.name].items).toArray()).map(item => new GraffitiCaptureViewModel(item)),
-				railcar: new RailcarSummaryModel(await BaseServer.unwrap(this.$$model.railcar)),
+				railcar: new GraffitiRailcarViewModel(await BaseServer.unwrap(this.$$model.railcar)),
 				type: new GraffitiTypeViewModel(await BaseServer.unwrap(this.$$model.type)),
 				description: this.$$model.description,
 				direction: this.$$model.direction,
@@ -1467,7 +1472,7 @@ ViewModel.mappings = {
 					);
 				},
 				get railcar() {
-					return ViewModel.mappings[RailcarSummaryModel.name].getPrefetchingProperties(
+					return ViewModel.mappings[GraffitiRailcarViewModel.name].getPrefetchingProperties(
 						level,
 						[...parents, "railcar-GraffitiViewModel"]
 					);
@@ -1490,7 +1495,7 @@ ViewModel.mappings = {
 			const item = new GraffitiViewModel(null);
 			"artist" in data && (item.artist = data.artist && ViewModel.mappings[ArtistSummaryModel.name].toViewModel(data.artist));
 			"captures" in data && (item.captures = data.captures && [...data.captures].map(i => ViewModel.mappings[GraffitiCaptureViewModel.name].toViewModel(i)));
-			"railcar" in data && (item.railcar = data.railcar && ViewModel.mappings[RailcarSummaryModel.name].toViewModel(data.railcar));
+			"railcar" in data && (item.railcar = data.railcar && ViewModel.mappings[GraffitiRailcarViewModel.name].toViewModel(data.railcar));
 			"type" in data && (item.type = data.type && ViewModel.mappings[GraffitiTypeViewModel.name].toViewModel(data.type));
 			"description" in data && (item.description = data.description === null ? null : `${data.description}`);
 			"direction" in data && (item.direction = data.direction === null ? null : data.direction);
@@ -1709,6 +1714,94 @@ ViewModel.mappings = {
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"shortname" in viewModel && (model.shortname = viewModel.shortname === null ? null : `${viewModel.shortname}`);
 			"summary" in viewModel && (model.summary = viewModel.summary === null ? null : `${viewModel.summary}`);
+			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
+
+			return model;
+		}
+	},
+	[GraffitiRailcarViewModel.name]: class ComposedGraffitiRailcarViewModel extends GraffitiRailcarViewModel {
+		async map() {
+			return {
+				model: new RailcarModelSummaryModel(await BaseServer.unwrap(this.$$model.model)),
+				graffitis: (await this.$$model.graffitis.includeTree(ViewModel.mappings[GraffitiSummaryModel.name].items).toArray()).map(item => new GraffitiSummaryModel(item)),
+				givenName: this.$$model.givenName,
+				id: this.$$model.id,
+				runningNumber: this.$$model.runningNumber,
+				tag: this.$$model.tag
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				get model() {
+					return ViewModel.mappings[RailcarModelSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "model-GraffitiRailcarViewModel"]
+					);
+				},
+				get graffitis() {
+					return ViewModel.mappings[GraffitiSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "graffitis-GraffitiRailcarViewModel"]
+					);
+				},
+				givenName: true,
+				id: true,
+				runningNumber: true,
+				tag: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new GraffitiRailcarViewModel(null);
+			"model" in data && (item.model = data.model && ViewModel.mappings[RailcarModelSummaryModel.name].toViewModel(data.model));
+			"graffitis" in data && (item.graffitis = data.graffitis && [...data.graffitis].map(i => ViewModel.mappings[GraffitiSummaryModel.name].toViewModel(i)));
+			"givenName" in data && (item.givenName = data.givenName === null ? null : `${data.givenName}`);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"runningNumber" in data && (item.runningNumber = data.runningNumber === null ? null : `${data.runningNumber}`);
+			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: GraffitiRailcarViewModel) {
+			let model: Railcar;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(Railcar).find(viewModel.id)
+			} else {
+				model = new Railcar();
+			}
+			
+			"model" in viewModel && (model.model.id = viewModel.model ? viewModel.model.id : null);
+			"graffitis" in viewModel && (null);
+			"givenName" in viewModel && (model.givenName = viewModel.givenName === null ? null : `${viewModel.givenName}`);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"runningNumber" in viewModel && (model.runningNumber = viewModel.runningNumber === null ? null : `${viewModel.runningNumber}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
 
 			return model;
