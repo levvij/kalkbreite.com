@@ -13,6 +13,8 @@ import { AssignGraffitiBoundsPage } from './graffiti/assign';
 import { ArtistPage } from './artist';
 import { LoginPage } from './login';
 import { RegisterGraffitiPage } from './railcar/register-graffiti';
+import { GraffitiInspirationsPage } from './graffiti-inspirations';
+import { GraffitiInspirationPage } from './graffiti-inspiration';
 
 // injected by esbuild
 declare const buildDate: string;
@@ -46,6 +48,10 @@ export class Application {
 
 			.route('/storage-container/print', PrintStorageContainerTagPage)
 			.route('/storage-container/:tag', StorageContainerPage)
+
+			.route('/graffiti-inspiration', GraffitiInspirationsPage
+				.route('/:id', GraffitiInspirationPage)
+			)
 
 			.route('/graffiti/:id', GraffitiPage
 				.route('/assign/:captureId', AssignGraffitiBoundsPage)

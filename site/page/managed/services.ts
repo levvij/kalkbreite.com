@@ -111,6 +111,38 @@ export class GraffitiTypeViewModel {
 	}
 }
 
+export class GraffitiInspirationSummaryModel {
+	captured: Date;
+	id: string;
+	name: string;
+	origin: string;
+	paintingUrge: number;
+
+	private static $build(raw) {
+		const item = new GraffitiInspirationSummaryModel();
+		raw.captured === undefined || (item.captured = raw.captured ? new Date(raw.captured) : null)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		raw.origin === undefined || (item.origin = raw.origin === null ? null : `${raw.origin}`)
+		raw.paintingUrge === undefined || (item.paintingUrge = raw.paintingUrge === null ? null : +raw.paintingUrge)
+		
+		return item;
+	}
+}
+
+export class GraffitiInspirationMediaViewModel {
+	id: string;
+	mimeType: string;
+
+	private static $build(raw) {
+		const item = new GraffitiInspirationMediaViewModel();
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.mimeType === undefined || (item.mimeType = raw.mimeType === null ? null : `${raw.mimeType}`)
+		
+		return item;
+	}
+}
+
 export class RailcarModelSummaryModel {
 	id: string;
 	name: string;
@@ -264,6 +296,35 @@ export class GraffitiViewModel {
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		raw.painted === undefined || (item.painted = raw.painted ? new Date(raw.painted) : null)
+		
+		return item;
+	}
+}
+
+export class GraffitiInspirationViewModel {
+	artist: ArtistSummaryModel;
+	media: GraffitiInspirationMediaViewModel[];
+	paintings: GraffitiSummaryModel[];
+	captured: Date;
+	description: string;
+	id: string;
+	name: string;
+	origin: string;
+	paintingEffort: number;
+	paintingUrge: number;
+
+	private static $build(raw) {
+		const item = new GraffitiInspirationViewModel();
+		raw.artist === undefined || (item.artist = raw.artist ? ArtistSummaryModel["$build"](raw.artist) : null)
+		raw.media === undefined || (item.media = raw.media ? raw.media.map(i => GraffitiInspirationMediaViewModel["$build"](i)) : null)
+		raw.paintings === undefined || (item.paintings = raw.paintings ? raw.paintings.map(i => GraffitiSummaryModel["$build"](i)) : null)
+		raw.captured === undefined || (item.captured = raw.captured ? new Date(raw.captured) : null)
+		raw.description === undefined || (item.description = raw.description === null ? null : `${raw.description}`)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		raw.origin === undefined || (item.origin = raw.origin === null ? null : `${raw.origin}`)
+		raw.paintingEffort === undefined || (item.paintingEffort = raw.paintingEffort === null ? null : +raw.paintingEffort)
+		raw.paintingUrge === undefined || (item.paintingUrge = raw.paintingUrge === null ? null : +raw.paintingUrge)
 		
 		return item;
 	}
@@ -505,6 +566,90 @@ export class GraffitiService {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {
 				throw new Error(r.error);
+			}
+		});
+	}
+
+	async getInspirations(): Promise<Array<GraffitiInspirationSummaryModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("szdzxrd3hzc29xa3NiYzU2ZWV3ajgyMz"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : GraffitiInspirationSummaryModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async getInspiration(id: string): Promise<GraffitiInspirationViewModel> {
+		const $data = new FormData();
+		$data.append("BwbTU5aXIxd2pkOXR6MmhrdWU4MzA1N2", Service.stringify(id))
+
+		return await fetch(Service.toURL("ppeXJ4cmhqOHd1amE2a29mYmR4NTIxbm"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d === null ? null : GraffitiInspirationViewModel["$build"](d);
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async createInspiration(data: Blob, mimeType: string): Promise<string> {
+		const $data = new FormData();
+		$data.append("BzeHhhd2Z3M2JhcGk4NWxwbWJhNTFrdD", data)
+		$data.append("xzMmE5ZXE2dWMwMGkwZmdqaTBuemVjM3", Service.stringify(mimeType))
+
+		return await fetch(Service.toURL("Q1N2BlY3V2dHtsc3Z0NWMwYTN2bDhkaW"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d === null ? null : `${d}`;
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async saveInpiration(inspirationViewModel: GraffitiInspirationViewModel, artistId: string): Promise<void> {
+		const $data = new FormData();
+		$data.append("Bva2dleTlxNjtmZWIxbHJiY3J4c3Zya3", Service.stringify(inspirationViewModel))
+		$data.append("54cDh2MH96a2hjbGJqYnFlYTF1MXJhej", Service.stringify(artistId))
+
+		return await fetch(Service.toURL("40ZnAwbjJ3N3Fqc3U1ejR4Y3ZuNTI0bD"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("error" in r) {
+				throw new Error(r.error);
+			}
+
+			if ("aborted" in r) {
+				throw new Error("request aborted by server");
 			}
 		});
 	}

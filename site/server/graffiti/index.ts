@@ -1,10 +1,11 @@
 import { Service } from "vlserver";
-import { DbContext, Graffiti, RailcarDirection } from "../managed/database";
+import { DbContext, Graffiti, GraffitiInspiration, GraffitiInspirationMedia, RailcarDirection } from "../managed/database";
 import { GraffitiCaptureViewModel, GraffitiTypeViewModel, GraffitiViewModel } from "./graffiti";
 import { CaptureViewModel } from "../capture/capture";
 import { Canvas, loadImage } from "skia-canvas";
 import { cropGraffiti } from "../../shared/crop-graffiti";
 import { ArtistViewModel } from "./artist";
+import { GraffitiInspirationSummaryModel, GraffitiInspirationViewModel } from "./inspiration";
 
 export class GraffitiService extends Service {
 	constructor(
@@ -47,6 +48,43 @@ export class GraffitiService extends Service {
 			this.database.graffitiType
 				.orderByAscending(type => type.complexity)
 		)
+	}
+
+	async getInspirations() {
+		return GraffitiInspirationSummaryModel.from(
+			this.database.graffitiInspiration
+				.orderByDescending(graffiti => graffiti.captured)
+		);
+	}
+
+	async getInspiration(id: string) {
+		return new GraffitiInspirationViewModel(
+			await this.database.graffitiInspiration.find(id)
+		);
+	}
+
+	async createInspiration(data: Buffer, mimeType: string) {
+		const inspiration = new GraffitiInspiration();
+		inspiration.captured = new Date();
+
+		await inspiration.create();
+
+		const media = new GraffitiInspirationMedia();
+		media.graffitiInspiration = inspiration;
+		media.data = data;
+		media.mimeType = mimeType;
+		media.uploaded = new Date();
+
+		await media.create();
+
+		return inspiration.id;
+	}
+
+	async saveInpiration(inspirationViewModel: GraffitiInspirationViewModel, artistId: string) {
+		const inspiration = await inspirationViewModel.toModel();
+		inspiration.artistId = artistId;
+
+		await inspiration.update();
 	}
 
 	async register(railcarId: string, name: string, description: string, typeId: string, painted: Date, side: string, artistId: string) {

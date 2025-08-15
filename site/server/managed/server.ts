@@ -5,6 +5,8 @@ import { CompanySummaryModel } from "././../company/company";
 import { CompanyViewModel } from "././../company/company";
 import { CompanyService } from "././../company/index";
 import { Graffiti } from "././database";
+import { GraffitiInspiration } from "././database";
+import { GraffitiInspirationMedia } from "././database";
 import { RailcarDirection } from "././database";
 import { GraffitiCaptureViewModel } from "././../graffiti/graffiti";
 import { GraffitiTypeViewModel } from "././../graffiti/graffiti";
@@ -12,6 +14,8 @@ import { GraffitiViewModel } from "././../graffiti/graffiti";
 import { CaptureViewModel } from "././../capture/capture";
 import { cropGraffiti } from "././../../shared/crop-graffiti";
 import { ArtistViewModel } from "././../graffiti/artist";
+import { GraffitiInspirationSummaryModel } from "././../graffiti/inspiration";
+import { GraffitiInspirationViewModel } from "././../graffiti/inspiration";
 import { GraffitiService } from "././../graffiti/index";
 import { RailcarSummaryModel } from "././../railcar/railcar";
 import { RailcarViewModel } from "././../railcar/railcar";
@@ -25,6 +29,7 @@ import { StorageContainerViewModel } from "././../storage/storage-contaiuner";
 import { StorageService } from "././../storage/index";
 import { ArtistSummaryModel } from "./../graffiti/artist";
 import { GraffitiSummaryModel } from "./../graffiti/graffiti";
+import { GraffitiInspirationMediaViewModel } from "./../graffiti/inspiration";
 import { RailcarModelSummaryModel } from "./../railcar/model";
 import { AccountViewModel } from "./../session/session";
 import { StorageContainerSummaryModel } from "./../storage/storage-contaiuner";
@@ -135,6 +140,52 @@ export class ManagedServer extends BaseServer {
 			inject => inject.construct(GraffitiService),
 			(controller, params) => controller.getTypes(
 				
+			)
+		);
+
+		this.expose(
+			"szdzxrd3hzc29xa3NiYzU2ZWV3ajgyMz",
+			{},
+			inject => inject.construct(GraffitiService),
+			(controller, params) => controller.getInspirations(
+				
+			)
+		);
+
+		this.expose(
+			"ppeXJ4cmhqOHd1amE2a29mYmR4NTIxbm",
+			{
+			"BwbTU5aXIxd2pkOXR6MmhrdWU4MzA1N2": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(GraffitiService),
+			(controller, params) => controller.getInspiration(
+				params["BwbTU5aXIxd2pkOXR6MmhrdWU4MzA1N2"]
+			)
+		);
+
+		this.expose(
+			"Q1N2BlY3V2dHtsc3Z0NWMwYTN2bDhkaW",
+			{
+			"BzeHhhd2Z3M2JhcGk4NWxwbWJhNTFrdD": { type: "buffer", isArray: false, isOptional: false },
+				"xzMmE5ZXE2dWMwMGkwZmdqaTBuemVjM3": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(GraffitiService),
+			(controller, params) => controller.createInspiration(
+				params["BzeHhhd2Z3M2JhcGk4NWxwbWJhNTFrdD"],
+				params["xzMmE5ZXE2dWMwMGkwZmdqaTBuemVjM3"]
+			)
+		);
+
+		this.expose(
+			"40ZnAwbjJ3N3Fqc3U1ejR4Y3ZuNTI0bD",
+			{
+			"Bva2dleTlxNjtmZWIxbHJiY3J4c3Zya3": { type: GraffitiInspirationViewModel, isArray: false, isOptional: false },
+				"54cDh2MH96a2hjbGJqYnFlYTF1MXJhej": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(GraffitiService),
+			(controller, params) => controller.saveInpiration(
+				params["Bva2dleTlxNjtmZWIxbHJiY3J4c3Zya3"],
+				params["54cDh2MH96a2hjbGJqYnFlYTF1MXJhej"]
 			)
 		);
 
@@ -673,6 +724,142 @@ ViewModel.mappings = {
 			
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
+
+			return model;
+		}
+	},
+	[GraffitiInspirationSummaryModel.name]: class ComposedGraffitiInspirationSummaryModel extends GraffitiInspirationSummaryModel {
+		async map() {
+			return {
+				captured: this.$$model.captured,
+				id: this.$$model.id,
+				name: this.$$model.name,
+				origin: this.$$model.origin,
+				paintingUrge: this.$$model.paintingUrge
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				captured: true,
+				id: true,
+				name: true,
+				origin: true,
+				paintingUrge: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new GraffitiInspirationSummaryModel(null);
+			"captured" in data && (item.captured = data.captured === null ? null : new Date(data.captured));
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+			"origin" in data && (item.origin = data.origin === null ? null : `${data.origin}`);
+			"paintingUrge" in data && (item.paintingUrge = data.paintingUrge === null ? null : +data.paintingUrge);
+
+			return item;
+		}
+
+		static async toModel(viewModel: GraffitiInspirationSummaryModel) {
+			let model: GraffitiInspiration;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(GraffitiInspiration).find(viewModel.id)
+			} else {
+				model = new GraffitiInspiration();
+			}
+			
+			"captured" in viewModel && (model.captured = viewModel.captured === null ? null : new Date(viewModel.captured));
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
+			"origin" in viewModel && (model.origin = viewModel.origin === null ? null : `${viewModel.origin}`);
+			"paintingUrge" in viewModel && (model.paintingUrge = viewModel.paintingUrge === null ? null : +viewModel.paintingUrge);
+
+			return model;
+		}
+	},
+	[GraffitiInspirationMediaViewModel.name]: class ComposedGraffitiInspirationMediaViewModel extends GraffitiInspirationMediaViewModel {
+		async map() {
+			return {
+				id: this.$$model.id,
+				mimeType: this.$$model.mimeType
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				id: true,
+				mimeType: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new GraffitiInspirationMediaViewModel(null);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"mimeType" in data && (item.mimeType = data.mimeType === null ? null : `${data.mimeType}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: GraffitiInspirationMediaViewModel) {
+			let model: GraffitiInspirationMedia;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(GraffitiInspirationMedia).find(viewModel.id)
+			} else {
+				model = new GraffitiInspirationMedia();
+			}
+			
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"mimeType" in viewModel && (model.mimeType = viewModel.mimeType === null ? null : `${viewModel.mimeType}`);
 
 			return model;
 		}
@@ -1332,6 +1519,115 @@ ViewModel.mappings = {
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"painted" in viewModel && (model.painted = viewModel.painted === null ? null : new Date(viewModel.painted));
+
+			return model;
+		}
+	},
+	[GraffitiInspirationViewModel.name]: class ComposedGraffitiInspirationViewModel extends GraffitiInspirationViewModel {
+		async map() {
+			return {
+				artist: new ArtistSummaryModel(await BaseServer.unwrap(this.$$model.artist)),
+				media: (await this.$$model.media.includeTree(ViewModel.mappings[GraffitiInspirationMediaViewModel.name].items).toArray()).map(item => new GraffitiInspirationMediaViewModel(item)),
+				paintings: (await this.$$model.paintings.includeTree(ViewModel.mappings[GraffitiSummaryModel.name].items).toArray()).map(item => new GraffitiSummaryModel(item)),
+				captured: this.$$model.captured,
+				description: this.$$model.description,
+				id: this.$$model.id,
+				name: this.$$model.name,
+				origin: this.$$model.origin,
+				paintingEffort: this.$$model.paintingEffort,
+				paintingUrge: this.$$model.paintingUrge
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				get artist() {
+					return ViewModel.mappings[ArtistSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "artist-GraffitiInspirationViewModel"]
+					);
+				},
+				get media() {
+					return ViewModel.mappings[GraffitiInspirationMediaViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "media-GraffitiInspirationViewModel"]
+					);
+				},
+				get paintings() {
+					return ViewModel.mappings[GraffitiSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "paintings-GraffitiInspirationViewModel"]
+					);
+				},
+				captured: true,
+				description: true,
+				id: true,
+				name: true,
+				origin: true,
+				paintingEffort: true,
+				paintingUrge: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new GraffitiInspirationViewModel(null);
+			"artist" in data && (item.artist = data.artist && ViewModel.mappings[ArtistSummaryModel.name].toViewModel(data.artist));
+			"media" in data && (item.media = data.media && [...data.media].map(i => ViewModel.mappings[GraffitiInspirationMediaViewModel.name].toViewModel(i)));
+			"paintings" in data && (item.paintings = data.paintings && [...data.paintings].map(i => ViewModel.mappings[GraffitiSummaryModel.name].toViewModel(i)));
+			"captured" in data && (item.captured = data.captured === null ? null : new Date(data.captured));
+			"description" in data && (item.description = data.description === null ? null : `${data.description}`);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+			"origin" in data && (item.origin = data.origin === null ? null : `${data.origin}`);
+			"paintingEffort" in data && (item.paintingEffort = data.paintingEffort === null ? null : +data.paintingEffort);
+			"paintingUrge" in data && (item.paintingUrge = data.paintingUrge === null ? null : +data.paintingUrge);
+
+			return item;
+		}
+
+		static async toModel(viewModel: GraffitiInspirationViewModel) {
+			let model: GraffitiInspiration;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(GraffitiInspiration).find(viewModel.id)
+			} else {
+				model = new GraffitiInspiration();
+			}
+			
+			"artist" in viewModel && (model.artist.id = viewModel.artist ? viewModel.artist.id : null);
+			"media" in viewModel && (null);
+			"paintings" in viewModel && (null);
+			"captured" in viewModel && (model.captured = viewModel.captured === null ? null : new Date(viewModel.captured));
+			"description" in viewModel && (model.description = viewModel.description === null ? null : `${viewModel.description}`);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
+			"origin" in viewModel && (model.origin = viewModel.origin === null ? null : `${viewModel.origin}`);
+			"paintingEffort" in viewModel && (model.paintingEffort = viewModel.paintingEffort === null ? null : +viewModel.paintingEffort);
+			"paintingUrge" in viewModel && (model.paintingUrge = viewModel.paintingUrge === null ? null : +viewModel.paintingUrge);
 
 			return model;
 		}

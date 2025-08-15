@@ -3,6 +3,7 @@ import { RailcarService, RailcarSummaryModel } from "../managed/services";
 import { ReaderComponent } from "./reader";
 import { RailcarCollectionComponent } from "../shared/railcar-collection";
 import { SlideshowComponent } from "../shared/slideshow";
+import { Application } from "..";
 
 export class HomePage extends Component {
 	railcars: RailcarSummaryModel[];
@@ -20,9 +21,9 @@ export class HomePage extends Component {
 					Welcome to Kalkbreite Model Railway. A playground for railway operations, electronics, software and street art.
 				</ui-guide>
 
-				<ui-actions>
+				{Application.session.account && <ui-actions>
 					{new ReaderComponent()}
-				</ui-actions>
+				</ui-actions>}
 
 				{new RailcarCollectionComponent(this.railcars)}
 			</ui-content>
