@@ -17,7 +17,8 @@ export class GraffitiCrossComponent extends Component {
 		const peers = this.graffiti.railcar.graffitis
 			.filter(peer => peer.direction == this.graffiti.direction)
 			.filter(peer => peer.id != this.graffiti.id)
-			.filter(peer => peer.captures.length);
+			.filter(peer => peer.captures.length)
+			.filter(peer => peer.painted > this.graffiti.painted);
 
 		const crosses = peers.filter(peer => crossesGraffiti(this.graffiti.captures[0], peer.captures[0]));
 
