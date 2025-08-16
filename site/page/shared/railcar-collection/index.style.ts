@@ -5,7 +5,7 @@ import { collection, collectionItem } from "../../shared/collection";
 import { clickable } from "../interaction";
 
 export const railcarCollectionStyle = () => child('ui-railcars',
-	collection(rem(8)),
+	collection(rem(16)),
 
 	child('ui-railcar',
 		collectionItem(),
