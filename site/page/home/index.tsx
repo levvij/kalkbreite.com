@@ -10,6 +10,22 @@ export class HomePage extends Component {
 
 	async onload() {
 		this.railcars = await new RailcarService().list();
+
+		let textBuffer = '';
+		let textBufferReset = setTimeout(() => {});
+
+		onkeypress = event => {
+			clearTimeout(textBufferReset);
+			textBufferReset = setTimeout(() => textBuffer = '', 500);
+
+			if (document.contains(this.rootNode)) {
+				if (event.key == 'Enter') {
+					this.navigate(`/railcar/${textBuffer}`);
+				} else if (/^[0-9a-z]$/.test(event.key)) {
+					textBuffer += event.key;
+				}
+			}
+		};
 	}
 
 	render() {
