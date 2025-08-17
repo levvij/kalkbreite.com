@@ -2,6 +2,7 @@ import { Canvas } from "skia-canvas";
 import { Capture, CaptureFrame, CaptureSession, DbContext, GraffitiCapture, RailcarDirection } from "../managed/database";
 import { ManagedServer } from "../managed/server";
 import { updateThumbnail } from "./thumbnail";
+import { registerCaptureSessionInterface } from "./session";
 
 export const registerCaptureInterface = (server: ManagedServer, database: DbContext) => {
 	const emptyCanvas = new Canvas(1, 1);
@@ -11,6 +12,8 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 
 	const thumbnailCache = new Map<string, Capture | GraffitiCapture>();
 	const imageCache = new Map<string, Capture>();
+
+	registerCaptureSessionInterface(server, database);
 
 	server.app.get('/capture/random', async (request, response) => {
 		const captureQuery = () => database.capture;
@@ -24,43 +27,6 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 
 		response.contentType('image/jpeg');
 		response.end(capture.thumbnail);
-	});
-
-	server.app.get('/capture/session/create', async (request, response) => {
-		const session = new CaptureSession();
-		session.created = new Date();
-
-		await session.create();
-
-		response.end(session.id);
-	});
-
-	server.app.post('/capture/session/:id/:x/:y', async (request, response) => {
-		const sessionId = request.params.id;
-		const x = +request.params.x;
-		const y = +request.params.y;
-
-		const capture = new CaptureFrame();
-		capture.sessionId = sessionId;
-		capture.offsetX = x;
-		capture.offsetY = y;
-		capture.uploaded = new Date();
-
-		await capture.create();
-
-		const chunks = [];
-
-		request.on('data', chunk => {
-			chunks.push(chunk);
-		});
-
-		request.on('end', async () => {
-			capture.data = Buffer.concat(chunks);
-
-			await capture.update();
-
-			response.sendStatus(200).end();
-		});
 	});
 
 	server.app.get('/capture/:id', async (request, response) => {
