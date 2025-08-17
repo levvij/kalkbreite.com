@@ -151,6 +151,90 @@ export class Capture extends Entity<CaptureQueryProxy> {
 	
 }
 			
+export class CaptureFrameQueryProxy extends QueryProxy {
+	get session(): Partial<CaptureSessionQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get data(): Partial<QueryBuffer> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get offsetX(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get offsetY(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get sessionId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get thumbnail(): Partial<QueryBuffer> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get uploaded(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class CaptureFrame extends Entity<CaptureFrameQueryProxy> {
+	get session(): Partial<ForeignReference<CaptureSession>> { return this.$session; }
+	data: Buffer;
+	declare id: string;
+	offsetX: number;
+	offsetY: number;
+	sessionId: string;
+	thumbnail: Buffer;
+	uploaded: Date;
+	
+	$$meta = {
+		source: "capture_frame",
+		columns: {
+			data: { type: "bytea", name: "data" },
+			id: { type: "uuid", name: "id" },
+			offsetX: { type: "int4", name: "offset_x" },
+			offsetY: { type: "int4", name: "offset_y" },
+			sessionId: { type: "uuid", name: "session_id" },
+			thumbnail: { type: "bytea", name: "thumbnail" },
+			uploaded: { type: "timestamp", name: "uploaded" }
+		},
+		get set(): DbSet<CaptureFrame, CaptureFrameQueryProxy> { 
+			return new DbSet<CaptureFrame, CaptureFrameQueryProxy>(CaptureFrame, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.$session = new ForeignReference<CaptureSession>(this, "sessionId", CaptureSession);
+	}
+	
+	private $session: ForeignReference<CaptureSession>;
+
+	set session(value: Partial<ForeignReference<CaptureSession>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.sessionId = value.id as string;
+		} else {
+			this.sessionId = null;
+		}
+	}
+
+	
+}
+			
+export class CaptureSessionQueryProxy extends QueryProxy {
+	get created(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class CaptureSession extends Entity<CaptureSessionQueryProxy> {
+	frames: PrimaryReference<CaptureFrame, CaptureFrameQueryProxy>;
+		created: Date;
+	declare id: string;
+	
+	$$meta = {
+		source: "capture_session",
+		columns: {
+			created: { type: "timestamp", name: "created" },
+			id: { type: "uuid", name: "id" }
+		},
+		get set(): DbSet<CaptureSession, CaptureSessionQueryProxy> { 
+			return new DbSet<CaptureSession, CaptureSessionQueryProxy>(CaptureSession, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.frames = new PrimaryReference<CaptureFrame, CaptureFrameQueryProxy>(this, "sessionId", CaptureFrame);
+	}
+}
+			
 export class CompanyQueryProxy extends QueryProxy {
 	get icon(): Partial<CompanyLogoQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get logo(): Partial<CompanyLogoQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -866,6 +950,8 @@ export class DbContext {
 	account: DbSet<Account, AccountQueryProxy>;
 	artist: DbSet<Artist, ArtistQueryProxy>;
 	capture: DbSet<Capture, CaptureQueryProxy>;
+	captureFrame: DbSet<CaptureFrame, CaptureFrameQueryProxy>;
+	captureSession: DbSet<CaptureSession, CaptureSessionQueryProxy>;
 	company: DbSet<Company, CompanyQueryProxy>;
 	companyLogo: DbSet<CompanyLogo, CompanyLogoQueryProxy>;
 	graffiti: DbSet<Graffiti, GraffitiQueryProxy>;
@@ -882,6 +968,8 @@ export class DbContext {
 		this.account = new DbSet<Account, AccountQueryProxy>(Account, this.runContext);
 		this.artist = new DbSet<Artist, ArtistQueryProxy>(Artist, this.runContext);
 		this.capture = new DbSet<Capture, CaptureQueryProxy>(Capture, this.runContext);
+		this.captureFrame = new DbSet<CaptureFrame, CaptureFrameQueryProxy>(CaptureFrame, this.runContext);
+		this.captureSession = new DbSet<CaptureSession, CaptureSessionQueryProxy>(CaptureSession, this.runContext);
 		this.company = new DbSet<Company, CompanyQueryProxy>(Company, this.runContext);
 		this.companyLogo = new DbSet<CompanyLogo, CompanyLogoQueryProxy>(CompanyLogo, this.runContext);
 		this.graffiti = new DbSet<Graffiti, GraffitiQueryProxy>(Graffiti, this.runContext);
