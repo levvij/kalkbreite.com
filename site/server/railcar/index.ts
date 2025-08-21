@@ -13,6 +13,7 @@ export class RailcarService extends Service {
 	list() {
 		return RailcarSummaryModel.from(this.database.railcar
 			.orderByDescending(railcar => railcar.aquired)
+			.orderByAscending(railcar => railcar.tag)
 		);
 	}
 

@@ -67,6 +67,14 @@ export class RailcarPage extends Component {
 					<ui-action ui-href='register-graffiti'>
 						Register Graffiti
 					</ui-action>
+
+					{forwardCaptures[0] && <ui-action ui-href={`/capture/${forwardCaptures[0].id}/full`} ui-href-target='blank'>
+						Download Capture (Forward)
+					</ui-action>}
+
+					{reverseCaptures[0] && <ui-action ui-href={`/capture/${reverseCaptures[0].id}/full`} ui-href-target='blank'>
+						Download Capture (Reverse)
+					</ui-action>}
 				</ui-actions>}
 
 				{this.railcar.model && new DetailSectionComponent(<ui-model ui-href={`/model/${this.railcar.model.tag}`}>

@@ -16,17 +16,14 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 	registerCaptureSessionInterface(server, database);
 
 	server.app.get('/capture/random', async (request, response) => {
-		const captureQuery = () => database.capture;
+		const thumbnails = [...thumbnailCache.values()];
 
-		const count = await captureQuery().count();
-
-		const capture = await captureQuery()
-			.skip(Math.floor(Math.random() * count))
-			.includeTree({ thumbnail: true })
-			.first();
+		if (!thumbnails.length) {
+			response.status(404).end();
+		}
 
 		response.contentType('image/jpeg');
-		response.end(capture.thumbnail);
+		response.end(thumbnails[Math.floor(thumbnails.length * Math.random())].thumbnail);
 	});
 
 	server.app.get('/capture/:id', async (request, response) => {
