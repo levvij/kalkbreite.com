@@ -1,6 +1,6 @@
-import { alignItems, alignSelf, aspectRatio, backgroundColor, child, color, cursor, display, Dvi, em, filter, flexBasis, flexGrow, flexShrink, flexWrap, fontFamily, fontSize, fontWeight, gap, height, hex, imageRendering, invert, justifyContent, lineHeight, marginBottom, marginInline, marginRight, maxWidth, min, objectFit, opacity, padding, paddingBlock, paddingBottom, paddingInline, percentage, ratio, rem, textAlign, width } from "@acryps/style";
+import { alignItems, alignSelf, aspectRatio, backgroundColor, child, color, cursor, display, Dvi, em, filter, flexBasis, flexGrow, flexShrink, flexWrap, fontFamily, fontSize, fontWeight, gap, height, hex, imageRendering, invert, justifyContent, lineHeight, marginBottom, marginInline, marginRight, marginTop, maxWidth, min, objectFit, opacity, padding, paddingBlock, paddingBottom, paddingInline, percentage, position, ratio, rem, textAlign, width } from "@acryps/style";
 import { boxed } from "../shared/boxed";
-import { captureAspectRatio, captureBackgroundColor, knockoutColor, knockoutContrastColor, pageGutter, pageSpacing, runningNumberFont, tagFont } from "../index.style";
+import { captureAspectRatio, captureBackgroundColor, knockoutColor, knockoutContrastColor, pageColor, pageGutter, pageSpacing, runningNumberFont, tagFont } from "../index.style";
 import { collection, collectionItem } from "../shared/collection";
 import { monospacedFont } from "../assets/font";
 import { storageContainerTagStyle } from "../shared/storage-container-tag/index.style";
@@ -61,6 +61,25 @@ export const railcarStyle = () => child('ui-railcar',
 
 	anchorStyle(),
 	registerGraffitiStyle(),
+
+	child('ui-couplers',
+		boxed(),
+
+		display('flex'),
+		justifyContent('space-between'),
+
+		position('relative'),
+
+		marginTop(pageGutter.invert()),
+		marginBottom(pageGutter),
+
+		child('ui-coupler',
+			display('flex'),
+			padding(pageGutter),
+
+			backgroundColor(pageColor)
+		)
+	),
 
 	child('ui-detail',
 		boxed(),

@@ -1,6 +1,6 @@
 import { Component, ComponentContent } from "@acryps/page";
 import { CompanySummaryModel, RailcarDirection, RailcarService, RailcarViewModel } from "../managed/services";
-import { containerIcon, goIcon, lengthIncludingBuffersIcon, lengthIncludingCouplersIcon } from "../assets/icons/managed";
+import { containerIcon, goIcon, headCouplerIcon, lengthIncludingBuffersIcon, lengthIncludingCouplersIcon, tailCouplerIcon } from "../assets/icons/managed";
 import { MetaProduct } from "@acryps/metadata";
 import { StorageContainerTagComponent } from "../shared/storage-container-tag";
 import { SlideshowComponent } from "../shared/slideshow";
@@ -57,6 +57,16 @@ export class RailcarPage extends Component {
 			</ui-header>
 
 			{newestSideCaptures.length != 0 && new SlideshowComponent(index => `/capture/${newestSideCaptures[index % newestSideCaptures.length]?.id}`)}
+
+			<ui-couplers>
+				{this.railcar.headCoupler && <ui-coupler ui-href='coupler/head'>
+					{headCouplerIcon()}
+				</ui-coupler>}
+
+				{this.railcar.tailCoupler && <ui-coupler ui-href='coupler/tail'>
+					{tailCouplerIcon()}
+				</ui-coupler>}
+			</ui-couplers>
 
 			{child ?? <ui-detail>
 				{this.railcar.note && <ui-note>

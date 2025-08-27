@@ -12,12 +12,34 @@ import { updateThumbnail } from "./capture/thumbnail";
 import { registerStorageTagInterface } from "./storage/tag";
 import cookieParser from 'cookie-parser';
 import { RequestContext } from "./session/context";
+import { TrainChain } from "./train/chain";
 
 DbClient.connectedClient = new DbClient({});
 
 DbClient.connectedClient.connect().then(async () => {
 	const app = new ManagedServer();
 	const database = new DbContext(new RunContext());
+
+
+	const chain = new TrainChain();
+
+	for (let railcar of await database.railcar.toArray()) {
+		await chain.add(railcar);
+	}
+
+	chain.dump();
+
+	for (let coupling of await database.coupling.orderByAscending(coupling => coupling.coupled).toArray()) {
+		await chain.couple(coupling.sourceId, coupling.targetId);
+
+		chain.dump();
+	}
+
+
+
+
+
+
 
 	// fill in missing thumbnails
 	for (let capture of await database.capture.where(capture => capture.thumbnail == null).toArray()) {

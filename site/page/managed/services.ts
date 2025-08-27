@@ -149,6 +149,17 @@ export class GraffitiInspirationMediaViewModel {
 	}
 }
 
+export class CouplerViewModel {
+	id: string;
+
+	private static $build(raw) {
+		const item = new CouplerViewModel();
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		
+		return item;
+	}
+}
+
 export class RailcarModelSummaryModel {
 	id: string;
 	name: string;
@@ -221,6 +232,25 @@ export class StorageContainerSummaryModel {
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
+		
+		return item;
+	}
+}
+
+export class CouplingViewModel {
+	coupled: Date;
+	id: string;
+	sourceId: string;
+	targetId: string;
+	uncoupled: Date;
+
+	private static $build(raw) {
+		const item = new CouplingViewModel();
+		raw.coupled === undefined || (item.coupled = raw.coupled ? new Date(raw.coupled) : null)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.sourceId === undefined || (item.sourceId = raw.sourceId === null ? null : `${raw.sourceId}`)
+		raw.targetId === undefined || (item.targetId = raw.targetId === null ? null : `${raw.targetId}`)
+		raw.uncoupled === undefined || (item.uncoupled = raw.uncoupled ? new Date(raw.uncoupled) : null)
 		
 		return item;
 	}
@@ -381,6 +411,7 @@ export class GraffitiRailcarViewModel {
 }
 
 export class RailcarViewModel {
+	headCoupler: CouplerViewModel;
 	manufacturer: CompanySummaryModel;
 	model: RailcarModelViewModel;
 	operator: CompanySummaryModel;
@@ -388,6 +419,7 @@ export class RailcarViewModel {
 	captures: CaptureViewModel[];
 	graffitis: GraffitiSummaryModel[];
 	storageContainer: StorageContainerSummaryModel;
+	tailCoupler: CouplerViewModel;
 	aquired: Date;
 	givenName: string;
 	id: string;
@@ -397,6 +429,7 @@ export class RailcarViewModel {
 
 	private static $build(raw) {
 		const item = new RailcarViewModel();
+		raw.headCoupler === undefined || (item.headCoupler = raw.headCoupler ? CouplerViewModel["$build"](raw.headCoupler) : null)
 		raw.manufacturer === undefined || (item.manufacturer = raw.manufacturer ? CompanySummaryModel["$build"](raw.manufacturer) : null)
 		raw.model === undefined || (item.model = raw.model ? RailcarModelViewModel["$build"](raw.model) : null)
 		raw.operator === undefined || (item.operator = raw.operator ? CompanySummaryModel["$build"](raw.operator) : null)
@@ -404,6 +437,7 @@ export class RailcarViewModel {
 		raw.captures === undefined || (item.captures = raw.captures ? raw.captures.map(i => CaptureViewModel["$build"](i)) : null)
 		raw.graffitis === undefined || (item.graffitis = raw.graffitis ? raw.graffitis.map(i => GraffitiSummaryModel["$build"](i)) : null)
 		raw.storageContainer === undefined || (item.storageContainer = raw.storageContainer ? StorageContainerSummaryModel["$build"](raw.storageContainer) : null)
+		raw.tailCoupler === undefined || (item.tailCoupler = raw.tailCoupler ? CouplerViewModel["$build"](raw.tailCoupler) : null)
 		raw.aquired === undefined || (item.aquired = raw.aquired ? new Date(raw.aquired) : null)
 		raw.givenName === undefined || (item.givenName = raw.givenName === null ? null : `${raw.givenName}`)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)

@@ -5,6 +5,7 @@ import { CompanySummaryModel } from "../company/company";
 import { StorageContainerSummaryModel } from "../storage/storage-contaiuner";
 import { GraffitiSummaryModel } from "../graffiti/graffiti";
 import { CaptureViewModel } from "../capture/capture";
+import { CouplerViewModel } from "./coupler";
 
 export class RailcarSummaryModel extends ViewModel<Railcar> {
 	id;
@@ -33,4 +34,7 @@ export class RailcarViewModel extends RailcarSummaryModel {
 	storageContainer: StorageContainerSummaryModel;
 	captures: CaptureViewModel[];
 	graffitis: GraffitiSummaryModel[];
+
+	headCoupler: CouplerViewModel;
+	tailCoupler: CouplerViewModel;
 }

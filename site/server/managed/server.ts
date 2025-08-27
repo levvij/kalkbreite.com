@@ -31,9 +31,11 @@ import { StorageService } from "././../storage/index";
 import { ArtistSummaryModel } from "./../graffiti/artist";
 import { GraffitiSummaryModel } from "./../graffiti/graffiti";
 import { GraffitiInspirationMediaViewModel } from "./../graffiti/inspiration";
+import { CouplerViewModel } from "./../railcar/coupler";
 import { RailcarModelSummaryModel } from "./../railcar/model";
 import { AccountViewModel } from "./../session/session";
 import { StorageContainerSummaryModel } from "./../storage/storage-contaiuner";
+import { CouplingViewModel } from "./../train/coupling";
 import { RailcarModelViewModel } from "./../railcar/model";
 import { GraffitiRailcarViewModel } from "./../railcar/railcar";
 import { Capture } from "./../managed/database";
@@ -41,10 +43,12 @@ import { Company } from "./../managed/database";
 import { Artist } from "./../managed/database";
 import { GraffitiCapture } from "./../managed/database";
 import { GraffitiType } from "./../managed/database";
+import { Coupler } from "./../managed/database";
 import { RailcarModel } from "./../managed/database";
 import { Railcar } from "./../managed/database";
 import { Account } from "./../managed/database";
 import { StorageContainer } from "./../managed/database";
+import { Coupling } from "./../managed/database";
 
 Inject.mappings = {
 	"CompanyService": {
@@ -891,6 +895,64 @@ ViewModel.mappings = {
 			return model;
 		}
 	},
+	[CouplerViewModel.name]: class ComposedCouplerViewModel extends CouplerViewModel {
+		async map() {
+			return {
+				id: this.$$model.id
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				id: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new CouplerViewModel(null);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: CouplerViewModel) {
+			let model: Coupler;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(Coupler).find(viewModel.id)
+			} else {
+				model = new Coupler();
+			}
+			
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+
+			return model;
+		}
+	},
 	[RailcarModelSummaryModel.name]: class ComposedRailcarModelSummaryModel extends RailcarModelSummaryModel {
 		async map() {
 			return {
@@ -1231,6 +1293,80 @@ ViewModel.mappings = {
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
+
+			return model;
+		}
+	},
+	[CouplingViewModel.name]: class ComposedCouplingViewModel extends CouplingViewModel {
+		async map() {
+			return {
+				coupled: this.$$model.coupled,
+				id: this.$$model.id,
+				sourceId: this.$$model.sourceId,
+				targetId: this.$$model.targetId,
+				uncoupled: this.$$model.uncoupled
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				coupled: true,
+				id: true,
+				sourceId: true,
+				targetId: true,
+				uncoupled: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new CouplingViewModel(null);
+			"coupled" in data && (item.coupled = data.coupled === null ? null : new Date(data.coupled));
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"sourceId" in data && (item.sourceId = data.sourceId === null ? null : `${data.sourceId}`);
+			"targetId" in data && (item.targetId = data.targetId === null ? null : `${data.targetId}`);
+			"uncoupled" in data && (item.uncoupled = data.uncoupled === null ? null : new Date(data.uncoupled));
+
+			return item;
+		}
+
+		static async toModel(viewModel: CouplingViewModel) {
+			let model: Coupling;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(Coupling).find(viewModel.id)
+			} else {
+				model = new Coupling();
+			}
+			
+			"coupled" in viewModel && (model.coupled = viewModel.coupled === null ? null : new Date(viewModel.coupled));
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"sourceId" in viewModel && (model.sourceId = viewModel.sourceId === null ? null : `${viewModel.sourceId}`);
+			"targetId" in viewModel && (model.targetId = viewModel.targetId === null ? null : `${viewModel.targetId}`);
+			"uncoupled" in viewModel && (model.uncoupled = viewModel.uncoupled === null ? null : new Date(viewModel.uncoupled));
 
 			return model;
 		}
@@ -1832,6 +1968,7 @@ ViewModel.mappings = {
 	[RailcarViewModel.name]: class ComposedRailcarViewModel extends RailcarViewModel {
 		async map() {
 			return {
+				headCoupler: new CouplerViewModel(await BaseServer.unwrap(this.$$model.headCoupler)),
 				manufacturer: new CompanySummaryModel(await BaseServer.unwrap(this.$$model.manufacturer)),
 				model: new RailcarModelViewModel(await BaseServer.unwrap(this.$$model.model)),
 				operator: new CompanySummaryModel(await BaseServer.unwrap(this.$$model.operator)),
@@ -1839,6 +1976,7 @@ ViewModel.mappings = {
 				captures: (await this.$$model.captures.includeTree(ViewModel.mappings[CaptureViewModel.name].items).toArray()).map(item => new CaptureViewModel(item)),
 				graffitis: (await this.$$model.graffitis.includeTree(ViewModel.mappings[GraffitiSummaryModel.name].items).toArray()).map(item => new GraffitiSummaryModel(item)),
 				storageContainer: new StorageContainerSummaryModel(await BaseServer.unwrap(this.$$model.storageContainer)),
+				tailCoupler: new CouplerViewModel(await BaseServer.unwrap(this.$$model.tailCoupler)),
 				aquired: this.$$model.aquired,
 				givenName: this.$$model.givenName,
 				id: this.$$model.id,
@@ -1874,6 +2012,12 @@ ViewModel.mappings = {
 			}
 
 			return {
+				get headCoupler() {
+					return ViewModel.mappings[CouplerViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "headCoupler-RailcarViewModel"]
+					);
+				},
 				get manufacturer() {
 					return ViewModel.mappings[CompanySummaryModel.name].getPrefetchingProperties(
 						level,
@@ -1916,6 +2060,12 @@ ViewModel.mappings = {
 						[...parents, "storageContainer-RailcarViewModel"]
 					);
 				},
+				get tailCoupler() {
+					return ViewModel.mappings[CouplerViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "tailCoupler-RailcarViewModel"]
+					);
+				},
 				aquired: true,
 				givenName: true,
 				id: true,
@@ -1927,6 +2077,7 @@ ViewModel.mappings = {
 
 		static toViewModel(data) {
 			const item = new RailcarViewModel(null);
+			"headCoupler" in data && (item.headCoupler = data.headCoupler && ViewModel.mappings[CouplerViewModel.name].toViewModel(data.headCoupler));
 			"manufacturer" in data && (item.manufacturer = data.manufacturer && ViewModel.mappings[CompanySummaryModel.name].toViewModel(data.manufacturer));
 			"model" in data && (item.model = data.model && ViewModel.mappings[RailcarModelViewModel.name].toViewModel(data.model));
 			"operator" in data && (item.operator = data.operator && ViewModel.mappings[CompanySummaryModel.name].toViewModel(data.operator));
@@ -1934,6 +2085,7 @@ ViewModel.mappings = {
 			"captures" in data && (item.captures = data.captures && [...data.captures].map(i => ViewModel.mappings[CaptureViewModel.name].toViewModel(i)));
 			"graffitis" in data && (item.graffitis = data.graffitis && [...data.graffitis].map(i => ViewModel.mappings[GraffitiSummaryModel.name].toViewModel(i)));
 			"storageContainer" in data && (item.storageContainer = data.storageContainer && ViewModel.mappings[StorageContainerSummaryModel.name].toViewModel(data.storageContainer));
+			"tailCoupler" in data && (item.tailCoupler = data.tailCoupler && ViewModel.mappings[CouplerViewModel.name].toViewModel(data.tailCoupler));
 			"aquired" in data && (item.aquired = data.aquired === null ? null : new Date(data.aquired));
 			"givenName" in data && (item.givenName = data.givenName === null ? null : `${data.givenName}`);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
@@ -1953,6 +2105,7 @@ ViewModel.mappings = {
 				model = new Railcar();
 			}
 			
+			"headCoupler" in viewModel && (model.headCoupler.id = viewModel.headCoupler ? viewModel.headCoupler.id : null);
 			"manufacturer" in viewModel && (model.manufacturer.id = viewModel.manufacturer ? viewModel.manufacturer.id : null);
 			"model" in viewModel && (model.model.id = viewModel.model ? viewModel.model.id : null);
 			"operator" in viewModel && (model.operator.id = viewModel.operator ? viewModel.operator.id : null);
@@ -1960,6 +2113,7 @@ ViewModel.mappings = {
 			"captures" in viewModel && (null);
 			"graffitis" in viewModel && (null);
 			"storageContainer" in viewModel && (model.storageContainer.id = viewModel.storageContainer ? viewModel.storageContainer.id : null);
+			"tailCoupler" in viewModel && (model.tailCoupler.id = viewModel.tailCoupler ? viewModel.tailCoupler.id : null);
 			"aquired" in viewModel && (model.aquired = viewModel.aquired === null ? null : new Date(viewModel.aquired));
 			"givenName" in viewModel && (model.givenName = viewModel.givenName === null ? null : `${viewModel.givenName}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
