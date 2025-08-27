@@ -1,4 +1,5 @@
-import { Coupler, Railcar } from "../../managed/database";
+import { createHash } from "crypto";
+import { Coupler, DbContext, Railcar } from "../../managed/database";
 import { CoupledUnit } from "./railcar";
 import { Train } from "./train";
 
@@ -7,6 +8,31 @@ export class TrainChain {
 	trains: Train[] = [];
 
 	onDisband = (train: Train, units: CoupledUnit[]) => console.log('disbaned', train.identifier, units.map(unit => unit.railcar.tag));
+
+	private hasher = createHash('sha1');
+
+	static async restore(database: DbContext) {
+		const chain = new TrainChain();
+
+		const railcars = await database.railcar
+			.include(railcar => railcar.headCoupler)
+			.include(railcar => railcar.tailCoupler)
+			.toArray();
+
+		for (let railcar of railcars) {
+			await chain.add(railcar);
+		}
+
+		const couplings = await database.coupling
+			.orderByAscending(coupling => coupling.coupled)
+			.toArray();
+
+		for (let coupling of couplings) {
+			await chain.couple(coupling.sourceId, coupling.targetId);
+		}
+
+		return chain;
+	}
 
 	// adds a railcar to the chain
 	//
@@ -19,11 +45,14 @@ export class TrainChain {
 			{ coupler: await railcar.tailCoupler.fetch() }
 		);
 
-		const train = new Train();
+		const train = new Train(this.createIdentifier());
 		train.units.push(unit);
 
 		this.trains.push(train);
 		this.units.push(unit);
+
+		this.hasher.update('add');
+		this.hasher.update(railcar.id);
 
 		return train;
 	}
@@ -32,8 +61,12 @@ export class TrainChain {
 	// automatically rearranges trains, creating and deleting them as required
 	//
 	// will create new trains if no target is set
-	async couple(sourceId: string, targetId: string) {
+	async couple(sourceId: string, targetId?: string) {
 		console.group(sourceId, targetId);
+
+		this.hasher.update('couple');
+		this.hasher.update(sourceId);
+		this.hasher.update(targetId ?? '*');
 
 		// find the railcar detaching itself
 		const sourceUnit = this.units.find(unit => unit.railcar.headCouplerId == sourceId || unit.railcar.tailCouplerId == sourceId);
@@ -142,5 +175,9 @@ export class TrainChain {
 		console.log(`singles: ${singles.map(single => single.units.at(0).railcar.tag).join(' ')}`)
 
 		console.groupEnd();
+	}
+
+	private createIdentifier() {
+		return this.hasher.update('identifier').copy().digest('base64url').substring(0, 6);
 	}
 }

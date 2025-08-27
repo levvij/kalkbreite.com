@@ -1,6 +1,6 @@
 import { Component, ComponentContent } from "@acryps/page";
-import { CompanySummaryModel, RailcarDirection, RailcarService, RailcarViewModel } from "../managed/services";
-import { containerIcon, goIcon, headCouplerIcon, lengthIncludingBuffersIcon, lengthIncludingCouplersIcon, tailCouplerIcon } from "../assets/icons/managed";
+import { CompanySummaryModel, RailcarDirection, RailcarService, RailcarViewModel, TrainService } from "../managed/services";
+import { containerIcon, goIcon, headCouplerIcon, lengthIncludingBuffersIcon, lengthIncludingCouplersIcon, tailCouplerIcon, trainLinkupIcon } from "../assets/icons/managed";
 import { MetaProduct } from "@acryps/metadata";
 import { StorageContainerTagComponent } from "../shared/storage-container-tag";
 import { SlideshowComponent } from "../shared/slideshow";
@@ -59,13 +59,25 @@ export class RailcarPage extends Component {
 			{newestSideCaptures.length != 0 && new SlideshowComponent(index => `/capture/${newestSideCaptures[index % newestSideCaptures.length]?.id}`)}
 
 			<ui-couplers>
-				{this.railcar.headCoupler && <ui-coupler ui-href='coupler/head'>
-					{headCouplerIcon()}
-				</ui-coupler>}
+				<ui-side>
+					{this.railcar.headCoupler && <ui-link ui-href='coupler/head'>
+						{headCouplerIcon()}
+					</ui-link>}
 
-				{this.railcar.tailCoupler && <ui-coupler ui-href='coupler/tail'>
-					{tailCouplerIcon()}
-				</ui-coupler>}
+					<ui-link ui-click={async () => {
+						const unit = await new TrainService().getUnitTrain(this.railcar.id);
+
+						this.navigate(`/train/${unit}`);
+					}}>
+						{trainLinkupIcon()}
+					</ui-link>
+				</ui-side>
+
+				<ui-side>
+					{this.railcar.tailCoupler && <ui-link ui-href='coupler/tail'>
+						{tailCouplerIcon()}
+					</ui-link>}
+				</ui-side>
 			</ui-couplers>
 
 			{child ?? <ui-detail>
@@ -73,10 +85,10 @@ export class RailcarPage extends Component {
 					{this.railcar.note}
 				</ui-note>}
 
-				{Application.session?.account && <ui-actions>
-					<ui-action ui-href='register-graffiti'>
+				<ui-actions>
+					{Application.session?.account && <ui-action ui-href='register-graffiti'>
 						Register Graffiti
-					</ui-action>
+					</ui-action>}
 
 					{forwardCaptures[0] && <ui-action ui-href={`/capture/${forwardCaptures[0].id}/full`} ui-href-target='blank'>
 						Download Capture (Forward)
@@ -85,7 +97,7 @@ export class RailcarPage extends Component {
 					{reverseCaptures[0] && <ui-action ui-href={`/capture/${reverseCaptures[0].id}/full`} ui-href-target='blank'>
 						Download Capture (Reverse)
 					</ui-action>}
-				</ui-actions>}
+				</ui-actions>
 
 				{this.railcar.model && new DetailSectionComponent(<ui-model ui-href={`/model/${this.railcar.model.tag}`}>
 					<ui-name>

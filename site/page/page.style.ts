@@ -12,6 +12,7 @@ import { artistStyle } from "./artist/index.style";
 import { buttonStyle } from "./shared/button";
 import { clickable } from "./shared/interaction";
 import { loginStyle } from "./login/index.style";
+import { trainStyle } from "./train/index.style";
 
 export const applicationStyle = () => root(
 	monospacedFont,
@@ -31,6 +32,7 @@ export const applicationStyle = () => root(
 		child('ui-page',
 			homeStyle(),
 			loginStyle(),
+			trainStyle(),
 			artistStyle(),
 			railcarStyle(),
 			companyStyle(),

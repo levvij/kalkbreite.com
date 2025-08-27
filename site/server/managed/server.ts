@@ -28,6 +28,8 @@ import { Authentication } from "././../session/authentication";
 import { SessionService } from "././../session/index";
 import { StorageContainerViewModel } from "././../storage/storage-contaiuner";
 import { StorageService } from "././../storage/index";
+import { TrainChain } from "././../train/chain";
+import { TrainService } from "././../train/index";
 import { ArtistSummaryModel } from "./../graffiti/artist";
 import { GraffitiSummaryModel } from "./../graffiti/graffiti";
 import { GraffitiInspirationMediaViewModel } from "./../graffiti/inspiration";
@@ -82,6 +84,14 @@ Inject.mappings = {
 	"StorageService": {
 		objectConstructor: StorageService,
 		parameters: ["DbContext"]
+	},
+	"TrainService": {
+		objectConstructor: TrainService,
+		parameters: ["DbContext","TrainChain"]
+	},
+	"TrainChain": {
+		objectConstructor: TrainChain,
+		parameters: []
 	}
 };
 
@@ -294,6 +304,37 @@ export class ManagedServer extends BaseServer {
 			inject => inject.construct(StorageService),
 			(controller, params) => controller.getContainer(
 				params["FpNz1jaHk2emZvY2Z4dDdvOGZ2Zml4eD"]
+			)
+		);
+
+		this.expose(
+			"U0M3RkYjRzNjt1ZWVrbzswMWpsMjpwaT",
+			{},
+			inject => inject.construct(TrainService),
+			(controller, params) => controller.getTrains(
+				
+			)
+		);
+
+		this.expose(
+			"lzOGlqcTd0eWhnYTZ0Y2A3czJsYm95cj",
+			{
+			"F5Z3U5ZXFxeWd3cHY3MmA3YXB2MnV4Zn": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(TrainService),
+			(controller, params) => controller.getTrain(
+				params["F5Z3U5ZXFxeWd3cHY3MmA3YXB2MnV4Zn"]
+			)
+		);
+
+		this.expose(
+			"lrcDJxc3wya2t2bGZlOHMxdTQ3OXI2cH",
+			{
+			"10czNubHltczN4cXhubmRxNzdiMWR0b3": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(TrainService),
+			(controller, params) => controller.getUnitTrain(
+				params["10czNubHltczN4cXhubmRxNzdiMWR0b3"]
 			)
 		)
 	}

@@ -894,3 +894,68 @@ export class StorageService {
 		});
 	}
 }
+
+export class TrainService {
+	async getTrains(): Promise<Array<string>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("U0M3RkYjRzNjt1ZWVrbzswMWpsMjpwaT"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : `${d}`);
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async getTrain(identifier: string): Promise<Array<RailcarSummaryModel>> {
+		const $data = new FormData();
+		$data.append("F5Z3U5ZXFxeWd3cHY3MmA3YXB2MnV4Zn", Service.stringify(identifier))
+
+		return await fetch(Service.toURL("lzOGlqcTd0eWhnYTZ0Y2A3czJsYm95cj"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : RailcarSummaryModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async getUnitTrain(railcarId: string): Promise<string> {
+		const $data = new FormData();
+		$data.append("10czNubHltczN4cXhubmRxNzdiMWR0b3", Service.stringify(railcarId))
+
+		return await fetch(Service.toURL("lrcDJxc3wya2t2bGZlOHMxdTQ3OXI2cH"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d === null ? null : `${d}`;
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+}

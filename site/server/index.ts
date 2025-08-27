@@ -20,26 +20,9 @@ DbClient.connectedClient.connect().then(async () => {
 	const app = new ManagedServer();
 	const database = new DbContext(new RunContext());
 
-
-	const chain = new TrainChain();
-
-	for (let railcar of await database.railcar.toArray()) {
-		await chain.add(railcar);
-	}
-
+	// load chain
+	const chain = await TrainChain.restore(database);
 	chain.dump();
-
-	for (let coupling of await database.coupling.orderByAscending(coupling => coupling.coupled).toArray()) {
-		await chain.couple(coupling.sourceId, coupling.targetId);
-
-		chain.dump();
-	}
-
-
-
-
-
-
 
 	// fill in missing thumbnails
 	for (let capture of await database.capture.where(capture => capture.thumbnail == null).toArray()) {
@@ -58,7 +41,8 @@ DbClient.connectedClient.connect().then(async () => {
 	app.createInjector = (context: RequestContext) => new Inject({
 		DbContext: database,
 		Session: context.session,
-		Authentication: context.authentication
+		Authentication: context.authentication,
+		TrainChain: chain
 	});
 
 	app.use(new StaticFileRoute('/assets/', join(process.cwd(), '..', 'page', 'assets')));

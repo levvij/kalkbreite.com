@@ -3,7 +3,9 @@ import { Coupler } from "../../managed/database";
 import { CoupledUnit } from "./railcar";
 
 export class Train {
-	identifier = randomBytes(8).toString('base64');
+	constructor(
+		public identifier: string
+	) {}
 
 	units: CoupledUnit[] = [];
 
