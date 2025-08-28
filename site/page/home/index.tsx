@@ -30,7 +30,7 @@ export class HomePage extends Component {
 
 	render() {
 		return <ui-home>
-			{new SlideshowComponent(() => '/capture/random')}
+			{new SlideshowComponent(() => `/capture/random?seed=${Math.random().toString().substring(2)}`)}
 
 			<ui-content>
 				<ui-guide>

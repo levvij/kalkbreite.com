@@ -13,6 +13,7 @@ import { registerStorageTagInterface } from "./storage/tag";
 import cookieParser from 'cookie-parser';
 import { RequestContext } from "./session/context";
 import { TrainChain } from "./train/chain";
+import { writeFile } from "fs/promises";
 
 DbClient.connectedClient = new DbClient({});
 
