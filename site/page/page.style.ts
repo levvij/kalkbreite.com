@@ -13,6 +13,7 @@ import { buttonStyle } from "./shared/button";
 import { clickable } from "./shared/interaction";
 import { loginStyle } from "./login/index.style";
 import { trainStyle } from "./train/index.style";
+import { layoutStyle } from "./layout/index.style";
 
 export const applicationStyle = () => root(
 	monospacedFont,
@@ -38,6 +39,7 @@ export const applicationStyle = () => root(
 			companyStyle(),
 			graffitiStyle(),
 			storageContainerStyle(),
+			layoutStyle(),
 
 			display('block'),
 

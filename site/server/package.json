@@ -13,10 +13,8 @@
 	},
 	"dependencies": {
 		"@acryps/environment": "^2.7.2",
-		"@types/jsdom": "^21.1.7",
 		"bwip-js": "^4.5.1",
 		"cookie-parser": "^1.4.7",
-		"jsdom": "^26.1.0",
 		"skia-canvas": "^2.0.2",
 		"vlquery": "^7.2.0",
 		"vlserver": "^4.9.2"

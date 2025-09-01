@@ -18,6 +18,7 @@ import { GraffitiInspirationPage } from './graffiti-inspiration';
 import { CaptureAnchorPage } from './railcar/anchor';
 import { RailcarCouplerPage } from './railcar/coupler';
 import { TrainPage } from './train';
+import { LayoutPage } from './layout';
 
 // injected by esbuild
 declare const buildDate: string;
@@ -40,6 +41,8 @@ export class Application {
 		this.router = new PathRouter(PageComponent
 			.route('/home', HomePage)
 			.route('/login', LoginPage)
+
+			.route('/layout', LayoutPage)
 
 			.route('/artist/:tag', ArtistPage)
 

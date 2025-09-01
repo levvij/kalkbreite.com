@@ -22,10 +22,6 @@ DbClient.connectedClient.connect().then(async () => {
 	const app = new ManagedServer();
 	const database = new DbContext(new RunContext());
 
-	const layoutPlan = new LayoutPlan(
-		readFileSync(join(process.cwd(), '..', '..', 'layout', 'index.rml')).toString()
-	);
-
 	// load chain
 	const chain = await TrainChain.restore(database);
 	chain.dump();
@@ -53,6 +49,8 @@ DbClient.connectedClient.connect().then(async () => {
 
 	app.use(new StaticFileRoute('/assets/', join(process.cwd(), '..', 'page', 'assets')));
 	app.use(new StaticFileRoute('/bundle/', join(process.cwd(), '..', 'page', '.built')));
+
+	app.use(new StaticFileRoute('/layout/source/', join(process.cwd(), '..', '..', 'layout')));
 
 	registerTagInterface(app);
 	registerCaptureInterface(app, database);
