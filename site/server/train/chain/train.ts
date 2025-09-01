@@ -3,9 +3,16 @@ import { Coupler } from "../../managed/database";
 import { CoupledUnit } from "./railcar";
 
 export class Train {
+	changed: Date = this.created;
+
 	constructor(
-		public identifier: string
+		public identifier: string,
+		public created: Date
 	) {}
+
+	get length(): number {
+		return this.units.length;
+	}
 
 	units: CoupledUnit[] = [];
 

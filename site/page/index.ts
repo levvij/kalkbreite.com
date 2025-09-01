@@ -17,8 +17,9 @@ import { GraffitiInspirationsPage } from './graffiti-inspirations';
 import { GraffitiInspirationPage } from './graffiti-inspiration';
 import { CaptureAnchorPage } from './railcar/anchor';
 import { RailcarCouplerPage } from './railcar/coupler';
-import { TrainPage } from './train';
+import { TrainPage } from './trains/train';
 import { LayoutPage } from './layout';
+import { TrainsPage } from './trains';
 
 // injected by esbuild
 declare const buildDate: string;
@@ -53,7 +54,9 @@ export class Application {
 				.route('/coupler/:direction', RailcarCouplerPage)
 			)
 
-			.route('/train/:identifier', TrainPage)
+			.route('/train', TrainsPage
+				.route('/:identifier', TrainPage)
+			)
 
 			.route('/company/:tag', CompanyPage)
 

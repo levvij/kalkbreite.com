@@ -1,4 +1,4 @@
-import { root, child, padding, margin, display, position, top, backgroundColor, color, fontSize, rem, fontFamily, borderBottom, px, paddingBlock, paddingInline, flexGrow, alignItems } from "@acryps/style";
+import { root, child, padding, margin, display, position, top, backgroundColor, color, fontSize, rem, fontFamily, borderBottom, px, paddingBlock, paddingInline, flexGrow, alignItems, zIndex, boxShadow, hex } from "@acryps/style";
 import { homeStyle } from "./home/index.style";
 import { pageColor, pageContrastColor, pageGutter, pageSpacing, primaryColor, primaryContrastColor } from "./index.style";
 import { boxed } from "./shared/boxed";
@@ -12,8 +12,9 @@ import { artistStyle } from "./artist/index.style";
 import { buttonStyle } from "./shared/button";
 import { clickable } from "./shared/interaction";
 import { loginStyle } from "./login/index.style";
-import { trainStyle } from "./train/index.style";
+import { trainStyle } from "./trains/train/index.style";
 import { layoutStyle } from "./layout/index.style";
+import { trainsStyle } from "./trains/index.style";
 
 export const applicationStyle = () => root(
 	monospacedFont,
@@ -33,7 +34,7 @@ export const applicationStyle = () => root(
 		child('ui-page',
 			homeStyle(),
 			loginStyle(),
-			trainStyle(),
+			trainsStyle(),
 			artistStyle(),
 			railcarStyle(),
 			companyStyle(),
@@ -46,6 +47,7 @@ export const applicationStyle = () => root(
 			child('ui-navigation',
 				position('sticky'),
 				top(0),
+				zIndex(1),
 
 				display('block'),
 
@@ -53,6 +55,7 @@ export const applicationStyle = () => root(
 				backgroundColor(pageColor),
 
 				borderBottom(px(2), 'solid', primaryColor),
+				boxShadow(hex('0002'), 0, 0, rem(1)),
 
 				child('ui-content',
 					boxed(),

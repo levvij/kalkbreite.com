@@ -256,6 +256,23 @@ export class CouplingViewModel {
 	}
 }
 
+export class TrainViewModel {
+	changed: Date;
+	identifier: string;
+	created: Date;
+	length: number;
+
+	private static $build(raw) {
+		const item = new TrainViewModel();
+		raw.changed === undefined || (item.changed = raw.changed ? new Date(raw.changed) : null)
+		raw.identifier === undefined || (item.identifier = raw.identifier === null ? null : `${raw.identifier}`)
+		raw.created === undefined || (item.created = raw.created ? new Date(raw.created) : null)
+		raw.length === undefined || (item.length = raw.length === null ? null : +raw.length)
+		
+		return item;
+	}
+}
+
 export class CompanyViewModel {
 	manufacturedRailcars: RailcarSummaryModel[];
 	operatedRailcars: RailcarSummaryModel[];
@@ -896,11 +913,30 @@ export class StorageService {
 }
 
 export class TrainService {
-	async getTrains(): Promise<Array<string>> {
+	async uncoupleAfter(railcarId: string): Promise<void> {
+		const $data = new FormData();
+		$data.append("RmYjhpMnhrcXRhY2E4M2M1YjVpcGF2aG", Service.stringify(railcarId))
+
+		return await fetch(Service.toURL("dpZGNpcXprMWV5aDVpb3BsaDU1Z2FreW"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("error" in r) {
+				throw new Error(r.error);
+			}
+
+			if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			}
+		});
+	}
+
+	async getTrains(): Promise<Array<TrainViewModel>> {
 		const $data = new FormData();
 		
 
-		return await fetch(Service.toURL("U0M3RkYjRzNjt1ZWVrbzswMWpsMjpwaT"), {
+		return await fetch(Service.toURL("FpZXZtYWR5eGRiZzlqMDhyYXRra3M5b2"), {
 			method: "post",
 			credentials: "include",
 			body: $data
@@ -908,7 +944,7 @@ export class TrainService {
 			if ("data" in r) {
 				const d = r.data;
 
-				return d.map(d => d === null ? null : `${d}`);
+				return d.map(d => d === null ? null : TrainViewModel["$build"](d));
 			} else if ("aborted" in r) {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {

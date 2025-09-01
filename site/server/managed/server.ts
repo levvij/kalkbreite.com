@@ -28,7 +28,9 @@ import { Authentication } from "././../session/authentication";
 import { SessionService } from "././../session/index";
 import { StorageContainerViewModel } from "././../storage/storage-contaiuner";
 import { StorageService } from "././../storage/index";
+import { Coupling } from "././database";
 import { TrainChain } from "././../train/chain";
+import { TrainViewModel } from "././../train/train";
 import { TrainService } from "././../train/index";
 import { ArtistSummaryModel } from "./../graffiti/artist";
 import { GraffitiSummaryModel } from "./../graffiti/graffiti";
@@ -50,7 +52,7 @@ import { RailcarModel } from "./../managed/database";
 import { Railcar } from "./../managed/database";
 import { Account } from "./../managed/database";
 import { StorageContainer } from "./../managed/database";
-import { Coupling } from "./../managed/database";
+import { Train } from "./../train/chain/train";
 
 Inject.mappings = {
 	"CompanyService": {
@@ -308,7 +310,18 @@ export class ManagedServer extends BaseServer {
 		);
 
 		this.expose(
-			"U0M3RkYjRzNjt1ZWVrbzswMWpsMjpwaT",
+			"dpZGNpcXprMWV5aDVpb3BsaDU1Z2FreW",
+			{
+			"RmYjhpMnhrcXRhY2E4M2M1YjVpcGF2aG": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(TrainService),
+			(controller, params) => controller.uncoupleAfter(
+				params["RmYjhpMnhrcXRhY2E4M2M1YjVpcGF2aG"]
+			)
+		);
+
+		this.expose(
+			"FpZXZtYWR5eGRiZzlqMDhyYXRra3M5b2",
 			{},
 			inject => inject.construct(TrainService),
 			(controller, params) => controller.getTrains(
@@ -1408,6 +1421,70 @@ ViewModel.mappings = {
 			"sourceId" in viewModel && (model.sourceId = viewModel.sourceId === null ? null : `${viewModel.sourceId}`);
 			"targetId" in viewModel && (model.targetId = viewModel.targetId === null ? null : `${viewModel.targetId}`);
 			"uncoupled" in viewModel && (model.uncoupled = viewModel.uncoupled === null ? null : new Date(viewModel.uncoupled));
+
+			return model;
+		}
+	},
+	[TrainViewModel.name]: class ComposedTrainViewModel extends TrainViewModel {
+		async map() {
+			return {
+				changed: this.$$model.changed,
+				identifier: this.$$model.identifier,
+				created: this.$$model.created,
+				length: this.$$model.length
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				changed: true,
+				identifier: true,
+				created: true,
+				length: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new TrainViewModel(null);
+			"changed" in data && (item.changed = data.changed === null ? null : new Date(data.changed));
+			"identifier" in data && (item.identifier = data.identifier === null ? null : `${data.identifier}`);
+			"created" in data && (item.created = data.created === null ? null : new Date(data.created));
+			"length" in data && (item.length = data.length === null ? null : +data.length);
+
+			return item;
+		}
+
+		static async toModel(viewModel: TrainViewModel) {
+			const model = new Train();
+			
+			"changed" in viewModel && (model.changed = viewModel.changed === null ? null : new Date(viewModel.changed));
+			"identifier" in viewModel && (model.identifier = viewModel.identifier === null ? null : `${viewModel.identifier}`);
+			"created" in viewModel && (model.created = viewModel.created === null ? null : new Date(viewModel.created));
+			"length" in viewModel && (model.length = viewModel.length === null ? null : +viewModel.length);
 
 			return model;
 		}

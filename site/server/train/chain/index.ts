@@ -20,7 +20,7 @@ export class TrainChain {
 			.toArray();
 
 		for (let railcar of railcars) {
-			await chain.add(railcar);
+			await chain.add(railcar, railcar.aquired);
 		}
 
 		const couplings = await database.coupling
@@ -28,7 +28,7 @@ export class TrainChain {
 			.toArray();
 
 		for (let coupling of couplings) {
-			await chain.couple(coupling.sourceId, coupling.targetId);
+			await chain.couple(coupling.sourceId, coupling.targetId, coupling.coupled);
 		}
 
 		return chain;
@@ -38,14 +38,14 @@ export class TrainChain {
 	//
 	// each railcar quickly acts as a single train when being created
 	// it can be immediately coupled after being created
-	async add(railcar: Railcar) {
+	async add(railcar: Railcar, time: Date) {
 		const unit = new CoupledUnit(
 			railcar,
 			{ coupler: await railcar.headCoupler.fetch() },
 			{ coupler: await railcar.tailCoupler.fetch() }
 		);
 
-		const train = new Train(this.createIdentifier());
+		const train = new Train(this.createIdentifier(), time);
 		train.units.push(unit);
 
 		this.trains.push(train);
@@ -61,7 +61,7 @@ export class TrainChain {
 	// automatically rearranges trains, creating and deleting them as required
 	//
 	// will create new trains if no target is set
-	async couple(sourceId: string, targetId?: string) {
+	async couple(sourceId: string, targetId: string | null, time: Date) {
 		console.group(sourceId, targetId);
 
 		this.hasher.update('couple');
@@ -81,6 +81,7 @@ export class TrainChain {
 
 		// shrink old train
 		sourceTrain.units = split.before;
+		sourceTrain.changed = time;
 
 		if (sourceTrain.units.length) {
 			// remove link
@@ -93,7 +94,7 @@ export class TrainChain {
 
 		// create new train with the loose railcars if they are not attached to somewhere
 		if (!targetId) {
-			const train = new Train();
+			const train = new Train(this.createIdentifier(), time);
 			train.units = split.after;
 
 			this.trains.push(train);
@@ -148,6 +149,7 @@ export class TrainChain {
 		}
 
 		targetTrain.units.push(...appendingUnits);
+		targetTrain.changed = time;
 
 		console.groupEnd();
 	}
