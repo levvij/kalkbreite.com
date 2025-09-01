@@ -178,6 +178,11 @@ export class TrainChain {
 	}
 
 	private createIdentifier() {
-		return this.hasher.update('identifier').copy().digest('base64url').substring(0, 6);
+		return this.hasher
+			.update('identifier')
+			.copy()
+			.digest('base64url')
+			.replace(/[^A-Z0-9]/g, '')
+			.substring(0, 6);
 	}
 }

@@ -1,8 +1,8 @@
-import { alignItems, alignSelf, aspectRatio, backgroundColor, child, color, cursor, display, Dvi, em, filter, flexBasis, flexGrow, flexShrink, flexWrap, fontFamily, fontSize, fontWeight, gap, height, hex, imageRendering, invert, justifyContent, lineHeight, marginBottom, marginInline, marginRight, marginTop, maxWidth, min, objectFit, opacity, padding, paddingBlock, paddingBottom, paddingInline, percentage, position, ratio, rem, textAlign, width } from "@acryps/style";
+import { alignContent, alignItems, alignSelf, aspectRatio, backgroundColor, child, color, cursor, display, Dvi, em, filter, flexBasis, flexGrow, flexShrink, flexWrap, fontFamily, fontSize, fontWeight, gap, height, hex, imageRendering, invert, justifyContent, lineHeight, marginBottom, marginInline, marginRight, marginTop, maxWidth, min, objectFit, opacity, padding, paddingBlock, paddingBottom, paddingInline, percentage, position, ratio, rem, textAlign, width } from "@acryps/style";
 import { boxed } from "../shared/boxed";
 import { captureAspectRatio, captureBackgroundColor, knockoutColor, knockoutContrastColor, pageColor, pageContrastColor, pageGutter, pageSpacing, runningNumberFont, tagFont } from "../index.style";
 import { collection, collectionItem } from "../shared/collection";
-import { monospacedFont } from "../assets/font";
+import { monospacedFont, trainIdentifierFont } from "../assets/font";
 import { storageContainerTagStyle } from "../shared/storage-container-tag/index.style";
 import { slideshowStyle } from "../shared/slideshow/index.style";
 import { graffitiCollectionStyle } from "../shared/graffiti-collection/index.style";
@@ -80,13 +80,27 @@ export const railcarStyle = () => child('ui-railcar',
 
 			child('ui-link',
 				display('flex'),
+				alignContent('center'),
+				gap(pageGutter),
+
 				padding(pageGutter),
 
 				backgroundColor(pageColor),
-				fontSize(rem(1.5)),
-				clickable()
+				clickable(),
+
+				child('ui-icon',
+					fontSize(rem(1.5))
+				),
+
+				child('ui-train',
+					trainIdentifierFont
+				)
 			)
 				.hover(
+					color(pageColor),
+					backgroundColor(pageContrastColor)
+				)
+				.attribute('ui-active',
 					color(pageColor),
 					backgroundColor(pageContrastColor)
 				)

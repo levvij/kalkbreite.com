@@ -5,3 +5,5 @@ export const displayFont = new Font('pressura-display')
 
 export const monospacedFont = new Font('pressura-monospace')
 	.addSource('/assets/font/monospace.woff2');
+
+export const trainIdentifierFont = monospacedFont;

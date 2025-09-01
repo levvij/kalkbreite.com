@@ -15,9 +15,11 @@ export class RailcarPage extends Component {
 	declare parameters: { tag };
 
 	railcar: RailcarViewModel;
+	train: string;
 
 	async onload() {
 		this.railcar = await new RailcarService().get(this.parameters.tag);
+		this.train = await new TrainService().getUnitTrain(this.railcar.id);
 
 		new MetaProduct({
 			name: this.railcar.givenName ?? this.railcar.model?.name ?? '-',
@@ -60,21 +62,21 @@ export class RailcarPage extends Component {
 
 			<ui-couplers>
 				<ui-side>
-					{this.railcar.headCoupler && <ui-link ui-href='coupler/head'>
+					{this.railcar.headCoupler && <ui-link ui-href='coupler/head' ui-href-active>
 						{headCouplerIcon()}
 					</ui-link>}
 
-					<ui-link ui-click={async () => {
-						const unit = await new TrainService().getUnitTrain(this.railcar.id);
-
-						this.navigate(`/train/${unit}`);
-					}}>
+					<ui-link ui-href={`/train/${this.train}`}>
 						{trainLinkupIcon()}
+
+						<ui-train>
+							{this.train}
+						</ui-train>
 					</ui-link>
 				</ui-side>
 
 				<ui-side>
-					{this.railcar.tailCoupler && <ui-link ui-href='coupler/tail'>
+					{this.railcar.tailCoupler && <ui-link ui-href='coupler/tail' ui-href-active>
 						{tailCouplerIcon()}
 					</ui-link>}
 				</ui-side>

@@ -14,12 +14,17 @@ import cookieParser from 'cookie-parser';
 import { RequestContext } from "./session/context";
 import { TrainChain } from "./train/chain";
 import { writeFile } from "fs/promises";
+import { LayoutPlan } from "./layout-plan/interface";
 
 DbClient.connectedClient = new DbClient({});
 
 DbClient.connectedClient.connect().then(async () => {
 	const app = new ManagedServer();
 	const database = new DbContext(new RunContext());
+
+	const layoutPlan = new LayoutPlan(
+		readFileSync(join(process.cwd(), '..', '..', 'layout', 'index.rml')).toString()
+	);
 
 	// load chain
 	const chain = await TrainChain.restore(database);

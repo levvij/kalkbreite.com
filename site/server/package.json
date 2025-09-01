@@ -1,6 +1,6 @@
 {
 	"scripts": {
-		"build": "npx vlserver compile && esbuild index.ts --bundle --outfile=.built/index.js --platform=node --target=es2018 --external:skia-canvas && vlquery compile",
+		"build": "npx vlserver compile && esbuild index.ts --bundle --outfile=.built/index.js --platform=node --target=es2018 --external:skia-canvas --external:jsdom && vlquery compile",
 		"start": "npm run build && environment node .built/index.js",
 		"typecheck": "npx vlserver compile && tsc --noEmit",
 		"database:update": "environment vlquery create-context"
@@ -13,8 +13,10 @@
 	},
 	"dependencies": {
 		"@acryps/environment": "^2.7.2",
+		"@types/jsdom": "^21.1.7",
 		"bwip-js": "^4.5.1",
 		"cookie-parser": "^1.4.7",
+		"jsdom": "^26.1.0",
 		"skia-canvas": "^2.0.2",
 		"vlquery": "^7.2.0",
 		"vlserver": "^4.9.2"
