@@ -4,6 +4,7 @@ import { ManagedServer } from "../managed/server";
 import { updateThumbnail } from "./thumbnail";
 import { registerCaptureSessionInterface } from "./session";
 import { TrainChain } from "../train/chain";
+import { reverse } from "../../shared/direction";
 
 export const registerCaptureInterface = (server: ManagedServer, database: DbContext, chain: TrainChain) => {
 	const emptyCanvas = new Canvas(1, 1);
@@ -53,14 +54,17 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 
 	server.app.get('/capture/train/:identifier', (request, response) => {
 		const train = chain.trains.find(train => train.identifier == request.params.identifier);
+		const unit = train.units.at(0);
 
-		response.redirect(`/capture/railcar/${train.units.at(0).railcar.id}`);
+		response.redirect(`/capture/railcar/${unit.railcar.id}/${unit.direction}`);
 	});
 
 	server.app.get('/capture/train/:identifier/:direction', (request, response) => {
+		const invert = request.params.direction == RailcarDirection.reverse;
 		const train = chain.trains.find(train => train.identifier == request.params.identifier);
+		const unit = train.units.at(invert ? -1 : 0);
 
-		response.redirect(`/capture/railcar/${train.units.at(request.params.direction == 'head' ? 0 : -1).railcar.id}`);
+		response.redirect(`/capture/railcar/${unit.railcar.id}/${invert ? reverse(unit.direction) : unit.direction}`);
 	});
 
 	server.app.get('/capture/graffiti/:id', async (request, response) => {

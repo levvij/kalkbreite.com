@@ -26,9 +26,8 @@ export class TrainService extends Service {
 		uncoupling.uncoupled = new Date();
 		uncoupling.sourceId = unit.tail.coupler.id;
 
+		await this.chain.uncouple(uncoupling.sourceId, uncoupling.uncoupled);
 		await uncoupling.create();
-
-		this.chain.uncouple(uncoupling.sourceId, uncoupling.uncoupled);
 	}
 
 	async couple(
@@ -43,9 +42,8 @@ export class TrainService extends Service {
 		coupling.sourceId = sourceAnchor == 'head' ? source.headCoupler.id : source.tailCoupler.id;
 		coupling.targetId = targetAnchor == 'head' ? target.headCoupler.id : target.tailCoupler.id;
 
+		await this.chain.couple(coupling.sourceId, coupling.targetId, coupling.coupled);
 		await coupling.create();
-
-		this.chain.couple(coupling.sourceId, coupling.targetId, coupling.coupled);
 	}
 
 	getTrains() {
