@@ -242,7 +242,6 @@ export class CouplingViewModel {
 	id: string;
 	sourceId: string;
 	targetId: string;
-	uncoupled: Date;
 
 	private static $build(raw) {
 		const item = new CouplingViewModel();
@@ -250,7 +249,6 @@ export class CouplingViewModel {
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.sourceId === undefined || (item.sourceId = raw.sourceId === null ? null : `${raw.sourceId}`)
 		raw.targetId === undefined || (item.targetId = raw.targetId === null ? null : `${raw.targetId}`)
-		raw.uncoupled === undefined || (item.uncoupled = raw.uncoupled ? new Date(raw.uncoupled) : null)
 		
 		return item;
 	}
@@ -918,6 +916,28 @@ export class TrainService {
 		$data.append("RmYjhpMnhrcXRhY2E4M2M1YjVpcGF2aG", Service.stringify(railcarId))
 
 		return await fetch(Service.toURL("dpZGNpcXprMWV5aDVpb3BsaDU1Z2FreW"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("error" in r) {
+				throw new Error(r.error);
+			}
+
+			if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			}
+		});
+	}
+
+	async couple(sourceTrainIdentifier: string, sourceAnchor: string, targetTrainIdentifier: string, targetAnchor: string): Promise<void> {
+		const $data = new FormData();
+		$data.append("ZxMGU5Mnlpd2BlZzo4eXFycXJ1OWpjcD", Service.stringify(sourceTrainIdentifier))
+		$data.append("IzZ2lqNmZ3eWZqaXhnMnlwczVwNGg3OW", Service.stringify(sourceAnchor))
+		$data.append("ZmMzUydGRjZXVxbXd0Z2F6dHF3cTI4Mz", Service.stringify(targetTrainIdentifier))
+		$data.append("hwcDV2bTo5aWZlaDlxNTU2ZmVhMjEyZT", Service.stringify(targetAnchor))
+
+		return await fetch(Service.toURL("p1ZGExaDh2ZzlibTUxamFteTVwcDZtMz"), {
 			method: "post",
 			credentials: "include",
 			body: $data

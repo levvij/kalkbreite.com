@@ -20,6 +20,7 @@ import { RailcarCouplerPage } from './railcar/coupler';
 import { TrainPage } from './trains/train';
 import { LayoutPage } from './layout';
 import { TrainsPage } from './trains';
+import { CoupleTrainPage } from './trains/train/couple';
 
 // injected by esbuild
 declare const buildDate: string;
@@ -55,7 +56,9 @@ export class Application {
 			)
 
 			.route('/train', TrainsPage
-				.route('/:identifier', TrainPage)
+				.route('/:identifier', TrainPage
+					.route('/couple/:anchor', CoupleTrainPage)
+				)
 			)
 
 			.route('/company/:tag', CompanyPage)

@@ -29,6 +29,7 @@ import { SessionService } from "././../session/index";
 import { StorageContainerViewModel } from "././../storage/storage-contaiuner";
 import { StorageService } from "././../storage/index";
 import { Coupling } from "././database";
+import { Uncoupling } from "././database";
 import { TrainChain } from "././../train/chain";
 import { TrainViewModel } from "././../train/train";
 import { TrainService } from "././../train/index";
@@ -317,6 +318,23 @@ export class ManagedServer extends BaseServer {
 			inject => inject.construct(TrainService),
 			(controller, params) => controller.uncoupleAfter(
 				params["RmYjhpMnhrcXRhY2E4M2M1YjVpcGF2aG"]
+			)
+		);
+
+		this.expose(
+			"p1ZGExaDh2ZzlibTUxamFteTVwcDZtMz",
+			{
+			"ZxMGU5Mnlpd2BlZzo4eXFycXJ1OWpjcD": { type: "string", isArray: false, isOptional: false },
+				"IzZ2lqNmZ3eWZqaXhnMnlwczVwNGg3OW": { type: "string", isArray: false, isOptional: false },
+				"ZmMzUydGRjZXVxbXd0Z2F6dHF3cTI4Mz": { type: "string", isArray: false, isOptional: false },
+				"hwcDV2bTo5aWZlaDlxNTU2ZmVhMjEyZT": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(TrainService),
+			(controller, params) => controller.couple(
+				params["ZxMGU5Mnlpd2BlZzo4eXFycXJ1OWpjcD"],
+				params["IzZ2lqNmZ3eWZqaXhnMnlwczVwNGg3OW"],
+				params["ZmMzUydGRjZXVxbXd0Z2F6dHF3cTI4Mz"],
+				params["hwcDV2bTo5aWZlaDlxNTU2ZmVhMjEyZT"]
 			)
 		);
 
@@ -1357,8 +1375,7 @@ ViewModel.mappings = {
 				coupled: this.$$model.coupled,
 				id: this.$$model.id,
 				sourceId: this.$$model.sourceId,
-				targetId: this.$$model.targetId,
-				uncoupled: this.$$model.uncoupled
+				targetId: this.$$model.targetId
 			}
 		};
 
@@ -1391,8 +1408,7 @@ ViewModel.mappings = {
 				coupled: true,
 				id: true,
 				sourceId: true,
-				targetId: true,
-				uncoupled: true
+				targetId: true
 			};
 		};
 
@@ -1402,7 +1418,6 @@ ViewModel.mappings = {
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"sourceId" in data && (item.sourceId = data.sourceId === null ? null : `${data.sourceId}`);
 			"targetId" in data && (item.targetId = data.targetId === null ? null : `${data.targetId}`);
-			"uncoupled" in data && (item.uncoupled = data.uncoupled === null ? null : new Date(data.uncoupled));
 
 			return item;
 		}
@@ -1420,7 +1435,6 @@ ViewModel.mappings = {
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"sourceId" in viewModel && (model.sourceId = viewModel.sourceId === null ? null : `${viewModel.sourceId}`);
 			"targetId" in viewModel && (model.targetId = viewModel.targetId === null ? null : `${viewModel.targetId}`);
-			"uncoupled" in viewModel && (model.uncoupled = viewModel.uncoupled === null ? null : new Date(viewModel.uncoupled));
 
 			return model;
 		}

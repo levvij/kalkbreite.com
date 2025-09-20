@@ -22,6 +22,12 @@ CREATE TABLE coupling (
 	source_id UUID CONSTRAINT source__ REFERENCES coupler (id),
 	target_id UUID CONSTRAINT target__ REFERENCES coupler (id),
 
-	uncoupled TIMESTAMP,
 	coupled TIMESTAMP
+);
+
+CREATE TABLE uncoupling (
+	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+	source_id UUID CONSTRAINT source__ REFERENCES coupler (id),
+
+	uncoupled TIMESTAMP
 );

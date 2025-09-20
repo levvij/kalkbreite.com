@@ -3,8 +3,9 @@ import { Capture, CaptureFrame, CaptureSession, DbContext, GraffitiCapture, Rail
 import { ManagedServer } from "../managed/server";
 import { updateThumbnail } from "./thumbnail";
 import { registerCaptureSessionInterface } from "./session";
+import { TrainChain } from "../train/chain";
 
-export const registerCaptureInterface = (server: ManagedServer, database: DbContext) => {
+export const registerCaptureInterface = (server: ManagedServer, database: DbContext, chain: TrainChain) => {
 	const emptyCanvas = new Canvas(1, 1);
 	emptyCanvas.getContext('2d');
 
@@ -48,6 +49,18 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 
 		response.contentType('image/jpeg');
 		response.end(capture.thumbnail);
+	});
+
+	server.app.get('/capture/train/:identifier', (request, response) => {
+		const train = chain.trains.find(train => train.identifier == request.params.identifier);
+
+		response.redirect(`/capture/railcar/${train.units.at(0).railcar.id}`);
+	});
+
+	server.app.get('/capture/train/:identifier/:direction', (request, response) => {
+		const train = chain.trains.find(train => train.identifier == request.params.identifier);
+
+		response.redirect(`/capture/railcar/${train.units.at(request.params.direction == 'head' ? 0 : -1).railcar.id}`);
 	});
 
 	server.app.get('/capture/graffiti/:id', async (request, response) => {

@@ -8,6 +8,7 @@ export class TrainsPage extends Component {
 		this.trains = await new TrainService().getTrains();
 	}
 
+	breadcrumb = 'Trains';
 	render(child) {
 		if (child) {
 			return <ui-trains>
@@ -30,7 +31,7 @@ export class TrainsPage extends Component {
 						{train.changed.toISOString().replace('T', ' ').replace(/\.[0-9]+Z$/, '')}
 					</ui-changed>
 
-					<img src={`/capture/train/${train}`} />
+					<img src={`/capture/train/${train.identifier}`} />
 				</ui-train>)}
 			</ui-list>
 		</ui-trains>

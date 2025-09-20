@@ -28,6 +28,7 @@ export class RailcarPage extends Component {
 		}).apply();
 	}
 
+	breadcrumb = () => `Railcar ${this.railcar.givenName ?? this.railcar.model?.name ?? '-'}`;
 	render(child) {
 		const forwardCaptures = this.railcar.captures
 			.filter(capture => capture.direction == RailcarDirection.forward)

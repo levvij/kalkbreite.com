@@ -14,14 +14,45 @@ export class Train {
 		return this.units.length;
 	}
 
+	get headCoupler() {
+		return this.units.at(0).head.coupler;
+	}
+
+	get tailCoupler() {
+		return this.units.at(-1).tail.coupler;
+	}
+
 	units: CoupledUnit[] = [];
 
 	split(couplerId: string) {
-		const targetUnitIndex = this.units.findIndex(unit => unit.head.coupler.id == couplerId || unit.tail.coupler.id == couplerId);
+		const targetHeadIndex = this.units.findIndex(unit => unit.head.coupler.id == couplerId);
 
-		return {
-			before: this.units.slice(0, targetUnitIndex),
-			after: this.units.slice(targetUnitIndex)
+		if (targetHeadIndex != -1) {
+			return {
+				before: this.units.slice(0, targetHeadIndex),
+				after: this.units.slice(targetHeadIndex)
+			}
+		}
+
+		const targetTailIndex = this.units.findIndex(unit => unit.tail.coupler.id == couplerId);
+
+		if (targetTailIndex != -1) {
+			return {
+				before: this.units.slice(0, targetTailIndex + 1),
+				after: this.units.slice(targetTailIndex + 1)
+			}
+		}
+
+		throw new Error(`Coupler '${couplerId}' not on any of ${this.identifier} trains unit`);
+	}
+
+	reverse() {
+		this.units.reverse();
+
+		for (let unit of this.units) {
+			const coupler = unit.head;
+			unit.head = unit.tail;
+			unit.tail = coupler;
 		}
 	}
 }

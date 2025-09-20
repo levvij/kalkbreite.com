@@ -19,8 +19,7 @@ export const railcarStyle = () => child('ui-railcar',
 	child('ui-header',
 		boxed(),
 
-		paddingInline(pageSpacing),
-		marginBottom(pageGutter),
+		padding(pageSpacing),
 
 		child('ui-name',
 			display('block'),

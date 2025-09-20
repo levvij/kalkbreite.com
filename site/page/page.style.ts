@@ -1,4 +1,4 @@
-import { root, child, padding, margin, display, position, top, backgroundColor, color, fontSize, rem, fontFamily, borderBottom, px, paddingBlock, paddingInline, flexGrow, alignItems, zIndex, boxShadow, hex } from "@acryps/style";
+import { root, child, padding, margin, display, position, top, backgroundColor, color, fontSize, rem, fontFamily, borderBottom, px, paddingBlock, paddingInline, flexGrow, alignItems, zIndex, boxShadow, hex, select, marginRight, lineHeight, percentage } from "@acryps/style";
 import { homeStyle } from "./home/index.style";
 import { pageColor, pageContrastColor, pageGutter, pageSpacing, primaryColor, primaryContrastColor } from "./index.style";
 import { boxed } from "./shared/boxed";
@@ -47,18 +47,18 @@ export const applicationStyle = () => root(
 			child('ui-navigation',
 				position('sticky'),
 				top(0),
-				zIndex(1),
+				zIndex(2),
 
 				display('block'),
 
 				color(pageContrastColor),
 				backgroundColor(pageColor),
 
-				borderBottom(px(2), 'solid', primaryColor),
 				boxShadow(hex('0002'), 0, 0, rem(1)),
 
 				child('ui-content',
 					boxed(),
+					lineHeight(1),
 
 					display('flex'),
 					alignItems('center'),
@@ -72,6 +72,29 @@ export const applicationStyle = () => root(
 					),
 
 					child('ui-login',
+						clickable()
+					)
+				)
+			),
+
+			child('ui-breadcrumb',
+				position('sticky'),
+				top(rem(1.5).add(pageGutter.multiply(2)).subtract(rem(1).subtract(pageGutter.divide(2))).add(px(1))),
+				zIndex(1),
+
+				display('block'),
+				paddingBlock(pageGutter.divide(4)),
+				lineHeight(1),
+
+				color(primaryContrastColor),
+				backgroundColor(primaryColor),
+
+				select('ui-layer',
+					display('flex'),
+
+					child('ui-name',
+						marginRight(pageSpacing),
+
 						clickable()
 					)
 				)

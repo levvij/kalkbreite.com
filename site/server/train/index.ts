@@ -1,5 +1,5 @@
 import { Service } from "vlserver";
-import { Coupling, DbContext } from "../managed/database";
+import { Coupling, DbContext, Uncoupling } from "../managed/database";
 import { TrainChain } from "./chain";
 import { RailcarSummaryModel } from "../railcar/railcar";
 import { TrainViewModel } from "./train";
@@ -20,13 +20,32 @@ export class TrainService extends Service {
 			return;
 		}
 
+		console.log(train.units.map(peer => `${peer.head.coupler.id}/${peer.railcar.tag}${peer == unit ? '#' : ''}/${peer.tail.coupler.id}`));
+
+		const uncoupling = new Uncoupling();
+		uncoupling.uncoupled = new Date();
+		uncoupling.sourceId = unit.tail.coupler.id;
+
+		await uncoupling.create();
+
+		this.chain.uncouple(uncoupling.sourceId, uncoupling.uncoupled);
+	}
+
+	async couple(
+		sourceTrainIdentifier: string, sourceAnchor: string,
+		targetTrainIdentifier: string, targetAnchor: string
+	) {
+		const source = this.chain.trains.find(train => train.identifier == sourceTrainIdentifier);
+		const target = this.chain.trains.find(train => train.identifier == targetTrainIdentifier);
+
 		const coupling = new Coupling();
 		coupling.coupled = new Date();
-		coupling.sourceId = unit.tail.coupler.id;
+		coupling.sourceId = sourceAnchor == 'head' ? source.headCoupler.id : source.tailCoupler.id;
+		coupling.targetId = targetAnchor == 'head' ? target.headCoupler.id : target.tailCoupler.id;
 
 		await coupling.create();
 
-		this.chain.couple(coupling.sourceId, null, coupling.coupled);
+		this.chain.couple(coupling.sourceId, coupling.targetId, coupling.coupled);
 	}
 
 	getTrains() {

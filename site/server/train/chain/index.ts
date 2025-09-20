@@ -23,12 +23,24 @@ export class TrainChain {
 			await chain.add(railcar, railcar.aquired);
 		}
 
-		const couplings = await database.coupling
-			.orderByAscending(coupling => coupling.coupled)
-			.toArray();
+		const couplings = await database.coupling.toArray();
+		const uncouplings = await database.uncoupling.toArray();
 
-		for (let coupling of couplings) {
-			await chain.couple(coupling.sourceId, coupling.targetId, coupling.coupled);
+		const actions = [
+			...couplings.map(coupling => ({
+				time: coupling.coupled,
+				restore: async () => await chain.couple(coupling.sourceId, coupling.targetId, coupling.coupled)
+			})),
+			...uncouplings.map(uncoupling => ({
+				time: uncoupling.uncoupled,
+				restore: async () => await chain.uncouple(uncoupling.sourceId, uncoupling.uncoupled)
+			}))
+		];
+
+		actions.sort((a, b) => +a.time > +b.time ? 1 : -1);
+
+		for (let action of actions) {
+			await action.restore();
 		}
 
 		return chain;
@@ -57,54 +69,74 @@ export class TrainChain {
 		return train;
 	}
 
-	// couples tow railcars together
-	// automatically rearranges trains, creating and deleting them as required
+	// decouples two railcars
 	//
-	// will create new trains if no target is set
-	async couple(sourceId: string, targetId: string | null, time: Date) {
-		console.group(sourceId, targetId);
+	// the railcar owning the breaking coupler will keep the train identifier, while the peer will get a new train
+	async uncouple(breakingCouplerId: string, time: Date) {
+		console.log('UNCOUPLE', breakingCouplerId);
 
-		this.hasher.update('couple');
-		this.hasher.update(sourceId);
-		this.hasher.update(targetId ?? '*');
+		this.hasher.update('uncouple');
+		this.hasher.update(breakingCouplerId);
 
-		// find the railcar detaching itself
-		const sourceUnit = this.units.find(unit => unit.railcar.headCouplerId == sourceId || unit.railcar.tailCouplerId == sourceId);
-		console.log('source unit', sourceUnit.railcar.tag);
+		const sourceUnit = this.units.find(unit => unit.railcar.headCouplerId == breakingCouplerId || unit.railcar.tailCouplerId == breakingCouplerId);
+		console.log('source unit', sourceUnit.railcar.tag)
 
 		const sourceTrain = this.trains.find(train => train.units.includes(sourceUnit));
 		console.log('source train', sourceTrain.identifier, sourceTrain.units.map(unit => unit.railcar.tag));
 
 		// get all railcars after the broken coupler
-		const split = sourceTrain.split(sourceId);
+		const split = sourceTrain.split(breakingCouplerId);
 		console.log('split', split.before.map(unit => unit.railcar.tag), split.after.map(unit => unit.railcar.tag));
 
+		if (split.before.length == 0 || split.after.length == 0) {
+			throw new Error('Cannot uncouple loose coupler');
+		}
+
+		// remove link between the last railcar and the first railcar of the split off train
+		split.before.at(-1).tail.target = null;
+		split.after.at(0).head.target = null;
+
+		let before: CoupledUnit[];
+		let after: CoupledUnit[];
+
+		if (sourceUnit.tail.coupler.id == breakingCouplerId) {
+			before = split.before;
+			after = split.after;
+		} else {
+			before = split.after;
+			after = split.before;
+		}
+
 		// shrink old train
-		sourceTrain.units = split.before;
+		sourceTrain.units = before;
 		sourceTrain.changed = time;
 
-		if (sourceTrain.units.length) {
-			// remove link
-			sourceTrain.units.at(-1).tail.target = null;
-			split.after.at(0).head.target = null;
-		} else {
-			this.onDisband(sourceTrain, split.after);
-			this.trains.splice(this.trains.indexOf(sourceTrain), 1);
-		}
-
 		// create new train with the loose railcars if they are not attached to somewhere
-		if (!targetId) {
-			const train = new Train(this.createIdentifier(), time);
-			train.units = split.after;
+		const train = new Train(this.createIdentifier(), time);
+		train.units = after;
 
-			this.trains.push(train);
+		this.trains.push(train);
+	}
 
-			console.groupEnd();
+	// couples two railcars together
+	// automatically rearranges trains, creating and deleting them as required
+	//
+	// the train of source will keep the train, while the target train will be disbanded
+	async couple(sourceId: string, targetId: string, time: Date) {
+		console.group(sourceId, targetId);
 
-			return train;
-		}
+		this.hasher.update('couple');
+		this.hasher.update(sourceId);
+		this.hasher.update(targetId);
 
-		// find target
+		// find the source train and unit
+		const sourceUnit = this.units.find(unit => unit.railcar.headCouplerId == sourceId || unit.railcar.tailCouplerId == sourceId);
+		console.log('source unit', sourceUnit.railcar.tag)
+
+		const sourceTrain = this.trains.find(train => train.units.includes(sourceUnit));
+		console.log('source train', sourceTrain.identifier, sourceTrain.units.map(unit => unit.railcar.tag));
+
+		// find the target where this coupling attaches to
 		const targetUnit = this.units.find(unit => unit.railcar.headCouplerId == targetId || unit.railcar.tailCouplerId == targetId);
 
 		if (sourceUnit == targetUnit) {
@@ -118,38 +150,46 @@ export class TrainChain {
 		console.log('target unit', targetUnit.railcar.tag);
 
 		const targetTrain = this.trains.find(train => train.units.includes(targetUnit));
-
 		console.log('target train', targetTrain.identifier, targetTrain.units.map(unit => unit.railcar.tag));
 
-		const appendingUnits = [...split.after];
-		let anchor: CoupledUnit;
+		// source tail is directly coupled to target head
+		if (sourceUnit.tail.coupler.id == sourceId && targetUnit.head.coupler.id == targetId) {
+			sourceTrain.units = [...sourceTrain.units, ...targetTrain.units];
 
-		if (targetTrain.units.at(-1) == targetUnit) {
-			anchor = appendingUnits.at(0);
-
-			targetUnit.tail.target = anchor;
-			anchor.head.target = targetUnit;
-		} else if (targetTrain.units.at(0) == targetUnit) {
-			// reverse what is after the split, we are hanging onto the head
-			// flip unit head/tails
-			appendingUnits.reverse();
-
-			for (let unit of appendingUnits) {
-				const coupler = unit.head;
-				unit.head = unit.tail;
-				unit.tail = coupler;
-			}
-
-			anchor = appendingUnits.at(0);
-
-			targetUnit.head.target = anchor;
-			anchor.tail.target = targetUnit;
-		} else {
-			throw new Error(`Target '${targetUnit.railcar.tag}' is not head or tail of train`);
+			sourceUnit.tail.target = targetUnit;
+			targetUnit.head.target = sourceUnit;
 		}
 
-		targetTrain.units.push(...appendingUnits);
-		targetTrain.changed = time;
+		// source head is coupled to target tail
+		if (sourceUnit.head.coupler.id == sourceId && targetUnit.tail.coupler.id == targetId) {
+			sourceTrain.units = [...targetTrain.units, ...sourceTrain.units];
+
+			sourceUnit.head.target = targetUnit;
+			targetUnit.tail.target = sourceUnit;
+		}
+
+		// source tail is connected to target tail, flip target
+		if (sourceUnit.tail.coupler.id == sourceId && targetUnit.tail.coupler.id == targetId) {
+			targetTrain.reverse();
+			sourceTrain.units = [...sourceTrain.units, ...targetTrain.units];
+
+			sourceUnit.tail.target = targetUnit;
+			targetUnit.head.target = sourceUnit;
+		}
+
+		// source train is connected with head to target train, which needs to be flipped
+		if (sourceUnit.head.coupler.id == sourceId && targetUnit.head.coupler.id == targetId) {
+			targetTrain.reverse();
+			sourceTrain.units = [...targetTrain.units, ...sourceTrain.units];
+
+			sourceUnit.head.target = targetUnit;
+			targetUnit.tail.target = sourceUnit;
+		}
+
+		this.trains.splice(this.trains.indexOf(targetTrain), 1);
+		this.onDisband(targetTrain, targetTrain.units);
+
+		console.log('formed', sourceTrain.identifier, sourceTrain.units.map(unit => unit.railcar.tag));
 
 		console.groupEnd();
 	}

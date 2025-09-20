@@ -9,5 +9,4 @@ export class CouplingViewModel extends ViewModel<Coupling> {
 	coupled;
 
 	targetId;
-	uncoupled;
 }

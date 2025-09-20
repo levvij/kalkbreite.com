@@ -53,7 +53,7 @@ DbClient.connectedClient.connect().then(async () => {
 	app.use(new StaticFileRoute('/layout/source/', join(process.cwd(), '..', '..', 'layout')));
 
 	registerTagInterface(app);
-	registerCaptureInterface(app, database);
+	registerCaptureInterface(app, database, chain);
 	registerLogoInterface(app, database);
 	registerStorageTagInterface(app);
 

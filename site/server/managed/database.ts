@@ -380,7 +380,6 @@ export class CouplingQueryProxy extends QueryProxy {
 	get coupled(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get sourceId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get targetId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
-	get uncoupled(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
 
 export class Coupling extends Entity<CouplingQueryProxy> {
@@ -390,7 +389,6 @@ export class Coupling extends Entity<CouplingQueryProxy> {
 	declare id: string;
 	sourceId: string;
 	targetId: string;
-	uncoupled: Date;
 	
 	$$meta = {
 		source: "coupling",
@@ -398,8 +396,7 @@ export class Coupling extends Entity<CouplingQueryProxy> {
 			coupled: { type: "timestamp", name: "coupled" },
 			id: { type: "uuid", name: "id" },
 			sourceId: { type: "uuid", name: "source_id" },
-			targetId: { type: "uuid", name: "target_id" },
-			uncoupled: { type: "timestamp", name: "uncoupled" }
+			targetId: { type: "uuid", name: "target_id" }
 		},
 		get set(): DbSet<Coupling, CouplingQueryProxy> { 
 			return new DbSet<Coupling, CouplingQueryProxy>(Coupling, null);
@@ -1065,33 +1062,49 @@ export class StorageContainer extends Entity<StorageContainerQueryProxy> {
 	}
 }
 			
-export class TrainQueryProxy extends QueryProxy {
-	get activeTrainNumber(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
-	get description(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
-	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
-	get shortName(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+export class UncouplingQueryProxy extends QueryProxy {
+	get source(): Partial<CouplerQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get sourceId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get uncoupled(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
 
-export class Train extends Entity<TrainQueryProxy> {
-	activeTrainNumber: string;
-	description: string;
+export class Uncoupling extends Entity<UncouplingQueryProxy> {
+	get source(): Partial<ForeignReference<Coupler>> { return this.$source; }
 	declare id: string;
-	name: string;
-	shortName: string;
+	sourceId: string;
+	uncoupled: Date;
 	
 	$$meta = {
-		source: "train",
+		source: "uncoupling",
 		columns: {
-			activeTrainNumber: { type: "text", name: "active_train_number" },
-			description: { type: "text", name: "description" },
 			id: { type: "uuid", name: "id" },
-			name: { type: "text", name: "name" },
-			shortName: { type: "text", name: "short_name" }
+			sourceId: { type: "uuid", name: "source_id" },
+			uncoupled: { type: "timestamp", name: "uncoupled" }
 		},
-		get set(): DbSet<Train, TrainQueryProxy> { 
-			return new DbSet<Train, TrainQueryProxy>(Train, null);
+		get set(): DbSet<Uncoupling, UncouplingQueryProxy> { 
+			return new DbSet<Uncoupling, UncouplingQueryProxy>(Uncoupling, null);
 		}
 	};
+	
+	constructor() {
+		super();
+		
+		this.$source = new ForeignReference<Coupler>(this, "sourceId", Coupler);
+	}
+	
+	private $source: ForeignReference<Coupler>;
+
+	set source(value: Partial<ForeignReference<Coupler>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.sourceId = value.id as string;
+		} else {
+			this.sourceId = null;
+		}
+	}
+
+	
 }
 			
 
@@ -1114,7 +1127,7 @@ export class DbContext {
 	railcarModel: DbSet<RailcarModel, RailcarModelQueryProxy>;
 	session: DbSet<Session, SessionQueryProxy>;
 	storageContainer: DbSet<StorageContainer, StorageContainerQueryProxy>;
-	train: DbSet<Train, TrainQueryProxy>;
+	uncoupling: DbSet<Uncoupling, UncouplingQueryProxy>;
 
 	constructor(private runContext: RunContext) {
 		this.account = new DbSet<Account, AccountQueryProxy>(Account, this.runContext);
@@ -1135,7 +1148,7 @@ export class DbContext {
 		this.railcarModel = new DbSet<RailcarModel, RailcarModelQueryProxy>(RailcarModel, this.runContext);
 		this.session = new DbSet<Session, SessionQueryProxy>(Session, this.runContext);
 		this.storageContainer = new DbSet<StorageContainer, StorageContainerQueryProxy>(StorageContainer, this.runContext);
-		this.train = new DbSet<Train, TrainQueryProxy>(Train, this.runContext);
+		this.uncoupling = new DbSet<Uncoupling, UncouplingQueryProxy>(Uncoupling, this.runContext);
 	}
 
 	findSet(modelType) {
