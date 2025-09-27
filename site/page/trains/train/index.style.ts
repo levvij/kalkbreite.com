@@ -5,12 +5,12 @@ import { trainIdentifierFont } from "../../assets/font";
 import { clickable } from "../../shared/interaction";
 import { coupleStyle } from "./couple/index.style";
 
-export const trainStyle = () => child('ui-train',
+export const trainStyle = () => child('ui-train') (
 	display('block'),
 
 	coupleStyle(),
 
-	child('ui-identifier',
+	child('ui-identifier') (
 		display('block'),
 		marginBottom(pageGutter),
 
@@ -18,24 +18,24 @@ export const trainStyle = () => child('ui-train',
 		trainIdentifierFont
 	),
 
-	child('ui-units',
+	child('ui-units') (
 		display('flex'),
 		flexWrap('wrap'),
 		alignItems('center'),
 		gap(pageGutter),
 
-		child('ui-unit',
+		child('ui-unit') (
 			display('flex'),
 			flexDirection('column'),
 
 			clickable(),
 
-			child('img',
+			child('img') (
 				height(rem(4))
 			)
 		),
 
-		child('ui-action',
+		child('ui-action') (
 			clickable(),
 
 			fontSize(rem(1.5))

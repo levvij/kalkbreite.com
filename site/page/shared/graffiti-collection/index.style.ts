@@ -4,12 +4,12 @@ import { boxed } from "../../shared/boxed";
 import { collection, collectionItem } from "../../shared/collection";
 import { clickable } from "../interaction";
 
-export const graffitiCollectionStyle = (...extras) => child('ui-graffitis',
+export const graffitiCollectionStyle = (...extras) => child('ui-graffitis') (
 	collection(rem(16)),
 
 	extras,
 
-	child('ui-graffiti',
+	child('ui-graffiti') (
 		collectionItem(),
 
 		display('flex'),
@@ -22,24 +22,24 @@ export const graffitiCollectionStyle = (...extras) => child('ui-graffitis',
 
 		clickable(),
 
-		child('img',
+		child('img') (
 			flexGrow(1),
 
 			objectFit('contain'),
 			backgroundColor(captureBackgroundColor)
 		),
 
-		child('ui-detail',
+		child('ui-detail') (
 			display('flex'),
 			flexDirection('column'),
 			gap(rem(0.75)),
 			padding(pageGutter),
 
-			child('ui-artist',
+			child('ui-artist') (
 				display('block')
 			),
 
-			child('ui-name',
+			child('ui-name') (
 				display('block'),
 
 				fontSize(rem(0.8)),

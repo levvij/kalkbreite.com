@@ -5,18 +5,18 @@ import { trainIdentifierFont } from "../../../assets/font";
 
 const trainHeight = rem(3);
 
-export const coupleStyle = () => child('ui-couple',
+export const coupleStyle = () => child('ui-couple') (
 	boxed(),
 	overflow('hidden'),
 
 	display('flex'),
 	gap(pageGutter),
 
-	child('ui-source',
+	child('ui-source') (
 		width(percentage(30)),
 		flexShrink(0),
 
-		child('img',
+		child('img') (
 			height(trainHeight),
 			width(percentage(100)),
 
@@ -25,25 +25,25 @@ export const coupleStyle = () => child('ui-couple',
 		)
 	),
 
-	child('ui-icon',
+	child('ui-icon') (
 		lineHeight(trainHeight),
 
 		fontSize(rem(1.5))
 	),
 
-	child('ui-trains',
+	child('ui-trains') (
 		flexGrow(1),
 
-		child('ui-train',
+		child('ui-train') (
 			display('flex'),
 			alignItems('center'),
 			gap(pageGutter),
 
-			child('ui-identifier',
+			child('ui-identifier') (
 				trainIdentifierFont
 			),
 
-			child('img',
+			child('img') (
 				height(trainHeight),
 				width(percentage(100)),
 

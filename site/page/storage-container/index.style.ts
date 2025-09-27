@@ -5,23 +5,23 @@ import { railcarCollectionStyle } from "../shared/railcar-collection/index.style
 import { pageGutter, pageSpacing } from "../index.style";
 import { buttonGroupStyle, buttonStyle } from "../shared/button";
 
-export const storageContainerStyle = () => child('ui-storage-container',
+export const storageContainerStyle = () => child('ui-storage-container') (
 	boxed(),
 
 	padding(pageSpacing),
 
 	storageContainerTagStyle(),
 
-	child('ui-actions',
+	child('ui-actions') (
 		buttonGroupStyle(),
 		marginBottom(pageSpacing),
 
-		child('ui-action',
+		child('ui-action') (
 			buttonStyle()
 		)
 	),
 
-	child('ui-storage-container-tag',
+	child('ui-storage-container-tag') (
 		marginBottom(pageGutter)
 	),
 

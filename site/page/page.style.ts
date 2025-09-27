@@ -1,4 +1,4 @@
-import { root, child, padding, margin, display, position, top, backgroundColor, color, fontSize, rem, fontFamily, borderBottom, px, paddingBlock, paddingInline, flexGrow, alignItems, zIndex, boxShadow, hex, select, marginRight, lineHeight, percentage } from "@acryps/style";
+import { root, child, padding, margin, display, position, top, backgroundColor, color, fontSize, rem, fontFamily, borderBottom, px, paddingBlock, paddingInline, flexGrow, alignItems, zIndex, boxShadow, hex, descendant, marginRight, lineHeight, percentage } from "@acryps/style";
 import { homeStyle } from "./home/index.style";
 import { pageColor, pageContrastColor, pageGutter, pageSpacing, primaryColor, primaryContrastColor } from "./index.style";
 import { boxed } from "./shared/boxed";
@@ -16,14 +16,14 @@ import { trainStyle } from "./trains/train/index.style";
 import { layoutStyle } from "./layout/index.style";
 import { trainsStyle } from "./trains/index.style";
 
-export const applicationStyle = () => root(
+export const applicationStyle = () => root() (
 	monospacedFont,
 	displayFont,
 
 	iconFont,
 	icons(),
 
-	child('body',
+	child('body') (
 		padding(0),
 		margin(0),
 
@@ -31,7 +31,7 @@ export const applicationStyle = () => root(
 		backgroundColor(pageColor),
 		fontFamily(displayFont.name),
 
-		child('ui-page',
+		child('ui-page') (
 			homeStyle(),
 			loginStyle(),
 			trainsStyle(),
@@ -44,7 +44,7 @@ export const applicationStyle = () => root(
 
 			display('block'),
 
-			child('ui-navigation',
+			child('ui-navigation') (
 				position('sticky'),
 				top(0),
 				zIndex(2),
@@ -56,7 +56,7 @@ export const applicationStyle = () => root(
 
 				boxShadow(hex('0002'), 0, 0, rem(1)),
 
-				child('ui-content',
+				child('ui-content') (
 					boxed(),
 					lineHeight(1),
 
@@ -65,19 +65,19 @@ export const applicationStyle = () => root(
 					paddingBlock(pageGutter),
 					paddingInline(pageSpacing),
 
-					child('ui-logo',
+					child('ui-logo') (
 						flexGrow(1),
 
 						fontSize(rem(1.5))
 					),
 
-					child('ui-login',
+					child('ui-login') (
 						clickable()
 					)
 				)
 			),
 
-			child('ui-breadcrumb',
+			child('ui-breadcrumb') (
 				position('sticky'),
 				top(rem(1.5).add(pageGutter.multiply(2)).subtract(rem(1).subtract(pageGutter.divide(2))).add(px(1))),
 				zIndex(1),
@@ -89,10 +89,10 @@ export const applicationStyle = () => root(
 				color(primaryContrastColor),
 				backgroundColor(primaryColor),
 
-				select('ui-layer',
+				descendant('ui-layer') (
 					display('flex'),
 
-					child('ui-name',
+					child('ui-name') (
 						marginRight(pageSpacing),
 
 						clickable()

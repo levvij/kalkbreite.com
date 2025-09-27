@@ -3,35 +3,35 @@ import { boxed } from "../shared/boxed";
 import { pageGutter, pageSpacing } from "../index.style";
 import { graffitiCollectionStyle } from "../shared/graffiti-collection/index.style";
 
-export const artistStyle = () => child('ui-artist',
+export const artistStyle = () => child('ui-artist') (
 	boxed(),
 	padding(pageSpacing),
 
-	child('ui-header',
+	child('ui-header') (
 		display('block'),
 		marginBottom(pageSpacing),
 
-		child('img',
+		child('img') (
 			height(rem(4)),
 			maxWidth(percentage(70)),
 
 			objectFit('contain')
 		),
 
-		child('ui-name',
+		child('ui-name') (
 			fontSize(rem(2))
 		),
 
-		child('ui-origin',
+		child('ui-origin') (
 			display('block'),
 			marginTop(pageGutter)
 		)
 	),
 
-	child('ui-detail',
+	child('ui-detail') (
 		display('block'),
 
-		child('ui-description',
+		child('ui-description') (
 			display('block'),
 			marginBottom(pageSpacing)
 		),

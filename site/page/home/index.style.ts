@@ -7,26 +7,26 @@ import { buttonGroupStyle, buttonStyle } from "../shared/button";
 import { SlideshowComponent } from "../shared/slideshow";
 import { slideshowStyle } from "../shared/slideshow/index.style";
 
-export const homeStyle = () => child('ui-home',
+export const homeStyle = () => child('ui-home') (
 	display('block'),
 
 	slideshowStyle(),
 
-	child('ui-content',
+	child('ui-content') (
 		boxed(),
 
 		padding(pageSpacing),
 
-		child('ui-guide',
+		child('ui-guide') (
 			display('block'),
 			marginBottom(pageGutter)
 		),
 
-		child('ui-actions',
+		child('ui-actions') (
 			buttonGroupStyle(),
 			marginBottom(pageGutter),
 
-			child('ui-action',
+			child('ui-action') (
 				buttonStyle()
 			)
 		),

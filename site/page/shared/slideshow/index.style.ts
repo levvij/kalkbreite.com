@@ -3,7 +3,7 @@ import { captureAspectRatio, captureBackgroundColor, pageSpacing } from "../../i
 
 export const moveDuration = milliseconds(500);
 
-export const slideshowStyle = () => child('ui-slideshow',
+export const slideshowStyle = () => child('ui-slideshow') (
 	display('flex'),
 	maxHeight(vh(40)),
 	width(percentage(100)),
@@ -13,7 +13,7 @@ export const slideshowStyle = () => child('ui-slideshow',
 
 	backgroundColor(captureBackgroundColor),
 
-	child('img',
+	child('img') (
 		marginLeft(0).transition(moveDuration),
 		height(percentage(100))
 	)

@@ -4,32 +4,32 @@ import { pageGutter, pageSpacing } from "../index.style";
 import { trainStyle } from "./train/index.style";
 import { monospacedFont, trainIdentifierFont } from "../assets/font";
 
-export const trainsStyle = () => child('ui-trains',
+export const trainsStyle = () => child('ui-trains') (
 	boxed(),
 	padding(pageSpacing),
 
 	trainStyle(),
 
-	child('ui-list',
+	child('ui-list') (
 		display('block'),
 
-		child('ui-train',
+		child('ui-train') (
 			display('flex'),
 			alignItems('center'),
 			gap(pageGutter),
 			marginBottom(pageGutter.divide(2)),
 
-			child('ui-identifier',
+			child('ui-identifier') (
 				trainIdentifierFont
 			),
 
-			child('ui-type',
+			child('ui-type') (
 				monospacedFont,
 
 				opacity(0.5)
 			),
 
-			child('ui-changed',
+			child('ui-changed') (
 				monospacedFont
 			)
 		)
