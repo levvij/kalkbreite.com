@@ -88,20 +88,19 @@ export const railcarStyle = () => child('ui-railcar')(
 				backgroundColor(pageColor),
 				clickable(),
 
-				hover()(
+				hover() (
 					filter(invert(1))
 				),
 
-				attribute('ui-active')(
-					color(pageColor),
-					backgroundColor(pageContrastColor)
+				attribute('ui-active') (
+					filter(invert(1))
 				),
 
-				attribute('ui-side', 'tail')(
+				attribute('ui-side', 'tail') (
 					transform(rotate(turn(0.5)))
 				),
 
-				child('svg')(
+				child('svg') (
 					height(rem(1.5)),
 					width(rem(2))
 				),
