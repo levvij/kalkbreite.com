@@ -178,10 +178,25 @@ export class UicIdentifierIndexLetterViewModel {
 }
 
 export class CouplerViewModel {
+	type: CouplerTypeSummaryModel;
 	id: string;
 
 	private static $build(raw) {
 		const item = new CouplerViewModel();
+		raw.type === undefined || (item.type = raw.type ? CouplerTypeSummaryModel["$build"](raw.type) : null)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		
+		return item;
+	}
+}
+
+export class CouplerTypeSummaryModel {
+	icon: string;
+	id: string;
+
+	private static $build(raw) {
+		const item = new CouplerTypeSummaryModel();
+		raw.icon === undefined || (item.icon = raw.icon === null ? null : `${raw.icon}`)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		
 		return item;

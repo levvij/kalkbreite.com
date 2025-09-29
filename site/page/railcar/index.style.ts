@@ -1,4 +1,4 @@
-import { alignContent, alignItems, alignSelf, aspectRatio, attribute, backgroundColor, child, color, cursor, display, Dvi, em, filter, flexBasis, flexGrow, flexShrink, flexWrap, fontFamily, fontSize, fontWeight, gap, height, hex, hover, imageRendering, invert, justifyContent, lineHeight, marginBottom, marginInline, marginRight, marginTop, maxWidth, min, objectFit, opacity, padding, paddingBlock, paddingBottom, paddingInline, percentage, position, ratio, rem, textAlign, width } from "@acryps/style";
+import { alignContent, alignItems, alignSelf, aspectRatio, attribute, backgroundColor, child, color, cursor, display, Dvi, em, filter, flexBasis, flexGrow, flexShrink, flexWrap, fontFamily, fontSize, fontWeight, gap, height, hex, hover, imageRendering, invert, justifyContent, lineHeight, marginBottom, marginInline, marginRight, marginTop, maxWidth, min, objectFit, opacity, padding, paddingBlock, paddingBottom, paddingInline, percentage, position, ratio, rem, rotate, textAlign, transform, turn, width } from "@acryps/style";
 import { boxed } from "../shared/boxed";
 import { captureAspectRatio, captureBackgroundColor, knockoutColor, knockoutContrastColor, pageColor, pageContrastColor, pageGutter, pageSpacing, runningNumberFont, tagFont } from "../index.style";
 import { collection, collectionItem } from "../shared/collection";
@@ -12,23 +12,24 @@ import { detailSectionStyle } from "../shared/detail-section/index.style";
 import { buttonGroupStyle, buttonStyle } from "../shared/button";
 import { registerGraffitiStyle } from "./register-graffiti/index.style";
 import { anchorStyle } from "./anchor/index.style";
+import { AtRule } from "@acryps/style/.built/at-rule";
 
-export const railcarStyle = () => child('ui-railcar') (
+export const railcarStyle = () => child('ui-railcar')(
 	display('block'),
 
-	child('ui-header') (
+	child('ui-header')(
 		boxed(),
 
 		padding(pageSpacing),
 
-		child('ui-name') (
+		child('ui-name')(
 			display('block'),
 			marginBottom(pageGutter),
 
 			fontSize(rem(2))
 		),
 
-		child('ui-identifiers') (
+		child('ui-identifiers')(
 			display('flex'),
 			gap(pageGutter),
 			alignItems('center'),
@@ -36,17 +37,17 @@ export const railcarStyle = () => child('ui-railcar') (
 			lineHeight(1),
 			fontSize(rem(1.5)),
 
-			child('ui-running-number') (
+			child('ui-running-number')(
 				flexGrow(1),
 
 				fontFamily(runningNumberFont)
 			),
 
-			child('ui-tag') (
+			child('ui-tag')(
 				fontFamily(tagFont)
 			),
 
-			child('img') (
+			child('img')(
 				height(em(1).subtract(rem(0.4))),
 				padding(rem(0.2)),
 
@@ -61,7 +62,7 @@ export const railcarStyle = () => child('ui-railcar') (
 	anchorStyle(),
 	registerGraffitiStyle(),
 
-	child('ui-couplers') (
+	child('ui-couplers')(
 		boxed(),
 
 		display('flex'),
@@ -73,11 +74,11 @@ export const railcarStyle = () => child('ui-railcar') (
 		marginBottom(pageGutter),
 		paddingInline(pageSpacing),
 
-		child('ui-side') (
+		child('ui-side')(
 			display('flex'),
 			gap(pageGutter),
 
-			child('ui-link') (
+			child('ui-link')(
 				display('flex'),
 				alignContent('center'),
 				gap(pageGutter),
@@ -87,14 +88,22 @@ export const railcarStyle = () => child('ui-railcar') (
 				backgroundColor(pageColor),
 				clickable(),
 
-				hover() (
+				hover()(
+					filter(invert(1))
+				),
+
+				attribute('ui-active')(
 					color(pageColor),
 					backgroundColor(pageContrastColor)
 				),
 
-				attribute('ui-active') (
-					color(pageColor),
-					backgroundColor(pageContrastColor)
+				attribute('ui-side', 'tail')(
+					transform(rotate(turn(0.5)))
+				),
+
+				child('svg')(
+					height(rem(1.5)),
+					width(rem(2))
 				),
 
 				child('ui-icon') (

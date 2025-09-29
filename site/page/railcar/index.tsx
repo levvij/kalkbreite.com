@@ -1,5 +1,5 @@
 import { Component, ComponentContent } from "@acryps/page";
-import { CompanySummaryModel, RailcarDirection, RailcarService, RailcarViewModel, TrainService } from "../managed/services";
+import { CompanySummaryModel, CouplerViewModel, RailcarDirection, RailcarService, RailcarViewModel, TrainService } from "../managed/services";
 import { containerIcon, goIcon, headCouplerIcon, lengthIncludingBuffersIcon, lengthIncludingCouplersIcon, tailCouplerIcon, trainLinkupIcon } from "../assets/icons/managed";
 import { MetaProduct } from "@acryps/metadata";
 import { StorageContainerTagComponent } from "../shared/storage-container-tag";
@@ -63,9 +63,7 @@ export class RailcarPage extends Component {
 
 			<ui-couplers>
 				<ui-side>
-					{this.railcar.headCoupler && <ui-link ui-href='coupler/head' ui-href-active>
-						{headCouplerIcon()}
-					</ui-link>}
+					{this.renderCoupler('head', this.railcar.headCoupler)}
 
 					<ui-link ui-href={`/train/${this.train}`}>
 						{trainLinkupIcon()}
@@ -77,9 +75,7 @@ export class RailcarPage extends Component {
 				</ui-side>
 
 				<ui-side>
-					{this.railcar.tailCoupler && <ui-link ui-href='coupler/tail' ui-href-active>
-						{tailCouplerIcon()}
-					</ui-link>}
+					{this.renderCoupler('tail', this.railcar.tailCoupler)}
 				</ui-side>
 			</ui-couplers>
 
@@ -137,5 +133,16 @@ export class RailcarPage extends Component {
 				{reverseCaptures.length != 0 && new CaptureTimelineComponent(reverseCaptures)}
 			</ui-detail>}
 		</ui-railcar>;
+	}
+
+	renderCoupler(side: string, coupler: CouplerViewModel) {
+		if (!coupler) {
+			return;
+		}
+
+		const button = <ui-link ui-href={`coupler/${side}`} ui-href-active ui-side={side}></ui-link>;
+		button.innerHTML = coupler.type.icon;
+
+		return button;
 	}
 }

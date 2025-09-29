@@ -357,21 +357,75 @@ export class CompanyLogo extends Entity<CompanyLogoQueryProxy> {
 }
 			
 export class CouplerQueryProxy extends QueryProxy {
-	
+	get type(): Partial<CouplerTypeQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get typeId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
 
 export class Coupler extends Entity<CouplerQueryProxy> {
+	get type(): Partial<ForeignReference<CouplerType>> { return this.$type; }
 	declare id: string;
+	typeId: string;
 	
 	$$meta = {
 		source: "coupler",
 		columns: {
-			id: { type: "uuid", name: "id" }
+			id: { type: "uuid", name: "id" },
+			typeId: { type: "uuid", name: "type_id" }
 		},
 		get set(): DbSet<Coupler, CouplerQueryProxy> { 
 			return new DbSet<Coupler, CouplerQueryProxy>(Coupler, null);
 		}
 	};
+	
+	constructor() {
+		super();
+		
+		this.$type = new ForeignReference<CouplerType>(this, "typeId", CouplerType);
+	}
+	
+	private $type: ForeignReference<CouplerType>;
+
+	set type(value: Partial<ForeignReference<CouplerType>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.typeId = value.id as string;
+		} else {
+			this.typeId = null;
+		}
+	}
+
+	
+}
+			
+export class CouplerTypeQueryProxy extends QueryProxy {
+	get icon(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class CouplerType extends Entity<CouplerTypeQueryProxy> {
+	couplers: PrimaryReference<Coupler, CouplerQueryProxy>;
+		icon: string;
+	declare id: string;
+	name: string;
+	
+	$$meta = {
+		source: "coupler_type",
+		columns: {
+			icon: { type: "text", name: "icon" },
+			id: { type: "uuid", name: "id" },
+			name: { type: "text", name: "name" }
+		},
+		get set(): DbSet<CouplerType, CouplerTypeQueryProxy> { 
+			return new DbSet<CouplerType, CouplerTypeQueryProxy>(CouplerType, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.couplers = new PrimaryReference<Coupler, CouplerQueryProxy>(this, "typeId", Coupler);
+	}
 }
 			
 export class CouplingQueryProxy extends QueryProxy {
@@ -1225,6 +1279,7 @@ export class DbContext {
 	company: DbSet<Company, CompanyQueryProxy>;
 	companyLogo: DbSet<CompanyLogo, CompanyLogoQueryProxy>;
 	coupler: DbSet<Coupler, CouplerQueryProxy>;
+	couplerType: DbSet<CouplerType, CouplerTypeQueryProxy>;
 	coupling: DbSet<Coupling, CouplingQueryProxy>;
 	graffiti: DbSet<Graffiti, GraffitiQueryProxy>;
 	graffitiCapture: DbSet<GraffitiCapture, GraffitiCaptureQueryProxy>;
@@ -1249,6 +1304,7 @@ export class DbContext {
 		this.company = new DbSet<Company, CompanyQueryProxy>(Company, this.runContext);
 		this.companyLogo = new DbSet<CompanyLogo, CompanyLogoQueryProxy>(CompanyLogo, this.runContext);
 		this.coupler = new DbSet<Coupler, CouplerQueryProxy>(Coupler, this.runContext);
+		this.couplerType = new DbSet<CouplerType, CouplerTypeQueryProxy>(CouplerType, this.runContext);
 		this.coupling = new DbSet<Coupling, CouplingQueryProxy>(Coupling, this.runContext);
 		this.graffiti = new DbSet<Graffiti, GraffitiQueryProxy>(Graffiti, this.runContext);
 		this.graffitiCapture = new DbSet<GraffitiCapture, GraffitiCaptureQueryProxy>(GraffitiCapture, this.runContext);

@@ -14,7 +14,7 @@ export class ModelPage extends Component {
 		this.railcars = await new RailcarModelService().getRailcars(this.model.id);
 	}
 
-	breadcrumb = () => `Railcar ${this.model.name}`;
+	breadcrumb = () => `Railcar Model ${this.model.name}`;
 	render() {
 		return <ui-railcar-model>
 			{this.model.drawings.map(drawing => <ui-technical-drawing>

@@ -42,6 +42,7 @@ import { ArtistSummaryModel } from "./../graffiti/artist";
 import { GraffitiSummaryModel } from "./../graffiti/graffiti";
 import { GraffitiInspirationMediaViewModel } from "./../graffiti/inspiration";
 import { CouplerViewModel } from "./../railcar/coupler";
+import { CouplerTypeSummaryModel } from "./../railcar/coupler";
 import { RailcarModelSummaryModel } from "./../railcar/model";
 import { RailcarModelDrawingSummaryModel } from "./../railcar/model";
 import { AccountViewModel } from "./../session/session";
@@ -55,6 +56,7 @@ import { GraffitiCapture } from "./../managed/database";
 import { GraffitiType } from "./../managed/database";
 import { UicIdentifierClass } from "./../managed/database";
 import { Coupler } from "./../managed/database";
+import { CouplerType } from "./../managed/database";
 import { RailcarModel } from "./../managed/database";
 import { RailcarModelDrawing } from "./../managed/database";
 import { Railcar } from "./../managed/database";
@@ -1137,6 +1139,7 @@ ViewModel.mappings = {
 	[CouplerViewModel.name]: class ComposedCouplerViewModel extends CouplerViewModel {
 		async map() {
 			return {
+				type: new CouplerTypeSummaryModel(await BaseServer.unwrap(this.$$model.type)),
 				id: this.$$model.id
 			}
 		};
@@ -1167,12 +1170,19 @@ ViewModel.mappings = {
 			}
 
 			return {
+				get type() {
+					return ViewModel.mappings[CouplerTypeSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "type-CouplerViewModel"]
+					);
+				},
 				id: true
 			};
 		};
 
 		static toViewModel(data) {
 			const item = new CouplerViewModel(null);
+			"type" in data && (item.type = data.type && ViewModel.mappings[CouplerTypeSummaryModel.name].toViewModel(data.type));
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 
 			return item;
@@ -1187,6 +1197,69 @@ ViewModel.mappings = {
 				model = new Coupler();
 			}
 			
+			"type" in viewModel && (model.type.id = viewModel.type ? viewModel.type.id : null);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+
+			return model;
+		}
+	},
+	[CouplerTypeSummaryModel.name]: class ComposedCouplerTypeSummaryModel extends CouplerTypeSummaryModel {
+		async map() {
+			return {
+				icon: this.$$model.icon,
+				id: this.$$model.id
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				icon: true,
+				id: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new CouplerTypeSummaryModel(null);
+			"icon" in data && (item.icon = data.icon === null ? null : `${data.icon}`);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: CouplerTypeSummaryModel) {
+			let model: CouplerType;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(CouplerType).find(viewModel.id)
+			} else {
+				model = new CouplerType();
+			}
+			
+			"icon" in viewModel && (model.icon = viewModel.icon === null ? null : `${viewModel.icon}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 
 			return model;
