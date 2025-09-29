@@ -15,6 +15,7 @@ import { RequestContext } from "./session/context";
 import { TrainChain } from "./train/chain";
 import { writeFile } from "fs/promises";
 import { LayoutPlan } from "./layout-plan/interface";
+import { registerRailcarModelDrawingInterface } from "./model/drawing";
 
 DbClient.connectedClient = new DbClient({});
 
@@ -56,6 +57,7 @@ DbClient.connectedClient.connect().then(async () => {
 	registerCaptureInterface(app, database, chain);
 	registerLogoInterface(app, database);
 	registerStorageTagInterface(app);
+	registerRailcarModelDrawingInterface(app, database);
 
 	app.prepareRoutes();
 

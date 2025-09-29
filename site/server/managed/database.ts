@@ -947,10 +947,12 @@ export class RailcarModelQueryProxy extends QueryProxy {
 	get shortname(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get summary(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get tag(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get uicIdentifier(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
 
 export class RailcarModel extends Entity<RailcarModelQueryProxy> {
 	railcars: PrimaryReference<Railcar, RailcarQueryProxy>;
+		drawings: PrimaryReference<RailcarModelDrawing, RailcarModelDrawingQueryProxy>;
 		description: string;
 	declare id: string;
 	lengthIncludingBuffers: number;
@@ -959,6 +961,7 @@ export class RailcarModel extends Entity<RailcarModelQueryProxy> {
 	shortname: string;
 	summary: string;
 	tag: string;
+	uicIdentifier: string;
 	
 	$$meta = {
 		source: "railcar_model",
@@ -970,7 +973,8 @@ export class RailcarModel extends Entity<RailcarModelQueryProxy> {
 			name: { type: "text", name: "name" },
 			shortname: { type: "text", name: "shortname" },
 			summary: { type: "text", name: "summary" },
-			tag: { type: "text", name: "tag" }
+			tag: { type: "text", name: "tag" },
+			uicIdentifier: { type: "text", name: "uic_identifier" }
 		},
 		get set(): DbSet<RailcarModel, RailcarModelQueryProxy> { 
 			return new DbSet<RailcarModel, RailcarModelQueryProxy>(RailcarModel, null);
@@ -981,7 +985,59 @@ export class RailcarModel extends Entity<RailcarModelQueryProxy> {
 		super();
 		
 		this.railcars = new PrimaryReference<Railcar, RailcarQueryProxy>(this, "modelId", Railcar);
+		this.drawings = new PrimaryReference<RailcarModelDrawing, RailcarModelDrawingQueryProxy>(this, "railcarModelId", RailcarModelDrawing);
 	}
+}
+			
+export class RailcarModelDrawingQueryProxy extends QueryProxy {
+	get railcarModel(): Partial<RailcarModelQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get image(): Partial<QueryBuffer> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get railcarModelId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get source(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class RailcarModelDrawing extends Entity<RailcarModelDrawingQueryProxy> {
+	get railcarModel(): Partial<ForeignReference<RailcarModel>> { return this.$railcarModel; }
+	declare id: string;
+	image: Buffer;
+	name: string;
+	railcarModelId: string;
+	source: string;
+	
+	$$meta = {
+		source: "railcar_model_drawing",
+		columns: {
+			id: { type: "uuid", name: "id" },
+			image: { type: "bytea", name: "image" },
+			name: { type: "text", name: "name" },
+			railcarModelId: { type: "uuid", name: "railcar_model_id" },
+			source: { type: "text", name: "source" }
+		},
+		get set(): DbSet<RailcarModelDrawing, RailcarModelDrawingQueryProxy> { 
+			return new DbSet<RailcarModelDrawing, RailcarModelDrawingQueryProxy>(RailcarModelDrawing, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.$railcarModel = new ForeignReference<RailcarModel>(this, "railcarModelId", RailcarModel);
+	}
+	
+	private $railcarModel: ForeignReference<RailcarModel>;
+
+	set railcarModel(value: Partial<ForeignReference<RailcarModel>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.railcarModelId = value.id as string;
+		} else {
+			this.railcarModelId = null;
+		}
+	}
+
+	
 }
 			
 export class SessionQueryProxy extends QueryProxy {
@@ -1062,6 +1118,58 @@ export class StorageContainer extends Entity<StorageContainerQueryProxy> {
 	}
 }
 			
+export class UicIdentifierClassQueryProxy extends QueryProxy {
+	get code(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get description(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class UicIdentifierClass extends Entity<UicIdentifierClassQueryProxy> {
+	code: string;
+	description: string;
+	declare id: string;
+	name: string;
+	
+	$$meta = {
+		source: "uic_identifier_class",
+		columns: {
+			code: { type: "text", name: "code" },
+			description: { type: "text", name: "description" },
+			id: { type: "uuid", name: "id" },
+			name: { type: "text", name: "name" }
+		},
+		get set(): DbSet<UicIdentifierClass, UicIdentifierClassQueryProxy> { 
+			return new DbSet<UicIdentifierClass, UicIdentifierClassQueryProxy>(UicIdentifierClass, null);
+		}
+	};
+}
+			
+export class UicIdentifierIndexLetterQueryProxy extends QueryProxy {
+	get classFilter(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get code(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class UicIdentifierIndexLetter extends Entity<UicIdentifierIndexLetterQueryProxy> {
+	classFilter: string;
+	code: string;
+	declare id: string;
+	name: string;
+	
+	$$meta = {
+		source: "uic_identifier_index_letter",
+		columns: {
+			classFilter: { type: "text", name: "class_filter" },
+			code: { type: "text", name: "code" },
+			id: { type: "uuid", name: "id" },
+			name: { type: "text", name: "name" }
+		},
+		get set(): DbSet<UicIdentifierIndexLetter, UicIdentifierIndexLetterQueryProxy> { 
+			return new DbSet<UicIdentifierIndexLetter, UicIdentifierIndexLetterQueryProxy>(UicIdentifierIndexLetter, null);
+		}
+	};
+}
+			
 export class UncouplingQueryProxy extends QueryProxy {
 	get source(): Partial<CouplerQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get sourceId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -1125,8 +1233,11 @@ export class DbContext {
 	graffitiType: DbSet<GraffitiType, GraffitiTypeQueryProxy>;
 	railcar: DbSet<Railcar, RailcarQueryProxy>;
 	railcarModel: DbSet<RailcarModel, RailcarModelQueryProxy>;
+	railcarModelDrawing: DbSet<RailcarModelDrawing, RailcarModelDrawingQueryProxy>;
 	session: DbSet<Session, SessionQueryProxy>;
 	storageContainer: DbSet<StorageContainer, StorageContainerQueryProxy>;
+	uicIdentifierClass: DbSet<UicIdentifierClass, UicIdentifierClassQueryProxy>;
+	uicIdentifierIndexLetter: DbSet<UicIdentifierIndexLetter, UicIdentifierIndexLetterQueryProxy>;
 	uncoupling: DbSet<Uncoupling, UncouplingQueryProxy>;
 
 	constructor(private runContext: RunContext) {
@@ -1146,8 +1257,11 @@ export class DbContext {
 		this.graffitiType = new DbSet<GraffitiType, GraffitiTypeQueryProxy>(GraffitiType, this.runContext);
 		this.railcar = new DbSet<Railcar, RailcarQueryProxy>(Railcar, this.runContext);
 		this.railcarModel = new DbSet<RailcarModel, RailcarModelQueryProxy>(RailcarModel, this.runContext);
+		this.railcarModelDrawing = new DbSet<RailcarModelDrawing, RailcarModelDrawingQueryProxy>(RailcarModelDrawing, this.runContext);
 		this.session = new DbSet<Session, SessionQueryProxy>(Session, this.runContext);
 		this.storageContainer = new DbSet<StorageContainer, StorageContainerQueryProxy>(StorageContainer, this.runContext);
+		this.uicIdentifierClass = new DbSet<UicIdentifierClass, UicIdentifierClassQueryProxy>(UicIdentifierClass, this.runContext);
+		this.uicIdentifierIndexLetter = new DbSet<UicIdentifierIndexLetter, UicIdentifierIndexLetterQueryProxy>(UicIdentifierIndexLetter, this.runContext);
 		this.uncoupling = new DbSet<Uncoupling, UncouplingQueryProxy>(Uncoupling, this.runContext);
 	}
 

@@ -30,8 +30,6 @@ export class SlideshowComponent extends Component {
 
 		image.onload = () => setTimeout(() => {
 			if (!document.contains(this.rootNode)) {
-				console.log('STOP')
-
 				return;
 			}
 

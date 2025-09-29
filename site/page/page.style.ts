@@ -15,6 +15,7 @@ import { loginStyle } from "./login/index.style";
 import { trainStyle } from "./trains/train/index.style";
 import { layoutStyle } from "./layout/index.style";
 import { trainsStyle } from "./trains/index.style";
+import { railcarModelStyle } from "./model/index.style";
 
 export const applicationStyle = () => root() (
 	monospacedFont,
@@ -41,6 +42,7 @@ export const applicationStyle = () => root() (
 			graffitiStyle(),
 			storageContainerStyle(),
 			layoutStyle(),
+			railcarModelStyle(),
 
 			display('block'),
 

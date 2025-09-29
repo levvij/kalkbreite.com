@@ -1,5 +1,5 @@
 import { ViewModel } from "vlserver";
-import { RailcarModel } from "../managed/database";
+import { RailcarModel, RailcarModelDrawing } from "../managed/database";
 
 export class RailcarModelSummaryModel extends ViewModel<RailcarModel> {
 	id;
@@ -11,7 +11,17 @@ export class RailcarModelSummaryModel extends ViewModel<RailcarModel> {
 
 export class RailcarModelViewModel extends RailcarModelSummaryModel {
 	summary;
+	uicIdentifier;
 
 	lengthIncludingBuffers;
 	lengthIncludingCouplers;
+
+	drawings: RailcarModelSummaryModel[];
+}
+
+export class RailcarModelDrawingSummaryModel extends ViewModel<RailcarModelDrawing> {
+	id;
+
+	name;
+	source;
 }

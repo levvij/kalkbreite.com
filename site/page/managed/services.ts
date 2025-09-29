@@ -149,6 +149,34 @@ export class GraffitiInspirationMediaViewModel {
 	}
 }
 
+export class UicIdentifierClassViewModel {
+	code: string;
+	name: string;
+
+	private static $build(raw) {
+		const item = new UicIdentifierClassViewModel();
+		raw.code === undefined || (item.code = raw.code === null ? null : `${raw.code}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		
+		return item;
+	}
+}
+
+export class UicIdentifierIndexLetterViewModel {
+	classFilter: string;
+	code: string;
+	name: string;
+
+	private static $build(raw) {
+		const item = new UicIdentifierIndexLetterViewModel();
+		raw.classFilter === undefined || (item.classFilter = raw.classFilter === null ? null : `${raw.classFilter}`)
+		raw.code === undefined || (item.code = raw.code === null ? null : `${raw.code}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		
+		return item;
+	}
+}
+
 export class CouplerViewModel {
 	id: string;
 
@@ -172,6 +200,21 @@ export class RailcarModelSummaryModel {
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		raw.shortname === undefined || (item.shortname = raw.shortname === null ? null : `${raw.shortname}`)
 		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
+		
+		return item;
+	}
+}
+
+export class RailcarModelDrawingSummaryModel {
+	id: string;
+	name: string;
+	source: string;
+
+	private static $build(raw) {
+		const item = new RailcarModelDrawingSummaryModel();
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		raw.source === undefined || (item.source = raw.source === null ? null : `${raw.source}`)
 		
 		return item;
 	}
@@ -382,6 +425,7 @@ export class GraffitiInspirationViewModel {
 }
 
 export class RailcarModelViewModel {
+	drawings: RailcarModelSummaryModel[];
 	id: string;
 	lengthIncludingBuffers: number;
 	lengthIncludingCouplers: number;
@@ -389,9 +433,11 @@ export class RailcarModelViewModel {
 	shortname: string;
 	summary: string;
 	tag: string;
+	uicIdentifier: string;
 
 	private static $build(raw) {
 		const item = new RailcarModelViewModel();
+		raw.drawings === undefined || (item.drawings = raw.drawings ? raw.drawings.map(i => RailcarModelSummaryModel["$build"](i)) : null)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.lengthIncludingBuffers === undefined || (item.lengthIncludingBuffers = raw.lengthIncludingBuffers === null ? null : +raw.lengthIncludingBuffers)
 		raw.lengthIncludingCouplers === undefined || (item.lengthIncludingCouplers = raw.lengthIncludingCouplers === null ? null : +raw.lengthIncludingCouplers)
@@ -399,6 +445,7 @@ export class RailcarModelViewModel {
 		raw.shortname === undefined || (item.shortname = raw.shortname === null ? null : `${raw.shortname}`)
 		raw.summary === undefined || (item.summary = raw.summary === null ? null : `${raw.summary}`)
 		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
+		raw.uicIdentifier === undefined || (item.uicIdentifier = raw.uicIdentifier === null ? null : `${raw.uicIdentifier}`)
 		
 		return item;
 	}
@@ -773,6 +820,92 @@ export class GraffitiService {
 
 			if ("aborted" in r) {
 				throw new Error("request aborted by server");
+			}
+		});
+	}
+}
+
+export class RailcarModelService {
+	async getModel(tag: string): Promise<RailcarModelViewModel> {
+		const $data = new FormData();
+		$data.append("1wbmJxdmkzanZsbzV4YWEwa34ydDs2c2", Service.stringify(tag))
+
+		return await fetch(Service.toURL("cxZGJtaGBzY3t5bntiZmVmdzZ5bDYxbD"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d === null ? null : RailcarModelViewModel["$build"](d);
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async getRailcars(modelId: string): Promise<Array<RailcarSummaryModel>> {
+		const $data = new FormData();
+		$data.append("Y2aWNtZjIxNHxlcj1jYTk1Y39iM2VpM2", Service.stringify(modelId))
+
+		return await fetch(Service.toURL("g1c2NhNjNvM3BlODw2NzN3dnJpcmdtMW"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : RailcarSummaryModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async getUicClasses(): Promise<Array<UicIdentifierClassViewModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("pnZW16NWRreHdmb2hpdWl5YWdodzM4NW"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : UicIdentifierClassViewModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async getUicIndexLetters(): Promise<Array<UicIdentifierIndexLetterViewModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("gyNHgwYnRqZGMxN3cxZTdia2FkMTMyYz"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : UicIdentifierIndexLetterViewModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
 			}
 		});
 	}
