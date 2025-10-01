@@ -33,10 +33,10 @@ export class RailcarModelService extends Service {
 		);
 	}
 
-
-	async getUicIndexLetters() {
+	async getUicIndexLetters(localeId: string) {
 		return UicIdentifierIndexLetterViewModel.from(
 			this.database.uicIdentifierIndexLetter
+				.where(identifier => identifier.uicLocaleId == null || identifier.uicLocaleId == localeId)
 				.orderByAscending(identifier => identifier.code)
 		);
 	}

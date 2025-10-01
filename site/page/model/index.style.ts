@@ -1,4 +1,4 @@
-import { attribute, attributeIn, child, columnGap, ColumnGapGlobalStyleProperty, display, empty, fontSize, fontWeight, FontWeightGlobalStyleProperty, margin, marginBlock, marginBottom, marginRight, paddingInline, PaddingInlineGlobalStyleProperty, paddingRight, percentage, rem, width } from "@acryps/style";
+import { attribute, attributeIn, ch, child, columnGap, ColumnGapGlobalStyleProperty, display, empty, fontSize, fontWeight, FontWeightGlobalStyleProperty, margin, marginBlock, marginBottom, marginLeft, marginRight, opacity, paddingInline, PaddingInlineGlobalStyleProperty, paddingRight, percentage, rem, width } from "@acryps/style";
 import { boxed } from "../shared/boxed";
 import { pageGutter, pageSpacing } from "../index.style";
 import { railcarCollectionStyle } from "../shared/railcar-collection/index.style";
@@ -55,7 +55,14 @@ export const railcarModelStyle = () => child('ui-railcar-model')(
 			),
 
 			child('ui-name') (
-				display('table-cell')
+				display('table-cell'),
+
+				child('ui-locale') (
+					display('inline-block'),
+					marginLeft(ch(1)),
+
+					opacity(0.5)
+				)
 			)
 		)
 	),

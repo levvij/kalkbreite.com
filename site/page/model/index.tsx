@@ -18,7 +18,7 @@ export class ModelPage extends Component {
 	render() {
 		return <ui-railcar-model>
 			{this.model.drawings.map(drawing => <ui-technical-drawing>
-				<img src={`/railcar-model-drawing/${drawing.id}`} />
+				<img src={`/model/drawing/${drawing.id}`} />
 			</ui-technical-drawing>)}
 
 			<ui-name>
@@ -29,7 +29,7 @@ export class ModelPage extends Component {
 				{this.model.summary}
 			</ui-summary>
 
-			{this.model.uicIdentifier && new UicIdentifierComponent(this.model.uicIdentifier)}
+			{this.model.uicIdentifier && new UicIdentifierComponent(this.model.uicIdentifier, this.model.uicLocale)}
 
 			{new RailcarCollectionComponent(this.railcars)}
 		</ui-railcar-model>

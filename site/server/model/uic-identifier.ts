@@ -1,5 +1,5 @@
 import { ViewModel } from "vlserver";
-import { UicIdentifierClass, UicIdentifierIndexLetter } from "../managed/database";
+import { UicIdentifierClass, UicIdentifierIndexLetter, UicLocale } from "../managed/database";
 
 export class UicIdentifierClassViewModel extends ViewModel<UicIdentifierClass> {
 	code;
@@ -10,6 +10,13 @@ export class UicIdentifierClassViewModel extends ViewModel<UicIdentifierClass> {
 export class UicIdentifierIndexLetterViewModel extends ViewModel<UicIdentifierIndexLetter> {
 	code;
 	classFilter;
+	uicLocaleId;
+
+	name;
+}
+
+export class UicLocaleViewModel extends ViewModel<UicLocale> {
+	id;
 
 	name;
 }

@@ -1,12 +1,13 @@
 import { Component } from "@acryps/page";
-import { RailcarModelService, UicIdentifierClassViewModel, UicIdentifierIndexLetterViewModel } from "../managed/services";
+import { RailcarModelService, UicIdentifierClassViewModel, UicIdentifierIndexLetterViewModel, UicLocaleViewModel } from "../managed/services";
 
 export class UicIdentifierComponent extends Component {
 	static classes: UicIdentifierClassViewModel[];
 	static indexLetters: UicIdentifierIndexLetterViewModel[];
 
 	constructor(
-		private code: string
+		private code: string,
+		private locale?: UicLocaleViewModel
 	) {
 		super();
 	}
@@ -17,7 +18,7 @@ export class UicIdentifierComponent extends Component {
 		}
 
 		if (!UicIdentifierComponent.indexLetters) {
-			UicIdentifierComponent.indexLetters = await new RailcarModelService().getUicIndexLetters();
+			UicIdentifierComponent.indexLetters = await new RailcarModelService().getUicIndexLetters(this.locale?.id ?? null);
 		}
 	}
 
@@ -48,6 +49,10 @@ export class UicIdentifierComponent extends Component {
 
 				<ui-name>
 					{modifier.name}
+
+					{modifier.uicLocaleId && <ui-locale>
+						({this.locale.name})
+					</ui-locale>}
 				</ui-name>
 			</ui-part>)}
 		</ui-uic-identifier>
@@ -78,7 +83,7 @@ export class UicIdentifierComponent extends Component {
 		const sortedClasses = UicIdentifierComponent.classes
 			.toSorted((a, b) => b.code.length - a.code.length);
 
-		const appliedModifiers: UicIdentifierClassViewModel[] = [];
+		const appliedModifiers: UicIdentifierIndexLetterViewModel[] = [];
 
 		for (let indexLetterCode of indexLetterCodes) {
 			const appliedIndexLetters = new Map<UicIdentifierClassViewModel, number>();

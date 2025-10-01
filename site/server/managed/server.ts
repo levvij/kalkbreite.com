@@ -41,6 +41,7 @@ import { TrainService } from "././../train/index";
 import { ArtistSummaryModel } from "./../graffiti/artist";
 import { GraffitiSummaryModel } from "./../graffiti/graffiti";
 import { GraffitiInspirationMediaViewModel } from "./../graffiti/inspiration";
+import { UicLocaleViewModel } from "./../model/uic-identifier";
 import { CouplerViewModel } from "./../railcar/coupler";
 import { CouplerTypeSummaryModel } from "./../railcar/coupler";
 import { RailcarModelSummaryModel } from "./../railcar/model";
@@ -55,6 +56,7 @@ import { Artist } from "./../managed/database";
 import { GraffitiCapture } from "./../managed/database";
 import { GraffitiType } from "./../managed/database";
 import { UicIdentifierClass } from "./../managed/database";
+import { UicLocale } from "./../managed/database";
 import { Coupler } from "./../managed/database";
 import { CouplerType } from "./../managed/database";
 import { RailcarModel } from "./../managed/database";
@@ -289,11 +291,13 @@ export class ManagedServer extends BaseServer {
 		);
 
 		this.expose(
-			"gyNHgwYnRqZGMxN3cxZTdia2FkMTMyYz",
-			{},
+			"dlb3JtcmNyYTJzeGAyMGJhemR2NGo5cD",
+			{
+			"NhdXE0dzR5dTJ0Z21xZDg0djQ5OGJieH": { type: "string", isArray: false, isOptional: false }
+			},
 			inject => inject.construct(RailcarModelService),
 			(controller, params) => controller.getUicIndexLetters(
-				
+				params["NhdXE0dzR5dTJ0Z21xZDg0djQ5OGJieH"]
 			)
 		);
 
@@ -1081,7 +1085,8 @@ ViewModel.mappings = {
 			return {
 				classFilter: this.$$model.classFilter,
 				code: this.$$model.code,
-				name: this.$$model.name
+				name: this.$$model.name,
+				uicLocaleId: this.$$model.uicLocaleId
 			}
 		};
 
@@ -1113,7 +1118,8 @@ ViewModel.mappings = {
 			return {
 				classFilter: true,
 				code: true,
-				name: true
+				name: true,
+				uicLocaleId: true
 			};
 		};
 
@@ -1122,6 +1128,7 @@ ViewModel.mappings = {
 			"classFilter" in data && (item.classFilter = data.classFilter === null ? null : `${data.classFilter}`);
 			"code" in data && (item.code = data.code === null ? null : `${data.code}`);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+			"uicLocaleId" in data && (item.uicLocaleId = data.uicLocaleId === null ? null : `${data.uicLocaleId}`);
 
 			return item;
 		}
@@ -1131,6 +1138,69 @@ ViewModel.mappings = {
 			
 			"classFilter" in viewModel && (model.classFilter = viewModel.classFilter === null ? null : `${viewModel.classFilter}`);
 			"code" in viewModel && (model.code = viewModel.code === null ? null : `${viewModel.code}`);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
+			"uicLocaleId" in viewModel && (model.uicLocaleId = viewModel.uicLocaleId === null ? null : `${viewModel.uicLocaleId}`);
+
+			return model;
+		}
+	},
+	[UicLocaleViewModel.name]: class ComposedUicLocaleViewModel extends UicLocaleViewModel {
+		async map() {
+			return {
+				id: this.$$model.id,
+				name: this.$$model.name
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				id: true,
+				name: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new UicLocaleViewModel(null);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: UicLocaleViewModel) {
+			let model: UicLocale;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(UicLocale).find(viewModel.id)
+			} else {
+				model = new UicLocale();
+			}
+			
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 
 			return model;
@@ -2237,6 +2307,7 @@ ViewModel.mappings = {
 		async map() {
 			return {
 				drawings: (await this.$$model.drawings.includeTree(ViewModel.mappings[RailcarModelSummaryModel.name].items).toArray()).map(item => new RailcarModelSummaryModel(item)),
+				uicLocale: new UicLocaleViewModel(await BaseServer.unwrap(this.$$model.uicLocale)),
 				id: this.$$model.id,
 				lengthIncludingBuffers: this.$$model.lengthIncludingBuffers,
 				lengthIncludingCouplers: this.$$model.lengthIncludingCouplers,
@@ -2280,6 +2351,12 @@ ViewModel.mappings = {
 						[...parents, "drawings-RailcarModelViewModel"]
 					);
 				},
+				get uicLocale() {
+					return ViewModel.mappings[UicLocaleViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "uicLocale-RailcarModelViewModel"]
+					);
+				},
 				id: true,
 				lengthIncludingBuffers: true,
 				lengthIncludingCouplers: true,
@@ -2294,6 +2371,7 @@ ViewModel.mappings = {
 		static toViewModel(data) {
 			const item = new RailcarModelViewModel(null);
 			"drawings" in data && (item.drawings = data.drawings && [...data.drawings].map(i => ViewModel.mappings[RailcarModelSummaryModel.name].toViewModel(i)));
+			"uicLocale" in data && (item.uicLocale = data.uicLocale && ViewModel.mappings[UicLocaleViewModel.name].toViewModel(data.uicLocale));
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"lengthIncludingBuffers" in data && (item.lengthIncludingBuffers = data.lengthIncludingBuffers === null ? null : +data.lengthIncludingBuffers);
 			"lengthIncludingCouplers" in data && (item.lengthIncludingCouplers = data.lengthIncludingCouplers === null ? null : +data.lengthIncludingCouplers);
@@ -2316,6 +2394,7 @@ ViewModel.mappings = {
 			}
 			
 			"drawings" in viewModel && (null);
+			"uicLocale" in viewModel && (model.uicLocale.id = viewModel.uicLocale ? viewModel.uicLocale.id : null);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"lengthIncludingBuffers" in viewModel && (model.lengthIncludingBuffers = viewModel.lengthIncludingBuffers === null ? null : +viewModel.lengthIncludingBuffers);
 			"lengthIncludingCouplers" in viewModel && (model.lengthIncludingCouplers = viewModel.lengthIncludingCouplers === null ? null : +viewModel.lengthIncludingCouplers);

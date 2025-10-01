@@ -166,11 +166,26 @@ export class UicIdentifierIndexLetterViewModel {
 	classFilter: string;
 	code: string;
 	name: string;
+	uicLocaleId: string;
 
 	private static $build(raw) {
 		const item = new UicIdentifierIndexLetterViewModel();
 		raw.classFilter === undefined || (item.classFilter = raw.classFilter === null ? null : `${raw.classFilter}`)
 		raw.code === undefined || (item.code = raw.code === null ? null : `${raw.code}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		raw.uicLocaleId === undefined || (item.uicLocaleId = raw.uicLocaleId === null ? null : `${raw.uicLocaleId}`)
+		
+		return item;
+	}
+}
+
+export class UicLocaleViewModel {
+	id: string;
+	name: string;
+
+	private static $build(raw) {
+		const item = new UicLocaleViewModel();
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		
 		return item;
@@ -441,6 +456,7 @@ export class GraffitiInspirationViewModel {
 
 export class RailcarModelViewModel {
 	drawings: RailcarModelSummaryModel[];
+	uicLocale: UicLocaleViewModel;
 	id: string;
 	lengthIncludingBuffers: number;
 	lengthIncludingCouplers: number;
@@ -453,6 +469,7 @@ export class RailcarModelViewModel {
 	private static $build(raw) {
 		const item = new RailcarModelViewModel();
 		raw.drawings === undefined || (item.drawings = raw.drawings ? raw.drawings.map(i => RailcarModelSummaryModel["$build"](i)) : null)
+		raw.uicLocale === undefined || (item.uicLocale = raw.uicLocale ? UicLocaleViewModel["$build"](raw.uicLocale) : null)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.lengthIncludingBuffers === undefined || (item.lengthIncludingBuffers = raw.lengthIncludingBuffers === null ? null : +raw.lengthIncludingBuffers)
 		raw.lengthIncludingCouplers === undefined || (item.lengthIncludingCouplers = raw.lengthIncludingCouplers === null ? null : +raw.lengthIncludingCouplers)
@@ -904,11 +921,11 @@ export class RailcarModelService {
 		});
 	}
 
-	async getUicIndexLetters(): Promise<Array<UicIdentifierIndexLetterViewModel>> {
+	async getUicIndexLetters(localeId: string): Promise<Array<UicIdentifierIndexLetterViewModel>> {
 		const $data = new FormData();
-		
+		$data.append("NhdXE0dzR5dTJ0Z21xZDg0djQ5OGJieH", Service.stringify(localeId))
 
-		return await fetch(Service.toURL("gyNHgwYnRqZGMxN3cxZTdia2FkMTMyYz"), {
+		return await fetch(Service.toURL("dlb3JtcmNyYTJzeGAyMGJhemR2NGo5cD"), {
 			method: "post",
 			credentials: "include",
 			body: $data

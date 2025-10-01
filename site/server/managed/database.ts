@@ -994,6 +994,7 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 }
 			
 export class RailcarModelQueryProxy extends QueryProxy {
+	get uicLocale(): Partial<UicLocaleQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get description(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get lengthIncludingBuffers(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get lengthIncludingCouplers(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -1002,12 +1003,14 @@ export class RailcarModelQueryProxy extends QueryProxy {
 	get summary(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get tag(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get uicIdentifier(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get uicLocaleId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
 
 export class RailcarModel extends Entity<RailcarModelQueryProxy> {
 	railcars: PrimaryReference<Railcar, RailcarQueryProxy>;
 		drawings: PrimaryReference<RailcarModelDrawing, RailcarModelDrawingQueryProxy>;
-		description: string;
+		get uicLocale(): Partial<ForeignReference<UicLocale>> { return this.$uicLocale; }
+	description: string;
 	declare id: string;
 	lengthIncludingBuffers: number;
 	lengthIncludingCouplers: number;
@@ -1016,6 +1019,7 @@ export class RailcarModel extends Entity<RailcarModelQueryProxy> {
 	summary: string;
 	tag: string;
 	uicIdentifier: string;
+	uicLocaleId: string;
 	
 	$$meta = {
 		source: "railcar_model",
@@ -1028,7 +1032,8 @@ export class RailcarModel extends Entity<RailcarModelQueryProxy> {
 			shortname: { type: "text", name: "shortname" },
 			summary: { type: "text", name: "summary" },
 			tag: { type: "text", name: "tag" },
-			uicIdentifier: { type: "text", name: "uic_identifier" }
+			uicIdentifier: { type: "text", name: "uic_identifier" },
+			uicLocaleId: { type: "uuid", name: "uic_locale_id" }
 		},
 		get set(): DbSet<RailcarModel, RailcarModelQueryProxy> { 
 			return new DbSet<RailcarModel, RailcarModelQueryProxy>(RailcarModel, null);
@@ -1040,7 +1045,22 @@ export class RailcarModel extends Entity<RailcarModelQueryProxy> {
 		
 		this.railcars = new PrimaryReference<Railcar, RailcarQueryProxy>(this, "modelId", Railcar);
 		this.drawings = new PrimaryReference<RailcarModelDrawing, RailcarModelDrawingQueryProxy>(this, "railcarModelId", RailcarModelDrawing);
+		this.$uicLocale = new ForeignReference<UicLocale>(this, "uicLocaleId", UicLocale);
 	}
+	
+	private $uicLocale: ForeignReference<UicLocale>;
+
+	set uicLocale(value: Partial<ForeignReference<UicLocale>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.uicLocaleId = value.id as string;
+		} else {
+			this.uicLocaleId = null;
+		}
+	}
+
+	
 }
 			
 export class RailcarModelDrawingQueryProxy extends QueryProxy {
@@ -1199,16 +1219,20 @@ export class UicIdentifierClass extends Entity<UicIdentifierClassQueryProxy> {
 }
 			
 export class UicIdentifierIndexLetterQueryProxy extends QueryProxy {
+	get uicLocale(): Partial<UicLocaleQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get classFilter(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get code(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get uicLocaleId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
 
 export class UicIdentifierIndexLetter extends Entity<UicIdentifierIndexLetterQueryProxy> {
+	get uicLocale(): Partial<ForeignReference<UicLocale>> { return this.$uicLocale; }
 	classFilter: string;
 	code: string;
 	declare id: string;
 	name: string;
+	uicLocaleId: string;
 	
 	$$meta = {
 		source: "uic_identifier_index_letter",
@@ -1216,12 +1240,60 @@ export class UicIdentifierIndexLetter extends Entity<UicIdentifierIndexLetterQue
 			classFilter: { type: "text", name: "class_filter" },
 			code: { type: "text", name: "code" },
 			id: { type: "uuid", name: "id" },
-			name: { type: "text", name: "name" }
+			name: { type: "text", name: "name" },
+			uicLocaleId: { type: "uuid", name: "uic_locale_id" }
 		},
 		get set(): DbSet<UicIdentifierIndexLetter, UicIdentifierIndexLetterQueryProxy> { 
 			return new DbSet<UicIdentifierIndexLetter, UicIdentifierIndexLetterQueryProxy>(UicIdentifierIndexLetter, null);
 		}
 	};
+	
+	constructor() {
+		super();
+		
+		this.$uicLocale = new ForeignReference<UicLocale>(this, "uicLocaleId", UicLocale);
+	}
+	
+	private $uicLocale: ForeignReference<UicLocale>;
+
+	set uicLocale(value: Partial<ForeignReference<UicLocale>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.uicLocaleId = value.id as string;
+		} else {
+			this.uicLocaleId = null;
+		}
+	}
+
+	
+}
+			
+export class UicLocaleQueryProxy extends QueryProxy {
+	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class UicLocale extends Entity<UicLocaleQueryProxy> {
+	indexLetters: PrimaryReference<UicIdentifierIndexLetter, UicIdentifierIndexLetterQueryProxy>;
+		declare id: string;
+	name: string;
+	
+	$$meta = {
+		source: "uic_locale",
+		columns: {
+			id: { type: "uuid", name: "id" },
+			name: { type: "text", name: "name" }
+		},
+		get set(): DbSet<UicLocale, UicLocaleQueryProxy> { 
+			return new DbSet<UicLocale, UicLocaleQueryProxy>(UicLocale, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.indexLetters = new PrimaryReference<UicIdentifierIndexLetter, UicIdentifierIndexLetterQueryProxy>(this, "uicLocaleId", UicIdentifierIndexLetter);
+	}
 }
 			
 export class UncouplingQueryProxy extends QueryProxy {
@@ -1293,6 +1365,7 @@ export class DbContext {
 	storageContainer: DbSet<StorageContainer, StorageContainerQueryProxy>;
 	uicIdentifierClass: DbSet<UicIdentifierClass, UicIdentifierClassQueryProxy>;
 	uicIdentifierIndexLetter: DbSet<UicIdentifierIndexLetter, UicIdentifierIndexLetterQueryProxy>;
+	uicLocale: DbSet<UicLocale, UicLocaleQueryProxy>;
 	uncoupling: DbSet<Uncoupling, UncouplingQueryProxy>;
 
 	constructor(private runContext: RunContext) {
@@ -1318,6 +1391,7 @@ export class DbContext {
 		this.storageContainer = new DbSet<StorageContainer, StorageContainerQueryProxy>(StorageContainer, this.runContext);
 		this.uicIdentifierClass = new DbSet<UicIdentifierClass, UicIdentifierClassQueryProxy>(UicIdentifierClass, this.runContext);
 		this.uicIdentifierIndexLetter = new DbSet<UicIdentifierIndexLetter, UicIdentifierIndexLetterQueryProxy>(UicIdentifierIndexLetter, this.runContext);
+		this.uicLocale = new DbSet<UicLocale, UicLocaleQueryProxy>(UicLocale, this.runContext);
 		this.uncoupling = new DbSet<Uncoupling, UncouplingQueryProxy>(Uncoupling, this.runContext);
 	}
 

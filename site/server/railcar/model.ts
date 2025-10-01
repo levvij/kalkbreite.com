@@ -1,5 +1,6 @@
 import { ViewModel } from "vlserver";
 import { RailcarModel, RailcarModelDrawing } from "../managed/database";
+import { UicLocaleViewModel } from "../model/uic-identifier";
 
 export class RailcarModelSummaryModel extends ViewModel<RailcarModel> {
 	id;
@@ -16,6 +17,7 @@ export class RailcarModelViewModel extends RailcarModelSummaryModel {
 	lengthIncludingBuffers;
 	lengthIncludingCouplers;
 
+	uicLocale: UicLocaleViewModel;
 	drawings: RailcarModelSummaryModel[];
 }
 
