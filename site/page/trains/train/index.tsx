@@ -1,14 +1,16 @@
 import { Component } from "@acryps/page";
-import { RailcarSummaryModel, TrainService } from "../../managed/services";
+import { RailcarSummaryModel, TrainRailcarUnitViewModel, TrainService, TrainUnitViewModel } from "../../managed/services";
 import { Application } from "../..";
 import { coupleIcon, uncoupleIcon } from "../../assets/icons/managed";
 import { TrainsPage } from "..";
+import { StorageContainerTagComponent } from "../../shared/storage-container-tag";
+import { DetailSectionComponent } from "../../shared/detail-section";
 
 export class TrainPage extends Component {
 	declare parameters: { identifier };
 	declare parent: TrainsPage;
 
-	units: RailcarSummaryModel[];
+	units: TrainRailcarUnitViewModel[];
 
 	async onload() {
 		this.units = await new TrainService().getTrain(this.parameters.identifier);
@@ -36,9 +38,20 @@ export class TrainPage extends Component {
 					<ui-unit ui-href={`/railcar/${unit.tag}`}>
 						<img src={`/capture/railcar/${unit.id}/forward`} />
 
-						<ui-tag>
-							{unit.tag}
-						</ui-tag>
+						{new DetailSectionComponent(<ui-header>
+							<ui-name>
+								{unit.givenName || unit.model?.name || unit.runningNumber}
+							</ui-name>
+
+							<ui-tag>
+								{unit.tag}
+							</ui-tag>
+						</ui-header>)
+							.addMetric('Type', () => unit.model?.name, `/model/${unit.model?.tag}`)
+							.addMetric('Running Number', () => unit.runningNumber)
+							.addStakeholder('Owner', unit.owner)
+							.addStakeholder('Operator', unit.operator)
+							.addMetric('Storage Container', () => unit.storageContainer?.tag, `/storage-container/${unit.storageContainer?.tag}`)}
 					</ui-unit>,
 
 					Application.session.account && index != this.units.length - 1 && <ui-action ui-click={async () => {

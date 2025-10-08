@@ -37,6 +37,8 @@ import { Coupling } from "././database";
 import { Uncoupling } from "././database";
 import { TrainChain } from "././../train/chain";
 import { TrainViewModel } from "././../train/train";
+import { TrainRailcarUnitViewModel } from "././../train/unit";
+import { TrainUnitViewModel } from "././../train/unit";
 import { TrainService } from "././../train/index";
 import { ArtistSummaryModel } from "./../graffiti/artist";
 import { GraffitiSummaryModel } from "./../graffiti/graffiti";
@@ -2724,6 +2726,112 @@ ViewModel.mappings = {
 			"railcars" in viewModel && (null);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
+			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
+
+			return model;
+		}
+	},
+	[TrainRailcarUnitViewModel.name]: class ComposedTrainRailcarUnitViewModel extends TrainRailcarUnitViewModel {
+		async map() {
+			return {
+				model: new RailcarModelSummaryModel(await BaseServer.unwrap(this.$$model.model)),
+				operator: new CompanySummaryModel(await BaseServer.unwrap(this.$$model.operator)),
+				owner: new CompanySummaryModel(await BaseServer.unwrap(this.$$model.owner)),
+				storageContainer: new StorageContainerSummaryModel(await BaseServer.unwrap(this.$$model.storageContainer)),
+				givenName: this.$$model.givenName,
+				id: this.$$model.id,
+				runningNumber: this.$$model.runningNumber,
+				tag: this.$$model.tag
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				get model() {
+					return ViewModel.mappings[RailcarModelSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "model-TrainRailcarUnitViewModel"]
+					);
+				},
+				get operator() {
+					return ViewModel.mappings[CompanySummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "operator-TrainRailcarUnitViewModel"]
+					);
+				},
+				get owner() {
+					return ViewModel.mappings[CompanySummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "owner-TrainRailcarUnitViewModel"]
+					);
+				},
+				get storageContainer() {
+					return ViewModel.mappings[StorageContainerSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "storageContainer-TrainRailcarUnitViewModel"]
+					);
+				},
+				givenName: true,
+				id: true,
+				runningNumber: true,
+				tag: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new TrainRailcarUnitViewModel(null);
+			"model" in data && (item.model = data.model && ViewModel.mappings[RailcarModelSummaryModel.name].toViewModel(data.model));
+			"operator" in data && (item.operator = data.operator && ViewModel.mappings[CompanySummaryModel.name].toViewModel(data.operator));
+			"owner" in data && (item.owner = data.owner && ViewModel.mappings[CompanySummaryModel.name].toViewModel(data.owner));
+			"storageContainer" in data && (item.storageContainer = data.storageContainer && ViewModel.mappings[StorageContainerSummaryModel.name].toViewModel(data.storageContainer));
+			"givenName" in data && (item.givenName = data.givenName === null ? null : `${data.givenName}`);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"runningNumber" in data && (item.runningNumber = data.runningNumber === null ? null : `${data.runningNumber}`);
+			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: TrainRailcarUnitViewModel) {
+			let model: Railcar;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(Railcar).find(viewModel.id)
+			} else {
+				model = new Railcar();
+			}
+			
+			"model" in viewModel && (model.model.id = viewModel.model ? viewModel.model.id : null);
+			"operator" in viewModel && (model.operator.id = viewModel.operator ? viewModel.operator.id : null);
+			"owner" in viewModel && (model.owner.id = viewModel.owner ? viewModel.owner.id : null);
+			"storageContainer" in viewModel && (model.storageContainer.id = viewModel.storageContainer ? viewModel.storageContainer.id : null);
+			"givenName" in viewModel && (model.givenName = viewModel.givenName === null ? null : `${viewModel.givenName}`);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"runningNumber" in viewModel && (model.runningNumber = viewModel.runningNumber === null ? null : `${viewModel.runningNumber}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
 
 			return model;

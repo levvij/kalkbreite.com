@@ -560,6 +560,31 @@ export class StorageContainerViewModel {
 	}
 }
 
+export class TrainRailcarUnitViewModel {
+	model: RailcarModelSummaryModel;
+	operator: CompanySummaryModel;
+	owner: CompanySummaryModel;
+	storageContainer: StorageContainerSummaryModel;
+	givenName: string;
+	id: string;
+	runningNumber: string;
+	tag: string;
+
+	private static $build(raw) {
+		const item = new TrainRailcarUnitViewModel();
+		raw.model === undefined || (item.model = raw.model ? RailcarModelSummaryModel["$build"](raw.model) : null)
+		raw.operator === undefined || (item.operator = raw.operator ? CompanySummaryModel["$build"](raw.operator) : null)
+		raw.owner === undefined || (item.owner = raw.owner ? CompanySummaryModel["$build"](raw.owner) : null)
+		raw.storageContainer === undefined || (item.storageContainer = raw.storageContainer ? StorageContainerSummaryModel["$build"](raw.storageContainer) : null)
+		raw.givenName === undefined || (item.givenName = raw.givenName === null ? null : `${raw.givenName}`)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.runningNumber === undefined || (item.runningNumber = raw.runningNumber === null ? null : `${raw.runningNumber}`)
+		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
+		
+		return item;
+	}
+}
+
 export class Service {
 	static baseUrl = "";
 
@@ -1117,7 +1142,7 @@ export class TrainService {
 		});
 	}
 
-	async getTrains(): Promise<Array<TrainViewModel>> {
+	async getTrains(): Promise<Array<TrainRailcarUnitViewModel>> {
 		const $data = new FormData();
 		
 
@@ -1129,7 +1154,7 @@ export class TrainService {
 			if ("data" in r) {
 				const d = r.data;
 
-				return d.map(d => d === null ? null : TrainViewModel["$build"](d));
+				return d.map(d => d === null ? null : TrainRailcarUnitViewModel["$build"](d));
 			} else if ("aborted" in r) {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {

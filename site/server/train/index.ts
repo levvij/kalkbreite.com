@@ -3,6 +3,7 @@ import { Coupling, DbContext, Uncoupling } from "../managed/database";
 import { TrainChain } from "./chain";
 import { RailcarSummaryModel } from "../railcar/railcar";
 import { TrainViewModel } from "./train";
+import { TrainRailcarUnitViewModel, TrainUnitViewModel } from "./unit";
 
 export class TrainService extends Service {
 	constructor(
@@ -47,7 +48,7 @@ export class TrainService extends Service {
 	}
 
 	getTrains() {
-		return TrainViewModel.from(
+		return TrainRailcarUnitViewModel.from(
 			[...this.chain.trains]
 				.sort((a, b) => {
 					if (a.units.length == b.units.length) {

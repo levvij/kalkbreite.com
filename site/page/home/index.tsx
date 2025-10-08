@@ -4,6 +4,7 @@ import { ReaderComponent } from "./reader";
 import { RailcarCollectionComponent } from "../shared/railcar-collection";
 import { SlideshowComponent } from "../shared/slideshow";
 import { Application } from "..";
+import { LayoutComponent } from "../shared/layout";
 
 export class HomePage extends Component {
 	railcars: RailcarSummaryModel[];
@@ -29,8 +30,11 @@ export class HomePage extends Component {
 	}
 
 	render() {
+		const layout = new LayoutComponent();
+		layout.onSectionClick = section => this.navigate(`/layout/section/${section.domainName}`);
+
 		return <ui-home>
-			{new SlideshowComponent(() => `/capture/random?seed=${Math.random().toString().substring(2)}`)}
+			{layout}
 
 			<ui-content>
 				<ui-guide>

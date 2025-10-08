@@ -6,11 +6,12 @@ import { railcarCollectionStyle } from "../shared/railcar-collection/index.style
 import { buttonGroupStyle, buttonStyle } from "../shared/button";
 import { SlideshowComponent } from "../shared/slideshow";
 import { slideshowStyle } from "../shared/slideshow/index.style";
+import { layoutStyle } from "../shared/layout/index.style";
 
 export const homeStyle = () => child('ui-home') (
 	display('block'),
 
-	slideshowStyle(),
+	layoutStyle(),
 
 	child('ui-content') (
 		boxed(),

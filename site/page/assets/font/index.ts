@@ -8,3 +8,6 @@ export const monospacedFont = new Font('pressura-monospace')
 
 export const trainIdentifierFont = monospacedFont;
 export const uicIdentifierFont = monospacedFont;
+
+export const districtIdentifierFont = monospacedFont;
+export const sectionIdentifierFont = monospacedFont;

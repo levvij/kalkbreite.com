@@ -41,8 +41,8 @@ export const applicationStyle = () => root() (
 			companyStyle(),
 			graffitiStyle(),
 			storageContainerStyle(),
-			layoutStyle(),
 			railcarModelStyle(),
+			layoutStyle(),
 
 			display('block'),
 
