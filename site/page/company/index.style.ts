@@ -4,19 +4,19 @@ import { boxed } from "../shared/boxed";
 import { railcarCollectionStyle } from "../shared/railcar-collection/index.style";
 import { clickable } from "../shared/interaction";
 
-export const companyStyle = () => child('ui-company',
+export const companyStyle = () => child('ui-company') (
 	boxed(),
 	padding(pageSpacing),
 
-	child('ui-header',
+	child('ui-header') (
 		display('block'),
 		marginBottom(pageSpacing),
 
-		child('ui-logo',
+		child('ui-logo') (
 			display('block'),
 			marginBottom(pageGutter),
 
-			child('img',
+			child('img') (
 				height(rem(3)),
 				maxWidth(percentage(100)),
 
@@ -25,18 +25,18 @@ export const companyStyle = () => child('ui-company',
 			)
 		),
 
-		child('ui-name',
+		child('ui-name') (
 			display('block'),
 
 			fontSize(rem(2))
 		),
 
-		child('ui-shortname',
+		child('ui-shortname') (
 			display('block'),
 			marginTop(pageGutter)
 		),
 
-		child('ui-parent',
+		child('ui-parent') (
 			display('block'),
 			marginTop(rem(0.25)),
 
@@ -45,10 +45,10 @@ export const companyStyle = () => child('ui-company',
 		)
 	),
 
-	child('ui-detail',
+	child('ui-detail') (
 		display('block'),
 
-		child('ui-description',
+		child('ui-description') (
 			display('block'),
 			marginBottom(pageSpacing)
 		),

@@ -1,4 +1,4 @@
-import { resize, paddingBlock, rem, paddingInline, fontFamily, fontSize, color, backgroundColor, border, borderRadius, outline, child, display, flexDirection, marginBottom, StyleSelectorBody, height, padding, style, alignItems, marginLeft, paddingLeft, margin, width, position, left, top, lineHeight, paddingTop, px, content, justifyContent, appearance } from "@acryps/style";
+import { resize, paddingBlock, rem, paddingInline, fontFamily, fontSize, color, backgroundColor, border, borderRadius, outline, child, display, flexDirection, marginBottom, StyleSelectorBody, height, padding, style, alignItems, marginLeft, paddingLeft, margin, width, position, left, top, lineHeight, paddingTop, px, content, justifyContent, appearance, has, attribute, checked, after } from "@acryps/style";
 import { pageColor, pageContrastColor, primaryColor, radius } from "../index.style";
 
 export const inputTextColor = pageContrastColor;
@@ -27,24 +27,27 @@ const checkboxBorderSize = px(2);
 
 const labelBottomSpacing = rem(0.375);
 
-export const fieldStyle = (...extras: StyleSelectorBody[]) => child('ui-field',
+export const fieldStyle = (...extras: StyleSelectorBody[]) => child('ui-field') (
 	display('flex'),
 	flexDirection('column'),
 	marginBottom(rem(1)),
 
-	style(':has(input[type="checkbox"])',
+	has(child('input'), attribute('type', 'checkbox')) (
 		position('relative'),
 
 		paddingLeft(checkboxSize.add(inputSpacingInline)),
 		paddingTop(checkboxSize.subtract(rem(1)).subtract(labelBottomSpacing).divide(2))
 	),
 
-	child('input', inputStyle())
-		.attribute('type', 'color',
+	child('input') (
+		inputStyle(),
+
+		attribute('type', 'color') (
 			height(rem(2)),
 			padding(0)
-		)
-		.attribute('type', 'checkbox',
+		),
+
+		attribute('type', 'checkbox') (
 			appearance('none'),
 
 			position('absolute'),
@@ -59,7 +62,7 @@ export const fieldStyle = (...extras: StyleSelectorBody[]) => child('ui-field',
 			backgroundColor(inputBackgroundColor),
 			border(checkboxBorderSize, 'solid', inputBackgroundColor),
 
-			style(':checked:after',
+			checked(after()) (
 				content('X'),
 				color(inputTextColor),
 
@@ -74,19 +77,25 @@ export const fieldStyle = (...extras: StyleSelectorBody[]) => child('ui-field',
 				height(checkboxSize.subtract(checkboxBorderSize.multiply(2))),
 				width(checkboxSize.subtract(checkboxBorderSize.multiply(2)))
 			)
-		),
+		)
+	),
 
-	child('textarea', inputStyle()),
-	child('select', inputStyle()),
+	child('textarea') (
+		inputStyle()
+	),
 
-	child('label',
+	child('select') (
+		inputStyle()
+	),
+
+	child('label') (
 		display('block'),
 		marginBottom(labelBottomSpacing),
 
 		lineHeight(1)
 	),
 
-	child('ui-hint',
+	child('ui-hint') (
 		display('block'),
 		marginBottom(rem(0.75)),
 

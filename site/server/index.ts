@@ -12,12 +12,20 @@ import { updateThumbnail } from "./capture/thumbnail";
 import { registerStorageTagInterface } from "./storage/tag";
 import cookieParser from 'cookie-parser';
 import { RequestContext } from "./session/context";
+import { TrainChain } from "./train/chain";
+import { writeFile } from "fs/promises";
+import { LayoutPlan } from "./layout-plan/interface";
+import { registerRailcarModelDrawingInterface } from "./model/drawing";
 
 DbClient.connectedClient = new DbClient({});
 
 DbClient.connectedClient.connect().then(async () => {
 	const app = new ManagedServer();
 	const database = new DbContext(new RunContext());
+
+	// load chain
+	const chain = await TrainChain.restore(database);
+	chain.dump();
 
 	// fill in missing thumbnails
 	for (let capture of await database.capture.where(capture => capture.thumbnail == null).toArray()) {
@@ -36,16 +44,20 @@ DbClient.connectedClient.connect().then(async () => {
 	app.createInjector = (context: RequestContext) => new Inject({
 		DbContext: database,
 		Session: context.session,
-		Authentication: context.authentication
+		Authentication: context.authentication,
+		TrainChain: chain
 	});
 
 	app.use(new StaticFileRoute('/assets/', join(process.cwd(), '..', 'page', 'assets')));
 	app.use(new StaticFileRoute('/bundle/', join(process.cwd(), '..', 'page', '.built')));
 
+	app.use(new StaticFileRoute('/layout/source/', join(process.cwd(), '..', '..', 'layout')));
+
 	registerTagInterface(app);
-	registerCaptureInterface(app, database);
+	registerCaptureInterface(app, database, chain);
 	registerLogoInterface(app, database);
 	registerStorageTagInterface(app);
+	registerRailcarModelDrawingInterface(app, database);
 
 	app.prepareRoutes();
 

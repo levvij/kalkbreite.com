@@ -5,17 +5,17 @@ const itemSpacing = mm(6);
 const labelPadding = mm(4);
 
 export const printStyle = () => root(
-	child('body',
+	child('body') (
 		color(hex('000')),
 		backgroundColor(hex('fff')),
 
 		paddingInline(mm(10)),
 		paddingTop(mm(19)),
 
-		child('ui-tag-sheet',
+		child('ui-tag-sheet') (
 			display('block'),
 
-			child('ui-storage-container-tag',
+			child('ui-storage-container-tag') (
 				display('flex'),
 				alignItems('center'),
 				gap(itemSpacing),
@@ -27,20 +27,20 @@ export const printStyle = () => root(
 
 				lineHeight(1),
 
-				child('img',
+				child('img') (
 					flexShrink(0),
 					height(percentage(100)),
 
 					imageRendering('pixelated')
 				),
 
-				child('ui-name',
+				child('ui-name') (
 					flexGrow(1),
 
 					fontSize(mm(6))
 				),
 
-				child('ui-tag',
+				child('ui-tag') (
 					monospacedFont
 				)
 			)

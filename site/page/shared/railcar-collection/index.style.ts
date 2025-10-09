@@ -4,10 +4,10 @@ import { boxed } from "../../shared/boxed";
 import { collection, collectionItem } from "../../shared/collection";
 import { clickable } from "../interaction";
 
-export const railcarCollectionStyle = () => child('ui-railcars',
+export const railcarCollectionStyle = () => child('ui-railcars') (
 	collection(rem(16)),
 
-	child('ui-railcar',
+	child('ui-railcar') (
 		collectionItem(),
 
 		display('flex'),
@@ -20,7 +20,7 @@ export const railcarCollectionStyle = () => child('ui-railcars',
 
 		clickable(),
 
-		child('img',
+		child('img') (
 			width(percentage(100)),
 			aspectRatio(captureAspectRatio),
 			backgroundColor(captureBackgroundColor),
@@ -29,7 +29,7 @@ export const railcarCollectionStyle = () => child('ui-railcars',
 			objectPosition('left')
 		),
 
-		child('ui-header',
+		child('ui-header') (
 			flexGrow(1),
 
 			display('flex'),
@@ -39,18 +39,18 @@ export const railcarCollectionStyle = () => child('ui-railcars',
 
 			marginBlock(pageGutter.divide(2)),
 
-			child('ui-name',
+			child('ui-name') (
 				fontSize(rem(1.2)),
 
 				overflow('hidden')
 			),
 
-			child('ui-tag',
+			child('ui-tag') (
 				fontFamily(tagFont)
 			)
 		),
 
-		child('ui-running-number',
+		child('ui-running-number') (
 			display('block'),
 			paddingInline(pageGutter),
 			paddingBottom(pageGutter),

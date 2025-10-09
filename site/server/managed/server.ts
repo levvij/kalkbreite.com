@@ -17,7 +17,12 @@ import { ArtistViewModel } from "././../graffiti/artist";
 import { GraffitiInspirationSummaryModel } from "././../graffiti/inspiration";
 import { GraffitiInspirationViewModel } from "././../graffiti/inspiration";
 import { GraffitiService } from "././../graffiti/index";
+import { UicIdentifierIndexLetter } from "././database";
+import { RailcarModelViewModel } from "././../railcar/model";
 import { RailcarSummaryModel } from "././../railcar/railcar";
+import { UicIdentifierClassViewModel } from "././../model/uic-identifier";
+import { UicIdentifierIndexLetterViewModel } from "././../model/uic-identifier";
+import { RailcarModelService } from "././../model/index";
 import { RailcarViewModel } from "././../railcar/railcar";
 import { updateThumbnail } from "././../capture/thumbnail";
 import { RailcarService } from "././../railcar/index";
@@ -28,23 +33,40 @@ import { Authentication } from "././../session/authentication";
 import { SessionService } from "././../session/index";
 import { StorageContainerViewModel } from "././../storage/storage-contaiuner";
 import { StorageService } from "././../storage/index";
+import { Coupling } from "././database";
+import { Uncoupling } from "././database";
+import { TrainChain } from "././../train/chain";
+import { TrainViewModel } from "././../train/train";
+import { TrainRailcarUnitViewModel } from "././../train/unit";
+import { TrainUnitViewModel } from "././../train/unit";
+import { TrainService } from "././../train/index";
 import { ArtistSummaryModel } from "./../graffiti/artist";
 import { GraffitiSummaryModel } from "./../graffiti/graffiti";
 import { GraffitiInspirationMediaViewModel } from "./../graffiti/inspiration";
+import { UicLocaleViewModel } from "./../model/uic-identifier";
+import { CouplerViewModel } from "./../railcar/coupler";
+import { CouplerTypeSummaryModel } from "./../railcar/coupler";
 import { RailcarModelSummaryModel } from "./../railcar/model";
+import { RailcarModelDrawingSummaryModel } from "./../railcar/model";
 import { AccountViewModel } from "./../session/session";
 import { StorageContainerSummaryModel } from "./../storage/storage-contaiuner";
-import { RailcarModelViewModel } from "./../railcar/model";
+import { CouplingViewModel } from "./../train/coupling";
 import { GraffitiRailcarViewModel } from "./../railcar/railcar";
 import { Capture } from "./../managed/database";
 import { Company } from "./../managed/database";
 import { Artist } from "./../managed/database";
 import { GraffitiCapture } from "./../managed/database";
 import { GraffitiType } from "./../managed/database";
+import { UicIdentifierClass } from "./../managed/database";
+import { UicLocale } from "./../managed/database";
+import { Coupler } from "./../managed/database";
+import { CouplerType } from "./../managed/database";
 import { RailcarModel } from "./../managed/database";
+import { RailcarModelDrawing } from "./../managed/database";
 import { Railcar } from "./../managed/database";
 import { Account } from "./../managed/database";
 import { StorageContainer } from "./../managed/database";
+import { Train } from "./../train/chain/train";
 
 Inject.mappings = {
 	"CompanyService": {
@@ -57,6 +79,10 @@ Inject.mappings = {
 	},
 	"GraffitiService": {
 		objectConstructor: GraffitiService,
+		parameters: ["DbContext"]
+	},
+	"RailcarModelService": {
+		objectConstructor: RailcarModelService,
 		parameters: ["DbContext"]
 	},
 	"RailcarService": {
@@ -78,6 +104,14 @@ Inject.mappings = {
 	"StorageService": {
 		objectConstructor: StorageService,
 		parameters: ["DbContext"]
+	},
+	"TrainService": {
+		objectConstructor: TrainService,
+		parameters: ["DbContext","TrainChain"]
+	},
+	"TrainChain": {
+		objectConstructor: TrainChain,
+		parameters: []
 	}
 };
 
@@ -228,6 +262,48 @@ export class ManagedServer extends BaseServer {
 		);
 
 		this.expose(
+			"cxZGJtaGBzY3t5bntiZmVmdzZ5bDYxbD",
+			{
+			"1wbmJxdmkzanZsbzV4YWEwa34ydDs2c2": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(RailcarModelService),
+			(controller, params) => controller.getModel(
+				params["1wbmJxdmkzanZsbzV4YWEwa34ydDs2c2"]
+			)
+		);
+
+		this.expose(
+			"g1c2NhNjNvM3BlODw2NzN3dnJpcmdtMW",
+			{
+			"Y2aWNtZjIxNHxlcj1jYTk1Y39iM2VpM2": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(RailcarModelService),
+			(controller, params) => controller.getRailcars(
+				params["Y2aWNtZjIxNHxlcj1jYTk1Y39iM2VpM2"]
+			)
+		);
+
+		this.expose(
+			"pnZW16NWRreHdmb2hpdWl5YWdodzM4NW",
+			{},
+			inject => inject.construct(RailcarModelService),
+			(controller, params) => controller.getUicClasses(
+				
+			)
+		);
+
+		this.expose(
+			"dlb3JtcmNyYTJzeGAyMGJhemR2NGo5cD",
+			{
+			"NhdXE0dzR5dTJ0Z21xZDg0djQ5OGJieH": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(RailcarModelService),
+			(controller, params) => controller.getUicIndexLetters(
+				params["NhdXE0dzR5dTJ0Z21xZDg0djQ5OGJieH"]
+			)
+		);
+
+		this.expose(
 			"F5MWVheDdpemBtMHpic2k0NTdiZWhkYz",
 			{},
 			inject => inject.construct(RailcarService),
@@ -290,6 +366,65 @@ export class ManagedServer extends BaseServer {
 			inject => inject.construct(StorageService),
 			(controller, params) => controller.getContainer(
 				params["FpNz1jaHk2emZvY2Z4dDdvOGZ2Zml4eD"]
+			)
+		);
+
+		this.expose(
+			"dpZGNpcXprMWV5aDVpb3BsaDU1Z2FreW",
+			{
+			"RmYjhpMnhrcXRhY2E4M2M1YjVpcGF2aG": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(TrainService),
+			(controller, params) => controller.uncoupleAfter(
+				params["RmYjhpMnhrcXRhY2E4M2M1YjVpcGF2aG"]
+			)
+		);
+
+		this.expose(
+			"p1ZGExaDh2ZzlibTUxamFteTVwcDZtMz",
+			{
+			"ZxMGU5Mnlpd2BlZzo4eXFycXJ1OWpjcD": { type: "string", isArray: false, isOptional: false },
+				"IzZ2lqNmZ3eWZqaXhnMnlwczVwNGg3OW": { type: "string", isArray: false, isOptional: false },
+				"ZmMzUydGRjZXVxbXd0Z2F6dHF3cTI4Mz": { type: "string", isArray: false, isOptional: false },
+				"hwcDV2bTo5aWZlaDlxNTU2ZmVhMjEyZT": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(TrainService),
+			(controller, params) => controller.couple(
+				params["ZxMGU5Mnlpd2BlZzo4eXFycXJ1OWpjcD"],
+				params["IzZ2lqNmZ3eWZqaXhnMnlwczVwNGg3OW"],
+				params["ZmMzUydGRjZXVxbXd0Z2F6dHF3cTI4Mz"],
+				params["hwcDV2bTo5aWZlaDlxNTU2ZmVhMjEyZT"]
+			)
+		);
+
+		this.expose(
+			"FpZXZtYWR5eGRiZzlqMDhyYXRra3M5b2",
+			{},
+			inject => inject.construct(TrainService),
+			(controller, params) => controller.getTrains(
+				
+			)
+		);
+
+		this.expose(
+			"lzOGlqcTd0eWhnYTZ0Y2A3czJsYm95cj",
+			{
+			"F5Z3U5ZXFxeWd3cHY3MmA3YXB2MnV4Zn": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(TrainService),
+			(controller, params) => controller.getTrain(
+				params["F5Z3U5ZXFxeWd3cHY3MmA3YXB2MnV4Zn"]
+			)
+		);
+
+		this.expose(
+			"lrcDJxc3wya2t2bGZlOHMxdTQ3OXI2cH",
+			{
+			"10czNubHltczN4cXhubmRxNzdiMWR0b3": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(TrainService),
+			(controller, params) => controller.getUnitTrain(
+				params["10czNubHltczN4cXhubmRxNzdiMWR0b3"]
 			)
 		)
 	}
@@ -891,6 +1026,317 @@ ViewModel.mappings = {
 			return model;
 		}
 	},
+	[UicIdentifierClassViewModel.name]: class ComposedUicIdentifierClassViewModel extends UicIdentifierClassViewModel {
+		async map() {
+			return {
+				code: this.$$model.code,
+				name: this.$$model.name
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				code: true,
+				name: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new UicIdentifierClassViewModel(null);
+			"code" in data && (item.code = data.code === null ? null : `${data.code}`);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: UicIdentifierClassViewModel) {
+			const model = new UicIdentifierClass();
+			
+			"code" in viewModel && (model.code = viewModel.code === null ? null : `${viewModel.code}`);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
+
+			return model;
+		}
+	},
+	[UicIdentifierIndexLetterViewModel.name]: class ComposedUicIdentifierIndexLetterViewModel extends UicIdentifierIndexLetterViewModel {
+		async map() {
+			return {
+				classFilter: this.$$model.classFilter,
+				code: this.$$model.code,
+				name: this.$$model.name,
+				uicLocaleId: this.$$model.uicLocaleId
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				classFilter: true,
+				code: true,
+				name: true,
+				uicLocaleId: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new UicIdentifierIndexLetterViewModel(null);
+			"classFilter" in data && (item.classFilter = data.classFilter === null ? null : `${data.classFilter}`);
+			"code" in data && (item.code = data.code === null ? null : `${data.code}`);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+			"uicLocaleId" in data && (item.uicLocaleId = data.uicLocaleId === null ? null : `${data.uicLocaleId}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: UicIdentifierIndexLetterViewModel) {
+			const model = new UicIdentifierIndexLetter();
+			
+			"classFilter" in viewModel && (model.classFilter = viewModel.classFilter === null ? null : `${viewModel.classFilter}`);
+			"code" in viewModel && (model.code = viewModel.code === null ? null : `${viewModel.code}`);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
+			"uicLocaleId" in viewModel && (model.uicLocaleId = viewModel.uicLocaleId === null ? null : `${viewModel.uicLocaleId}`);
+
+			return model;
+		}
+	},
+	[UicLocaleViewModel.name]: class ComposedUicLocaleViewModel extends UicLocaleViewModel {
+		async map() {
+			return {
+				id: this.$$model.id,
+				name: this.$$model.name
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				id: true,
+				name: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new UicLocaleViewModel(null);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: UicLocaleViewModel) {
+			let model: UicLocale;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(UicLocale).find(viewModel.id)
+			} else {
+				model = new UicLocale();
+			}
+			
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
+
+			return model;
+		}
+	},
+	[CouplerViewModel.name]: class ComposedCouplerViewModel extends CouplerViewModel {
+		async map() {
+			return {
+				type: new CouplerTypeSummaryModel(await BaseServer.unwrap(this.$$model.type)),
+				id: this.$$model.id
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				get type() {
+					return ViewModel.mappings[CouplerTypeSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "type-CouplerViewModel"]
+					);
+				},
+				id: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new CouplerViewModel(null);
+			"type" in data && (item.type = data.type && ViewModel.mappings[CouplerTypeSummaryModel.name].toViewModel(data.type));
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: CouplerViewModel) {
+			let model: Coupler;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(Coupler).find(viewModel.id)
+			} else {
+				model = new Coupler();
+			}
+			
+			"type" in viewModel && (model.type.id = viewModel.type ? viewModel.type.id : null);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+
+			return model;
+		}
+	},
+	[CouplerTypeSummaryModel.name]: class ComposedCouplerTypeSummaryModel extends CouplerTypeSummaryModel {
+		async map() {
+			return {
+				icon: this.$$model.icon,
+				id: this.$$model.id
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				icon: true,
+				id: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new CouplerTypeSummaryModel(null);
+			"icon" in data && (item.icon = data.icon === null ? null : `${data.icon}`);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: CouplerTypeSummaryModel) {
+			let model: CouplerType;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(CouplerType).find(viewModel.id)
+			} else {
+				model = new CouplerType();
+			}
+			
+			"icon" in viewModel && (model.icon = viewModel.icon === null ? null : `${viewModel.icon}`);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+
+			return model;
+		}
+	},
 	[RailcarModelSummaryModel.name]: class ComposedRailcarModelSummaryModel extends RailcarModelSummaryModel {
 		async map() {
 			return {
@@ -957,6 +1403,72 @@ ViewModel.mappings = {
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"shortname" in viewModel && (model.shortname = viewModel.shortname === null ? null : `${viewModel.shortname}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
+
+			return model;
+		}
+	},
+	[RailcarModelDrawingSummaryModel.name]: class ComposedRailcarModelDrawingSummaryModel extends RailcarModelDrawingSummaryModel {
+		async map() {
+			return {
+				id: this.$$model.id,
+				name: this.$$model.name,
+				source: this.$$model.source
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				id: true,
+				name: true,
+				source: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new RailcarModelDrawingSummaryModel(null);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+			"source" in data && (item.source = data.source === null ? null : `${data.source}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: RailcarModelDrawingSummaryModel) {
+			let model: RailcarModelDrawing;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(RailcarModelDrawing).find(viewModel.id)
+			} else {
+				model = new RailcarModelDrawing();
+			}
+			
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
+			"source" in viewModel && (model.source = viewModel.source === null ? null : `${viewModel.source}`);
 
 			return model;
 		}
@@ -1231,6 +1743,140 @@ ViewModel.mappings = {
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
+
+			return model;
+		}
+	},
+	[CouplingViewModel.name]: class ComposedCouplingViewModel extends CouplingViewModel {
+		async map() {
+			return {
+				coupled: this.$$model.coupled,
+				id: this.$$model.id,
+				sourceId: this.$$model.sourceId,
+				targetId: this.$$model.targetId
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				coupled: true,
+				id: true,
+				sourceId: true,
+				targetId: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new CouplingViewModel(null);
+			"coupled" in data && (item.coupled = data.coupled === null ? null : new Date(data.coupled));
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"sourceId" in data && (item.sourceId = data.sourceId === null ? null : `${data.sourceId}`);
+			"targetId" in data && (item.targetId = data.targetId === null ? null : `${data.targetId}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: CouplingViewModel) {
+			let model: Coupling;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(Coupling).find(viewModel.id)
+			} else {
+				model = new Coupling();
+			}
+			
+			"coupled" in viewModel && (model.coupled = viewModel.coupled === null ? null : new Date(viewModel.coupled));
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"sourceId" in viewModel && (model.sourceId = viewModel.sourceId === null ? null : `${viewModel.sourceId}`);
+			"targetId" in viewModel && (model.targetId = viewModel.targetId === null ? null : `${viewModel.targetId}`);
+
+			return model;
+		}
+	},
+	[TrainViewModel.name]: class ComposedTrainViewModel extends TrainViewModel {
+		async map() {
+			return {
+				changed: this.$$model.changed,
+				identifier: this.$$model.identifier,
+				created: this.$$model.created,
+				length: this.$$model.length
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				changed: true,
+				identifier: true,
+				created: true,
+				length: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new TrainViewModel(null);
+			"changed" in data && (item.changed = data.changed === null ? null : new Date(data.changed));
+			"identifier" in data && (item.identifier = data.identifier === null ? null : `${data.identifier}`);
+			"created" in data && (item.created = data.created === null ? null : new Date(data.created));
+			"length" in data && (item.length = data.length === null ? null : +data.length);
+
+			return item;
+		}
+
+		static async toModel(viewModel: TrainViewModel) {
+			const model = new Train();
+			
+			"changed" in viewModel && (model.changed = viewModel.changed === null ? null : new Date(viewModel.changed));
+			"identifier" in viewModel && (model.identifier = viewModel.identifier === null ? null : `${viewModel.identifier}`);
+			"created" in viewModel && (model.created = viewModel.created === null ? null : new Date(viewModel.created));
+			"length" in viewModel && (model.length = viewModel.length === null ? null : +viewModel.length);
 
 			return model;
 		}
@@ -1662,13 +2308,16 @@ ViewModel.mappings = {
 	[RailcarModelViewModel.name]: class ComposedRailcarModelViewModel extends RailcarModelViewModel {
 		async map() {
 			return {
+				drawings: (await this.$$model.drawings.includeTree(ViewModel.mappings[RailcarModelSummaryModel.name].items).toArray()).map(item => new RailcarModelSummaryModel(item)),
+				uicLocale: new UicLocaleViewModel(await BaseServer.unwrap(this.$$model.uicLocale)),
 				id: this.$$model.id,
 				lengthIncludingBuffers: this.$$model.lengthIncludingBuffers,
 				lengthIncludingCouplers: this.$$model.lengthIncludingCouplers,
 				name: this.$$model.name,
 				shortname: this.$$model.shortname,
 				summary: this.$$model.summary,
-				tag: this.$$model.tag
+				tag: this.$$model.tag,
+				uicIdentifier: this.$$model.uicIdentifier
 			}
 		};
 
@@ -1698,18 +2347,33 @@ ViewModel.mappings = {
 			}
 
 			return {
+				get drawings() {
+					return ViewModel.mappings[RailcarModelSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "drawings-RailcarModelViewModel"]
+					);
+				},
+				get uicLocale() {
+					return ViewModel.mappings[UicLocaleViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "uicLocale-RailcarModelViewModel"]
+					);
+				},
 				id: true,
 				lengthIncludingBuffers: true,
 				lengthIncludingCouplers: true,
 				name: true,
 				shortname: true,
 				summary: true,
-				tag: true
+				tag: true,
+				uicIdentifier: true
 			};
 		};
 
 		static toViewModel(data) {
 			const item = new RailcarModelViewModel(null);
+			"drawings" in data && (item.drawings = data.drawings && [...data.drawings].map(i => ViewModel.mappings[RailcarModelSummaryModel.name].toViewModel(i)));
+			"uicLocale" in data && (item.uicLocale = data.uicLocale && ViewModel.mappings[UicLocaleViewModel.name].toViewModel(data.uicLocale));
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"lengthIncludingBuffers" in data && (item.lengthIncludingBuffers = data.lengthIncludingBuffers === null ? null : +data.lengthIncludingBuffers);
 			"lengthIncludingCouplers" in data && (item.lengthIncludingCouplers = data.lengthIncludingCouplers === null ? null : +data.lengthIncludingCouplers);
@@ -1717,6 +2381,7 @@ ViewModel.mappings = {
 			"shortname" in data && (item.shortname = data.shortname === null ? null : `${data.shortname}`);
 			"summary" in data && (item.summary = data.summary === null ? null : `${data.summary}`);
 			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
+			"uicIdentifier" in data && (item.uicIdentifier = data.uicIdentifier === null ? null : `${data.uicIdentifier}`);
 
 			return item;
 		}
@@ -1730,6 +2395,8 @@ ViewModel.mappings = {
 				model = new RailcarModel();
 			}
 			
+			"drawings" in viewModel && (null);
+			"uicLocale" in viewModel && (model.uicLocale.id = viewModel.uicLocale ? viewModel.uicLocale.id : null);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"lengthIncludingBuffers" in viewModel && (model.lengthIncludingBuffers = viewModel.lengthIncludingBuffers === null ? null : +viewModel.lengthIncludingBuffers);
 			"lengthIncludingCouplers" in viewModel && (model.lengthIncludingCouplers = viewModel.lengthIncludingCouplers === null ? null : +viewModel.lengthIncludingCouplers);
@@ -1737,6 +2404,7 @@ ViewModel.mappings = {
 			"shortname" in viewModel && (model.shortname = viewModel.shortname === null ? null : `${viewModel.shortname}`);
 			"summary" in viewModel && (model.summary = viewModel.summary === null ? null : `${viewModel.summary}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
+			"uicIdentifier" in viewModel && (model.uicIdentifier = viewModel.uicIdentifier === null ? null : `${viewModel.uicIdentifier}`);
 
 			return model;
 		}
@@ -1832,6 +2500,7 @@ ViewModel.mappings = {
 	[RailcarViewModel.name]: class ComposedRailcarViewModel extends RailcarViewModel {
 		async map() {
 			return {
+				headCoupler: new CouplerViewModel(await BaseServer.unwrap(this.$$model.headCoupler)),
 				manufacturer: new CompanySummaryModel(await BaseServer.unwrap(this.$$model.manufacturer)),
 				model: new RailcarModelViewModel(await BaseServer.unwrap(this.$$model.model)),
 				operator: new CompanySummaryModel(await BaseServer.unwrap(this.$$model.operator)),
@@ -1839,6 +2508,7 @@ ViewModel.mappings = {
 				captures: (await this.$$model.captures.includeTree(ViewModel.mappings[CaptureViewModel.name].items).toArray()).map(item => new CaptureViewModel(item)),
 				graffitis: (await this.$$model.graffitis.includeTree(ViewModel.mappings[GraffitiSummaryModel.name].items).toArray()).map(item => new GraffitiSummaryModel(item)),
 				storageContainer: new StorageContainerSummaryModel(await BaseServer.unwrap(this.$$model.storageContainer)),
+				tailCoupler: new CouplerViewModel(await BaseServer.unwrap(this.$$model.tailCoupler)),
 				aquired: this.$$model.aquired,
 				givenName: this.$$model.givenName,
 				id: this.$$model.id,
@@ -1874,6 +2544,12 @@ ViewModel.mappings = {
 			}
 
 			return {
+				get headCoupler() {
+					return ViewModel.mappings[CouplerViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "headCoupler-RailcarViewModel"]
+					);
+				},
 				get manufacturer() {
 					return ViewModel.mappings[CompanySummaryModel.name].getPrefetchingProperties(
 						level,
@@ -1916,6 +2592,12 @@ ViewModel.mappings = {
 						[...parents, "storageContainer-RailcarViewModel"]
 					);
 				},
+				get tailCoupler() {
+					return ViewModel.mappings[CouplerViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "tailCoupler-RailcarViewModel"]
+					);
+				},
 				aquired: true,
 				givenName: true,
 				id: true,
@@ -1927,6 +2609,7 @@ ViewModel.mappings = {
 
 		static toViewModel(data) {
 			const item = new RailcarViewModel(null);
+			"headCoupler" in data && (item.headCoupler = data.headCoupler && ViewModel.mappings[CouplerViewModel.name].toViewModel(data.headCoupler));
 			"manufacturer" in data && (item.manufacturer = data.manufacturer && ViewModel.mappings[CompanySummaryModel.name].toViewModel(data.manufacturer));
 			"model" in data && (item.model = data.model && ViewModel.mappings[RailcarModelViewModel.name].toViewModel(data.model));
 			"operator" in data && (item.operator = data.operator && ViewModel.mappings[CompanySummaryModel.name].toViewModel(data.operator));
@@ -1934,6 +2617,7 @@ ViewModel.mappings = {
 			"captures" in data && (item.captures = data.captures && [...data.captures].map(i => ViewModel.mappings[CaptureViewModel.name].toViewModel(i)));
 			"graffitis" in data && (item.graffitis = data.graffitis && [...data.graffitis].map(i => ViewModel.mappings[GraffitiSummaryModel.name].toViewModel(i)));
 			"storageContainer" in data && (item.storageContainer = data.storageContainer && ViewModel.mappings[StorageContainerSummaryModel.name].toViewModel(data.storageContainer));
+			"tailCoupler" in data && (item.tailCoupler = data.tailCoupler && ViewModel.mappings[CouplerViewModel.name].toViewModel(data.tailCoupler));
 			"aquired" in data && (item.aquired = data.aquired === null ? null : new Date(data.aquired));
 			"givenName" in data && (item.givenName = data.givenName === null ? null : `${data.givenName}`);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
@@ -1953,6 +2637,7 @@ ViewModel.mappings = {
 				model = new Railcar();
 			}
 			
+			"headCoupler" in viewModel && (model.headCoupler.id = viewModel.headCoupler ? viewModel.headCoupler.id : null);
 			"manufacturer" in viewModel && (model.manufacturer.id = viewModel.manufacturer ? viewModel.manufacturer.id : null);
 			"model" in viewModel && (model.model.id = viewModel.model ? viewModel.model.id : null);
 			"operator" in viewModel && (model.operator.id = viewModel.operator ? viewModel.operator.id : null);
@@ -1960,6 +2645,7 @@ ViewModel.mappings = {
 			"captures" in viewModel && (null);
 			"graffitis" in viewModel && (null);
 			"storageContainer" in viewModel && (model.storageContainer.id = viewModel.storageContainer ? viewModel.storageContainer.id : null);
+			"tailCoupler" in viewModel && (model.tailCoupler.id = viewModel.tailCoupler ? viewModel.tailCoupler.id : null);
 			"aquired" in viewModel && (model.aquired = viewModel.aquired === null ? null : new Date(viewModel.aquired));
 			"givenName" in viewModel && (model.givenName = viewModel.givenName === null ? null : `${viewModel.givenName}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
@@ -2040,6 +2726,112 @@ ViewModel.mappings = {
 			"railcars" in viewModel && (null);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
+			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
+
+			return model;
+		}
+	},
+	[TrainRailcarUnitViewModel.name]: class ComposedTrainRailcarUnitViewModel extends TrainRailcarUnitViewModel {
+		async map() {
+			return {
+				model: new RailcarModelSummaryModel(await BaseServer.unwrap(this.$$model.model)),
+				operator: new CompanySummaryModel(await BaseServer.unwrap(this.$$model.operator)),
+				owner: new CompanySummaryModel(await BaseServer.unwrap(this.$$model.owner)),
+				storageContainer: new StorageContainerSummaryModel(await BaseServer.unwrap(this.$$model.storageContainer)),
+				givenName: this.$$model.givenName,
+				id: this.$$model.id,
+				runningNumber: this.$$model.runningNumber,
+				tag: this.$$model.tag
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				get model() {
+					return ViewModel.mappings[RailcarModelSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "model-TrainRailcarUnitViewModel"]
+					);
+				},
+				get operator() {
+					return ViewModel.mappings[CompanySummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "operator-TrainRailcarUnitViewModel"]
+					);
+				},
+				get owner() {
+					return ViewModel.mappings[CompanySummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "owner-TrainRailcarUnitViewModel"]
+					);
+				},
+				get storageContainer() {
+					return ViewModel.mappings[StorageContainerSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "storageContainer-TrainRailcarUnitViewModel"]
+					);
+				},
+				givenName: true,
+				id: true,
+				runningNumber: true,
+				tag: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new TrainRailcarUnitViewModel(null);
+			"model" in data && (item.model = data.model && ViewModel.mappings[RailcarModelSummaryModel.name].toViewModel(data.model));
+			"operator" in data && (item.operator = data.operator && ViewModel.mappings[CompanySummaryModel.name].toViewModel(data.operator));
+			"owner" in data && (item.owner = data.owner && ViewModel.mappings[CompanySummaryModel.name].toViewModel(data.owner));
+			"storageContainer" in data && (item.storageContainer = data.storageContainer && ViewModel.mappings[StorageContainerSummaryModel.name].toViewModel(data.storageContainer));
+			"givenName" in data && (item.givenName = data.givenName === null ? null : `${data.givenName}`);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"runningNumber" in data && (item.runningNumber = data.runningNumber === null ? null : `${data.runningNumber}`);
+			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: TrainRailcarUnitViewModel) {
+			let model: Railcar;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(Railcar).find(viewModel.id)
+			} else {
+				model = new Railcar();
+			}
+			
+			"model" in viewModel && (model.model.id = viewModel.model ? viewModel.model.id : null);
+			"operator" in viewModel && (model.operator.id = viewModel.operator ? viewModel.operator.id : null);
+			"owner" in viewModel && (model.owner.id = viewModel.owner ? viewModel.owner.id : null);
+			"storageContainer" in viewModel && (model.storageContainer.id = viewModel.storageContainer ? viewModel.storageContainer.id : null);
+			"givenName" in viewModel && (model.givenName = viewModel.givenName === null ? null : `${viewModel.givenName}`);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"runningNumber" in viewModel && (model.runningNumber = viewModel.runningNumber === null ? null : `${viewModel.runningNumber}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
 
 			return model;

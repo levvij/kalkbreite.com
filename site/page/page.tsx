@@ -1,5 +1,6 @@
 import { Component } from '@acryps/page';
 import { Application } from '.';
+import { BreadcrumbComponent } from './breadcrumb';
 
 export class PageComponent extends Component {
 	render(child) {
@@ -17,6 +18,8 @@ export class PageComponent extends Component {
 					</ui-login>}
 				</ui-content>
 			</ui-navigation>
+
+			{new BreadcrumbComponent(this)}
 
 			{child}
 		</ui-page>;

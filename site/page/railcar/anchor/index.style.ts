@@ -4,21 +4,21 @@ import { boxed } from "../../shared/boxed";
 import { pageSpacing } from "../../index.style";
 import { buttonGroupStyle, buttonStyle } from "../../shared/button";
 
-export const anchorStyle = () => child('ui-anchor',
+export const anchorStyle = () => child('ui-anchor') (
 	boxed(),
 
-	child('ui-hint',
+	child('ui-hint') (
 		display('block'),
 		padding(pageSpacing)
 	),
 
 	cropStyle(),
 
-	child('ui-actions',
+	child('ui-actions') (
 		buttonGroupStyle(),
 		marginTop(pageSpacing),
 
-		child('ui-action',
+		child('ui-action') (
 			buttonStyle()
 		)
 	)

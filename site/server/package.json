@@ -1,6 +1,6 @@
 {
 	"scripts": {
-		"build": "npx vlserver compile && esbuild index.ts --bundle --outfile=.built/index.js --platform=node --target=es2018 --external:skia-canvas && vlquery compile",
+		"build": "npx vlserver compile && esbuild index.ts --bundle --outfile=.built/index.js --platform=node --target=es2018 --external:skia-canvas --external:jsdom && vlquery compile",
 		"start": "npm run build && environment node .built/index.js",
 		"typecheck": "npx vlserver compile && tsc --noEmit",
 		"database:update": "environment vlquery create-context"

@@ -1,4 +1,4 @@
-import { alignItems, alignSelf, backgroundColor, border, borderRadius, boxShadow, color, cursor, display, flexWrap, gap, justifyContent, lineHeight, marginBlock, marginBottom, padding, px, rem, style, textAlign } from "@acryps/style";
+import { alignItems, alignSelf, backgroundColor, border, borderRadius, boxShadow, color, cursor, display, flexWrap, gap, hover, justifyContent, lineHeight, marginBlock, marginBottom, padding, px, rem, style, textAlign } from "@acryps/style";
 import { pageGutter, primaryColor, primaryContrastColor, primaryOutlineColor, radius } from "../index.style";
 import { clickable } from "./interaction";
 
@@ -21,9 +21,9 @@ export const buttonStyle = () => [
 	lineHeight(1),
 	clickable(),
 
-	style(':hover',
+	hover() (
 		boxShadow(primaryOutlineColor, 0, buttonDepth.divide(2), 0, 0),
-		marginBlock(buttonDepth.divide(2)),
+		marginBlock(buttonDepth.divide(2))
 	)
 ];
 

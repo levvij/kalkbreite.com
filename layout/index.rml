@@ -813,8 +813,8 @@
 			</section>
 
 			<router name="storage-1-2-merge" active="straight">
-				<route name="straight" in="storage-1" out="storage-1-2-merge-buffer">
-				<route name="left" in="storage-2" out="storage-1-2-merge-buffer">
+				<route name="straight" in="storage-1" out="storage-1-2-merge-buffer" />
+				<route name="left" in="storage-2" out="storage-1-2-merge-buffer" />
 			</router>
 
 			<section name="storage-1-2-merge-buffer">

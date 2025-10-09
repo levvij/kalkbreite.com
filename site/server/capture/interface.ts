@@ -3,8 +3,10 @@ import { Capture, CaptureFrame, CaptureSession, DbContext, GraffitiCapture, Rail
 import { ManagedServer } from "../managed/server";
 import { updateThumbnail } from "./thumbnail";
 import { registerCaptureSessionInterface } from "./session";
+import { TrainChain } from "../train/chain";
+import { reverse } from "../../shared/direction";
 
-export const registerCaptureInterface = (server: ManagedServer, database: DbContext) => {
+export const registerCaptureInterface = (server: ManagedServer, database: DbContext, chain: TrainChain) => {
 	const emptyCanvas = new Canvas(1, 1);
 	emptyCanvas.getContext('2d');
 
@@ -16,17 +18,14 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 	registerCaptureSessionInterface(server, database);
 
 	server.app.get('/capture/random', async (request, response) => {
-		const captureQuery = () => database.capture;
+		const thumbnails = [...thumbnailCache.values()];
 
-		const count = await captureQuery().count();
-
-		const capture = await captureQuery()
-			.skip(Math.floor(Math.random() * count))
-			.includeTree({ thumbnail: true })
-			.first();
+		if (!thumbnails.length) {
+			response.status(404).end();
+		}
 
 		response.contentType('image/jpeg');
-		response.end(capture.thumbnail);
+		response.end(thumbnails[Math.floor(thumbnails.length * Math.random())].thumbnail);
 	});
 
 	server.app.get('/capture/:id', async (request, response) => {
@@ -51,6 +50,21 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 
 		response.contentType('image/jpeg');
 		response.end(capture.thumbnail);
+	});
+
+	server.app.get('/capture/train/:identifier', (request, response) => {
+		const train = chain.trains.find(train => train.identifier == request.params.identifier);
+		const unit = train.units.at(0);
+
+		response.redirect(`/capture/railcar/${unit.railcar.id}/${unit.direction}`);
+	});
+
+	server.app.get('/capture/train/:identifier/:direction', (request, response) => {
+		const invert = request.params.direction == RailcarDirection.reverse;
+		const train = chain.trains.find(train => train.identifier == request.params.identifier);
+		const unit = train.units.at(invert ? -1 : 0);
+
+		response.redirect(`/capture/railcar/${unit.railcar.id}/${invert ? reverse(unit.direction) : unit.direction}`);
 	});
 
 	server.app.get('/capture/graffiti/:id', async (request, response) => {

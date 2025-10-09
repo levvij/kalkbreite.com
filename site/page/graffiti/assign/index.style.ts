@@ -4,20 +4,20 @@ import { buttonGroupStyle, buttonStyle } from "../../shared/button";
 import { boxed } from "../../shared/boxed";
 import { cropStyle } from "../../shared/crop/index.style";
 
-export const assignStyle = () => child('ui-assign',
+export const assignStyle = () => child('ui-assign') (
 	boxed(),
 
 	cropStyle(),
 
-	child('canvas',
+	child('canvas') (
 		width(percentage(100))
 	),
 
-	child('ui-actions',
+	child('ui-actions') (
 		buttonGroupStyle(),
 		marginTop(pageSpacing),
 
-		child('ui-action',
+		child('ui-action') (
 			buttonStyle()
 		)
 	)

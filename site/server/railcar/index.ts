@@ -2,6 +2,7 @@ import { Service } from "vlserver";
 import { DbContext } from "../managed/database";
 import { RailcarSummaryModel, RailcarViewModel } from "./railcar";
 import { updateThumbnail } from "../capture/thumbnail";
+import { RailcarModelViewModel } from "./model";
 
 export class RailcarService extends Service {
 	constructor(
@@ -13,11 +14,15 @@ export class RailcarService extends Service {
 	list() {
 		return RailcarSummaryModel.from(this.database.railcar
 			.orderByDescending(railcar => railcar.aquired)
+			.orderByAscending(railcar => railcar.tag)
 		);
 	}
 
 	async get(tag: string) {
-		return new RailcarViewModel(await this.database.railcar.first(railcar => railcar.tag.valueOf() == tag));
+		return new RailcarViewModel(
+			await this.database.railcar
+				.first(railcar => railcar.tag.valueOf() == tag)
+		);
 	}
 
 	async setAnchor(captureId: string, offset: number) {

@@ -9,18 +9,18 @@ import { buttonGroupStyle, buttonStyle } from "../shared/button";
 import { assignStyle } from "./assign/index.style";
 import { slideshowStyle } from "../shared/slideshow/index.style";
 
-export const graffitiStyle = () => child('ui-graffiti',
+export const graffitiStyle = () => child('ui-graffiti') (
 	boxed(),
 
 	assignStyle(),
 
 	slideshowStyle(),
 
-	child('ui-detail',
+	child('ui-detail') (
 		display('block'),
 		padding(pageSpacing),
 
-		child('ui-name',
+		child('ui-name') (
 			display('block'),
 			marginBottom(pageGutter),
 
@@ -28,7 +28,7 @@ export const graffitiStyle = () => child('ui-graffiti',
 			fontWeight('bold')
 		),
 
-		child('ui-description',
+		child('ui-description') (
 			display('block'),
 			marginBottom(pageSpacing)
 		),
@@ -36,34 +36,34 @@ export const graffitiStyle = () => child('ui-graffiti',
 		detailSectionStyle(
 			endDivider(),
 
-			child('ui-artist',
+			child('ui-artist') (
 				clickable(),
 
-				child('img',
+				child('img') (
 					height(rem(3))
 				),
 
-				child('ui-name',
+				child('ui-name') (
 					fontSize(rem(2))
 				),
 
-				child('ui-summary',
+				child('ui-summary') (
 					display('block'),
 					marginTop(rem(0.5))
 				)
 			)
 		),
 
-		child('ui-crosses',
+		child('ui-crosses') (
 			display('block'),
 
 			endDivider()
 		),
 
-		child('ui-captures',
+		child('ui-captures') (
 			collection(rem(15)),
 
-			child('ui-capture',
+			child('ui-capture') (
 				collectionItem(),
 
 				display('flex'),
@@ -74,7 +74,7 @@ export const graffitiStyle = () => child('ui-graffiti',
 				borderRadius(radius),
 				overflow('hidden'),
 
-				child('img',
+				child('img') (
 					width(percentage(100)),
 					aspectRatio(captureAspectRatio),
 					backgroundColor(captureBackgroundColor),
@@ -82,15 +82,15 @@ export const graffitiStyle = () => child('ui-graffiti',
 					objectFit('contain')
 				),
 
-				child('ui-detail',
+				child('ui-detail') (
 					paddingInline(pageSpacing),
 					paddingBlock(pageSpacing.divide(2)),
 
-					child('ui-actions',
+					child('ui-actions') (
 						buttonGroupStyle(),
 						marginTop(pageSpacing.divide(2)),
 
-						child('ui-action',
+						child('ui-action') (
 							buttonStyle()
 						)
 					)

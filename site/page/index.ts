@@ -16,6 +16,13 @@ import { RegisterGraffitiPage } from './railcar/register-graffiti';
 import { GraffitiInspirationsPage } from './graffiti-inspirations';
 import { GraffitiInspirationPage } from './graffiti-inspiration';
 import { CaptureAnchorPage } from './railcar/anchor';
+import { RailcarCouplerPage } from './railcar/coupler';
+import { TrainPage } from './trains/train';
+import { TrainsPage } from './trains';
+import { CoupleTrainPage } from './trains/train/couple';
+import { ModelPage } from './model';
+import { LayoutPage } from './layout';
+import { LayoutSectionPage } from './layout/section';
 
 // injected by esbuild
 declare const buildDate: string;
@@ -41,10 +48,24 @@ export class Application {
 
 			.route('/artist/:tag', ArtistPage)
 
+			.route('/layout', LayoutPage
+				.route('/section/:domainName', LayoutSectionPage)
+			)
+
 			.route('/railcar/:tag', RailcarPage
 				.route('/anchor/:captureId', CaptureAnchorPage)
 				.route('/register-graffiti', RegisterGraffitiPage)
+
+				.route('/coupler/:direction', RailcarCouplerPage)
 			)
+
+			.route('/train', TrainsPage
+				.route('/:identifier', TrainPage
+					.route('/couple/:anchor', CoupleTrainPage)
+				)
+			)
+
+			.route('/model/:tag', ModelPage)
 
 			.route('/company/:tag', CompanyPage)
 
