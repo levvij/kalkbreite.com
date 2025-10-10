@@ -5,7 +5,7 @@ export class DetailSectionComponent extends Component {
 	sections: ComponentContent[] = [];
 
 	constructor(
-		private header: ComponentContent
+		private header?: ComponentContent
 	) {
 		super();
 	}

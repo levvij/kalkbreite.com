@@ -4,6 +4,7 @@ CREATE TABLE maintenance (
 	completed TIMESTAMP,
 
 	title TEXT,
+	issue TEXT,
 	description TEXT,
 	cost REAL,
 

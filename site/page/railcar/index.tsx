@@ -85,16 +85,24 @@ export class RailcarPage extends Component {
 				</ui-note>}
 
 				<ui-actions>
-					{Application.session?.account && <ui-action ui-href='register-graffiti'>
-						Register Graffiti
-					</ui-action>}
-
 					{forwardCaptures[0] && <ui-action ui-href={`/capture/${forwardCaptures[0].id}/full`} ui-href-target='blank'>
 						Download Capture (Forward)
 					</ui-action>}
 
 					{reverseCaptures[0] && <ui-action ui-href={`/capture/${reverseCaptures[0].id}/full`} ui-href-target='blank'>
 						Download Capture (Reverse)
+					</ui-action>}
+
+					{Application.session?.account && <ui-action ui-href='register-graffiti'>
+						Register Graffiti
+					</ui-action>}
+
+					{Application.session?.account && <ui-action ui-click={async () => {
+						const maintenance = await new MaintenanceService().create(this.railcar.id);
+
+						this.navigate(`maintenance/${maintenance}`);
+					}}>
+						Open Maintenance
 					</ui-action>}
 				</ui-actions>
 

@@ -13,6 +13,7 @@ import { buttonGroupStyle, buttonStyle } from "../shared/button";
 import { registerGraffitiStyle } from "./register-graffiti/index.style";
 import { anchorStyle } from "./anchor/index.style";
 import { AtRule } from "@acryps/style/.built/at-rule";
+import { maintenanceStyle } from "./maintenance/index.style";
 
 export const railcarStyle = () => child('ui-railcar')(
 	display('block'),
@@ -61,6 +62,7 @@ export const railcarStyle = () => child('ui-railcar')(
 
 	anchorStyle(),
 	registerGraffitiStyle(),
+	maintenanceStyle(),
 
 	child('ui-couplers')(
 		boxed(),
