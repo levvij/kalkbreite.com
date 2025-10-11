@@ -6,6 +6,7 @@ import { StorageContainerSummaryModel } from "../storage/storage-contaiuner";
 import { GraffitiSummaryModel } from "../graffiti/graffiti";
 import { CaptureViewModel } from "../capture/capture";
 import { CouplerViewModel } from "./coupler";
+import { MaintenanceSummaryModel } from "../maintenace/maintenace";
 
 export class RailcarSummaryModel extends ViewModel<Railcar> {
 	id;
@@ -37,4 +38,6 @@ export class RailcarViewModel extends RailcarSummaryModel {
 
 	headCoupler: CouplerViewModel;
 	tailCoupler: CouplerViewModel;
+
+	maintenanceJobs: MaintenanceSummaryModel[];
 }

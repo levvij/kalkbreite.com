@@ -1,5 +1,5 @@
 import { Component, ComponentContent } from "@acryps/page";
-import { CompanySummaryModel, CouplerViewModel, RailcarDirection, RailcarService, RailcarViewModel, TrainService } from "../managed/services";
+import { CaptureViewModel, CompanySummaryModel, CouplerViewModel, RailcarDirection, RailcarService, RailcarViewModel, TrainService } from "../managed/services";
 import { containerIcon, goIcon, headCouplerIcon, lengthIncludingBuffersIcon, lengthIncludingCouplersIcon, tailCouplerIcon, trainLinkupIcon } from "../assets/icons/managed";
 import { MetaProduct } from "@acryps/metadata";
 import { StorageContainerTagComponent } from "../shared/storage-container-tag";
@@ -16,6 +16,8 @@ export class RailcarPage extends Component {
 
 	railcar: RailcarViewModel;
 	train: string;
+
+	captureImage = new Image();
 
 	async onload() {
 		this.railcar = await new RailcarService().get(this.parameters.tag);
@@ -40,6 +42,10 @@ export class RailcarPage extends Component {
 
 		const newestSideCaptures = [forwardCaptures[0], reverseCaptures[0]].filter(capture => capture);
 
+		if (newestSideCaptures.length) {
+			this.showCapture(newestSideCaptures[0]);
+		}
+
 		return <ui-railcar>
 			<ui-header>
 				<ui-name>
@@ -59,25 +65,39 @@ export class RailcarPage extends Component {
 				</ui-identifiers>
 			</ui-header>
 
-			{newestSideCaptures.length != 0 && new SlideshowComponent(index => `/capture/${newestSideCaptures[index % newestSideCaptures.length]?.id}`)}
+			{this.railcar.captures.length != 0 && <ui-capture>
+				{this.captureImage}
+			</ui-capture>}
 
-			<ui-couplers>
-				<ui-side>
+			<ui-toolbar>
+				<ui-group>
 					{this.renderCoupler('head', this.railcar.headCoupler)}
 
-					<ui-link ui-href={`/train/${this.train}`}>
+					<ui-tool ui-href={`/train/${this.train}`}>
 						{trainLinkupIcon()}
 
 						<ui-train>
 							{this.train}
 						</ui-train>
-					</ui-link>
-				</ui-side>
+					</ui-tool>
 
-				<ui-side>
 					{this.renderCoupler('tail', this.railcar.tailCoupler)}
-				</ui-side>
-			</ui-couplers>
+				</ui-group>
+
+				<ui-group>
+					{newestSideCaptures.length == 2 && <ui-tool ui-click={() => {
+						for (let capture of newestSideCaptures) {
+							if (!this.captureImage.src.includes(capture.id)) {
+								this.showCapture(capture);
+
+								return;
+							}
+						}
+					}}>
+						{flipIcon()}
+					</ui-tool>}
+				</ui-group>
+			</ui-toolbar>
 
 			{child ?? <ui-detail>
 				{this.railcar.note && <ui-note>
@@ -85,16 +105,24 @@ export class RailcarPage extends Component {
 				</ui-note>}
 
 				<ui-actions>
-					{Application.session?.account && <ui-action ui-href='register-graffiti'>
-						Register Graffiti
-					</ui-action>}
-
 					{forwardCaptures[0] && <ui-action ui-href={`/capture/${forwardCaptures[0].id}/full`} ui-href-target='blank'>
 						Download Capture (Forward)
 					</ui-action>}
 
 					{reverseCaptures[0] && <ui-action ui-href={`/capture/${reverseCaptures[0].id}/full`} ui-href-target='blank'>
 						Download Capture (Reverse)
+					</ui-action>}
+
+					{Application.session?.account && <ui-action ui-href='register-graffiti'>
+						Register Graffiti
+					</ui-action>}
+
+					{Application.session?.account && <ui-action ui-click={async () => {
+						const maintenance = await new MaintenanceService().create(this.railcar.id);
+
+						this.navigate(`maintenance/${maintenance}`);
+					}}>
+						Open Maintenance
 					</ui-action>}
 				</ui-actions>
 
@@ -140,9 +168,13 @@ export class RailcarPage extends Component {
 			return;
 		}
 
-		const button = <ui-link ui-href={`coupler/${side}`} ui-href-active ui-side={side}></ui-link>;
+		const button = <ui-tool ui-href={`coupler/${side}`} ui-href-active ui-side={side}></ui-tool>;
 		button.innerHTML = coupler.type.icon;
 
 		return button;
+	}
+
+	showCapture(capture: CaptureViewModel) {
+		this.captureImage.src = `/capture/${capture.id}`;
 	}
 }
