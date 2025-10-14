@@ -1,6 +1,6 @@
-import { alignContent, alignItems, alignSelf, aspectRatio, attribute, backgroundColor, child, color, cursor, display, Dvi, em, filter, flexBasis, flexGrow, flexShrink, flexWrap, fontFamily, fontSize, fontWeight, gap, height, hex, hover, imageRendering, invert, justifyContent, lineHeight, marginBottom, marginInline, marginRight, marginTop, maxHeight, maxWidth, min, objectFit, objectPosition, opacity, overflowInline, overflowX, padding, paddingBlock, paddingBottom, paddingInline, percentage, position, ratio, rem, rotate, textAlign, transform, turn, vh, width } from "@acryps/style";
+import { alignContent, alignItems, alignSelf, aspectRatio, attribute, backgroundColor, borderLeft, borderRight, ch, child, color, cursor, display, Dvi, em, filter, firstOfType, flexBasis, flexGrow, flexShrink, flexWrap, fontFamily, fontSize, fontWeight, gap, height, hex, hover, imageRendering, invert, justifyContent, lineHeight, marginBottom, marginInline, marginLeft, marginRight, marginTop, maxHeight, maxWidth, min, not, objectFit, objectPosition, opacity, overflowInline, overflowX, padding, paddingBlock, paddingBottom, paddingInline, paddingLeft, paddingTop, percentage, position, px, ratio, rem, rotate, textAlign, textDecorationLine, transform, turn, vh, whiteSpace, width } from "@acryps/style";
 import { boxed, maximumBoxedWidth } from "../shared/boxed";
-import { captureAspectRatio, captureBackgroundColor, knockoutColor, knockoutContrastColor, pageColor, pageContrastColor, pageGutter, pageSpacing, runningNumberFont, tagFont } from "../index.style";
+import { captureAspectRatio, captureBackgroundColor, knockoutColor, knockoutContrastColor, pageColor, pageContrastColor, pageGutter, pageSpacing, primaryColor, primaryContrastColor, runningNumberFont, tagFont } from "../index.style";
 import { collection, collectionItem } from "../shared/collection";
 import { monospacedFont, trainIdentifierFont } from "../assets/font";
 import { storageContainerTagStyle } from "../shared/storage-container-tag/index.style";
@@ -14,6 +14,8 @@ import { registerGraffitiStyle } from "./register-graffiti/index.style";
 import { anchorStyle } from "./anchor/index.style";
 import { AtRule } from "@acryps/style/.built/at-rule";
 import { maintenanceStyle } from "./maintenance/index.style";
+
+const timeDayLength = rem(6);
 
 export const railcarStyle = () => child('ui-railcar')(
 	display('block'),
@@ -199,42 +201,77 @@ export const railcarStyle = () => child('ui-railcar')(
 
 		child('ui-timeline') (
 			display('block'),
+			marginTop(pageSpacing),
 
-			startDivider(),
+			child('ui-date') (
+				display('block'),
+				width(timeDayLength.add(pageGutter)),
 
-			child('img') (
-				aspectRatio(captureAspectRatio),
-				width(percentage(100)),
+				borderRight(px(2), 'solid', 'currentColor'),
+				monospacedFont,
+				fontSize(rem(0.8)),
 
-				objectFit('contain')
+				not([firstOfType()]) (
+					paddingTop(pageGutter)
+				)
 			),
 
-			child('ui-captures') (
-				collection(rem(6)),
+			child('ui-item') (
+				display('flex'),
 
-				child('ui-capture') (
-					collectionItem(),
+				child('ui-time') (
+					flexShrink(0),
+					width(timeDayLength),
+					paddingBlock(pageGutter.divide(2)),
 
-					opacity(0.5),
+					monospacedFont,
+					whiteSpace('nowrap'),
+					fontSize(rem(0.8)),
+					textAlign('right')
+				),
 
-					attribute('ui-active') (
-						opacity(1)
+				child('ui-content') (
+					marginLeft(pageGutter),
+					paddingBlock(pageGutter.divide(2)),
+					paddingLeft(pageGutter),
+
+					borderLeft(px(2), 'solid', 'currentColor'),
+
+					child('ui-capture') (
+						clickable(),
+
+						child('ui-name') (
+							display('block'),
+							marginBottom(rem(0.25))
+						),
+
+						child('img') (
+							height(rem(2))
+						)
 					),
 
-					child('img') (
-						aspectRatio(captureAspectRatio),
-						width(percentage(100)),
+					child('ui-maintenance') (
+						clickable(),
+
+						child('ui-name') (
+							display('inline-block'),
+							paddingInline(ch(0.5)),
+
+							color(primaryContrastColor),
+							backgroundColor(primaryColor)
+						)
 					),
 
-					child('ui-date') (
-						display('block')
-					),
+					child('ui-graffiti') (
+						clickable(),
 
-					child('ui-actions') (
-						display('block'),
+						child('ui-name') (
+							display('block'),
+							marginBottom(rem(0.25))
+						),
 
-						child('ui-action') (
-							buttonStyle()
+						child('img') (
+							height(rem(2))
 						)
 					)
 				)

@@ -8,8 +8,7 @@ import { GraffitiCollectionComponent } from "../shared/graffiti-collection";
 import { ContentAppendable } from "@acryps/style";
 import { DetailSectionComponent } from "../shared/detail-section";
 import { Application } from "..";
-import { CaptureTimelineComponent } from "./capture-timeline";
-import { anchorShift } from "../../shared/anchor-shift";
+import { TimelineComponent } from "./timeline";
 
 export class RailcarPage extends Component {
 	declare parameters: { tag };
@@ -32,6 +31,48 @@ export class RailcarPage extends Component {
 
 	breadcrumb = () => `Railcar ${this.railcar.givenName ?? this.railcar.model?.name ?? '-'}`;
 	render(child) {
+		const timeline = new TimelineComponent();
+		timeline.addItem(this.railcar.aquired, 'Aquired model');
+
+		// add captures to timeline
+		timeline.addItems(this.railcar.captures, capture => [
+			capture.captured,
+			<ui-capture ui-click={() => this.showCapture(capture)}>
+				<ui-name>
+					Captured {capture.direction}
+				</ui-name>
+
+				<img src={`/capture/${capture.id}`} />
+			</ui-capture>
+		]);
+
+		// add maintenance to timeline
+		timeline.addItems(this.railcar.maintenanceJobs, maintenance => [
+			maintenance.opened,
+			<ui-maintenance ui-href={`maintenance/${maintenance.id}`}>
+				Maintenance <ui-name>{maintenance.title}</ui-name> opened
+			</ui-maintenance>
+		]);
+
+		timeline.addItems(this.railcar.maintenanceJobs.filter(job => job.completed), maintenance => [
+			maintenance.completed,
+			<ui-maintenance ui-href={`maintenance/${maintenance.id}`}>
+				Maintenance <ui-name>{maintenance.title}</ui-name> completed
+			</ui-maintenance>
+		]);
+
+		// add graffitis
+		timeline.addItems(this.railcar.graffitis.filter(graffiti => graffiti.painted), graffiti => [
+			graffiti.painted,
+			<ui-graffiti ui-href={`/graffiti/${graffiti.id}`}>
+				<ui-name>
+					Painted {graffiti.name ? `'${graffiti.name}'` : `a ${graffiti.type.name}`} graffiti {graffiti.artist && `by ${graffiti.artist.name}`}
+				</ui-name>
+
+				<img src={`/capture/graffiti/${graffiti.id}`} />
+			</ui-graffiti>
+		])
+
 		const forwardCaptures = this.railcar.captures
 			.filter(capture => capture.direction == RailcarDirection.forward)
 			.sort((a, b) => a.captured > b.captured ? -1 : 1);
@@ -155,8 +196,7 @@ export class RailcarPage extends Component {
 
 				{this.railcar.storageContainer && new StorageContainerTagComponent(this.railcar.storageContainer)}
 
-				{forwardCaptures.length != 0 && new CaptureTimelineComponent(forwardCaptures)}
-				{reverseCaptures.length != 0 && new CaptureTimelineComponent(reverseCaptures)}
+				{timeline}
 			</ui-detail>}
 		</ui-railcar>;
 	}

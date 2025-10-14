@@ -20,13 +20,13 @@ export class MaintenacePage extends Component {
 				</ui-title>
 
 				<ui-actions>
-					<ui-action ui-click={async () => {
+					{!this.maintenance.completed && <ui-action ui-click={async () => {
 						await new MaintenanceService().complete(this.maintenance.id);
 
 						this.navigate('../..');
 					}}>
 						Mark as Complete
-					</ui-action>
+					</ui-action>}
 				</ui-actions>
 			</ui-header>
 
