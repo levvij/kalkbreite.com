@@ -1,11 +1,11 @@
 import { Font, fontFamily, fontWeight, fontStyle, descendant, empty, before, content, attribute } from '@acryps/style';
 
 export const iconFont = new Font('icons', fontWeight('normal'), fontStyle('normal'))
-	.addSource('/assets/icons/managed/font/index.eot?abe637c58beb', 'embedded-opentype')
+	.addSource('/assets/icons/managed/font/index.eot?03a6efa95b97', 'embedded-opentype')
 	.addSource('/assets/icons/managed/font/index.svg?0ad5b9d3aa22', 'svg')
-	.addSource('/assets/icons/managed/font/index.ttf?b7adfb34061a', 'truetype')
-	.addSource('/assets/icons/managed/font/index.woff?e173266e0e2b', 'woff')
-	.addSource('/assets/icons/managed/font/index.woff2?ab58c14e4e8b', 'woff2');
+	.addSource('/assets/icons/managed/font/index.ttf?dd6a70da4479', 'truetype')
+	.addSource('/assets/icons/managed/font/index.woff?093e3fb3d07e', 'woff')
+	.addSource('/assets/icons/managed/font/index.woff2?25ab1756d6de', 'woff2');
 
 export const icons = () => descendant('ui-icon') (
 	fontFamily(iconFont.name),

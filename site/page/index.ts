@@ -24,6 +24,7 @@ import { ModelPage } from './model';
 import { LayoutPage } from './layout';
 import { LayoutSectionPage } from './layout/section';
 import { MaintenacePage } from './railcar/maintenance';
+import { Metadata } from '@acryps/metadata';
 
 // injected by esbuild
 declare const buildDate: string;

@@ -111,14 +111,6 @@ export class RailcarPage extends Component {
 				</ui-note>}
 
 				<ui-actions>
-					{forwardCaptures[0] && <ui-action ui-href={`/capture/${forwardCaptures[0].id}/full`} ui-href-target='blank'>
-						Download Capture (Forward)
-					</ui-action>}
-
-					{reverseCaptures[0] && <ui-action ui-href={`/capture/${reverseCaptures[0].id}/full`} ui-href-target='blank'>
-						Download Capture (Reverse)
-					</ui-action>}
-
 					{Application.session?.account && <ui-action ui-href='register-graffiti'>
 						Register Graffiti
 					</ui-action>}

@@ -1,7 +1,7 @@
-import { root, child, padding, margin, display, position, top, backgroundColor, color, fontSize, rem, fontFamily, borderBottom, px, paddingBlock, paddingInline, flexGrow, alignItems, zIndex, boxShadow, hex, descendant, marginRight, lineHeight, percentage } from "@acryps/style";
+import { root, child, padding, margin, display, position, top, backgroundColor, color, fontSize, rem, fontFamily, borderBottom, px, paddingBlock, paddingInline, flexGrow, alignItems, zIndex, boxShadow, hex, descendant, marginRight, lineHeight, percentage, maxWidth, marginInline } from "@acryps/style";
 import { homeStyle } from "./home/index.style";
 import { pageColor, pageContrastColor, pageGutter, pageSpacing, primaryColor, primaryContrastColor } from "./index.style";
-import { boxed } from "./shared/boxed";
+import { boxed, maximumBoxedWidth } from "./shared/boxed";
 import { railcarStyle } from "./railcar/index.style";
 import { displayFont, monospacedFont } from "./assets/font";
 import { iconFont, icons } from "./assets/icons/managed";
@@ -91,13 +91,19 @@ export const applicationStyle = () => root() (
 				color(primaryContrastColor),
 				backgroundColor(primaryColor),
 
-				descendant('ui-layer') (
-					display('flex'),
+				child('ui-container') (
+					display('block'),
+					maxWidth(maximumBoxedWidth),
+					marginInline('auto'),
 
-					child('ui-name') (
-						marginRight(pageSpacing),
+					descendant('ui-layer') (
+						display('flex'),
 
-						clickable()
+						child('ui-name') (
+							marginRight(pageSpacing),
+
+							clickable()
+						)
 					)
 				)
 			)
