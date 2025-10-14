@@ -149,6 +149,23 @@ export class GraffitiInspirationMediaViewModel {
 	}
 }
 
+export class MaintenanceSummaryModel {
+	completed: Date;
+	id: string;
+	opened: Date;
+	title: string;
+
+	private static $build(raw) {
+		const item = new MaintenanceSummaryModel();
+		raw.completed === undefined || (item.completed = raw.completed ? new Date(raw.completed) : null)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.opened === undefined || (item.opened = raw.opened ? new Date(raw.opened) : null)
+		raw.title === undefined || (item.title = raw.title === null ? null : `${raw.title}`)
+		
+		return item;
+	}
+}
+
 export class UicIdentifierClassViewModel {
 	code: string;
 	name: string;
@@ -454,6 +471,31 @@ export class GraffitiInspirationViewModel {
 	}
 }
 
+export class MaintenanceViewModel {
+	railcar: RailcarSummaryModel;
+	completed: Date;
+	cost: number;
+	description: string;
+	id: string;
+	issue: string;
+	opened: Date;
+	title: string;
+
+	private static $build(raw) {
+		const item = new MaintenanceViewModel();
+		raw.railcar === undefined || (item.railcar = raw.railcar ? RailcarSummaryModel["$build"](raw.railcar) : null)
+		raw.completed === undefined || (item.completed = raw.completed ? new Date(raw.completed) : null)
+		raw.cost === undefined || (item.cost = raw.cost === null ? null : +raw.cost)
+		raw.description === undefined || (item.description = raw.description === null ? null : `${raw.description}`)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.issue === undefined || (item.issue = raw.issue === null ? null : `${raw.issue}`)
+		raw.opened === undefined || (item.opened = raw.opened ? new Date(raw.opened) : null)
+		raw.title === undefined || (item.title = raw.title === null ? null : `${raw.title}`)
+		
+		return item;
+	}
+}
+
 export class RailcarModelViewModel {
 	drawings: RailcarModelSummaryModel[];
 	uicLocale: UicLocaleViewModel;
@@ -512,6 +554,7 @@ export class RailcarViewModel {
 	owner: CompanySummaryModel;
 	captures: CaptureViewModel[];
 	graffitis: GraffitiSummaryModel[];
+	maintenanceJobs: MaintenanceSummaryModel[];
 	storageContainer: StorageContainerSummaryModel;
 	tailCoupler: CouplerViewModel;
 	aquired: Date;
@@ -530,6 +573,7 @@ export class RailcarViewModel {
 		raw.owner === undefined || (item.owner = raw.owner ? CompanySummaryModel["$build"](raw.owner) : null)
 		raw.captures === undefined || (item.captures = raw.captures ? raw.captures.map(i => CaptureViewModel["$build"](i)) : null)
 		raw.graffitis === undefined || (item.graffitis = raw.graffitis ? raw.graffitis.map(i => GraffitiSummaryModel["$build"](i)) : null)
+		raw.maintenanceJobs === undefined || (item.maintenanceJobs = raw.maintenanceJobs ? raw.maintenanceJobs.map(i => MaintenanceSummaryModel["$build"](i)) : null)
 		raw.storageContainer === undefined || (item.storageContainer = raw.storageContainer ? StorageContainerSummaryModel["$build"](raw.storageContainer) : null)
 		raw.tailCoupler === undefined || (item.tailCoupler = raw.tailCoupler ? CouplerViewModel["$build"](raw.tailCoupler) : null)
 		raw.aquired === undefined || (item.aquired = raw.aquired ? new Date(raw.aquired) : null)
@@ -867,6 +911,88 @@ export class GraffitiService {
 		$data.append("9ianV0d2QxZ2QzM2p4NmMyaGE2ZGZzdm", Service.stringify(captureModel))
 
 		return await fetch(Service.toURL("JsMnZhdDB2aDQxNnZqNmZoeTBoejd2MT"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("error" in r) {
+				throw new Error(r.error);
+			}
+
+			if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			}
+		});
+	}
+}
+
+export class MaintenanceService {
+	async get(id: string): Promise<MaintenanceViewModel> {
+		const $data = new FormData();
+		$data.append("1ubzlvbjFiMGZveDVveWV6cXUya2pzZT", Service.stringify(id))
+
+		return await fetch(Service.toURL("5xMzJuNGJ3ZDdsOT9hOHYxM3oweml1bj"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d === null ? null : MaintenanceViewModel["$build"](d);
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async open(railcarId: string): Promise<string> {
+		const $data = new FormData();
+		$data.append("NraXFwYWcyamRiaWlhNWgxM3FoZWU0Mj", Service.stringify(railcarId))
+
+		return await fetch(Service.toURL("Zlcm42OWVwcmQ5en5oZHIwcDl0cmVzZz"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d === null ? null : `${d}`;
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async save(viewModel: MaintenanceViewModel): Promise<void> {
+		const $data = new FormData();
+		$data.append("hycjg0cHFmeWN4NWphenF6ejNkOGh2aH", Service.stringify(viewModel))
+
+		return await fetch(Service.toURL("hxbWd2dT42aDZycjs5djB6ZmdraGtlbn"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("error" in r) {
+				throw new Error(r.error);
+			}
+
+			if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			}
+		});
+	}
+
+	async complete(id: string): Promise<void> {
+		const $data = new FormData();
+		$data.append("04bDZ0N3lveGp5Y2JvYWI5b2A0cTh6ZX", Service.stringify(id))
+
+		return await fetch(Service.toURL("Jyd2V1N2pzZzIzYmRzcDp2Z256a2U4d2"), {
 			method: "post",
 			credentials: "include",
 			body: $data

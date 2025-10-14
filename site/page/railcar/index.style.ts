@@ -1,4 +1,4 @@
-import { alignContent, alignItems, alignSelf, aspectRatio, attribute, backgroundColor, child, color, cursor, display, Dvi, em, filter, flexBasis, flexGrow, flexShrink, flexWrap, fontFamily, fontSize, fontWeight, gap, height, hex, hover, imageRendering, invert, justifyContent, lineHeight, marginBottom, marginInline, marginRight, marginTop, maxHeight, maxWidth, min, objectFit, objectPosition, opacity, padding, paddingBlock, paddingBottom, paddingInline, percentage, position, ratio, rem, rotate, textAlign, transform, turn, vh, width } from "@acryps/style";
+import { alignContent, alignItems, alignSelf, aspectRatio, attribute, backgroundColor, child, color, cursor, display, Dvi, em, filter, flexBasis, flexGrow, flexShrink, flexWrap, fontFamily, fontSize, fontWeight, gap, height, hex, hover, imageRendering, invert, justifyContent, lineHeight, marginBottom, marginInline, marginRight, marginTop, maxHeight, maxWidth, min, objectFit, objectPosition, opacity, overflowInline, overflowX, padding, paddingBlock, paddingBottom, paddingInline, percentage, position, ratio, rem, rotate, textAlign, transform, turn, vh, width } from "@acryps/style";
 import { boxed, maximumBoxedWidth } from "../shared/boxed";
 import { captureAspectRatio, captureBackgroundColor, knockoutColor, knockoutContrastColor, pageColor, pageContrastColor, pageGutter, pageSpacing, runningNumberFont, tagFont } from "../index.style";
 import { collection, collectionItem } from "../shared/collection";
@@ -60,16 +60,26 @@ export const railcarStyle = () => child('ui-railcar')(
 
 	child('ui-capture') (
 		display('flex'),
-		height(vh(40)),
+		justifyContent('center'),
 
 		backgroundColor(captureBackgroundColor),
 
-		child('img') (
-			height(percentage(100)),
+		child('ui-container') (
+			display('flex'),
+			justifyContent('center'),
+			alignItems('center'),
+			width(percentage(100)),
 			maxWidth(maximumBoxedWidth),
+			maxHeight(vh(40)),
 
-			objectFit('cover'),
-			objectPosition('left')
+			child('img') (
+				maxWidth(percentage(100)),
+				height('auto'),
+				maxHeight(vh(40)),
+
+				objectFit('contain'),
+				objectPosition('left')
+			)
 		)
 	),
 

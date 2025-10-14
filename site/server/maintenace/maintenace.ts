@@ -4,7 +4,7 @@ import { RailcarSummaryModel } from "../railcar/railcar";
 
 export class MaintenanceSummaryModel extends ViewModel<Maintenance> {
 	id;
-	started;
+	opened;
 	completed;
 
 	title;

@@ -15,9 +15,9 @@ export class MaintenanceService extends Service {
 		);
 	}
 
-	async start(railcarId: string) {
+	async open(railcarId: string) {
 		const maintenance = new Maintenance();
-		maintenance.started = new Date();
+		maintenance.opened = new Date();
 		maintenance.railcarId = railcarId;
 		maintenance.cost = 0;
 		maintenance.title = '';

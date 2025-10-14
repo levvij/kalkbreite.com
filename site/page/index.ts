@@ -23,6 +23,7 @@ import { CoupleTrainPage } from './trains/train/couple';
 import { ModelPage } from './model';
 import { LayoutPage } from './layout';
 import { LayoutSectionPage } from './layout/section';
+import { MaintenacePage } from './railcar/maintenance';
 
 // injected by esbuild
 declare const buildDate: string;
@@ -55,6 +56,7 @@ export class Application {
 			.route('/railcar/:tag', RailcarPage
 				.route('/anchor/:captureId', CaptureAnchorPage)
 				.route('/register-graffiti', RegisterGraffitiPage)
+				.route('/maintenance/:id', MaintenacePage)
 
 				.route('/coupler/:direction', RailcarCouplerPage)
 			)

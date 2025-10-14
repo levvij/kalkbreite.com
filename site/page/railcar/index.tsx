@@ -1,6 +1,6 @@
 import { Component, ComponentContent } from "@acryps/page";
-import { CaptureViewModel, CompanySummaryModel, CouplerViewModel, RailcarDirection, RailcarService, RailcarViewModel, TrainService } from "../managed/services";
-import { containerIcon, goIcon, headCouplerIcon, lengthIncludingBuffersIcon, lengthIncludingCouplersIcon, tailCouplerIcon, trainLinkupIcon } from "../assets/icons/managed";
+import { CaptureViewModel, CompanySummaryModel, CouplerViewModel, MaintenanceService, RailcarDirection, RailcarService, RailcarViewModel, TrainService } from "../managed/services";
+import { containerIcon, downloadIcon, flipIcon, goIcon, headCouplerIcon, lengthIncludingBuffersIcon, lengthIncludingCouplersIcon, tailCouplerIcon, trainLinkupIcon } from "../assets/icons/managed";
 import { MetaProduct } from "@acryps/metadata";
 import { StorageContainerTagComponent } from "../shared/storage-container-tag";
 import { SlideshowComponent } from "../shared/slideshow";
@@ -66,7 +66,9 @@ export class RailcarPage extends Component {
 			</ui-header>
 
 			{this.railcar.captures.length != 0 && <ui-capture>
-				{this.captureImage}
+				<ui-container>
+					{this.captureImage}
+				</ui-container>
 			</ui-capture>}
 
 			<ui-toolbar>
@@ -84,7 +86,7 @@ export class RailcarPage extends Component {
 					{this.renderCoupler('tail', this.railcar.tailCoupler)}
 				</ui-group>
 
-				<ui-group>
+				{newestSideCaptures.length != 0 && <ui-group>
 					{newestSideCaptures.length == 2 && <ui-tool ui-click={() => {
 						for (let capture of newestSideCaptures) {
 							if (!this.captureImage.src.includes(capture.id)) {
@@ -96,7 +98,11 @@ export class RailcarPage extends Component {
 					}}>
 						{flipIcon()}
 					</ui-tool>}
-				</ui-group>
+
+					<ui-tool ui-click={() => open(`${this.captureImage.src}/full`)}>
+						{downloadIcon()}
+					</ui-tool>
+				</ui-group>}
 			</ui-toolbar>
 
 			{child ?? <ui-detail>
@@ -118,7 +124,7 @@ export class RailcarPage extends Component {
 					</ui-action>}
 
 					{Application.session?.account && <ui-action ui-click={async () => {
-						const maintenance = await new MaintenanceService().create(this.railcar.id);
+						const maintenance = await new MaintenanceService().open(this.railcar.id);
 
 						this.navigate(`maintenance/${maintenance}`);
 					}}>

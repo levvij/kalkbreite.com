@@ -1,5 +1,6 @@
 import { Component } from "@acryps/page";
 import { DetailSectionComponent } from "../../shared/detail-section";
+import { MaintenanceService, MaintenanceViewModel } from "../../managed/services";
 
 export class MaintenacePage extends Component {
 	declare parameters: { id };
@@ -30,7 +31,7 @@ export class MaintenacePage extends Component {
 			</ui-header>
 
 			{new DetailSectionComponent()
-				.addMetric('Created', () => this.maintenance.created.toLocaleString())
+				.addMetric('Created', () => this.maintenance.opened.toLocaleString())
 				.addMetric('Completed', () => this.maintenance.completed?.toLocaleString() ?? 'Open')
 			}
 
