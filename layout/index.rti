@@ -67,6 +67,19 @@
 		</railcar>
 	</train>
 
+	<train name="sbbc-shunter">
+		<head section="stem-body.northbound.fiddle-yard-east.kalkbreite.com" offset="300" reversed="false" />
+
+		<railcar name="am843-7104" length="15.2" max-deceleration="0.9" max-speed="80">
+			<traction max-acceleration="1" max-speed="80" />
+
+			<controller device="dcc-ex-mainline" channel="31" />
+
+			<coupler side="head" type="fpc" backlash="0.25" />
+			<coupler side="tail" type="fpc" backlash="0.25" />
+		</railcar>
+	</train>
+
 	<train name="xrl-ruth">
 		<head section="stem-body.northbound.fiddle-yard-east.kalkbreite.com" offset="201" reversed="false" />
 
