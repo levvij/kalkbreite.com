@@ -3,6 +3,7 @@ import { District, Layout, Route, Router, Section } from "@packtrack/layout";
 import { LayoutPage } from "..";
 import { DetailSectionComponent } from "../../shared/detail-section";
 import { LayoutComponent } from "../../shared/layout";
+import { hex } from "@acryps/style";
 
 export class LayoutSectionPage extends Component {
 	declare parameters: { domainName };
@@ -28,6 +29,12 @@ export class LayoutSectionPage extends Component {
 		layout.highlight(this.section);
 
 		layout.onSectionClick = section => this.navigate(`../${section.domainName}`);
+
+		let element = layout.mark(hex('ff0'), this.section, 0, 10);
+
+		setInterval(() => {
+			element.move(element.start + 10, element.end + 12);
+		}, 1000);
 
 		return <ui-section>
 			{layout}

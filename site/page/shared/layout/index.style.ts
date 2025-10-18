@@ -25,13 +25,12 @@ export const layoutStyle = () => child('ui-layout') (
 
 			child('path') (
 				fill('none'),
-				vectorEffect('non-scaling-stroke'),
 
 				clickable(),
 
 				attribute('ui-main') (
 					stroke(pageContrastColor),
-					strokeWidth(px(3)),
+					strokeWidth(px(0.2)),
 
 					pointerEvents('none')
 				),
@@ -39,7 +38,12 @@ export const layoutStyle = () => child('ui-layout') (
 				attribute('ui-backdrop') (
 					stroke('transparent'),
 					strokeWidth(rem(1)),
-				)
+					vectorEffect('non-scaling-stroke')
+				),
+
+				attribute('ui-marker') (
+					strokeWidth(px(0.225))
+				),
 			)
 		),
 

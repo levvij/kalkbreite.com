@@ -1,11 +1,17 @@
 import { Component } from "@acryps/page";
 import { District, Layout, Section, Tile } from '@packtrack/layout';
 import { LayoutLoader } from "./loader";
+import { LayoutMarker } from "./marker";
+import { ColorValue } from "@acryps/style";
 
 export class LayoutComponent extends Component {
 	layout: Layout;
+	canvas: SVGElement;
 
 	highlighted: Section;
+
+	elements: LayoutMarker[] = [];
+	elementContainer: SVGGElement;
 
 	onSectionClick: (segment: Section) => {};
 
@@ -17,6 +23,17 @@ export class LayoutComponent extends Component {
 		this.highlighted = section;
 
 		this.layout && this.update();
+	}
+
+	mark(color: ColorValue, section: Section, start: number, end?: number) {
+		const marker = new LayoutMarker(this, color, section, start, end);
+		this.elements.push(marker);
+
+		if (this.elementContainer) {
+			marker.host(this.elementContainer);
+		}
+
+		return marker;
 	}
 
 	render() {
@@ -56,9 +73,18 @@ export class LayoutComponent extends Component {
 			this.renderDistrict(root, svg);
 		}
 
+		this.canvas = svg;
+
+		this.elementContainer = document.createElementNS(svg.namespaceURI, 'g') as SVGGElement;
+		svg.appendChild(this.elementContainer);
+
+		for (let element of this.elements) {
+			element.host(this.elementContainer);
+		}
+
 		return <ui-layout>
 			{svg}
-		</ui-layout>
+		</ui-layout>;
 	}
 
 	renderDistrict(district: District, svg: SVGElement | SVGGElement) {
@@ -87,7 +113,7 @@ export class LayoutComponent extends Component {
 		const pathSegments = [];
 
 		for (let tile of section.tiles) {
-			pathSegments.push(tile.pattern.path(false, tile.x, tile.y));
+			pathSegments.push(tile.pattern.path(pathSegments.length != 0, tile.x, tile.y));
 		}
 
 		const path = document.createElementNS(svg.namespaceURI, 'path') as SVGGElement;
