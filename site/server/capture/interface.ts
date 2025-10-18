@@ -31,6 +31,10 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 	server.app.get('/capture/:id', async (request, response) => {
 		const id = request.params.id;
 
+		if (request.headers['if-none-match'] == id) {
+			return response.status(304).end();
+		}
+
 		let capture = thumbnailCache.get(id);
 
 		if (!capture) {
@@ -48,7 +52,12 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 			thumbnailCache.set(id, capture);
 		}
 
-		response.contentType('image/jpeg');
+		response.set({
+			'content-type': 'image/jpeg',
+			'cache-control': 'public, max-age=31536000, immutable',
+			'etag': id
+		});
+
 		response.end(capture.thumbnail);
 	});
 
