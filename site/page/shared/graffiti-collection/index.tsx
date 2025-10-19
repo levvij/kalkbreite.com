@@ -11,7 +11,7 @@ export class GraffitiCollectionComponent extends Component {
 	render() {
 		return <ui-graffitis>
 			{this.graffitis.map(graffiti => <ui-graffiti ui-href={`/graffiti/${graffiti.id}`}>
-				{graffiti.captures[0] && <img src={`/capture/graffiti/${graffiti.id}`} />}
+				{graffiti.captures[0] && <img src={`/capture/graffiti/${graffiti.id}`} loading='lazy' />}
 
 				<ui-detail>
 					{graffiti.artist && <ui-artist>

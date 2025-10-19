@@ -8,6 +8,7 @@
 	},
 	"include": [
 		".",
-		"../shared"
+		"../shared",
+		"../page/index.style.ts"
 	]
 }
