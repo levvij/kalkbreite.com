@@ -1,6 +1,6 @@
-import { alignItems, boxSizing, child, display, flexGrow, flexShrink, fontSize, gap, height, lineHeight, objectFit, objectPosition, overflow, percentage, rem, width } from "@acryps/style";
+import { after, alignItems, backgroundImage, boxSizing, child, colorStop, ColorStop, content, display, flexGrow, flexShrink, fontSize, gap, height, insetBlock, justifyContent, left, linearGradient, lineHeight, marginBottom, objectFit, objectPosition, overflow, percentage, position, rem, right, turn, width } from "@acryps/style";
 import { boxed } from "../../../shared/boxed";
-import { pageGutter } from "../../../index.style";
+import { pageColor, pageGutter, pageTransparentColor } from "../../../index.style";
 import { trainIdentifierFont } from "../../../assets/font";
 
 const trainHeight = rem(3);
@@ -16,12 +16,28 @@ export const coupleStyle = () => child('ui-couple') (
 		width(percentage(30)),
 		flexShrink(0),
 
-		child('img') (
-			height(trainHeight),
-			width(percentage(100)),
+		display('flex'),
+		justifyContent('right'),
+		position('relative'),
 
-			objectPosition('right'),
-			objectFit('contain')
+		overflow('hidden'),
+
+		after() (
+			content(''),
+
+			position('absolute'),
+			insetBlock(0),
+			left(0),
+			width(rem(2)),
+
+			backgroundImage(linearGradient(turn(0.25),
+				colorStop(percentage(0), pageColor),
+				colorStop(percentage(100), pageTransparentColor)
+			))
+		),
+
+		child('img') (
+			height(trainHeight)
 		)
 	),
 
@@ -34,21 +50,48 @@ export const coupleStyle = () => child('ui-couple') (
 	child('ui-trains') (
 		flexGrow(1),
 
+		overflow('hidden'),
+
 		child('ui-train') (
 			display('flex'),
-			alignItems('center'),
 			gap(pageGutter),
+			marginBottom(pageGutter),
+			width(percentage(100)),
+
+			overflow('hidden'),
 
 			child('ui-identifier') (
 				trainIdentifierFont
 			),
 
-			child('img') (
-				height(trainHeight),
-				width(percentage(100)),
+			child('ui-directions') (
+				flexGrow(1),
+				position('relative'),
 
-				objectPosition('left'),
-				objectFit('contain')
+				overflow('hidden'),
+				fontSize(0),
+
+				after() (
+					content(''),
+
+					position('absolute'),
+					insetBlock(0),
+					right(0),
+					width(rem(2)),
+
+					backgroundImage(linearGradient(turn(0.75),
+						colorStop(percentage(0), pageColor),
+						colorStop(percentage(100), pageTransparentColor)
+					))
+				),
+
+				child('img') (
+					display('block'),
+					height(trainHeight),
+
+					objectPosition('left'),
+					objectFit('contain')
+				)
 			)
 		)
 	)

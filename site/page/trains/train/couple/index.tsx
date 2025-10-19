@@ -3,6 +3,7 @@ import { TrainPage } from "..";
 import { Application } from "../../..";
 import { coupleIcon } from "../../../assets/icons/managed";
 import { RailcarDirection, TrainService, TrainViewModel } from "../../../managed/services";
+import { Railcar } from "../../../../server/managed/database";
 
 export class CoupleTrainPage extends Component {
 	declare parent: TrainPage;
@@ -14,7 +15,7 @@ export class CoupleTrainPage extends Component {
 
 		return <ui-couple>
 			<ui-source>
-				<img src={`/capture/railcar/${sourceUnit.id}/forward`} />
+				<img src={`/capture/train/${this.parent.parameters.identifier}/${this.parameters.anchor == 'head' ? RailcarDirection.reverse : RailcarDirection.forward}`} />
 			</ui-source>
 
 			{coupleIcon()}
@@ -22,29 +23,34 @@ export class CoupleTrainPage extends Component {
 			<ui-trains>
 				{this.parent.parent.trains
 					.filter(train => train.identifier != this.parent.parameters.identifier)
-					.map(train => [
-						this.renderTrain(train, RailcarDirection.forward),
-						this.renderTrain(train, RailcarDirection.reverse)
-					]
+					.map(train => <ui-train>
+						<ui-identifier>
+							{train.identifier}
+						</ui-identifier>
+
+						<ui-directions>
+							{this.renderTrain(train, RailcarDirection.forward)}
+							{this.renderTrain(train, RailcarDirection.reverse)}
+						</ui-directions>
+					</ui-train>
 				)}
 			</ui-trains>
 		</ui-couple>;
 	}
 
 	renderTrain(train: TrainViewModel, direction: RailcarDirection) {
-		return <ui-train ui-click={async () => {
-			await new TrainService().couple(
-				this.parent.parameters.identifier, this.parameters.anchor,
-				train.identifier, direction == RailcarDirection.forward ? 'head' : 'tail'
-			);
+		return <img
+			src={`/capture/train/${train.identifier}/${direction}`}
+			loading='lazy'
 
-			this.navigate('../..');
-		}}>
-			<ui-identifier>
-				{train.identifier}
-			</ui-identifier>
+		 	ui-click={async () => {
+				await new TrainService().couple(
+					this.parent.parameters.identifier, this.parameters.anchor,
+					train.identifier, direction == RailcarDirection.forward ? 'head' : 'tail'
+				);
 
-			<img src={`/capture/train/${train.identifier}/${direction}`} />
-		</ui-train>;
+				this.navigate('../..');
+			}}
+		/>;
 	}
 }

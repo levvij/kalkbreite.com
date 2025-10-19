@@ -17,9 +17,14 @@ export const registerTrainCaptureInterface = (server: ManagedServer, chain: Trai
 
 		server.app.get(route, async (request, response) => {
 			const identifier = request.params.identifier;
+			const train = chain.trains.find(train => train.identifier == identifier);
 
 			const reversed = reverse(request.params);
-			const cacheIdentifier = `${identifier}-${reversed ? 'reversed' : 'forward'}`;
+			const cacheIdentifier = [
+				identifier,
+				reversed ? 'reversed' : 'forward',
+				...train.units.flatMap(unit => unit.railcar.tag + (unit.direction == RailcarDirection.forward ? '/f' : '/r'))
+			].join('-');
 
 			if (request.headers['if-none-match'] == cacheIdentifier) {
 				return response.status(304).end();
@@ -28,7 +33,7 @@ export const registerTrainCaptureInterface = (server: ManagedServer, chain: Trai
 			if (trainCache.has(cacheIdentifier)) {
 				response.set({
 					'content-type': 'image/jpeg',
-					'cache-control': 'public, max-age=31536000, immutable',
+					'cache-control': 'public, max-age=31536000',
 					'etag': cacheIdentifier
 				});
 
@@ -36,8 +41,6 @@ export const registerTrainCaptureInterface = (server: ManagedServer, chain: Trai
 
 				return;
 			}
-
-			const train = chain.trains.find(train => train.identifier == identifier);
 
 			const thumbnails: Image[] = [];
 
@@ -103,7 +106,7 @@ export const registerTrainCaptureInterface = (server: ManagedServer, chain: Trai
 
 			response.set({
 				'content-type': 'image/jpeg',
-				'cache-control': 'public, max-age=31536000, immutable',
+				'cache-control': 'public, max-age=31536000',
 				'etag': cacheIdentifier
 			});
 
