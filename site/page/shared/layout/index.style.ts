@@ -6,8 +6,6 @@ import { clickable } from "../interaction";
 export const layoutStyle = () => child('ui-layout') (
 	boxed(),
 
-	padding(pageSpacing),
-
 	child('svg') (
 		width(percentage(100)),
 		maxHeight(vh(70)),
