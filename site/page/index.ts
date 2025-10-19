@@ -24,8 +24,11 @@ import { ModelPage } from './model';
 import { LayoutPage } from './layout';
 import { LayoutSectionPage } from './layout/section';
 import { MaintenacePage } from './railcar/maintenance';
-import { Metadata } from '@acryps/metadata';
+import { MetaCollectionPage, Metadata } from '@acryps/metadata';
 import { ReportDecouplingIncidentPage } from './layout/section/incident/decoupling';
+import { ReportDerailmentIncidentPage } from './layout/section/incident/derailment';
+import { ReportPowerLossIncidentPage } from './layout/section/incident/power-loss';
+import { ReportCollisionIncidentPage } from './layout/section/incident/collision';
 
 // injected by esbuild
 declare const buildDate: string;
@@ -54,6 +57,9 @@ export class Application {
 			.route('/layout', LayoutPage
 				.route('/section/:domainName', LayoutSectionPage
 					.route('/incident/decoupling', ReportDecouplingIncidentPage)
+					.route('/incident/derailment', ReportDerailmentIncidentPage)
+					.route('/incident/collision', ReportCollisionIncidentPage)
+					.route('/incident/power-loss', ReportPowerLossIncidentPage)
 				)
 			)
 

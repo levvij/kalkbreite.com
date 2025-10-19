@@ -1,6 +1,6 @@
 import { alignItems, attribute, backgroundColor, child, display, filter, flexDirection, fontSize, gap, height, hover, inset, invert, justifyContent, padding, percentage, position, rem, width } from "@acryps/style";
 import { inputStyle } from "../field.style";
-import { pageColor, pageGutter } from "../../index.style";
+import { captureBackgroundColor, pageColor, pageGutter } from "../../index.style";
 import { clickable } from "../interaction";
 
 export const railcarCouplerSelectStyle = () => child('ui-railcar-coupler-select') (
@@ -16,7 +16,9 @@ export const railcarCouplerSelectStyle = () => child('ui-railcar-coupler-select'
 		position('relative'),
 
 		child('img') (
-			width(percentage(100))
+			width(percentage(100)),
+
+			backgroundColor(captureBackgroundColor)
 		),
 
 		child('ui-couplers') (

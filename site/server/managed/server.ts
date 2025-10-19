@@ -17,7 +17,10 @@ import { ArtistViewModel } from "././../graffiti/artist";
 import { GraffitiInspirationSummaryModel } from "././../graffiti/inspiration";
 import { GraffitiInspirationViewModel } from "././../graffiti/inspiration";
 import { GraffitiService } from "././../graffiti/index";
+import { CollisionIncident } from "././database";
 import { DecouplingIncident } from "././database";
+import { DerailingIncident } from "././database";
+import { PowerLossIncident } from "././database";
 import { IncidentService } from "././../incident/index";
 import { MaintenanceViewModel } from "././../maintenace/maintenace";
 import { Maintenance } from "././database";
@@ -289,6 +292,59 @@ export class ManagedServer extends BaseServer {
 				params["l5cGM0Y3EwOXd6bHp5cGpkM2I4anZ1ZH"],
 				params["xoMD12dnh3Nj9waTFkb3dmY3c4aDQ5bX"],
 				params["k5ejIyejNzb2FsYTB2Y3JrMWk1djR2OG"]
+			)
+		);
+
+		this.expose(
+			"lremFlenJmcXFuNDNwMGx1c3ZhMmdkZH",
+			{
+			"pxOG8zbGY4ODRubmJ5cjFjb3lpZT4ya2": { type: "string", isArray: false, isOptional: false },
+				"p3OTw0YWp6eWM1NnNqZWFzZmYwZTlwZG": { type: "number", isArray: false, isOptional: false },
+				"NxejQ1bXE1cmhnMHBtYTprODdzc3N5Zn": { type: "string", isArray: false, isOptional: false },
+				"hraWdneWx3NnNyM2F3aDh2a2NxNnV0YW": { type: "date", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(IncidentService),
+			(controller, params) => controller.reportDerailment(
+				params["pxOG8zbGY4ODRubmJ5cjFjb3lpZT4ya2"],
+				params["p3OTw0YWp6eWM1NnNqZWFzZmYwZTlwZG"],
+				params["NxejQ1bXE1cmhnMHBtYTprODdzc3N5Zn"],
+				params["hraWdneWx3NnNyM2F3aDh2a2NxNnV0YW"]
+			)
+		);
+
+		this.expose(
+			"F1NmB5aWdyeWl0cWB4aGU2MjhqazZvcD",
+			{
+			"h0bWVncHJuNGBiZWU0dn90cnRhN2BvYj": { type: "string", isArray: false, isOptional: false },
+				"k5aXtraGNqbnFiMWdqYmlybTNvOGJkej": { type: "number", isArray: false, isOptional: false },
+				"JrZWUya2RxYzZ4aGluZXNlNWMwMmFhZG": { type: "string", isArray: false, isOptional: false },
+				"dzOGVpc201OTcxaXMxbHYwb2E5OGd2dj": { type: "string", isArray: false, isOptional: false },
+				"8yaj92c3dhc2RnbmRicTZwd3hhNXp3ZX": { type: "date", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(IncidentService),
+			(controller, params) => controller.reportCollision(
+				params["h0bWVncHJuNGBiZWU0dn90cnRhN2BvYj"],
+				params["k5aXtraGNqbnFiMWdqYmlybTNvOGJkej"],
+				params["JrZWUya2RxYzZ4aGluZXNlNWMwMmFhZG"],
+				params["dzOGVpc201OTcxaXMxbHYwb2E5OGd2dj"],
+				params["8yaj92c3dhc2RnbmRicTZwd3hhNXp3ZX"]
+			)
+		);
+
+		this.expose(
+			"djc3lyazI3ZWJoNXxxd2N1cTQxOHVlcX",
+			{
+			"IyZnV5bWdzemM2bnQyZms1cmRuanQ2cm": { type: "string", isArray: false, isOptional: false },
+				"pkYn80Mn41dWhtY2dhcD1yNmNmOGZ6bT": { type: "number", isArray: false, isOptional: false },
+				"JoZmdjcDpqbGh2bHF5aHNyMnN1NHs4dW": { type: "string", isArray: false, isOptional: false },
+				"M3dDRiaXdkODZzNnx5eXh2emM3a3Y3a3": { type: "date", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(IncidentService),
+			(controller, params) => controller.reportPowerLoss(
+				params["IyZnV5bWdzemM2bnQyZms1cmRuanQ2cm"],
+				params["pkYn80Mn41dWhtY2dhcD1yNmNmOGZ6bT"],
+				params["JoZmdjcDpqbGh2bHF5aHNyMnN1NHs4dW"],
+				params["M3dDRiaXdkODZzNnx5eXh2emM3a3Y3a3"]
 			)
 		);
 

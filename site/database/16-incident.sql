@@ -20,7 +20,7 @@ CREATE TABLE derailing_incident (
 	railcar_id UUID CONSTRAINT railcar__derailing_incidents REFERENCES railcar (id)
 );
 
-CREATE TABLE colision_incident (
+CREATE TABLE collision_incident (
 	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 
 	section TEXT,
@@ -28,8 +28,8 @@ CREATE TABLE colision_incident (
 
 	failed TIMESTAMP,
 
-	source_id UUID CONSTRAINT railcar__colision_source_incidents REFERENCES railcar (id),
-	target_id UUID CONSTRAINT railcar__colision_target_incidents REFERENCES railcar (id)
+	source_railcar_id UUID CONSTRAINT source_railcar__colision_source_incidents REFERENCES railcar (id),
+	target_railcar_id UUID CONSTRAINT target_railcar__colision_target_incidents REFERENCES railcar (id)
 );
 
 CREATE TABLE power_loss_incident (
@@ -40,5 +40,5 @@ CREATE TABLE power_loss_incident (
 
 	failed TIMESTAMP,
 
-	railcar_id UUID CONSTRAINT railcar__derailing_incidents REFERENCES railcar (id)
+	railcar_id UUID CONSTRAINT railcar__power_loss_incidents REFERENCES railcar (id)
 );

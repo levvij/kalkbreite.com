@@ -235,69 +235,69 @@ export class CaptureSession extends Entity<CaptureSessionQueryProxy> {
 	}
 }
 			
-export class ColisionIncidentQueryProxy extends QueryProxy {
-	get railcar(): Partial<RailcarQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
-	get railcar(): Partial<RailcarQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+export class CollisionIncidentQueryProxy extends QueryProxy {
+	get sourceRailcar(): Partial<RailcarQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get targetRailcar(): Partial<RailcarQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get failed(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get position(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get section(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
-	get sourceId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
-	get targetId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get sourceRailcarId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get targetRailcarId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
 
-export class ColisionIncident extends Entity<ColisionIncidentQueryProxy> {
-	get railcar(): Partial<ForeignReference<Railcar>> { return this.$railcar; }
-	get railcar(): Partial<ForeignReference<Railcar>> { return this.$railcar; }
+export class CollisionIncident extends Entity<CollisionIncidentQueryProxy> {
+	get sourceRailcar(): Partial<ForeignReference<Railcar>> { return this.$sourceRailcar; }
+	get targetRailcar(): Partial<ForeignReference<Railcar>> { return this.$targetRailcar; }
 	failed: Date;
 	declare id: string;
 	position: number;
 	section: string;
-	sourceId: string;
-	targetId: string;
+	sourceRailcarId: string;
+	targetRailcarId: string;
 	
 	$$meta = {
-		source: "colision_incident",
+		source: "collision_incident",
 		columns: {
 			failed: { type: "timestamp", name: "failed" },
 			id: { type: "uuid", name: "id" },
 			position: { type: "float4", name: "position" },
 			section: { type: "text", name: "section" },
-			sourceId: { type: "uuid", name: "source_id" },
-			targetId: { type: "uuid", name: "target_id" }
+			sourceRailcarId: { type: "uuid", name: "source_railcar_id" },
+			targetRailcarId: { type: "uuid", name: "target_railcar_id" }
 		},
-		get set(): DbSet<ColisionIncident, ColisionIncidentQueryProxy> { 
-			return new DbSet<ColisionIncident, ColisionIncidentQueryProxy>(ColisionIncident, null);
+		get set(): DbSet<CollisionIncident, CollisionIncidentQueryProxy> { 
+			return new DbSet<CollisionIncident, CollisionIncidentQueryProxy>(CollisionIncident, null);
 		}
 	};
 	
 	constructor() {
 		super();
 		
-		this.$railcar = new ForeignReference<Railcar>(this, "sourceId", Railcar);
-	this.$railcar = new ForeignReference<Railcar>(this, "targetId", Railcar);
+		this.$sourceRailcar = new ForeignReference<Railcar>(this, "sourceRailcarId", Railcar);
+	this.$targetRailcar = new ForeignReference<Railcar>(this, "targetRailcarId", Railcar);
 	}
 	
-	private $railcar: ForeignReference<Railcar>;
+	private $sourceRailcar: ForeignReference<Railcar>;
 
-	set railcar(value: Partial<ForeignReference<Railcar>>) {
+	set sourceRailcar(value: Partial<ForeignReference<Railcar>>) {
 		if (value) {
 			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
 
-			this.sourceId = value.id as string;
+			this.sourceRailcarId = value.id as string;
 		} else {
-			this.sourceId = null;
+			this.sourceRailcarId = null;
 		}
 	}
 
-	private $railcar: ForeignReference<Railcar>;
+	private $targetRailcar: ForeignReference<Railcar>;
 
-	set railcar(value: Partial<ForeignReference<Railcar>>) {
+	set targetRailcar(value: Partial<ForeignReference<Railcar>>) {
 		if (value) {
 			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
 
-			this.targetId = value.id as string;
+			this.targetRailcarId = value.id as string;
 		} else {
-			this.targetId = null;
+			this.targetRailcarId = null;
 		}
 	}
 
@@ -1135,16 +1135,16 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 	get operator(): Partial<ForeignReference<Company>> { return this.$operator; }
 	get owner(): Partial<ForeignReference<Company>> { return this.$owner; }
 	captures: PrimaryReference<Capture, CaptureQueryProxy>;
-		colisionSourceIncidents: PrimaryReference<ColisionIncident, ColisionIncidentQueryProxy>;
-		colisionTargetIncidents: PrimaryReference<ColisionIncident, ColisionIncidentQueryProxy>;
 		derailingIncidents: PrimaryReference<DerailingIncident, DerailingIncidentQueryProxy>;
-		derailingIncidents: PrimaryReference<PowerLossIncident, PowerLossIncidentQueryProxy>;
 		graffitis: PrimaryReference<Graffiti, GraffitiQueryProxy>;
 		maintenanceJobs: PrimaryReference<Maintenance, MaintenanceQueryProxy>;
+		powerLossIncidents: PrimaryReference<PowerLossIncident, PowerLossIncidentQueryProxy>;
 		tractionActors: PrimaryReference<Traction, TractionQueryProxy>;
+		colisionSourceIncidents: PrimaryReference<CollisionIncident, CollisionIncidentQueryProxy>;
 		get storageContainer(): Partial<ForeignReference<StorageContainer>> { return this.$storageContainer; }
 	get tailCoupler(): Partial<ForeignReference<Coupler>> { return this.$tailCoupler; }
-	aquired: Date;
+	colisionTargetIncidents: PrimaryReference<CollisionIncident, CollisionIncidentQueryProxy>;
+		aquired: Date;
 	givenName: string;
 	headCouplerId: string;
 	declare id: string;
@@ -1191,15 +1191,15 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 	this.$operator = new ForeignReference<Company>(this, "operatorId", Company);
 	this.$owner = new ForeignReference<Company>(this, "ownerId", Company);
 	this.captures = new PrimaryReference<Capture, CaptureQueryProxy>(this, "railcarId", Capture);
-		this.colisionSourceIncidents = new PrimaryReference<ColisionIncident, ColisionIncidentQueryProxy>(this, "sourceId", ColisionIncident);
-		this.colisionTargetIncidents = new PrimaryReference<ColisionIncident, ColisionIncidentQueryProxy>(this, "targetId", ColisionIncident);
 		this.derailingIncidents = new PrimaryReference<DerailingIncident, DerailingIncidentQueryProxy>(this, "railcarId", DerailingIncident);
-		this.derailingIncidents = new PrimaryReference<PowerLossIncident, PowerLossIncidentQueryProxy>(this, "railcarId", PowerLossIncident);
 		this.graffitis = new PrimaryReference<Graffiti, GraffitiQueryProxy>(this, "railcarId", Graffiti);
 		this.maintenanceJobs = new PrimaryReference<Maintenance, MaintenanceQueryProxy>(this, "railcarId", Maintenance);
+		this.powerLossIncidents = new PrimaryReference<PowerLossIncident, PowerLossIncidentQueryProxy>(this, "railcarId", PowerLossIncident);
 		this.tractionActors = new PrimaryReference<Traction, TractionQueryProxy>(this, "railcarId", Traction);
+		this.colisionSourceIncidents = new PrimaryReference<CollisionIncident, CollisionIncidentQueryProxy>(this, "sourceRailcarId", CollisionIncident);
 		this.$storageContainer = new ForeignReference<StorageContainer>(this, "storageContainerId", StorageContainer);
 	this.$tailCoupler = new ForeignReference<Coupler>(this, "tailCouplerId", Coupler);
+	this.colisionTargetIncidents = new PrimaryReference<CollisionIncident, CollisionIncidentQueryProxy>(this, "targetRailcarId", CollisionIncident);
 	}
 	
 	private $headCoupler: ForeignReference<Coupler>;
@@ -1698,7 +1698,7 @@ export class DbContext {
 	capture: DbSet<Capture, CaptureQueryProxy>;
 	captureFrame: DbSet<CaptureFrame, CaptureFrameQueryProxy>;
 	captureSession: DbSet<CaptureSession, CaptureSessionQueryProxy>;
-	colisionIncident: DbSet<ColisionIncident, ColisionIncidentQueryProxy>;
+	collisionIncident: DbSet<CollisionIncident, CollisionIncidentQueryProxy>;
 	company: DbSet<Company, CompanyQueryProxy>;
 	companyLogo: DbSet<CompanyLogo, CompanyLogoQueryProxy>;
 	coupler: DbSet<Coupler, CouplerQueryProxy>;
@@ -1730,7 +1730,7 @@ export class DbContext {
 		this.capture = new DbSet<Capture, CaptureQueryProxy>(Capture, this.runContext);
 		this.captureFrame = new DbSet<CaptureFrame, CaptureFrameQueryProxy>(CaptureFrame, this.runContext);
 		this.captureSession = new DbSet<CaptureSession, CaptureSessionQueryProxy>(CaptureSession, this.runContext);
-		this.colisionIncident = new DbSet<ColisionIncident, ColisionIncidentQueryProxy>(ColisionIncident, this.runContext);
+		this.collisionIncident = new DbSet<CollisionIncident, CollisionIncidentQueryProxy>(CollisionIncident, this.runContext);
 		this.company = new DbSet<Company, CompanyQueryProxy>(Company, this.runContext);
 		this.companyLogo = new DbSet<CompanyLogo, CompanyLogoQueryProxy>(CompanyLogo, this.runContext);
 		this.coupler = new DbSet<Coupler, CouplerQueryProxy>(Coupler, this.runContext);

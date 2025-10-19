@@ -32,7 +32,8 @@ export class RailcarSelect extends Component {
 			</select>
 
 			{this.railcar && <ui-capture>
-				<img src={`/capture/railcar/${this.railcar.id}`} />
+				<img src={`/capture/railcar/${this.railcar.id}/forward`} />
+				<img src={`/capture/railcar/${this.railcar.id}/reverse`} />
 			</ui-capture>}
 		</ui-railcar-select>
 	}

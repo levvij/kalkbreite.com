@@ -948,6 +948,73 @@ export class IncidentService {
 			}
 		});
 	}
+
+	async reportDerailment(section: string, position: number, railcarId: string, failed: Date): Promise<void> {
+		const $data = new FormData();
+		$data.append("pxOG8zbGY4ODRubmJ5cjFjb3lpZT4ya2", Service.stringify(section))
+		$data.append("p3OTw0YWp6eWM1NnNqZWFzZmYwZTlwZG", Service.stringify(position))
+		$data.append("NxejQ1bXE1cmhnMHBtYTprODdzc3N5Zn", Service.stringify(railcarId))
+		$data.append("hraWdneWx3NnNyM2F3aDh2a2NxNnV0YW", Service.stringify(failed))
+
+		return await fetch(Service.toURL("lremFlenJmcXFuNDNwMGx1c3ZhMmdkZH"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("error" in r) {
+				throw new Error(r.error);
+			}
+
+			if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			}
+		});
+	}
+
+	async reportCollision(section: string, position: number, sourceId: string, targetId: string, failed: Date): Promise<void> {
+		const $data = new FormData();
+		$data.append("h0bWVncHJuNGBiZWU0dn90cnRhN2BvYj", Service.stringify(section))
+		$data.append("k5aXtraGNqbnFiMWdqYmlybTNvOGJkej", Service.stringify(position))
+		$data.append("JrZWUya2RxYzZ4aGluZXNlNWMwMmFhZG", Service.stringify(sourceId))
+		$data.append("dzOGVpc201OTcxaXMxbHYwb2E5OGd2dj", Service.stringify(targetId))
+		$data.append("8yaj92c3dhc2RnbmRicTZwd3hhNXp3ZX", Service.stringify(failed))
+
+		return await fetch(Service.toURL("F1NmB5aWdyeWl0cWB4aGU2MjhqazZvcD"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("error" in r) {
+				throw new Error(r.error);
+			}
+
+			if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			}
+		});
+	}
+
+	async reportPowerLoss(section: string, position: number, railcarId: string, failed: Date): Promise<void> {
+		const $data = new FormData();
+		$data.append("IyZnV5bWdzemM2bnQyZms1cmRuanQ2cm", Service.stringify(section))
+		$data.append("pkYn80Mn41dWhtY2dhcD1yNmNmOGZ6bT", Service.stringify(position))
+		$data.append("JoZmdjcDpqbGh2bHF5aHNyMnN1NHs4dW", Service.stringify(railcarId))
+		$data.append("M3dDRiaXdkODZzNnx5eXh2emM3a3Y3a3", Service.stringify(failed))
+
+		return await fetch(Service.toURL("djc3lyazI3ZWJoNXxxd2N1cTQxOHVlcX"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("error" in r) {
+				throw new Error(r.error);
+			}
+
+			if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			}
+		});
+	}
 }
 
 export class MaintenanceService {
