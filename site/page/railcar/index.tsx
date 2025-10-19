@@ -29,7 +29,7 @@ export class RailcarPage extends Component {
 		}).apply();
 	}
 
-	breadcrumb = () => `Railcar ${this.railcar.givenName ?? this.railcar.model?.name ?? '-'}`;
+	breadcrumb = () => this.railcar.givenName ?? this.railcar.model?.name ?? '-';
 	render(child) {
 		const timeline = new TimelineComponent();
 		timeline.addItem(this.railcar.aquired, 'Aquired model');
@@ -162,6 +162,15 @@ export class RailcarPage extends Component {
 						this.navigate(`maintenance/${maintenance}`);
 					}}>
 						Open Maintenance
+					</ui-action>}
+
+					{Application.session?.account && <ui-action ui-click={async () => {
+						await new RailcarService().updateStorageState(this.railcar.id, !this.railcar.stored);
+						this.railcar.stored = !this.railcar.stored;
+
+						this.update();
+					}}>
+						Put {this.railcar.stored ? 'on Layout' : 'into Storage'}
 					</ui-action>}
 				</ui-actions>
 

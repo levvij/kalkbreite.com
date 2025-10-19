@@ -1124,6 +1124,7 @@ export class RailcarQueryProxy extends QueryProxy {
 	get runningNumber(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get salePrice(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get storageContainerId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get stored(): Partial<QueryBoolean> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get tag(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get tailCouplerId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
@@ -1156,6 +1157,7 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 	runningNumber: string;
 	salePrice: number;
 	storageContainerId: string;
+	stored: boolean;
 	tag: string;
 	tailCouplerId: string;
 	
@@ -1174,6 +1176,7 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 			runningNumber: { type: "text", name: "running_number" },
 			salePrice: { type: "float4", name: "sale_price" },
 			storageContainerId: { type: "uuid", name: "storage_container_id" },
+			stored: { type: "bool", name: "stored" },
 			tag: { type: "text", name: "tag" },
 			tailCouplerId: { type: "uuid", name: "tail_coupler_id" }
 		},

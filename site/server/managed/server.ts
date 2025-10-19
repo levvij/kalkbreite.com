@@ -468,6 +468,19 @@ export class ManagedServer extends BaseServer {
 		);
 
 		this.expose(
+			"B5eW82MmZ5M3RwMTJieHRzdmU4cHllaj",
+			{
+			"Yzaz8ybj11aHplNzc2djVsZXhmbXRtZX": { type: "string", isArray: false, isOptional: false },
+				"NiYT8xcGpzbHd6Y2c1YT41MWUyeH9maX": { type: "boolean", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(RailcarService),
+			(controller, params) => controller.updateStorageState(
+				params["Yzaz8ybj11aHplNzc2djVsZXhmbXRtZX"],
+				params["NiYT8xcGpzbHd6Y2c1YT41MWUyeH9maX"]
+			)
+		);
+
+		this.expose(
 			"NhbXltY3IxcnBmNWM2eDpoZ2Joc3FpaX",
 			{},
 			inject => inject.construct(SessionService),
@@ -1681,6 +1694,7 @@ ViewModel.mappings = {
 				givenName: this.$$model.givenName,
 				id: this.$$model.id,
 				runningNumber: this.$$model.runningNumber,
+				stored: this.$$model.stored,
 				tag: this.$$model.tag
 			}
 		};
@@ -1720,6 +1734,7 @@ ViewModel.mappings = {
 				givenName: true,
 				id: true,
 				runningNumber: true,
+				stored: true,
 				tag: true
 			};
 		};
@@ -1730,6 +1745,7 @@ ViewModel.mappings = {
 			"givenName" in data && (item.givenName = data.givenName === null ? null : `${data.givenName}`);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"runningNumber" in data && (item.runningNumber = data.runningNumber === null ? null : `${data.runningNumber}`);
+			"stored" in data && (item.stored = !!data.stored);
 			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
 
 			return item;
@@ -1748,6 +1764,7 @@ ViewModel.mappings = {
 			"givenName" in viewModel && (model.givenName = viewModel.givenName === null ? null : `${viewModel.givenName}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"runningNumber" in viewModel && (model.runningNumber = viewModel.runningNumber === null ? null : `${viewModel.runningNumber}`);
+			"stored" in viewModel && (model.stored = !!viewModel.stored);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
 
 			return model;
@@ -2709,6 +2726,7 @@ ViewModel.mappings = {
 				givenName: this.$$model.givenName,
 				id: this.$$model.id,
 				runningNumber: this.$$model.runningNumber,
+				stored: this.$$model.stored,
 				tag: this.$$model.tag
 			}
 		};
@@ -2754,6 +2772,7 @@ ViewModel.mappings = {
 				givenName: true,
 				id: true,
 				runningNumber: true,
+				stored: true,
 				tag: true
 			};
 		};
@@ -2765,6 +2784,7 @@ ViewModel.mappings = {
 			"givenName" in data && (item.givenName = data.givenName === null ? null : `${data.givenName}`);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"runningNumber" in data && (item.runningNumber = data.runningNumber === null ? null : `${data.runningNumber}`);
+			"stored" in data && (item.stored = !!data.stored);
 			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
 
 			return item;
@@ -2784,6 +2804,7 @@ ViewModel.mappings = {
 			"givenName" in viewModel && (model.givenName = viewModel.givenName === null ? null : `${viewModel.givenName}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"runningNumber" in viewModel && (model.runningNumber = viewModel.runningNumber === null ? null : `${viewModel.runningNumber}`);
+			"stored" in viewModel && (model.stored = !!viewModel.stored);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
 
 			return model;
@@ -2807,6 +2828,7 @@ ViewModel.mappings = {
 				id: this.$$model.id,
 				note: this.$$model.note,
 				runningNumber: this.$$model.runningNumber,
+				stored: this.$$model.stored,
 				tag: this.$$model.tag
 			}
 		};
@@ -2902,6 +2924,7 @@ ViewModel.mappings = {
 				id: true,
 				note: true,
 				runningNumber: true,
+				stored: true,
 				tag: true
 			};
 		};
@@ -2923,6 +2946,7 @@ ViewModel.mappings = {
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"note" in data && (item.note = data.note === null ? null : `${data.note}`);
 			"runningNumber" in data && (item.runningNumber = data.runningNumber === null ? null : `${data.runningNumber}`);
+			"stored" in data && (item.stored = !!data.stored);
 			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
 
 			return item;
@@ -2952,6 +2976,7 @@ ViewModel.mappings = {
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"note" in viewModel && (model.note = viewModel.note === null ? null : `${viewModel.note}`);
 			"runningNumber" in viewModel && (model.runningNumber = viewModel.runningNumber === null ? null : `${viewModel.runningNumber}`);
+			"stored" in viewModel && (model.stored = !!viewModel.stored);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
 
 			return model;
@@ -3042,6 +3067,7 @@ ViewModel.mappings = {
 				givenName: this.$$model.givenName,
 				id: this.$$model.id,
 				runningNumber: this.$$model.runningNumber,
+				stored: this.$$model.stored,
 				tag: this.$$model.tag
 			}
 		};
@@ -3099,6 +3125,7 @@ ViewModel.mappings = {
 				givenName: true,
 				id: true,
 				runningNumber: true,
+				stored: true,
 				tag: true
 			};
 		};
@@ -3112,6 +3139,7 @@ ViewModel.mappings = {
 			"givenName" in data && (item.givenName = data.givenName === null ? null : `${data.givenName}`);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"runningNumber" in data && (item.runningNumber = data.runningNumber === null ? null : `${data.runningNumber}`);
+			"stored" in data && (item.stored = !!data.stored);
 			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
 
 			return item;
@@ -3133,6 +3161,7 @@ ViewModel.mappings = {
 			"givenName" in viewModel && (model.givenName = viewModel.givenName === null ? null : `${viewModel.givenName}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"runningNumber" in viewModel && (model.runningNumber = viewModel.runningNumber === null ? null : `${viewModel.runningNumber}`);
+			"stored" in viewModel && (model.stored = !!viewModel.stored);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
 
 			return model;

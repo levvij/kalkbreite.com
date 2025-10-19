@@ -23,9 +23,15 @@ export class RailcarCollectionComponent extends Component {
 					</ui-tag>
 				</ui-header>
 
-				<ui-running-number>
-					{railcar.runningNumber}
-				</ui-running-number>
+				<ui-tagline>
+					<ui-running-number>
+						{railcar.runningNumber}
+					</ui-running-number>
+
+					{railcar.stored && <ui-tag>
+						In Storage
+					</ui-tag>}
+				</ui-tagline>
 			</ui-railcar>)}
 		</ui-railcars>;
 	}
