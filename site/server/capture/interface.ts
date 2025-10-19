@@ -7,7 +7,7 @@ import { TrainChain } from "../train/chain";
 import { registerTrainCaptureInterface } from "./interface/train";
 
 export const registerCaptureInterface = (server: ManagedServer, database: DbContext, chain: TrainChain) => {
-	registerTrainCaptureInterface(server, database, chain);
+	registerTrainCaptureInterface(server, chain);
 
 	const emptyCanvas = new Canvas(1, 1);
 	emptyCanvas.getContext('2d');
