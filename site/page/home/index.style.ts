@@ -1,4 +1,4 @@
-import { after, alignItems, aspectRatio, backgroundColor, backgroundImage, bottom, boxShadow, child, color, colorStop, content, display, flexDirection, flexGrow, fontFamily, fontSize, fontStyle, fontWeight, height, hover, inset, insetInline, justifyContent, justifySelf, linearGradient, margin, marginBlock, marginBottom, marginInline, marginTop, maxWidth, objectFit, outline, padding, paddingInline, percentage, position, px, ratio, rem, textAlign, top, vh, width } from "@acryps/style";
+import { after, alignItems, aspectRatio, backgroundColor, backgroundImage, bottom, boxShadow, child, color, colorStop, content, display, flexDirection, flexGrow, fontFamily, fontSize, fontStyle, fontWeight, height, hover, inset, insetInline, justifyContent, justifySelf, linearGradient, margin, marginBlock, marginBottom, marginInline, marginTop, maxWidth, objectFit, outline, padding, paddingInline, percentage, position, px, ratio, rem, textAlign, top, vh, width, zIndex } from "@acryps/style";
 import { captureAspectRatio, captureBackgroundColor, knockoutColor, knockoutContrastColor, pageColor, pageGutter, pageSpacing, pageTransparentColor, primaryColor, primaryContrastColor, primaryOutlineColor, runningNumberFont, tagFont } from "../index.style";
 import { boxed } from "../shared/boxed";
 import { collection, collectionItem } from "../shared/collection";
@@ -36,8 +36,9 @@ export const homeStyle = () => child('ui-home') (
 	child('ui-cover') (
 		display('block'),
 		position('relative'),
+		zIndex(-1),
 
-		marginBottom(coverOverscan),
+		marginBlock(coverOverscan),
 
 		child('img') (
 			width(percentage(100))
@@ -47,19 +48,18 @@ export const homeStyle = () => child('ui-home') (
 			content(''),
 
 			position('absolute'),
-			insetInline(0),
-			top(percentage(100).add(coverOverscan.multiply(2))),
-			bottom(0),
+			inset(0),
 
 			backgroundImage(linearGradient(0,
 				colorStop(percentage(0), pageColor),
-				colorStop(percentage(100), pageTransparentColor)
+				colorStop(coverOverscan.invert().multiply(2), pageTransparentColor),
+				colorStop(percentage(100).add(coverOverscan.multiply(2)), pageTransparentColor),
+				colorStop(percentage(100), pageColor)
 			))
 		)
 	),
 
 	child('ui-topics') (
-		position('relative'),
 		collection(rem(20)),
 		margin(pageSpacing),
 
