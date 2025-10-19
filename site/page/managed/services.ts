@@ -1359,7 +1359,7 @@ export class TrainService {
 		});
 	}
 
-	async getTrains(): Promise<Array<TrainRailcarUnitViewModel>> {
+	async getTrains(): Promise<Array<TrainViewModel>> {
 		const $data = new FormData();
 		
 
@@ -1371,7 +1371,7 @@ export class TrainService {
 			if ("data" in r) {
 				const d = r.data;
 
-				return d.map(d => d === null ? null : TrainRailcarUnitViewModel["$build"](d));
+				return d.map(d => d === null ? null : TrainViewModel["$build"](d));
 			} else if ("aborted" in r) {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {

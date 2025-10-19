@@ -13,9 +13,10 @@ import { buttonStyle } from "./shared/button";
 import { clickable } from "./shared/interaction";
 import { loginStyle } from "./login/index.style";
 import { trainStyle } from "./trains/train/index.style";
-import { layoutStyle } from "./layout/index.style";
+import { layoutPageStyle } from "./layout/index.style";
 import { trainsStyle } from "./trains/index.style";
 import { railcarModelStyle } from "./model/index.style";
+import { railcarsStyle } from "./railcars/index.style";
 
 export const applicationStyle = () => root() (
 	monospacedFont,
@@ -38,11 +39,12 @@ export const applicationStyle = () => root() (
 			trainsStyle(),
 			artistStyle(),
 			railcarStyle(),
+			railcarsStyle(),
 			companyStyle(),
 			graffitiStyle(),
 			storageContainerStyle(),
 			railcarModelStyle(),
-			layoutStyle(),
+			layoutPageStyle(),
 
 			display('block'),
 

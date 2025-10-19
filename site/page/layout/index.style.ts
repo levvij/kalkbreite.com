@@ -1,9 +1,11 @@
 import { child } from "@acryps/style";
 import { boxed } from "../shared/boxed";
 import { sectionStyle } from "./section/index.style";
+import { layoutStyle } from "../shared/layout/index.style";
 
-export const layoutStyle = () => child('ui-layout')(
+export const layoutPageStyle = () => child('ui-layout')(
 	boxed(),
 
-	sectionStyle()
+	sectionStyle(),
+	layoutStyle()
 );

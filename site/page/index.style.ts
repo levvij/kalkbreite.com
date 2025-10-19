@@ -17,6 +17,7 @@ export const dangerContrastColor = hex('fff');
 export const markerColor = hex('ff0');
 
 export const pageColor = hex('fff');
+export const pageTransparentColor = hex('fff0');
 export const pageContrastColor = hex('000');
 
 export const pageSpacing = rem(1.25);

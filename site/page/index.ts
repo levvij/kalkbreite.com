@@ -29,6 +29,7 @@ import { ReportDecouplingIncidentPage } from './layout/section/incident/decoupli
 import { ReportDerailmentIncidentPage } from './layout/section/incident/derailment';
 import { ReportPowerLossIncidentPage } from './layout/section/incident/power-loss';
 import { ReportCollisionIncidentPage } from './layout/section/incident/collision';
+import { RailcarsPage } from './railcars';
 
 // injected by esbuild
 declare const buildDate: string;
@@ -62,6 +63,8 @@ export class Application {
 					.route('/incident/power-loss', ReportPowerLossIncidentPage)
 				)
 			)
+
+			.route('/railcars', RailcarsPage)
 
 			.route('/railcar/:tag', RailcarPage
 				.route('/anchor/:captureId', CaptureAnchorPage)

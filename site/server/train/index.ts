@@ -48,7 +48,7 @@ export class TrainService extends Service {
 	}
 
 	getTrains() {
-		return TrainRailcarUnitViewModel.from(
+		return TrainViewModel.from(
 			[...this.chain.trains]
 				.sort((a, b) => {
 					if (a.units.length == b.units.length) {
