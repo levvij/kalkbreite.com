@@ -37,8 +37,7 @@ export const layoutStyle = () => child('ui-layout') (
 
 				attribute('ui-backdrop') (
 					stroke('transparent'),
-					strokeWidth(rem(1)),
-					vectorEffect('non-scaling-stroke')
+					strokeWidth(px(0.5))
 				),
 
 				attribute('ui-marker') (

@@ -35,17 +35,20 @@ export class LayoutMarker extends Component {
 		this.marker.setAttribute('stroke', this.color.toString());
 		this.move(this.start, this.end);
 
+		this.marker.onclick = () => this.layout.onMarkerClick?.(this);
+
 		return this.marker;
 	}
 
-	move(start: number, end?: number, time = 1000) {
+	move(start: number, end?: number, time = 100) {
 		this.start = start;
 		this.end = end;
 
 		const offset = this.start / this.section.length;
 		const length = (this.end ?? this.start + 10) / this.section.length - offset;
 
-		this.marker.setAttribute('stroke-dasharray', `0% ${100 * offset}% ${100 * length}% 100%`);
+		this.marker.setAttribute('pathLength', '1');
+		this.marker.setAttribute('stroke-dasharray', `0 ${offset} ${length} 1`);
 		this.marker.style.transition = `${time}ms stroke-dasharray`;
 		this.marker.style.transitionTimingFunction = 'linear';
 	}

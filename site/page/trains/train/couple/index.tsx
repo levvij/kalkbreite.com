@@ -1,4 +1,4 @@
-import { Component } from "@acryps/page/.built/source/component";
+import { Component } from "@acryps/page";
 import { TrainPage } from "..";
 import { Application } from "../../..";
 import { coupleIcon } from "../../../assets/icons/managed";

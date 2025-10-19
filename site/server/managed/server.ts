@@ -17,6 +17,8 @@ import { ArtistViewModel } from "././../graffiti/artist";
 import { GraffitiInspirationSummaryModel } from "././../graffiti/inspiration";
 import { GraffitiInspirationViewModel } from "././../graffiti/inspiration";
 import { GraffitiService } from "././../graffiti/index";
+import { DecouplingIncident } from "././database";
+import { IncidentService } from "././../incident/index";
 import { MaintenanceViewModel } from "././../maintenace/maintenace";
 import { Maintenance } from "././database";
 import { MaintenanceService } from "././../maintenace/index";
@@ -83,6 +85,10 @@ Inject.mappings = {
 	},
 	"GraffitiService": {
 		objectConstructor: GraffitiService,
+		parameters: ["DbContext"]
+	},
+	"IncidentService": {
+		objectConstructor: IncidentService,
 		parameters: ["DbContext"]
 	},
 	"MaintenanceService": {
@@ -266,6 +272,23 @@ export class ManagedServer extends BaseServer {
 			(controller, params) => controller.assign(
 				params["hiZHpkejpldXlraD1xOGZ1dnB2MWV4eG"],
 				params["9ianV0d2QxZ2QzM2p4NmMyaGE2ZGZzdm"]
+			)
+		);
+
+		this.expose(
+			"R1aXd5ZGF4MjB1OXR4dGJ0cDc5czZucX",
+			{
+			"Nyc2xqNmNkOWd0MXx3N3F2MDdoM3RjMm": { type: "string", isArray: false, isOptional: false },
+				"l5cGM0Y3EwOXd6bHp5cGpkM2I4anZ1ZH": { type: "number", isArray: false, isOptional: false },
+				"xoMD12dnh3Nj9waTFkb3dmY3c4aDQ5bX": { type: "string", isArray: false, isOptional: false },
+				"k5ejIyejNzb2FsYTB2Y3JrMWk1djR2OG": { type: "date", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(IncidentService),
+			(controller, params) => controller.reportDecoupling(
+				params["Nyc2xqNmNkOWd0MXx3N3F2MDdoM3RjMm"],
+				params["l5cGM0Y3EwOXd6bHp5cGpkM2I4anZ1ZH"],
+				params["xoMD12dnh3Nj9waTFkb3dmY3c4aDQ5bX"],
+				params["k5ejIyejNzb2FsYTB2Y3JrMWk1djR2OG"]
 			)
 		);
 

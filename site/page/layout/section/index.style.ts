@@ -4,10 +4,14 @@ import { districtIdentifierFont, monospacedFont, sectionIdentifierFont } from ".
 import { detailSectionStyle } from "../../shared/detail-section/index.style";
 import { clickable } from "../../shared/interaction";
 import { layoutStyle } from "../../shared/layout/index.style";
+import { incidentStyle } from "./incident/index.style";
+import { buttonGroupStyle, buttonStyle } from "../../shared/button";
 
 export const sectionStyle = () => child('ui-section') (
 	display('block'),
 	padding(pageSpacing),
+
+	incidentStyle(),
 
 	layoutStyle(),
 
@@ -23,11 +27,21 @@ export const sectionStyle = () => child('ui-section') (
 	),
 
 	detailSectionStyle(
+		marginBottom(pageSpacing),
+
 		child('ui-name') (
 			display('block'),
 
 			fontSize(rem(2)),
 			sectionIdentifierFont
 		),
+	),
+
+	child('ui-actions') (
+		buttonGroupStyle(),
+
+		child('ui-action') (
+			buttonStyle()
+		)
 	)
 );

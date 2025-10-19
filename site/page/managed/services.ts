@@ -926,6 +926,30 @@ export class GraffitiService {
 	}
 }
 
+export class IncidentService {
+	async reportDecoupling(section: string, position: number, couplerId: string, failed: Date): Promise<void> {
+		const $data = new FormData();
+		$data.append("Nyc2xqNmNkOWd0MXx3N3F2MDdoM3RjMm", Service.stringify(section))
+		$data.append("l5cGM0Y3EwOXd6bHp5cGpkM2I4anZ1ZH", Service.stringify(position))
+		$data.append("xoMD12dnh3Nj9waTFkb3dmY3c4aDQ5bX", Service.stringify(couplerId))
+		$data.append("k5ejIyejNzb2FsYTB2Y3JrMWk1djR2OG", Service.stringify(failed))
+
+		return await fetch(Service.toURL("R1aXd5ZGF4MjB1OXR4dGJ0cDc5czZucX"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("error" in r) {
+				throw new Error(r.error);
+			}
+
+			if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			}
+		});
+	}
+}
+
 export class MaintenanceService {
 	async get(id: string): Promise<MaintenanceViewModel> {
 		const $data = new FormData();

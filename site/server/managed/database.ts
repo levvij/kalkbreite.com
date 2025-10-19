@@ -235,6 +235,75 @@ export class CaptureSession extends Entity<CaptureSessionQueryProxy> {
 	}
 }
 			
+export class ColisionIncidentQueryProxy extends QueryProxy {
+	get railcar(): Partial<RailcarQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get railcar(): Partial<RailcarQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get failed(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get position(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get section(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get sourceId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get targetId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class ColisionIncident extends Entity<ColisionIncidentQueryProxy> {
+	get railcar(): Partial<ForeignReference<Railcar>> { return this.$railcar; }
+	get railcar(): Partial<ForeignReference<Railcar>> { return this.$railcar; }
+	failed: Date;
+	declare id: string;
+	position: number;
+	section: string;
+	sourceId: string;
+	targetId: string;
+	
+	$$meta = {
+		source: "colision_incident",
+		columns: {
+			failed: { type: "timestamp", name: "failed" },
+			id: { type: "uuid", name: "id" },
+			position: { type: "float4", name: "position" },
+			section: { type: "text", name: "section" },
+			sourceId: { type: "uuid", name: "source_id" },
+			targetId: { type: "uuid", name: "target_id" }
+		},
+		get set(): DbSet<ColisionIncident, ColisionIncidentQueryProxy> { 
+			return new DbSet<ColisionIncident, ColisionIncidentQueryProxy>(ColisionIncident, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.$railcar = new ForeignReference<Railcar>(this, "sourceId", Railcar);
+	this.$railcar = new ForeignReference<Railcar>(this, "targetId", Railcar);
+	}
+	
+	private $railcar: ForeignReference<Railcar>;
+
+	set railcar(value: Partial<ForeignReference<Railcar>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.sourceId = value.id as string;
+		} else {
+			this.sourceId = null;
+		}
+	}
+
+	private $railcar: ForeignReference<Railcar>;
+
+	set railcar(value: Partial<ForeignReference<Railcar>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.targetId = value.id as string;
+		} else {
+			this.targetId = null;
+		}
+	}
+
+	
+}
+			
 export class CompanyQueryProxy extends QueryProxy {
 	get icon(): Partial<CompanyLogoQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get logo(): Partial<CompanyLogoQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -362,7 +431,8 @@ export class CouplerQueryProxy extends QueryProxy {
 }
 
 export class Coupler extends Entity<CouplerQueryProxy> {
-	get type(): Partial<ForeignReference<CouplerType>> { return this.$type; }
+	decouplingIncidents: PrimaryReference<DecouplingIncident, DecouplingIncidentQueryProxy>;
+		get type(): Partial<ForeignReference<CouplerType>> { return this.$type; }
 	declare id: string;
 	typeId: string;
 	
@@ -380,6 +450,7 @@ export class Coupler extends Entity<CouplerQueryProxy> {
 	constructor() {
 		super();
 		
+		this.decouplingIncidents = new PrimaryReference<DecouplingIncident, DecouplingIncidentQueryProxy>(this, "couplerId", DecouplingIncident);
 		this.$type = new ForeignReference<CouplerType>(this, "typeId", CouplerType);
 	}
 	
@@ -485,6 +556,108 @@ export class Coupling extends Entity<CouplingQueryProxy> {
 			this.targetId = value.id as string;
 		} else {
 			this.targetId = null;
+		}
+	}
+
+	
+}
+			
+export class DecouplingIncidentQueryProxy extends QueryProxy {
+	get coupler(): Partial<CouplerQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get couplerId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get failed(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get position(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get section(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class DecouplingIncident extends Entity<DecouplingIncidentQueryProxy> {
+	get coupler(): Partial<ForeignReference<Coupler>> { return this.$coupler; }
+	couplerId: string;
+	failed: Date;
+	declare id: string;
+	position: number;
+	section: string;
+	
+	$$meta = {
+		source: "decoupling_incident",
+		columns: {
+			couplerId: { type: "uuid", name: "coupler_id" },
+			failed: { type: "timestamp", name: "failed" },
+			id: { type: "uuid", name: "id" },
+			position: { type: "float4", name: "position" },
+			section: { type: "text", name: "section" }
+		},
+		get set(): DbSet<DecouplingIncident, DecouplingIncidentQueryProxy> { 
+			return new DbSet<DecouplingIncident, DecouplingIncidentQueryProxy>(DecouplingIncident, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.$coupler = new ForeignReference<Coupler>(this, "couplerId", Coupler);
+	}
+	
+	private $coupler: ForeignReference<Coupler>;
+
+	set coupler(value: Partial<ForeignReference<Coupler>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.couplerId = value.id as string;
+		} else {
+			this.couplerId = null;
+		}
+	}
+
+	
+}
+			
+export class DerailingIncidentQueryProxy extends QueryProxy {
+	get railcar(): Partial<RailcarQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get failed(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get position(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get railcarId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get section(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class DerailingIncident extends Entity<DerailingIncidentQueryProxy> {
+	get railcar(): Partial<ForeignReference<Railcar>> { return this.$railcar; }
+	failed: Date;
+	declare id: string;
+	position: number;
+	railcarId: string;
+	section: string;
+	
+	$$meta = {
+		source: "derailing_incident",
+		columns: {
+			failed: { type: "timestamp", name: "failed" },
+			id: { type: "uuid", name: "id" },
+			position: { type: "float4", name: "position" },
+			railcarId: { type: "uuid", name: "railcar_id" },
+			section: { type: "text", name: "section" }
+		},
+		get set(): DbSet<DerailingIncident, DerailingIncidentQueryProxy> { 
+			return new DbSet<DerailingIncident, DerailingIncidentQueryProxy>(DerailingIncident, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.$railcar = new ForeignReference<Railcar>(this, "railcarId", Railcar);
+	}
+	
+	private $railcar: ForeignReference<Railcar>;
+
+	set railcar(value: Partial<ForeignReference<Railcar>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.railcarId = value.id as string;
+		} else {
+			this.railcarId = null;
 		}
 	}
 
@@ -881,6 +1054,57 @@ export class Maintenance extends Entity<MaintenanceQueryProxy> {
 	
 }
 			
+export class PowerLossIncidentQueryProxy extends QueryProxy {
+	get railcar(): Partial<RailcarQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get failed(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get position(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get railcarId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get section(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class PowerLossIncident extends Entity<PowerLossIncidentQueryProxy> {
+	get railcar(): Partial<ForeignReference<Railcar>> { return this.$railcar; }
+	failed: Date;
+	declare id: string;
+	position: number;
+	railcarId: string;
+	section: string;
+	
+	$$meta = {
+		source: "power_loss_incident",
+		columns: {
+			failed: { type: "timestamp", name: "failed" },
+			id: { type: "uuid", name: "id" },
+			position: { type: "float4", name: "position" },
+			railcarId: { type: "uuid", name: "railcar_id" },
+			section: { type: "text", name: "section" }
+		},
+		get set(): DbSet<PowerLossIncident, PowerLossIncidentQueryProxy> { 
+			return new DbSet<PowerLossIncident, PowerLossIncidentQueryProxy>(PowerLossIncident, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.$railcar = new ForeignReference<Railcar>(this, "railcarId", Railcar);
+	}
+	
+	private $railcar: ForeignReference<Railcar>;
+
+	set railcar(value: Partial<ForeignReference<Railcar>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.railcarId = value.id as string;
+		} else {
+			this.railcarId = null;
+		}
+	}
+
+	
+}
+			
 export class RailcarQueryProxy extends QueryProxy {
 	get headCoupler(): Partial<CouplerQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get manufacturer(): Partial<CompanyQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -911,6 +1135,10 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 	get operator(): Partial<ForeignReference<Company>> { return this.$operator; }
 	get owner(): Partial<ForeignReference<Company>> { return this.$owner; }
 	captures: PrimaryReference<Capture, CaptureQueryProxy>;
+		colisionSourceIncidents: PrimaryReference<ColisionIncident, ColisionIncidentQueryProxy>;
+		colisionTargetIncidents: PrimaryReference<ColisionIncident, ColisionIncidentQueryProxy>;
+		derailingIncidents: PrimaryReference<DerailingIncident, DerailingIncidentQueryProxy>;
+		derailingIncidents: PrimaryReference<PowerLossIncident, PowerLossIncidentQueryProxy>;
 		graffitis: PrimaryReference<Graffiti, GraffitiQueryProxy>;
 		maintenanceJobs: PrimaryReference<Maintenance, MaintenanceQueryProxy>;
 		tractionActors: PrimaryReference<Traction, TractionQueryProxy>;
@@ -963,6 +1191,10 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 	this.$operator = new ForeignReference<Company>(this, "operatorId", Company);
 	this.$owner = new ForeignReference<Company>(this, "ownerId", Company);
 	this.captures = new PrimaryReference<Capture, CaptureQueryProxy>(this, "railcarId", Capture);
+		this.colisionSourceIncidents = new PrimaryReference<ColisionIncident, ColisionIncidentQueryProxy>(this, "sourceId", ColisionIncident);
+		this.colisionTargetIncidents = new PrimaryReference<ColisionIncident, ColisionIncidentQueryProxy>(this, "targetId", ColisionIncident);
+		this.derailingIncidents = new PrimaryReference<DerailingIncident, DerailingIncidentQueryProxy>(this, "railcarId", DerailingIncident);
+		this.derailingIncidents = new PrimaryReference<PowerLossIncident, PowerLossIncidentQueryProxy>(this, "railcarId", PowerLossIncident);
 		this.graffitis = new PrimaryReference<Graffiti, GraffitiQueryProxy>(this, "railcarId", Graffiti);
 		this.maintenanceJobs = new PrimaryReference<Maintenance, MaintenanceQueryProxy>(this, "railcarId", Maintenance);
 		this.tractionActors = new PrimaryReference<Traction, TractionQueryProxy>(this, "railcarId", Traction);
@@ -1466,17 +1698,21 @@ export class DbContext {
 	capture: DbSet<Capture, CaptureQueryProxy>;
 	captureFrame: DbSet<CaptureFrame, CaptureFrameQueryProxy>;
 	captureSession: DbSet<CaptureSession, CaptureSessionQueryProxy>;
+	colisionIncident: DbSet<ColisionIncident, ColisionIncidentQueryProxy>;
 	company: DbSet<Company, CompanyQueryProxy>;
 	companyLogo: DbSet<CompanyLogo, CompanyLogoQueryProxy>;
 	coupler: DbSet<Coupler, CouplerQueryProxy>;
 	couplerType: DbSet<CouplerType, CouplerTypeQueryProxy>;
 	coupling: DbSet<Coupling, CouplingQueryProxy>;
+	decouplingIncident: DbSet<DecouplingIncident, DecouplingIncidentQueryProxy>;
+	derailingIncident: DbSet<DerailingIncident, DerailingIncidentQueryProxy>;
 	graffiti: DbSet<Graffiti, GraffitiQueryProxy>;
 	graffitiCapture: DbSet<GraffitiCapture, GraffitiCaptureQueryProxy>;
 	graffitiInspiration: DbSet<GraffitiInspiration, GraffitiInspirationQueryProxy>;
 	graffitiInspirationMedia: DbSet<GraffitiInspirationMedia, GraffitiInspirationMediaQueryProxy>;
 	graffitiType: DbSet<GraffitiType, GraffitiTypeQueryProxy>;
 	maintenance: DbSet<Maintenance, MaintenanceQueryProxy>;
+	powerLossIncident: DbSet<PowerLossIncident, PowerLossIncidentQueryProxy>;
 	railcar: DbSet<Railcar, RailcarQueryProxy>;
 	railcarModel: DbSet<RailcarModel, RailcarModelQueryProxy>;
 	railcarModelDrawing: DbSet<RailcarModelDrawing, RailcarModelDrawingQueryProxy>;
@@ -1494,17 +1730,21 @@ export class DbContext {
 		this.capture = new DbSet<Capture, CaptureQueryProxy>(Capture, this.runContext);
 		this.captureFrame = new DbSet<CaptureFrame, CaptureFrameQueryProxy>(CaptureFrame, this.runContext);
 		this.captureSession = new DbSet<CaptureSession, CaptureSessionQueryProxy>(CaptureSession, this.runContext);
+		this.colisionIncident = new DbSet<ColisionIncident, ColisionIncidentQueryProxy>(ColisionIncident, this.runContext);
 		this.company = new DbSet<Company, CompanyQueryProxy>(Company, this.runContext);
 		this.companyLogo = new DbSet<CompanyLogo, CompanyLogoQueryProxy>(CompanyLogo, this.runContext);
 		this.coupler = new DbSet<Coupler, CouplerQueryProxy>(Coupler, this.runContext);
 		this.couplerType = new DbSet<CouplerType, CouplerTypeQueryProxy>(CouplerType, this.runContext);
 		this.coupling = new DbSet<Coupling, CouplingQueryProxy>(Coupling, this.runContext);
+		this.decouplingIncident = new DbSet<DecouplingIncident, DecouplingIncidentQueryProxy>(DecouplingIncident, this.runContext);
+		this.derailingIncident = new DbSet<DerailingIncident, DerailingIncidentQueryProxy>(DerailingIncident, this.runContext);
 		this.graffiti = new DbSet<Graffiti, GraffitiQueryProxy>(Graffiti, this.runContext);
 		this.graffitiCapture = new DbSet<GraffitiCapture, GraffitiCaptureQueryProxy>(GraffitiCapture, this.runContext);
 		this.graffitiInspiration = new DbSet<GraffitiInspiration, GraffitiInspirationQueryProxy>(GraffitiInspiration, this.runContext);
 		this.graffitiInspirationMedia = new DbSet<GraffitiInspirationMedia, GraffitiInspirationMediaQueryProxy>(GraffitiInspirationMedia, this.runContext);
 		this.graffitiType = new DbSet<GraffitiType, GraffitiTypeQueryProxy>(GraffitiType, this.runContext);
 		this.maintenance = new DbSet<Maintenance, MaintenanceQueryProxy>(Maintenance, this.runContext);
+		this.powerLossIncident = new DbSet<PowerLossIncident, PowerLossIncidentQueryProxy>(PowerLossIncident, this.runContext);
 		this.railcar = new DbSet<Railcar, RailcarQueryProxy>(Railcar, this.runContext);
 		this.railcarModel = new DbSet<RailcarModel, RailcarModelQueryProxy>(RailcarModel, this.runContext);
 		this.railcarModelDrawing = new DbSet<RailcarModelDrawing, RailcarModelDrawingQueryProxy>(RailcarModelDrawing, this.runContext);

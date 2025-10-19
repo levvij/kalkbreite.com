@@ -25,6 +25,7 @@ import { LayoutPage } from './layout';
 import { LayoutSectionPage } from './layout/section';
 import { MaintenacePage } from './railcar/maintenance';
 import { Metadata } from '@acryps/metadata';
+import { ReportDecouplingIncidentPage } from './layout/section/incident/decoupling';
 
 // injected by esbuild
 declare const buildDate: string;
@@ -51,7 +52,9 @@ export class Application {
 			.route('/artist/:tag', ArtistPage)
 
 			.route('/layout', LayoutPage
-				.route('/section/:domainName', LayoutSectionPage)
+				.route('/section/:domainName', LayoutSectionPage
+					.route('/incident/decoupling', ReportDecouplingIncidentPage)
+				)
 			)
 
 			.route('/railcar/:tag', RailcarPage

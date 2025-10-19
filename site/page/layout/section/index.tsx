@@ -4,12 +4,14 @@ import { LayoutPage } from "..";
 import { DetailSectionComponent } from "../../shared/detail-section";
 import { LayoutComponent } from "../../shared/layout";
 import { hex } from "@acryps/style";
+import { Application } from "../..";
 
 export class LayoutSectionPage extends Component {
 	declare parameters: { domainName };
 	declare parent: LayoutPage;
 
 	section: Section;
+	layout = new LayoutComponent();
 
 	async onload() {
 		for (let district of this.parent.layout.allDistricts) {
@@ -24,20 +26,20 @@ export class LayoutSectionPage extends Component {
 	}
 
 	breadcrumb = () => this.section.name;
-	render() {
-		const layout = new LayoutComponent();
-		layout.highlight(this.section);
+	render(child) {
+		this.layout.highlight(this.section);
+		this.layout.onSectionClick = position => this.navigate(`../${position.section.domainName}`);
 
-		layout.onSectionClick = section => this.navigate(`../${section.domainName}`);
+		if (child) {
+			return <ui-section>
+				{this.layout}
 
-		let element = layout.mark(hex('ff0'), this.section, 0, 10);
-
-		setInterval(() => {
-			element.move(element.start + 10, element.end + 12);
-		}, 1000);
+				{child}
+			</ui-section>
+		}
 
 		return <ui-section>
-			{layout}
+			{this.layout}
 
 			<ui-hierarchy>
 				{this.renderDistrict(this.section.district)}
@@ -49,6 +51,24 @@ export class LayoutSectionPage extends Component {
 				.addMetric('Real Length', () => `${(this.section.length).toFixed(1)} m`)
 				.addMetric('Scale Length', () => `${(this.section.length / 87).toFixed(2)} m`)
 			}
+
+			{Application.session.account && <ui-actions>
+				<ui-action ui-href='incident/decoupling'>
+					Report Decoupling
+				</ui-action>
+
+				<ui-action ui-href='incident/derailment'>
+					Report Derailment
+				</ui-action>
+
+				<ui-action ui-href='incident/power-loss'>
+					Report Power Loss
+				</ui-action>
+
+				<ui-action ui-href='incident/collision'>
+					Report Collision
+				</ui-action>
+			</ui-actions>}
 		</ui-section>
 	}
 

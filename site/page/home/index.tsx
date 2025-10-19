@@ -20,7 +20,7 @@ export class HomePage extends Component {
 			textBufferReset = setTimeout(() => textBuffer = '', 500);
 
 			if (document.contains(this.rootNode)) {
-				if (event.key == 'Enter') {
+				if (event.key == 'Enter' && textBuffer) {
 					this.navigate(`/railcar/${textBuffer}`);
 				} else if (/^[0-9a-z]$/.test(event.key)) {
 					textBuffer += event.key;
@@ -31,7 +31,7 @@ export class HomePage extends Component {
 
 	render() {
 		const layout = new LayoutComponent();
-		layout.onSectionClick = section => this.navigate(`/layout/section/${section.domainName}`);
+		layout.onSectionClick = position => this.navigate(`/layout/section/${position.section.domainName}`);
 
 		return <ui-home>
 			{layout}

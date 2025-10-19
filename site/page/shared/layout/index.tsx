@@ -1,19 +1,21 @@
 import { Component } from "@acryps/page";
-import { District, Layout, Section, Tile } from '@packtrack/layout';
+import { District, Layout, Section, SectionPosition, Tile } from '@packtrack/layout';
 import { LayoutLoader } from "./loader";
 import { LayoutMarker } from "./marker";
 import { ColorValue } from "@acryps/style";
+import { off } from "process";
 
 export class LayoutComponent extends Component {
 	layout: Layout;
-	canvas: SVGElement;
+	canvas: SVGSVGElement;
 
 	highlighted: Section;
 
 	elements: LayoutMarker[] = [];
 	elementContainer: SVGGElement;
 
-	onSectionClick: (segment: Section) => {};
+	onSectionClick: (position: SectionPosition) => void;
+	onMarkerClick: (marker: LayoutMarker) => void;
 
 	async onload() {
 		this.layout = await LayoutLoader.load();
@@ -40,7 +42,7 @@ export class LayoutComponent extends Component {
 		const proxy = document.createElement('proxy');
 		proxy.innerHTML = '<svg />';
 
-		const svg = proxy.firstChild as SVGElement;
+		const svg = proxy.firstChild as SVGSVGElement;
 
 		const tiles = this.layout.allDistricts.flatMap(district => district.sections.flatMap(section => section.tiles));
 
@@ -69,11 +71,11 @@ export class LayoutComponent extends Component {
 			}
 		}
 
+		this.canvas = svg;
+
 		for (let root of this.layout.districts) {
 			this.renderDistrict(root, svg);
 		}
-
-		this.canvas = svg;
 
 		this.elementContainer = document.createElementNS(svg.namespaceURI, 'g') as SVGGElement;
 		svg.appendChild(this.elementContainer);
@@ -123,11 +125,43 @@ export class LayoutComponent extends Component {
 		group.insertBefore(path, group.firstChild);
 
 		// makes the path easily clickable
-		const backdrop = document.createElementNS(svg.namespaceURI, 'path') as SVGGElement;
+		const backdrop = document.createElementNS(svg.namespaceURI, 'path') as SVGPathElement;
 		backdrop.setAttribute('ui-backdrop', '');
 		backdrop.setAttribute('d', pathSegments.join(' '));
+		backdrop.setAttribute('pathLength', '1');
 
-		backdrop.onclick = () => this.onSectionClick(section);
+		backdrop.onclick = event => {
+			const point = this.canvas.createSVGPoint();
+			point.x = event.clientX;
+			point.y = event.clientY;
+
+			const translated = point.matrixTransform(svg.getScreenCTM().inverse());
+
+			const findClick = (start: number, length: number) => {
+				// stop at one meter percision
+				if (length < 1 / section.length) {
+					backdrop.removeAttribute('stroke-dasharray');
+
+					this.onSectionClick(new SectionPosition(section, Math.round(start * section.length), false));
+
+					return;
+				}
+
+				for (let offset of [start, start + length / 2]) {
+					backdrop.setAttribute('stroke-dasharray', `0 ${offset} ${length / 2} 1`);
+
+					if (backdrop.isPointInStroke(translated)) {
+						findClick(offset, length / 2);
+
+						return;
+					}
+				}
+			};
+
+			findClick(0, 1);
+
+			// this.onSectionClick(section)
+		};
 
 		group.insertBefore(backdrop, path);
 	}
