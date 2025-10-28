@@ -1,4 +1,4 @@
-import { attribute, child, descendant, fill, height, hex, hover, maxHeight, padding, percentage, pointerEvents, px, rem, stroke, strokeWidth, vectorEffect, vh, width } from "@acryps/style";
+import { attribute, child, descendant, fill, height, hex, hover, maxHeight, padding, percentage, pointerEvents, px, rem, stroke, strokeLinecap, strokeLinejoin, strokeWidth, vectorEffect, vh, width } from "@acryps/style";
 import { boxed } from "../../shared/boxed";
 import { pageColor, pageContrastColor, pageSpacing, primaryColor } from "../../index.style";
 import { clickable } from "../interaction";
@@ -29,6 +29,8 @@ export const layoutStyle = () => child('ui-layout') (
 				attribute('ui-main') (
 					stroke(pageContrastColor),
 					strokeWidth(px(0.2)),
+					strokeLinejoin('bevel'),
+					strokeLinecap('round'),
 
 					pointerEvents('none')
 				),

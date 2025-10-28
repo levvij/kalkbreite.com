@@ -60,7 +60,7 @@ export class LayoutComponent extends Component {
 		svg.setAttribute('viewBox', `${viewBox.left} ${viewBox.top} ${viewBox.right - viewBox.left + 1} ${viewBox.bottom - viewBox.top + 1}`);
 
 		const grid = this.getBoundary(tiles);
-		const overscan = Math.max(grid.right - grid.left, grid.bottom - grid.top);
+		const overscan = Math.max(grid.right - grid.left, grid.bottom - grid.top) / 2;
 
 		for (let x = grid.left - overscan; x <= grid.right + overscan; x++) {
 			for (let y = grid.top - overscan; y <= grid.bottom + overscan; y++) {
