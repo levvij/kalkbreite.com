@@ -31,4 +31,11 @@ export class RailcarService extends Service {
 
 		await updateThumbnail(capture);
 	}
+
+	async updateStorageState(railcarId: string, stored: boolean) {
+		const railcar = await this.database.railcar.find(railcarId);
+		railcar.stored = stored;
+
+		await railcar.update();
+	}
 }

@@ -1,5 +1,5 @@
-import { alignItems, aspectRatio, backgroundColor, border, borderRadius, child, color, display, flexDirection, flexGrow, fontFamily, fontSize, fontWeight, gap, height, justifyContent, justifySelf, marginBlock, marginBottom, objectFit, objectPosition, overflow, padding, paddingBottom, paddingInline, percentage, px, ratio, rem, width } from "@acryps/style";
-import { captureAspectRatio, captureBackgroundColor, pageGutter, pageSpacing, primaryColor, radius, runningNumberFont, tagFont } from "../../index.style";
+import { alignItems, aspectRatio, backgroundColor, border, borderRadius, child, color, display, flexDirection, flexGrow, fontFamily, fontSize, fontWeight, gap, height, justifyContent, justifySelf, marginBlock, marginBottom, marginRight, objectFit, objectPosition, overflow, padding, paddingBottom, paddingInline, percentage, px, ratio, rem, textTransform, width } from "@acryps/style";
+import { captureAspectRatio, captureBackgroundColor, knockoutColor, knockoutContrastColor, pageGutter, pageSpacing, primaryColor, radius, runningNumberFont, tagFont } from "../../index.style";
 import { boxed } from "../../shared/boxed";
 import { collection, collectionItem } from "../../shared/collection";
 import { clickable } from "../interaction";
@@ -50,13 +50,29 @@ export const railcarCollectionStyle = () => child('ui-railcars') (
 			)
 		),
 
-		child('ui-running-number') (
-			display('block'),
+		child('ui-tagline') (
+			display('flex'),
+			alignItems('center'),
+			gap(pageGutter),
 			paddingInline(pageGutter),
 			paddingBottom(pageGutter),
 
-			fontFamily(runningNumberFont),
-			fontSize(rem(0.8))
+			child('ui-running-number') (
+				display('block'),
+				marginRight('auto'),
+
+				fontFamily(runningNumberFont),
+				fontSize(rem(0.8))
+			),
+
+			child('ui-tag') (
+				padding(rem(0.1), rem(0.25)),
+
+				color(knockoutContrastColor),
+				backgroundColor(knockoutColor),
+				fontSize(rem(0.6)),
+				textTransform('uppercase')
+			)
 		)
 	)
 )

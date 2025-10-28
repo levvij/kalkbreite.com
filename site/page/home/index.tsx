@@ -106,7 +106,7 @@ export class HomePage extends Component {
 				</ui-topic>
 
 				<ui-topic ui-href='/train'>
-					<img src='/assets/topics/layout.jpg' />
+					<img src='/assets/topics/trains.jpg' />
 
 					<ui-title>
 						Trains

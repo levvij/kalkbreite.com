@@ -18,20 +18,24 @@ export class TrainsPage extends Component {
 
 		return <ui-trains>
 			<ui-list>
-				{this.trains.map(train => <ui-train ui-href={train.identifier}>
-					<ui-identifier>
-						{train.identifier}
-					</ui-identifier>
+				{this.trains.map(train => <ui-train>
+					<ui-detail>
+						<ui-identifier>
+							{train.identifier}
+						</ui-identifier>
 
-					<ui-type>
-						{train.length == 1 ? 'S' : '*'}
-					</ui-type>
+						<ui-type>
+							{train.length == 1 ? 'S' : train.length}
+						</ui-type>
 
-					<ui-changed>
-						{train.changed.toISOString().replace('T', ' ').replace(/\.[0-9]+Z$/, '')}
-					</ui-changed>
+						<ui-changed>
+							{train.changed.toISOString().replace('T', ' ').replace(/\.[0-9]+Z$/, '')}
+						</ui-changed>
+					</ui-detail>
 
-					<img src={`/capture/train/${train.identifier}`} />
+					<ui-capture>
+						<img ui-href={train.identifier} src={`/capture/train/${train.identifier}`} loading='lazy' />
+					</ui-capture>
 				</ui-train>)}
 			</ui-list>
 		</ui-trains>
