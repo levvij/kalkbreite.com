@@ -5,7 +5,7 @@ import { RailcarCollectionComponent } from "../shared/railcar-collection";
 import { SlideshowComponent } from "../shared/slideshow";
 import { Application } from "..";
 import { LayoutComponent } from "../shared/layout";
-import { goIcon } from "../assets/icons/managed";
+import { goIcon } from "../.built/icons";
 
 export class HomePage extends Component {
 	async onload() {

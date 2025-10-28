@@ -1,6 +1,5 @@
 import { Component, ComponentContent } from "@acryps/page";
 import { CaptureViewModel, CompanySummaryModel, CouplerViewModel, MaintenanceService, RailcarDirection, RailcarService, RailcarViewModel, TrainService } from "../managed/services";
-import { containerIcon, downloadIcon, flipIcon, goIcon, headCouplerIcon, lengthIncludingBuffersIcon, lengthIncludingCouplersIcon, tailCouplerIcon, trainLinkupIcon } from "../assets/icons/managed";
 import { MetaProduct } from "@acryps/metadata";
 import { StorageContainerTagComponent } from "../shared/storage-container-tag";
 import { SlideshowComponent } from "../shared/slideshow";
@@ -9,6 +8,7 @@ import { ContentAppendable } from "@acryps/style";
 import { DetailSectionComponent } from "../shared/detail-section";
 import { Application } from "..";
 import { TimelineComponent } from "./timeline";
+import { trainLinkupIcon, flipIcon, downloadIcon } from "../.built/icons";
 
 export class RailcarPage extends Component {
 	declare parameters: { tag };

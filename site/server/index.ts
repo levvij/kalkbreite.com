@@ -48,6 +48,7 @@ DbClient.connectedClient.connect().then(async () => {
 		TrainChain: chain
 	});
 
+	app.use(new StaticFileRoute('/assets/icons', join(process.cwd(), '..', 'page', '.built', 'icons', 'font')));
 	app.use(new StaticFileRoute('/assets/', join(process.cwd(), '..', 'page', 'assets')));
 	app.use(new StaticFileRoute('/bundle/', join(process.cwd(), '..', 'page', '.built')));
 

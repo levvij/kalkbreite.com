@@ -2,7 +2,7 @@
 	"scripts": {
 		"watch": "npm run build:glyph && node build watch",
 		"build": "npm run build:glyph && node build bundle",
-		"build:glyph": "glyph assets/icons/source assets/icons/managed /assets/icons/managed/font",
+		"build:glyph": "glyph assets/icons .built/icons /assets/icons",
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {

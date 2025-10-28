@@ -4,7 +4,6 @@ import { pageColor, pageContrastColor, pageGutter, pageSpacing, primaryColor, pr
 import { boxed, maximumBoxedWidth } from "./shared/boxed";
 import { railcarStyle } from "./railcar/index.style";
 import { displayFont, monospacedFont } from "./assets/font";
-import { iconFont, icons } from "./assets/icons/managed";
 import { companyStyle } from "./company/index.style";
 import { storageContainerStyle } from "./storage-container/index.style";
 import { graffitiStyle } from "./graffiti/index.style";
@@ -17,6 +16,7 @@ import { layoutPageStyle } from "./layout/index.style";
 import { trainsStyle } from "./trains/index.style";
 import { railcarModelStyle } from "./model/index.style";
 import { railcarsStyle } from "./railcars/index.style";
+import { iconFont, icons } from "./.built/icons";
 
 export const applicationStyle = () => root() (
 	monospacedFont,

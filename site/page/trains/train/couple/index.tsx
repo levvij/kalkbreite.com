@@ -1,8 +1,8 @@
 import { Component } from "@acryps/page";
 import { TrainPage } from "..";
 import { Application } from "../../..";
-import { coupleIcon } from "../../../assets/icons/managed";
 import { RailcarDirection, TrainService, TrainViewModel } from "../../../managed/services";
+import { coupleIcon } from "../../../.built/icons";
 
 export class CoupleTrainPage extends Component {
 	declare parent: TrainPage;

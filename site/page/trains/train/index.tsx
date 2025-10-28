@@ -1,10 +1,10 @@
 import { Component } from "@acryps/page";
 import { RailcarSummaryModel, TrainRailcarUnitViewModel, TrainService, TrainUnitViewModel } from "../../managed/services";
 import { Application } from "../..";
-import { coupleIcon, uncoupleIcon } from "../../assets/icons/managed";
 import { TrainsPage } from "..";
 import { StorageContainerTagComponent } from "../../shared/storage-container-tag";
 import { DetailSectionComponent } from "../../shared/detail-section";
+import { coupleIcon, uncoupleIcon } from "../../.built/icons";
 
 export class TrainPage extends Component {
 	declare parameters: { identifier };
