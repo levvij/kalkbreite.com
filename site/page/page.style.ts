@@ -87,6 +87,7 @@ export const applicationStyle = () => root() (
 				zIndex(1),
 
 				display('block'),
+				paddingInline(pageSpacing),
 				paddingBlock(pageGutter.divide(4)),
 				lineHeight(1),
 
