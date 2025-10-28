@@ -89,7 +89,7 @@ export class HomePage extends Component {
 					</ui-unavailable>
 				</ui-topic>
 
-				<ui-topic>
+				<ui-topic ui-href='/artists'>
 					<img src='/assets/topics/graffiti.jpg' />
 
 					<ui-title>
@@ -100,9 +100,7 @@ export class HomePage extends Component {
 						Explore the many graffitis applied to the rolling stock all over the layout.
 					</ui-description>
 
-					<ui-unavailable>
-						Page under construction
-					</ui-unavailable>
+					{goIcon()}
 				</ui-topic>
 
 				<ui-topic ui-href='/train'>

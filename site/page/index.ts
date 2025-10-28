@@ -30,6 +30,7 @@ import { ReportDerailmentIncidentPage } from './layout/section/incident/derailme
 import { ReportPowerLossIncidentPage } from './layout/section/incident/power-loss';
 import { ReportCollisionIncidentPage } from './layout/section/incident/collision';
 import { RailcarsPage } from './railcars';
+import { ArtistsPage } from './artists';
 
 // injected by esbuild
 declare const buildDate: string;
@@ -54,6 +55,8 @@ export class Application {
 			.route('/login', LoginPage)
 
 			.route('/artist/:tag', ArtistPage)
+
+			.route('/artists', ArtistsPage)
 
 			.route('/layout', LayoutPage
 				.route('/section/:domainName', LayoutSectionPage
