@@ -22,6 +22,8 @@ import { DecouplingIncident } from "././database";
 import { DerailingIncident } from "././database";
 import { PowerLossIncident } from "././database";
 import { IncidentService } from "././../incident/index";
+import { CameraViewModel } from "././../live/camera";
+import { LiveService } from "././../live/index";
 import { MaintenanceViewModel } from "././../maintenace/maintenace";
 import { Maintenance } from "././database";
 import { MaintenanceService } from "././../maintenace/index";
@@ -66,6 +68,7 @@ import { Company } from "./../managed/database";
 import { Artist } from "./../managed/database";
 import { GraffitiCapture } from "./../managed/database";
 import { GraffitiType } from "./../managed/database";
+import { Camera } from "./../managed/database";
 import { UicIdentifierClass } from "./../managed/database";
 import { UicLocale } from "./../managed/database";
 import { Coupler } from "./../managed/database";
@@ -92,6 +95,10 @@ Inject.mappings = {
 	},
 	"IncidentService": {
 		objectConstructor: IncidentService,
+		parameters: ["DbContext"]
+	},
+	"LiveService": {
+		objectConstructor: LiveService,
 		parameters: ["DbContext"]
 	},
 	"MaintenanceService": {
@@ -345,6 +352,15 @@ export class ManagedServer extends BaseServer {
 				params["pkYn80Mn41dWhtY2dhcD1yNmNmOGZ6bT"],
 				params["JoZmdjcDpqbGh2bHF5aHNyMnN1NHs4dW"],
 				params["M3dDRiaXdkODZzNnx5eXh2emM3a3Y3a3"]
+			)
+		);
+
+		this.expose(
+			"k4MWQ1aWc4aWE5ZTFkazMwNn53NnQzNj",
+			{},
+			inject => inject.construct(LiveService),
+			(controller, params) => controller.getCameras(
+				
 			)
 		);
 
@@ -1166,6 +1182,68 @@ ViewModel.mappings = {
 			
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"mimeType" in viewModel && (model.mimeType = viewModel.mimeType === null ? null : `${viewModel.mimeType}`);
+
+			return model;
+		}
+	},
+	[CameraViewModel.name]: class ComposedCameraViewModel extends CameraViewModel {
+		async map() {
+			return {
+				id: this.$$model.id,
+				name: this.$$model.name
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				id: true,
+				name: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new CameraViewModel(null);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: CameraViewModel) {
+			let model: Camera;
+			
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(Camera).find(viewModel.id)
+			} else {
+				model = new Camera();
+			}
+			
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 
 			return model;
 		}

@@ -18,6 +18,7 @@ import { railcarModelStyle } from "./model/index.style";
 import { railcarsStyle } from "./railcars/index.style";
 import { iconFont, icons } from "./.built/icons";
 import { artistsStyle } from "./artists/index.style";
+import { liveStyle } from "./live/index.style";
 
 export const applicationStyle = () => root() (
 	monospacedFont,
@@ -47,6 +48,7 @@ export const applicationStyle = () => root() (
 			storageContainerStyle(),
 			railcarModelStyle(),
 			layoutPageStyle(),
+			liveStyle(),
 
 			display('block'),
 

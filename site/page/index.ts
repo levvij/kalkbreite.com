@@ -31,6 +31,7 @@ import { ReportPowerLossIncidentPage } from './layout/section/incident/power-los
 import { ReportCollisionIncidentPage } from './layout/section/incident/collision';
 import { RailcarsPage } from './railcars';
 import { ArtistsPage } from './artists';
+import { LivePage } from './live';
 
 // injected by esbuild
 declare const buildDate: string;
@@ -97,6 +98,8 @@ export class Application {
 			.route('/graffiti/:id', GraffitiPage
 				.route('/assign/:captureId', AssignGraffitiBoundsPage)
 			)
+
+			.route('/live', LivePage)
 		);
 
 		registerDirectives(Component, this.router);

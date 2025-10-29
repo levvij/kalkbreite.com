@@ -16,6 +16,7 @@ import { TrainChain } from "./train/chain";
 import { writeFile } from "fs/promises";
 import { LayoutPlan } from "./layout-plan/interface";
 import { registerRailcarModelDrawingInterface } from "./model/drawing";
+import { LiveStreamer } from "./live/stream";
 
 DbClient.connectedClient = new DbClient({});
 
@@ -59,6 +60,17 @@ DbClient.connectedClient.connect().then(async () => {
 	registerLogoInterface(app, database);
 	registerStorageTagInterface(app);
 	registerRailcarModelDrawingInterface(app, database);
+
+	await LiveStreamer.start();
+
+	for (let camera of await database.camera.toArray()) {
+		const stream = new LiveStreamer(camera);
+		stream.register(app);
+
+		// wait with streaming between updates
+		// the monitoring website needs quite some delay between sessions or it will not work
+		setTimeout(() => stream.start(), 1000 * 60);
+	}
 
 	app.prepareRoutes();
 

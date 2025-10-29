@@ -1,6 +1,6 @@
 {
 	"scripts": {
-		"build": "npx vlserver compile && esbuild index.ts --bundle --outfile=.built/index.js --platform=node --target=es2018 --external:skia-canvas --external:jsdom && vlquery compile",
+		"build": "npx vlserver compile && esbuild index.ts --bundle --outfile=.built/index.js --platform=node --target=es2018 --external:skia-canvas --external:jsdom --external:puppeteer-core && vlquery compile",
 		"start": "npm run build && environment node .built/index.js",
 		"typecheck": "npx vlserver compile && tsc --noEmit",
 		"database:update": "environment vlquery create-context"
@@ -9,12 +9,16 @@
 		"pghost": "Database Host",
 		"pgdatabase": "Database Database",
 		"pguser": "Database User",
-		"pgpassword": "Database Password"
+		"pgpassword": "Database Password",
+		"browser": {
+			"applicationPath": "Browser Application Path (use 'which chromium' to get path)"
+		}
 	},
 	"dependencies": {
 		"@acryps/environment": "^2.7.2",
 		"bwip-js": "^4.5.1",
 		"cookie-parser": "^1.4.7",
+		"puppeteer-core": "^24.27.0",
 		"skia-canvas": "^2.0.2",
 		"vlquery": "^7.2.0",
 		"vlserver": "^4.9.2"

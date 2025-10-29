@@ -149,6 +149,19 @@ export class GraffitiInspirationMediaViewModel {
 	}
 }
 
+export class CameraViewModel {
+	id: string;
+	name: string;
+
+	private static $build(raw) {
+		const item = new CameraViewModel();
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		
+		return item;
+	}
+}
+
 export class MaintenanceSummaryModel {
 	completed: Date;
 	id: string;
@@ -1020,6 +1033,29 @@ export class IncidentService {
 
 			if ("aborted" in r) {
 				throw new Error("request aborted by server");
+			}
+		});
+	}
+}
+
+export class LiveService {
+	async getCameras(): Promise<Array<CameraViewModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("k4MWQ1aWc4aWE5ZTFkazMwNn53NnQzNj"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : CameraViewModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
 			}
 		});
 	}

@@ -73,7 +73,7 @@ export class HomePage extends Component {
 					{goIcon()}
 				</ui-topic>
 
-				<ui-topic>
+				<ui-topic ui-href='/live'>
 					<img src='/assets/topics/live.jpg' />
 
 					<ui-title>
@@ -84,9 +84,7 @@ export class HomePage extends Component {
 						View live view of the layout through the network cameras.
 					</ui-description>
 
-					<ui-unavailable>
-						Layout currently not running
-					</ui-unavailable>
+					{goIcon()}
 				</ui-topic>
 
 				<ui-topic ui-href='/artists'>

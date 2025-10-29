@@ -88,6 +88,87 @@ export class Artist extends Entity<ArtistQueryProxy> {
 	}
 }
 			
+export class CameraQueryProxy extends QueryProxy {
+	get frameInterval(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get resolution(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get streamSource(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class Camera extends Entity<CameraQueryProxy> {
+	blackouts: PrimaryReference<CameraBlackout, CameraBlackoutQueryProxy>;
+		frameInterval: number;
+	declare id: string;
+	name: string;
+	resolution: number;
+	streamSource: string;
+	
+	$$meta = {
+		source: "camera",
+		columns: {
+			frameInterval: { type: "int4", name: "frame_interval" },
+			id: { type: "uuid", name: "id" },
+			name: { type: "text", name: "name" },
+			resolution: { type: "float4", name: "resolution" },
+			streamSource: { type: "text", name: "stream_source" }
+		},
+		get set(): DbSet<Camera, CameraQueryProxy> { 
+			return new DbSet<Camera, CameraQueryProxy>(Camera, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.blackouts = new PrimaryReference<CameraBlackout, CameraBlackoutQueryProxy>(this, "cameraId", CameraBlackout);
+	}
+}
+			
+export class CameraBlackoutQueryProxy extends QueryProxy {
+	get camera(): Partial<CameraQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get cameraId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get path(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class CameraBlackout extends Entity<CameraBlackoutQueryProxy> {
+	get camera(): Partial<ForeignReference<Camera>> { return this.$camera; }
+	cameraId: string;
+	declare id: string;
+	path: string;
+	
+	$$meta = {
+		source: "camera_blackout",
+		columns: {
+			cameraId: { type: "uuid", name: "camera_id" },
+			id: { type: "uuid", name: "id" },
+			path: { type: "text", name: "path" }
+		},
+		get set(): DbSet<CameraBlackout, CameraBlackoutQueryProxy> { 
+			return new DbSet<CameraBlackout, CameraBlackoutQueryProxy>(CameraBlackout, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.$camera = new ForeignReference<Camera>(this, "cameraId", Camera);
+	}
+	
+	private $camera: ForeignReference<Camera>;
+
+	set camera(value: Partial<ForeignReference<Camera>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.cameraId = value.id as string;
+		} else {
+			this.cameraId = null;
+		}
+	}
+
+	
+}
+			
 export class CaptureQueryProxy extends QueryProxy {
 	get railcar(): Partial<RailcarQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get bufferAnchorOffset(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -1698,6 +1779,8 @@ export class Uncoupling extends Entity<UncouplingQueryProxy> {
 export class DbContext {
 	account: DbSet<Account, AccountQueryProxy>;
 	artist: DbSet<Artist, ArtistQueryProxy>;
+	camera: DbSet<Camera, CameraQueryProxy>;
+	cameraBlackout: DbSet<CameraBlackout, CameraBlackoutQueryProxy>;
 	capture: DbSet<Capture, CaptureQueryProxy>;
 	captureFrame: DbSet<CaptureFrame, CaptureFrameQueryProxy>;
 	captureSession: DbSet<CaptureSession, CaptureSessionQueryProxy>;
@@ -1730,6 +1813,8 @@ export class DbContext {
 	constructor(private runContext: RunContext) {
 		this.account = new DbSet<Account, AccountQueryProxy>(Account, this.runContext);
 		this.artist = new DbSet<Artist, ArtistQueryProxy>(Artist, this.runContext);
+		this.camera = new DbSet<Camera, CameraQueryProxy>(Camera, this.runContext);
+		this.cameraBlackout = new DbSet<CameraBlackout, CameraBlackoutQueryProxy>(CameraBlackout, this.runContext);
 		this.capture = new DbSet<Capture, CaptureQueryProxy>(Capture, this.runContext);
 		this.captureFrame = new DbSet<CaptureFrame, CaptureFrameQueryProxy>(CaptureFrame, this.runContext);
 		this.captureSession = new DbSet<CaptureSession, CaptureSessionQueryProxy>(CaptureSession, this.runContext);

@@ -1,7 +1,8 @@
 FROM node:22
 
 # install git to run rev-parse
-RUN apt-get update && apt-get install -y git
+RUN apt-get update && apt-get install -y git chromium ffmpeg
+RUN which chromium
 
 WORKDIR /usr/src/app
 COPY . .
