@@ -18,6 +18,8 @@ import { LayoutPlan } from "./layout-plan/interface";
 import { registerRailcarModelDrawingInterface } from "./model/drawing";
 import { LiveStreamer } from "./live/stream";
 
+const streamCameras = process.env.STREAM_CAMERAS == 'ENABLE';
+
 DbClient.connectedClient = new DbClient({});
 
 DbClient.connectedClient.connect().then(async () => {
@@ -61,15 +63,17 @@ DbClient.connectedClient.connect().then(async () => {
 	registerStorageTagInterface(app);
 	registerRailcarModelDrawingInterface(app, database);
 
-	await LiveStreamer.start();
+	if (streamCameras) {
+		await LiveStreamer.start();
 
-	for (let camera of await database.camera.toArray()) {
-		const stream = new LiveStreamer(camera);
-		stream.register(app);
+		for (let camera of await database.camera.toArray()) {
+			const stream = new LiveStreamer(camera);
+			stream.register(app);
 
-		// wait with streaming between updates
-		// the monitoring website needs quite some delay between sessions or it will not work
-		setTimeout(() => stream.start(), 1000 * 60);
+			// wait with streaming between updates
+			// the monitoring website needs quite some delay between sessions or it will not work
+			setTimeout(() => stream.start(), 1000 * 60);
+		}
 	}
 
 	app.prepareRoutes();

@@ -10,6 +10,7 @@
 		"pgdatabase": "Database Database",
 		"pguser": "Database User",
 		"pgpassword": "Database Password",
+		"streamCameras": "Stream Cameras (ENABLE to activate)",
 		"browser": {
 			"applicationPath": "Browser Application Path (use 'which chromium' to get path)"
 		}
