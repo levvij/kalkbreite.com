@@ -73,20 +73,14 @@ export class TrainChain {
 	//
 	// the railcar owning the breaking coupler will keep the train identifier, while the peer will get a new train
 	async uncouple(breakingCouplerId: string, time: Date) {
-		console.log('UNCOUPLE', breakingCouplerId);
-
 		this.hasher.update('uncouple');
 		this.hasher.update(breakingCouplerId);
 
 		const sourceUnit = this.units.find(unit => unit.railcar.headCouplerId == breakingCouplerId || unit.railcar.tailCouplerId == breakingCouplerId);
-		console.log('source unit', sourceUnit.railcar.tag)
-
 		const sourceTrain = this.trains.find(train => train.units.includes(sourceUnit));
-		console.log('source train', sourceTrain.identifier, sourceTrain.units.map(unit => unit.railcar.tag));
 
 		// get all railcars after the broken coupler
 		const split = sourceTrain.split(breakingCouplerId);
-		console.log('split', split.before.map(unit => unit.railcar.tag), split.after.map(unit => unit.railcar.tag));
 
 		if (split.before.length == 0 || split.after.length == 0) {
 			throw new Error('Cannot uncouple loose coupler');
@@ -123,18 +117,13 @@ export class TrainChain {
 	//
 	// the train of source will keep the train, while the target train will be disbanded
 	async couple(sourceId: string, targetId: string, time: Date) {
-		console.group(sourceId, targetId);
-
 		this.hasher.update('couple');
 		this.hasher.update(sourceId);
 		this.hasher.update(targetId);
 
 		// find the source train and unit
 		const sourceUnit = this.units.find(unit => unit.railcar.headCouplerId == sourceId || unit.railcar.tailCouplerId == sourceId);
-		console.log('source unit', sourceUnit.railcar.tag)
-
 		const sourceTrain = this.trains.find(train => train.units.includes(sourceUnit));
-		console.log('source train', sourceTrain.identifier, sourceTrain.units.map(unit => unit.railcar.tag));
 
 		// find the target where this coupling attaches to
 		const targetUnit = this.units.find(unit => unit.railcar.headCouplerId == targetId || unit.railcar.tailCouplerId == targetId);
@@ -147,10 +136,7 @@ export class TrainChain {
 			throw new Error(`Target '${targetUnit.railcar.tag}' is coupled (${targetUnit.head.target.railcar.tag} / ${targetUnit.tail.target.railcar.tag})`);
 		}
 
-		console.log('target unit', targetUnit.railcar.tag);
-
 		const targetTrain = this.trains.find(train => train.units.includes(targetUnit));
-		console.log('target train', targetTrain.identifier, targetTrain.units.map(unit => unit.railcar.tag));
 
 		// source tail is directly coupled to target head
 		if (sourceUnit.tail.coupler.id == sourceId && targetUnit.head.coupler.id == targetId) {
@@ -188,10 +174,6 @@ export class TrainChain {
 
 		this.trains.splice(this.trains.indexOf(targetTrain), 1);
 		this.onDisband(targetTrain, targetTrain.units);
-
-		console.log('formed', sourceTrain.identifier, sourceTrain.units.map(unit => unit.railcar.tag));
-
-		console.groupEnd();
 	}
 
 	dump() {

@@ -24,11 +24,14 @@ export class LiveStreamer {
 
 	static async start() {
 		this.browser = await launch({
-			executablePath: process.env.BROWSER_APPLICATION_PATH
+			executablePath: process.env.BROWSER_APPLICATION_PATH,
+			args: ['--no-sandbox', '--disable-setuid-sandbox']
 		});
 	}
 
 	async start() {
+		console.log(`starting stream capture for '${this.camera.id}'`);
+
 		this.blackouts = await this.camera.blackouts.toArray();
 
 		this.page = await LiveStreamer.browser.newPage();
@@ -99,6 +102,8 @@ export class LiveStreamer {
 	}
 
 	register(app: ManagedServer) {
+		console.log(`starting streaming server for '${this.camera.id}'`);
+
 		app.app.get(`/stream/${this.camera.id}`, (request, response) => {
 			const boundary = `frame-${randomUUID()}`;
 
