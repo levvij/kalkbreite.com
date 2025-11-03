@@ -4,7 +4,7 @@ import { monospacedFont } from "../../assets/font";
 const itemSpacing = mm(6);
 const labelPadding = mm(4);
 
-export const printStyle = () => root(
+export const printStyle = () => root() (
 	child('body') (
 		color(hex('000')),
 		backgroundColor(hex('fff')),
