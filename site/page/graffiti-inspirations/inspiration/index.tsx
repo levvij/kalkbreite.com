@@ -4,6 +4,7 @@ import { Application } from "../..";
 import { DetailSectionComponent } from "../../shared/detail-section";
 import { RailcarCollectionComponent } from "../../shared/railcar-collection";
 import { GraffitiCollectionComponent } from "../../shared/graffiti-collection";
+import { GraffitiInspirationsPage } from "..";
 
 export class GraffitiInspirationPage extends Component {
 	declare parameters: { id };
@@ -31,6 +32,16 @@ export class GraffitiInspirationPage extends Component {
 			})}
 
 			{Application.session.account ? <ui-detail>
+				<ui-actions>
+					<ui-action ui-click={() => GraffitiInspirationsPage.upload(false, this.inspiration).then(() => this.reload())}>
+						Upload Media
+					</ui-action>
+
+					<ui-action ui-click={() => GraffitiInspirationsPage.upload(true, this.inspiration).then(() => this.reload())}>
+						Capture Media
+					</ui-action>
+				</ui-actions>
+
 				<ui-field>
 					<label>
 						Name

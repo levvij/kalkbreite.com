@@ -65,11 +65,17 @@ export class GraffitiService extends Service {
 		);
 	}
 
-	async createInspiration(data: Buffer, mimeType: string) {
-		const inspiration = new GraffitiInspiration();
-		inspiration.captured = new Date();
+	async createInspiration(data: Buffer, mimeType: string, parentId: string) {
+		let inspiration: GraffitiInspiration;
 
-		await inspiration.create();
+		if (parentId) {
+			inspiration = await this.database.graffitiInspiration.find(parentId);
+		} else {
+			inspiration = new GraffitiInspiration();
+			inspiration.captured = new Date();
+
+			await inspiration.create();
+		}
 
 		const media = new GraffitiInspirationMedia();
 		media.graffitiInspiration = inspiration;
