@@ -111,7 +111,7 @@ export class GraffitiInspirationsPage extends Component {
 						data: blob,
 						type: 'image/jpeg'
 					});
-				}, 'jpeg');
+				}, 'jpeg', 0.3);
 			};
 
 			image.src = URL.createObjectURL(file);
