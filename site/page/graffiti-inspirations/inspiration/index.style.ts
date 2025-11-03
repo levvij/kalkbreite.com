@@ -4,6 +4,7 @@ import { pageGutter, pageSpacing, radius } from "../../index.style";
 import { detailSectionStyle } from "../../shared/detail-section/index.style";
 import { graffitiCollectionStyle } from "../../shared/graffiti-collection/index.style";
 import { endDivider } from "../../shared/divider";
+import { buttonGroupStyle, buttonStyle } from "../../shared/button";
 
 export const graffitiInspirationStyle = () => child('ui-graffiti-inspiration') (
 	display('block'),
@@ -34,6 +35,15 @@ export const graffitiInspirationStyle = () => child('ui-graffiti-inspiration') (
 
 		fieldStyle(),
 		detailSectionStyle(),
+
+		child('ui-actions') (
+			buttonGroupStyle(),
+			marginBottom(pageSpacing),
+
+			child('ui-action') (
+				buttonStyle()
+			)
+		),
 
 		child('ui-title') (
 			display('block'),

@@ -1,5 +1,5 @@
 import { Component } from "@acryps/page";
-import { GraffitiInspirationSummaryModel, GraffitiService } from "../managed/services";
+import { GraffitiInspirationSummaryModel, GraffitiInspirationViewModel, GraffitiService } from "../managed/services";
 import { Application } from "..";
 
 export class GraffitiInspirationsPage extends Component {
@@ -18,11 +18,11 @@ export class GraffitiInspirationsPage extends Component {
 
 		return <ui-graffiti-inspirations>
 			{Application.session.account && <ui-actions>
-				<ui-action ui-click={() => this.upload(false)}>
+				<ui-action ui-click={() => GraffitiInspirationsPage.upload(false, null).then(inspiration => this.navigate(inspiration))}>
 					Upload
 				</ui-action>
 
-				<ui-action ui-click={() => this.upload(true)}>
+				<ui-action ui-click={() => GraffitiInspirationsPage.upload(true, null).then(inspiration => this.navigate(inspiration))}>
 					Capture
 				</ui-action>
 			</ui-actions>}
@@ -66,28 +66,30 @@ export class GraffitiInspirationsPage extends Component {
 		</ui-section>;
 	}
 
-	private upload(capture: boolean) {
-		const input = document.createElement('input');
-		input.type = 'file';
+	static upload(capture: boolean, parent: GraffitiInspirationViewModel) {
+		return new Promise<string>(done => {
+			const input = document.createElement('input');
+			input.type = 'file';
 
-		if (capture) {
-			input.capture = 'environment';
-		}
-
-		input.onchange = async () => {
-			const file = await this.stripMetadata(input.files[0]);
-
-			if (file) {
-				const inspiration = await new GraffitiService().createInspiration(file.data, file.type);
-
-				this.navigate(inspiration);
+			if (capture) {
+				input.capture = 'environment';
 			}
-		};
 
-		input.click();
+			input.onchange = async () => {
+				const file = await this.stripMetadata(input.files[0]);
+
+				if (file) {
+					const inspiration = await new GraffitiService().createInspiration(file.data, file.type, parent?.id ?? null);
+
+					done(inspiration);
+				}
+			};
+
+			input.click();
+		});
 	}
 
-	private async stripMetadata(file: File): Promise<{ data: any, type: string }> {
+	static async stripMetadata(file: File): Promise<{ data: any, type: string }> {
 		if (!file.type?.startsWith('image/')) {
 			return {
 				data: file,
