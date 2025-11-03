@@ -1,6 +1,7 @@
 import { Component } from "@acryps/page";
 import { ArtistViewModel, GraffitiService, GraffitiSummaryModel } from "../managed/services";
 import { goIcon } from "../.built/icons";
+import { Application } from "..";
 
 export class ArtistsPage extends Component {
 	artists: ArtistViewModel[];
@@ -19,6 +20,12 @@ export class ArtistsPage extends Component {
 				Explore artists from the swiss and international graffiti scene.
 				Some of them even came down to draw on the rolling stock themselves!
 			</ui-hint>
+
+			<ui-actions>
+				<ui-action ui-href='/graffiti/inspiration'>
+					View Inspirations
+				</ui-action>
+			</ui-actions>
 
 			{featuredArtists.map(artist => <ui-artist>
 				<ui-header ui-href={`/artist/${artist.tag}`}>

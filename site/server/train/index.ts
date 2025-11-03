@@ -51,15 +51,11 @@ export class TrainService extends Service {
 		return TrainViewModel.from(
 			[...this.chain.trains]
 				.sort((a, b) => {
-					if (a.units.length == b.units.length) {
-						if (+a.changed == +b.changed) {
-							return a.identifier.localeCompare(b.identifier);
-						}
-
-						return a.changed > b.changed ? -1 : 1;
+					if (+a.changed == +b.changed) {
+						return a.identifier.localeCompare(b.identifier);
 					}
 
-					return b.units.length - a.units.length;
+					return a.changed > b.changed ? -1 : 1;
 				})
 		);
 	}

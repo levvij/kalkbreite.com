@@ -17,6 +17,7 @@ import { writeFile } from "fs/promises";
 import { LayoutPlan } from "./layout-plan/interface";
 import { registerRailcarModelDrawingInterface } from "./model/drawing";
 import { LiveStreamer } from "./live/stream";
+import { registerGraffitiInspirationCaptureInterface } from "./graffiti/inspiration.interface";
 
 const streamCameras = process.env.STREAM_CAMERAS == 'ENABLE';
 
@@ -62,6 +63,7 @@ DbClient.connectedClient.connect().then(async () => {
 	registerLogoInterface(app, database);
 	registerStorageTagInterface(app);
 	registerRailcarModelDrawingInterface(app, database);
+	registerGraffitiInspirationCaptureInterface(app, database);
 
 	if (streamCameras) {
 		await LiveStreamer.start();

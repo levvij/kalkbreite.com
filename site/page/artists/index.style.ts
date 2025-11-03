@@ -1,6 +1,8 @@
-import { alignItems, child, display, empty, fontSize, fontStyle, gap, height, justifyContent, marginBottom, marginTop, maxWidth, objectFit, objectPosition, overflowX, padding, percentage, rem, vw } from "@acryps/style";
+import { alignItems, borderRadius, child, display, empty, fontSize, fontStyle, gap, height, justifyContent, marginBottom, marginRight, marginTop, maxWidth, objectFit, objectPosition, overflowX, padding, percentage, rem, vw } from "@acryps/style";
 import { boxed } from "../shared/boxed";
-import { pageGutter, pageSpacing } from "../index.style";
+import { pageGutter, pageSpacing, radius } from "../index.style";
+import { clickable } from "../shared/interaction";
+import { buttonGroupStyle, buttonStyle } from "../shared/button";
 
 export const artistsStyle = () => child('ui-artists') (
 	boxed(),
@@ -12,14 +14,24 @@ export const artistsStyle = () => child('ui-artists') (
 		marginBottom(pageSpacing)
 	),
 
+	child('ui-actions') (
+		buttonGroupStyle(),
+
+		child('ui-action') (
+			buttonStyle()
+		)
+	),
+
 	child('ui-artist') (
 		display('block'),
 		marginTop(pageSpacing),
 
 		child('ui-header') (
 			display('flex'),
-			justifyContent('space-between'),
 			alignItems('center'),
+			gap(pageGutter),
+
+			clickable(),
 
 			child('ui-name') (
 				display('block'),
@@ -69,9 +81,11 @@ export const artistsStyle = () => child('ui-artists') (
 
 			child('ui-graffiti') (
 				display('block'),
+				clickable(),
 
 				child('img') (
-					height(rem(5))
+					height(rem(5)),
+					borderRadius(radius)
 				)
 			)
 		)

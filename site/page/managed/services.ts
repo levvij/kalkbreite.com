@@ -118,6 +118,8 @@ export class GraffitiTypeViewModel {
 }
 
 export class GraffitiInspirationSummaryModel {
+	media: GraffitiInspirationMediaViewModel[];
+	paintings: GraffitiSummaryModel[];
 	captured: Date;
 	id: string;
 	name: string;
@@ -126,6 +128,8 @@ export class GraffitiInspirationSummaryModel {
 
 	private static $build(raw) {
 		const item = new GraffitiInspirationSummaryModel();
+		raw.media === undefined || (item.media = raw.media ? raw.media.map(i => GraffitiInspirationMediaViewModel["$build"](i)) : null)
+		raw.paintings === undefined || (item.paintings = raw.paintings ? raw.paintings.map(i => GraffitiSummaryModel["$build"](i)) : null)
 		raw.captured === undefined || (item.captured = raw.captured ? new Date(raw.captured) : null)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
@@ -433,6 +437,7 @@ export class ArtistViewModel {
 export class GraffitiViewModel {
 	artist: ArtistSummaryModel;
 	captures: GraffitiCaptureViewModel[];
+	graffitiInspiration: GraffitiInspirationSummaryModel;
 	railcar: GraffitiRailcarViewModel;
 	type: GraffitiTypeViewModel;
 	description: string;
@@ -445,6 +450,7 @@ export class GraffitiViewModel {
 		const item = new GraffitiViewModel();
 		raw.artist === undefined || (item.artist = raw.artist ? ArtistSummaryModel["$build"](raw.artist) : null)
 		raw.captures === undefined || (item.captures = raw.captures ? raw.captures.map(i => GraffitiCaptureViewModel["$build"](i)) : null)
+		raw.graffitiInspiration === undefined || (item.graffitiInspiration = raw.graffitiInspiration ? GraffitiInspirationSummaryModel["$build"](raw.graffitiInspiration) : null)
 		raw.railcar === undefined || (item.railcar = raw.railcar ? GraffitiRailcarViewModel["$build"](raw.railcar) : null)
 		raw.type === undefined || (item.type = raw.type ? GraffitiTypeViewModel["$build"](raw.type) : null)
 		raw.description === undefined || (item.description = raw.description === null ? null : `${raw.description}`)
@@ -885,6 +891,26 @@ export class GraffitiService {
 		$data.append("54cDh2MH96a2hjbGJqYnFlYTF1MXJhej", Service.stringify(artistId))
 
 		return await fetch(Service.toURL("40ZnAwbjJ3N3Fqc3U1ejR4Y3ZuNTI0bD"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("error" in r) {
+				throw new Error(r.error);
+			}
+
+			if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			}
+		});
+	}
+
+	async assignInspiration(graffitiId: string, inspirationId: string): Promise<void> {
+		const $data = new FormData();
+		$data.append("ZjeG1teHc1aWdkdGpoY2Nnb3JkMTFoam", Service.stringify(graffitiId))
+		$data.append("VlbWEwa3Z3b2N5dTJ6anB5aTtla2gzeT", Service.stringify(inspirationId))
+
+		return await fetch(Service.toURL("1xY2o2eDpkczZqbDV5aGhpdHd1a2ltZX"), {
 			method: "post",
 			credentials: "include",
 			body: $data

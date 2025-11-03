@@ -19,6 +19,7 @@ import { railcarsStyle } from "./railcars/index.style";
 import { iconFont, icons } from "./.built/icons";
 import { artistsStyle } from "./artists/index.style";
 import { liveStyle } from "./live/index.style";
+import { graffitiInspirationsStyle } from "./graffiti-inspirations/index.style";
 
 export const applicationStyle = () => root() (
 	monospacedFont,
@@ -45,6 +46,7 @@ export const applicationStyle = () => root() (
 			railcarsStyle(),
 			companyStyle(),
 			graffitiStyle(),
+			graffitiInspirationsStyle(),
 			storageContainerStyle(),
 			railcarModelStyle(),
 			layoutPageStyle(),

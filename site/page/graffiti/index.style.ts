@@ -1,4 +1,4 @@
-import { aspectRatio, backgroundColor, border, borderRadius, child, color, display, filter, flexDirection, fontSize, fontWeight, height, invert, marginBottom, marginTop, objectFit, objectPosition, overflow, padding, paddingBlock, paddingInline, percentage, px, rem, width } from "@acryps/style";
+import { aspectRatio, backgroundColor, border, borderRadius, child, color, display, filter, flexDirection, fontSize, fontWeight, height, invert, marginBottom, marginTop, maxHeight, objectFit, objectPosition, overflow, padding, paddingBlock, paddingInline, percentage, px, rad, ratio, rem, vh, width } from "@acryps/style";
 import { boxed } from "../shared/boxed";
 import { captureAspectRatio, captureBackgroundColor, knockoutColor, knockoutContrastColor, pageGutter, pageSpacing, primaryColor, radius } from "../index.style";
 import { detailSectionStyle } from "../shared/detail-section/index.style";
@@ -8,17 +8,28 @@ import { collection, collectionItem } from "../shared/collection";
 import { buttonGroupStyle, buttonStyle } from "../shared/button";
 import { assignStyle } from "./assign/index.style";
 import { slideshowStyle } from "../shared/slideshow/index.style";
+import { assignGraffitiInspirationStyle } from "./assign-inspiration/index.style";
 
 export const graffitiStyle = () => child('ui-graffiti') (
 	boxed(),
 
 	assignStyle(),
+	assignGraffitiInspirationStyle(),
 
 	slideshowStyle(),
 
 	child('ui-detail') (
 		display('block'),
 		padding(pageSpacing),
+
+		child('ui-actions') (
+			buttonGroupStyle(),
+			marginBottom(pageSpacing),
+
+			child('ui-action') (
+				buttonStyle()
+			)
+		),
 
 		child('ui-name') (
 			display('block'),
@@ -58,6 +69,20 @@ export const graffitiStyle = () => child('ui-graffiti') (
 			display('block'),
 
 			endDivider()
+		),
+
+		child('ui-inspiration') (
+			display('block'),
+
+			endDivider(),
+
+			child('img') (
+				width(percentage(100)),
+				maxHeight(vh(40)),
+
+				objectFit('cover'),
+				borderRadius(radius)
+			)
 		),
 
 		child('ui-captures') (

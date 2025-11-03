@@ -250,6 +250,19 @@ export class ManagedServer extends BaseServer {
 		);
 
 		this.expose(
+			"1xY2o2eDpkczZqbDV5aGhpdHd1a2ltZX",
+			{
+			"ZjeG1teHc1aWdkdGpoY2Nnb3JkMTFoam": { type: "string", isArray: false, isOptional: false },
+				"VlbWEwa3Z3b2N5dTJ6anB5aTtla2gzeT": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(GraffitiService),
+			(controller, params) => controller.assignInspiration(
+				params["ZjeG1teHc1aWdkdGpoY2Nnb3JkMTFoam"],
+				params["VlbWEwa3Z3b2N5dTJ6anB5aTtla2gzeT"]
+			)
+		);
+
+		this.expose(
 			"dsZWVqY3M1cHFiZTU1c2VscWdxZWJ4dz",
 			{
 			"hqNGlzN3A1aXRleTU4dnF5bWtrMDM5eT": { type: "string", isArray: false, isOptional: false },
@@ -1053,6 +1066,8 @@ ViewModel.mappings = {
 	[GraffitiInspirationSummaryModel.name]: class ComposedGraffitiInspirationSummaryModel extends GraffitiInspirationSummaryModel {
 		async map() {
 			return {
+				media: (await this.$$model.media.includeTree(ViewModel.mappings[GraffitiInspirationMediaViewModel.name].items).toArray()).map(item => new GraffitiInspirationMediaViewModel(item)),
+				paintings: (await this.$$model.paintings.includeTree(ViewModel.mappings[GraffitiSummaryModel.name].items).toArray()).map(item => new GraffitiSummaryModel(item)),
 				captured: this.$$model.captured,
 				id: this.$$model.id,
 				name: this.$$model.name,
@@ -1087,6 +1102,18 @@ ViewModel.mappings = {
 			}
 
 			return {
+				get media() {
+					return ViewModel.mappings[GraffitiInspirationMediaViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "media-GraffitiInspirationSummaryModel"]
+					);
+				},
+				get paintings() {
+					return ViewModel.mappings[GraffitiSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "paintings-GraffitiInspirationSummaryModel"]
+					);
+				},
 				captured: true,
 				id: true,
 				name: true,
@@ -1097,6 +1124,8 @@ ViewModel.mappings = {
 
 		static toViewModel(data) {
 			const item = new GraffitiInspirationSummaryModel(null);
+			"media" in data && (item.media = data.media && [...data.media].map(i => ViewModel.mappings[GraffitiInspirationMediaViewModel.name].toViewModel(i)));
+			"paintings" in data && (item.paintings = data.paintings && [...data.paintings].map(i => ViewModel.mappings[GraffitiSummaryModel.name].toViewModel(i)));
 			"captured" in data && (item.captured = data.captured === null ? null : new Date(data.captured));
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
@@ -1115,6 +1144,8 @@ ViewModel.mappings = {
 				model = new GraffitiInspiration();
 			}
 			
+			"media" in viewModel && (null);
+			"paintings" in viewModel && (null);
 			"captured" in viewModel && (model.captured = viewModel.captured === null ? null : new Date(viewModel.captured));
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
@@ -2387,6 +2418,7 @@ ViewModel.mappings = {
 			return {
 				artist: new ArtistSummaryModel(await BaseServer.unwrap(this.$$model.artist)),
 				captures: (await this.$$model.captures.includeTree(ViewModel.mappings[GraffitiCaptureViewModel.name].items).toArray()).map(item => new GraffitiCaptureViewModel(item)),
+				graffitiInspiration: new GraffitiInspirationSummaryModel(await BaseServer.unwrap(this.$$model.graffitiInspiration)),
 				railcar: new GraffitiRailcarViewModel(await BaseServer.unwrap(this.$$model.railcar)),
 				type: new GraffitiTypeViewModel(await BaseServer.unwrap(this.$$model.type)),
 				description: this.$$model.description,
@@ -2435,6 +2467,12 @@ ViewModel.mappings = {
 						[...parents, "captures-GraffitiViewModel"]
 					);
 				},
+				get graffitiInspiration() {
+					return ViewModel.mappings[GraffitiInspirationSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "graffitiInspiration-GraffitiViewModel"]
+					);
+				},
 				get railcar() {
 					return ViewModel.mappings[GraffitiRailcarViewModel.name].getPrefetchingProperties(
 						level,
@@ -2459,6 +2497,7 @@ ViewModel.mappings = {
 			const item = new GraffitiViewModel(null);
 			"artist" in data && (item.artist = data.artist && ViewModel.mappings[ArtistSummaryModel.name].toViewModel(data.artist));
 			"captures" in data && (item.captures = data.captures && [...data.captures].map(i => ViewModel.mappings[GraffitiCaptureViewModel.name].toViewModel(i)));
+			"graffitiInspiration" in data && (item.graffitiInspiration = data.graffitiInspiration && ViewModel.mappings[GraffitiInspirationSummaryModel.name].toViewModel(data.graffitiInspiration));
 			"railcar" in data && (item.railcar = data.railcar && ViewModel.mappings[GraffitiRailcarViewModel.name].toViewModel(data.railcar));
 			"type" in data && (item.type = data.type && ViewModel.mappings[GraffitiTypeViewModel.name].toViewModel(data.type));
 			"description" in data && (item.description = data.description === null ? null : `${data.description}`);
@@ -2481,6 +2520,7 @@ ViewModel.mappings = {
 			
 			"artist" in viewModel && (model.artist.id = viewModel.artist ? viewModel.artist.id : null);
 			"captures" in viewModel && (null);
+			"graffitiInspiration" in viewModel && (model.graffitiInspiration.id = viewModel.graffitiInspiration ? viewModel.graffitiInspiration.id : null);
 			"railcar" in viewModel && (model.railcar.id = viewModel.railcar ? viewModel.railcar.id : null);
 			"type" in viewModel && (model.type.id = viewModel.type ? viewModel.type.id : null);
 			"description" in viewModel && (model.description = viewModel.description === null ? null : `${viewModel.description}`);

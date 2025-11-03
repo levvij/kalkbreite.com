@@ -11,6 +11,9 @@ export class GraffitiInspirationSummaryModel extends ViewModel<GraffitiInspirati
 
 	captured;
 	paintingUrge;
+
+	paintings: GraffitiSummaryModel[];
+	media: GraffitiInspirationMediaViewModel[];
 }
 
 export class GraffitiInspirationViewModel extends GraffitiInspirationSummaryModel {
@@ -18,8 +21,6 @@ export class GraffitiInspirationViewModel extends GraffitiInspirationSummaryMode
 	paintingEffort;
 
 	artist: ArtistSummaryModel;
-	media: GraffitiInspirationMediaViewModel[];
-	paintings: GraffitiSummaryModel[];
 }
 
 export class GraffitiInspirationMediaViewModel extends ViewModel<GraffitiInspirationMedia> {

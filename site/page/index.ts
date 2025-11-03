@@ -14,7 +14,6 @@ import { ArtistPage } from './artist';
 import { LoginPage } from './login';
 import { RegisterGraffitiPage } from './railcar/register-graffiti';
 import { GraffitiInspirationsPage } from './graffiti-inspirations';
-import { GraffitiInspirationPage } from './graffiti-inspiration';
 import { CaptureAnchorPage } from './railcar/anchor';
 import { RailcarCouplerPage } from './railcar/coupler';
 import { TrainPage } from './trains/train';
@@ -32,6 +31,8 @@ import { ReportCollisionIncidentPage } from './layout/section/incident/collision
 import { RailcarsPage } from './railcars';
 import { ArtistsPage } from './artists';
 import { LivePage } from './live';
+import { GraffitiInspirationPage } from './graffiti-inspirations/inspiration';
+import { AssignGraffitiInspirationPage } from './graffiti/assign-inspiration';
 
 // injected by esbuild
 declare const buildDate: string;
@@ -91,12 +92,13 @@ export class Application {
 			.route('/storage-container/print', PrintStorageContainerTagPage)
 			.route('/storage-container/:tag', StorageContainerPage)
 
-			.route('/graffiti-inspiration', GraffitiInspirationsPage
+			.route('/graffiti/inspiration', GraffitiInspirationsPage
 				.route('/:id', GraffitiInspirationPage)
 			)
 
 			.route('/graffiti/:id', GraffitiPage
 				.route('/assign/:captureId', AssignGraffitiBoundsPage)
+				.route('/assign-inspiration', AssignGraffitiInspirationPage)
 			)
 
 			.route('/live', LivePage)

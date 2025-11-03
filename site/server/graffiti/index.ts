@@ -40,6 +40,7 @@ export class GraffitiService extends Service {
 				.orderByAscending(capture => capture.captured)
 				.where(capture => capture.direction == graffiti.direction)
 				.where(capture => capture.railcarId == graffiti.railcarId)
+				.where(capture => capture.captured.isAfter(graffiti.painted))
 		);
 	}
 
@@ -53,6 +54,7 @@ export class GraffitiService extends Service {
 	async getInspirations() {
 		return GraffitiInspirationSummaryModel.from(
 			this.database.graffitiInspiration
+				.orderByDescending(graffiti => graffiti.paintingUrge)
 				.orderByDescending(graffiti => graffiti.captured)
 		);
 	}
@@ -77,6 +79,22 @@ export class GraffitiService extends Service {
 
 		await media.create();
 
+		if (mimeType?.startsWith('image/')) {
+			const image = await loadImage(data);
+
+			const maxSize = 1000;
+			const scale = Math.min(maxSize / image.width, maxSize / image.height);
+			const width = image.width * scale;
+			const height = image.height * scale;
+
+			const canvas = new Canvas(width, height);
+			const context = canvas.getContext('2d');
+			context.drawImage(image, 0, 0, width, height);
+
+			media.thumbnail = await canvas.toBuffer('jpeg');
+			await media.update();
+		}
+
 		return inspiration.id;
 	}
 
@@ -85,6 +103,13 @@ export class GraffitiService extends Service {
 		inspiration.artistId = artistId;
 
 		await inspiration.update();
+	}
+
+	async assignInspiration(graffitiId: string, inspirationId: string) {
+		const graffiti = await this.database.graffiti.find(graffitiId);
+		graffiti.graffitiInspirationId = inspirationId;
+
+		await graffiti.update();
 	}
 
 	async register(railcarId: string, name: string, description: string, typeId: string, painted: Date, side: string, artistId: string) {

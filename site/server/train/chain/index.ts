@@ -124,6 +124,7 @@ export class TrainChain {
 		// find the source train and unit
 		const sourceUnit = this.units.find(unit => unit.railcar.headCouplerId == sourceId || unit.railcar.tailCouplerId == sourceId);
 		const sourceTrain = this.trains.find(train => train.units.includes(sourceUnit));
+		sourceTrain.changed = time;
 
 		// find the target where this coupling attaches to
 		const targetUnit = this.units.find(unit => unit.railcar.headCouplerId == targetId || unit.railcar.tailCouplerId == targetId);
@@ -137,6 +138,7 @@ export class TrainChain {
 		}
 
 		const targetTrain = this.trains.find(train => train.units.includes(targetUnit));
+		targetTrain.changed = time;
 
 		// source tail is directly coupled to target head
 		if (sourceUnit.tail.coupler.id == sourceId && targetUnit.head.coupler.id == targetId) {

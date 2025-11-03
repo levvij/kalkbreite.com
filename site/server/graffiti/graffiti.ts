@@ -3,6 +3,7 @@ import { Graffiti, GraffitiCapture, GraffitiType } from "../managed/database";
 import { exit } from "process";
 import { ArtistSummaryModel } from "./artist";
 import { GraffitiRailcarViewModel, RailcarSummaryModel } from "../railcar/railcar";
+import { GraffitiInspirationSummaryModel } from "./inspiration";
 
 export class GraffitiSummaryModel extends ViewModel<Graffiti> {
 	id;
@@ -20,6 +21,7 @@ export class GraffitiViewModel extends GraffitiSummaryModel {
 	description;
 
 	railcar: GraffitiRailcarViewModel;
+	graffitiInspiration: GraffitiInspirationSummaryModel;
 }
 
 export class GraffitiCaptureViewModel extends ViewModel<GraffitiCapture> {

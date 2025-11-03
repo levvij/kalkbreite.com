@@ -999,6 +999,7 @@ export class GraffitiInspirationMediaQueryProxy extends QueryProxy {
 	get data(): Partial<QueryBuffer> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get graffitiInspirationId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get mimeType(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get thumbnail(): Partial<QueryBuffer> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get uploaded(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
 
@@ -1008,6 +1009,7 @@ export class GraffitiInspirationMedia extends Entity<GraffitiInspirationMediaQue
 	graffitiInspirationId: string;
 	declare id: string;
 	mimeType: string;
+	thumbnail: Buffer;
 	uploaded: Date;
 	
 	$$meta = {
@@ -1017,6 +1019,7 @@ export class GraffitiInspirationMedia extends Entity<GraffitiInspirationMediaQue
 			graffitiInspirationId: { type: "uuid", name: "graffiti_inspiration_id" },
 			id: { type: "uuid", name: "id" },
 			mimeType: { type: "text", name: "mime_type" },
+			thumbnail: { type: "bytea", name: "thumbnail" },
 			uploaded: { type: "timestamp", name: "uploaded" }
 		},
 		get set(): DbSet<GraffitiInspirationMedia, GraffitiInspirationMediaQueryProxy> { 

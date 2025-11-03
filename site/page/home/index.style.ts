@@ -1,5 +1,5 @@
-import { after, alignItems, aspectRatio, backgroundColor, backgroundImage, bottom, boxShadow, child, color, colorStop, content, display, flexDirection, flexGrow, fontFamily, fontSize, fontStyle, fontWeight, height, hover, inset, insetInline, justifyContent, justifySelf, linearGradient, margin, marginBlock, marginBottom, marginInline, marginTop, maxWidth, objectFit, outline, padding, paddingInline, percentage, position, px, ratio, rem, textAlign, top, vh, width, zIndex } from "@acryps/style";
-import { captureAspectRatio, captureBackgroundColor, knockoutColor, knockoutContrastColor, pageColor, pageGutter, pageSpacing, pageTransparentColor, primaryColor, primaryContrastColor, primaryOutlineColor, runningNumberFont, tagFont } from "../index.style";
+import { after, alignItems, aspectRatio, backgroundColor, backgroundImage, borderRadius, bottom, boxShadow, child, color, colorStop, content, display, flexDirection, flexGrow, fontFamily, fontSize, fontStyle, fontWeight, height, hover, inset, insetInline, justifyContent, justifySelf, linearGradient, margin, marginBlock, marginBottom, marginInline, marginTop, maxWidth, objectFit, outline, overflow, padding, paddingInline, percentage, position, px, ratio, rem, textAlign, top, vh, width, zIndex } from "@acryps/style";
+import { captureAspectRatio, captureBackgroundColor, knockoutColor, knockoutContrastColor, pageColor, pageGutter, pageSpacing, pageTransparentColor, primaryColor, primaryContrastColor, primaryOutlineColor, radius, runningNumberFont, tagFont } from "../index.style";
 import { boxed } from "../shared/boxed";
 import { collection, collectionItem } from "../shared/collection";
 import { railcarCollectionStyle } from "../shared/railcar-collection/index.style";
@@ -72,6 +72,8 @@ export const homeStyle = () => child('ui-home') (
 
 			color(knockoutContrastColor),
 			backgroundColor(knockoutColor),
+			borderRadius(radius),
+			overflow('hidden'),
 
 			hover() (
 				color(primaryContrastColor),

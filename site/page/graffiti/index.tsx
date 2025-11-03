@@ -3,6 +3,8 @@ import { CaptureViewModel, GraffitiService, GraffitiViewModel, RailcarDirection 
 import { DetailSectionComponent } from "../shared/detail-section";
 import { SlideshowComponent } from "../shared/slideshow";
 import { GraffitiCrossComponent } from "./cross";
+import { Application } from "..";
+import { InspirationComponent } from "./inspiration";
 
 export class GraffitiPage extends Component {
 	declare parameters: { id };
@@ -26,6 +28,12 @@ export class GraffitiPage extends Component {
 			{this.graffiti.captures.length != 0 && new SlideshowComponent(index => `/capture/graffiti/capture/${this.graffiti.captures[index % this.graffiti.captures.length].id}`)}
 
 			<ui-detail>
+				{Application.session.account && <ui-actions>
+					<ui-action ui-href='assign-inspiration'>
+						Assign Inspiration
+					</ui-action>
+				</ui-actions>}
+
 				{this.graffiti.name && <ui-name>
 					{this.graffiti.name}
 				</ui-name>}
@@ -51,6 +59,7 @@ export class GraffitiPage extends Component {
 				}
 
 				{new GraffitiCrossComponent(this.graffiti)}
+				{new InspirationComponent(this.graffiti)}
 
 				<ui-captures>
 					{this.sourceCaptures.map(capture => {
