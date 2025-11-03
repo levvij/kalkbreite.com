@@ -863,12 +863,13 @@ export class GraffitiService {
 		});
 	}
 
-	async createInspiration(data: Blob, mimeType: string): Promise<string> {
+	async createInspiration(data: Blob, mimeType: string, parentId: string): Promise<string> {
 		const $data = new FormData();
-		$data.append("BzeHhhd2Z3M2JhcGk4NWxwbWJhNTFrdD", data)
-		$data.append("xzMmE5ZXE2dWMwMGkwZmdqaTBuemVjM3", Service.stringify(mimeType))
+		$data.append("M1Z2BpanZmbWFxczY5NzkzcnEyZntman", data)
+		$data.append("50Z2VhcjVrZGRraHNud2JpN25uaDBrOH", Service.stringify(mimeType))
+		$data.append("c0YWx1NmR0Zmk0cGZ6MjdlcntuanNpeG", Service.stringify(parentId))
 
-		return await fetch(Service.toURL("Q1N2BlY3V2dHtsc3Z0NWMwYTN2bDhkaW"), {
+		return await fetch(Service.toURL("RyMHVxb3NtNTVmaXBlMWlrYTg0ZnM3eT"), {
 			method: "post",
 			credentials: "include",
 			body: $data

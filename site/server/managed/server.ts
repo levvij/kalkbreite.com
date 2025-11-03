@@ -224,15 +224,17 @@ export class ManagedServer extends BaseServer {
 		);
 
 		this.expose(
-			"Q1N2BlY3V2dHtsc3Z0NWMwYTN2bDhkaW",
+			"RyMHVxb3NtNTVmaXBlMWlrYTg0ZnM3eT",
 			{
-			"BzeHhhd2Z3M2JhcGk4NWxwbWJhNTFrdD": { type: "buffer", isArray: false, isOptional: false },
-				"xzMmE5ZXE2dWMwMGkwZmdqaTBuemVjM3": { type: "string", isArray: false, isOptional: false }
+			"M1Z2BpanZmbWFxczY5NzkzcnEyZntman": { type: "buffer", isArray: false, isOptional: false },
+				"50Z2VhcjVrZGRraHNud2JpN25uaDBrOH": { type: "string", isArray: false, isOptional: false },
+				"c0YWx1NmR0Zmk0cGZ6MjdlcntuanNpeG": { type: "string", isArray: false, isOptional: false }
 			},
 			inject => inject.construct(GraffitiService),
 			(controller, params) => controller.createInspiration(
-				params["BzeHhhd2Z3M2JhcGk4NWxwbWJhNTFrdD"],
-				params["xzMmE5ZXE2dWMwMGkwZmdqaTBuemVjM3"]
+				params["M1Z2BpanZmbWFxczY5NzkzcnEyZntman"],
+				params["50Z2VhcjVrZGRraHNud2JpN25uaDBrOH"],
+				params["c0YWx1NmR0Zmk0cGZ6MjdlcntuanNpeG"]
 			)
 		);
 
