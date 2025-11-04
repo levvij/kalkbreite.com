@@ -16,6 +16,7 @@ export class ScanRoute {
 
 export const scanRoutes = [
 	new ScanRoute('read', ({ tag }) => `/railcar/${tag}`),
+	new ScanRoute('register/railcar', ({ tag }) => `/railcar/register/${tag}`),
 	new ScanRoute('trace', ({ tag }) => `/live/trace/${tag}`),
 	new ScanRoute('train', ({ train }) => `/train/${train}`),
 	new ScanRoute('storage', ({ storageContainer }) => `/storage-container/${storageContainer}`),
