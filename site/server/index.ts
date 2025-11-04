@@ -18,6 +18,7 @@ import { LayoutPlan } from "./layout-plan/interface";
 import { registerRailcarModelDrawingInterface } from "./model/drawing";
 import { LiveStreamer } from "./live/stream";
 import { registerGraffitiInspirationCaptureInterface } from "./graffiti/inspiration.interface";
+import { importTrainProductBrands } from "./operators/import-train-product-brand";
 
 const streamCameras = process.env.STREAM_CAMERAS == 'ENABLE';
 

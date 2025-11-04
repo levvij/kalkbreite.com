@@ -1,9 +1,10 @@
 import { randomBytes } from "crypto";
-import { Coupler } from "../../managed/database";
+import { Coupler, TrainLabel } from "../../managed/database";
 import { CoupledUnit } from "./railcar";
 
 export class Train {
 	changed: Date = this.created;
+	label: TrainLabel;
 
 	constructor(
 		public identifier: string,

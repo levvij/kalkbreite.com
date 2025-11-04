@@ -1629,6 +1629,131 @@ export class Traction extends Entity<TractionQueryProxy> {
 	
 }
 			
+export class TrainHeadPositionQueryProxy extends QueryProxy {
+	get offset(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get reversed(): Partial<QueryBoolean> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get section(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get trainIdentifier(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get updated(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class TrainHeadPosition extends Entity<TrainHeadPositionQueryProxy> {
+	declare id: string;
+	offset: number;
+	reversed: boolean;
+	section: string;
+	trainIdentifier: string;
+	updated: Date;
+	
+	$$meta = {
+		source: "train_head_position",
+		columns: {
+			id: { type: "uuid", name: "id" },
+			offset: { type: "float4", name: "offset" },
+			reversed: { type: "bool", name: "reversed" },
+			section: { type: "text", name: "section" },
+			trainIdentifier: { type: "text", name: "train_identifier" },
+			updated: { type: "timestamp", name: "updated" }
+		},
+		get set(): DbSet<TrainHeadPosition, TrainHeadPositionQueryProxy> { 
+			return new DbSet<TrainHeadPosition, TrainHeadPositionQueryProxy>(TrainHeadPosition, null);
+		}
+	};
+}
+			
+export class TrainLabelQueryProxy extends QueryProxy {
+	get productBrand(): Partial<TrainProductBrandQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get description(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get label(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get productBrandId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get trainIdentifier(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class TrainLabel extends Entity<TrainLabelQueryProxy> {
+	get productBrand(): Partial<ForeignReference<TrainProductBrand>> { return this.$productBrand; }
+	description: string;
+	declare id: string;
+	label: string;
+	productBrandId: string;
+	trainIdentifier: string;
+	
+	$$meta = {
+		source: "train_label",
+		columns: {
+			description: { type: "text", name: "description" },
+			id: { type: "uuid", name: "id" },
+			label: { type: "text", name: "label" },
+			productBrandId: { type: "uuid", name: "product_brand_id" },
+			trainIdentifier: { type: "text", name: "train_identifier" }
+		},
+		get set(): DbSet<TrainLabel, TrainLabelQueryProxy> { 
+			return new DbSet<TrainLabel, TrainLabelQueryProxy>(TrainLabel, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.$productBrand = new ForeignReference<TrainProductBrand>(this, "productBrandId", TrainProductBrand);
+	}
+	
+	private $productBrand: ForeignReference<TrainProductBrand>;
+
+	set productBrand(value: Partial<ForeignReference<TrainProductBrand>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.productBrandId = value.id as string;
+		} else {
+			this.productBrandId = null;
+		}
+	}
+
+	
+}
+			
+export class TrainProductBrandQueryProxy extends QueryProxy {
+	get description(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get icon(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get iconNegative(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get shortName(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get summary(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class TrainProductBrand extends Entity<TrainProductBrandQueryProxy> {
+	trains: PrimaryReference<TrainLabel, TrainLabelQueryProxy>;
+		description: string;
+	icon: string;
+	iconNegative: string;
+	declare id: string;
+	name: string;
+	shortName: string;
+	summary: string;
+	
+	$$meta = {
+		source: "train_product_brand",
+		columns: {
+			description: { type: "text", name: "description" },
+			icon: { type: "text", name: "icon" },
+			iconNegative: { type: "text", name: "icon_negative" },
+			id: { type: "uuid", name: "id" },
+			name: { type: "text", name: "name" },
+			shortName: { type: "text", name: "short_name" },
+			summary: { type: "text", name: "summary" }
+		},
+		get set(): DbSet<TrainProductBrand, TrainProductBrandQueryProxy> { 
+			return new DbSet<TrainProductBrand, TrainProductBrandQueryProxy>(TrainProductBrand, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.trains = new PrimaryReference<TrainLabel, TrainLabelQueryProxy>(this, "productBrandId", TrainLabel);
+	}
+}
+			
 export class UicIdentifierClassQueryProxy extends QueryProxy {
 	get code(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get description(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -1808,6 +1933,9 @@ export class DbContext {
 	session: DbSet<Session, SessionQueryProxy>;
 	storageContainer: DbSet<StorageContainer, StorageContainerQueryProxy>;
 	traction: DbSet<Traction, TractionQueryProxy>;
+	trainHeadPosition: DbSet<TrainHeadPosition, TrainHeadPositionQueryProxy>;
+	trainLabel: DbSet<TrainLabel, TrainLabelQueryProxy>;
+	trainProductBrand: DbSet<TrainProductBrand, TrainProductBrandQueryProxy>;
 	uicIdentifierClass: DbSet<UicIdentifierClass, UicIdentifierClassQueryProxy>;
 	uicIdentifierIndexLetter: DbSet<UicIdentifierIndexLetter, UicIdentifierIndexLetterQueryProxy>;
 	uicLocale: DbSet<UicLocale, UicLocaleQueryProxy>;
@@ -1842,6 +1970,9 @@ export class DbContext {
 		this.session = new DbSet<Session, SessionQueryProxy>(Session, this.runContext);
 		this.storageContainer = new DbSet<StorageContainer, StorageContainerQueryProxy>(StorageContainer, this.runContext);
 		this.traction = new DbSet<Traction, TractionQueryProxy>(Traction, this.runContext);
+		this.trainHeadPosition = new DbSet<TrainHeadPosition, TrainHeadPositionQueryProxy>(TrainHeadPosition, this.runContext);
+		this.trainLabel = new DbSet<TrainLabel, TrainLabelQueryProxy>(TrainLabel, this.runContext);
+		this.trainProductBrand = new DbSet<TrainProductBrand, TrainProductBrandQueryProxy>(TrainProductBrand, this.runContext);
 		this.uicIdentifierClass = new DbSet<UicIdentifierClass, UicIdentifierClassQueryProxy>(UicIdentifierClass, this.runContext);
 		this.uicIdentifierIndexLetter = new DbSet<UicIdentifierIndexLetter, UicIdentifierIndexLetterQueryProxy>(UicIdentifierIndexLetter, this.runContext);
 		this.uicLocale = new DbSet<UicLocale, UicLocaleQueryProxy>(UicLocale, this.runContext);

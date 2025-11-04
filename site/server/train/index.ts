@@ -4,6 +4,9 @@ import { TrainChain } from "./chain";
 import { RailcarSummaryModel } from "../railcar/railcar";
 import { TrainViewModel } from "./train";
 import { TrainRailcarUnitViewModel, TrainUnitViewModel } from "./unit";
+import { TrainProductBrandSummaryModel } from "./product-brand";
+import { TrainLabelViewModel } from "./label";
+import { TrainState, TrainStateViewModel } from "./state";
 
 export class TrainService extends Service {
 	constructor(
@@ -60,15 +63,46 @@ export class TrainService extends Service {
 		);
 	}
 
-	getTrain(identifier: string) {
+	async getTrain(identifier: string) {
 		const train = this.chain.trains.find(train => train.identifier == identifier);
 
-		return RailcarSummaryModel.from(train.units.map(unit => unit.railcar));
+		const state = new TrainState();
+
+		state.label = await this.database.trainLabel
+			.first(label => label.trainIdentifier.valueOf() == train.identifier);
+
+		state.lastHeadPosition = await this.database.trainHeadPosition
+			.orderByDescending(position => position.updated)
+			.first(position => position.trainIdentifier.valueOf() == train.identifier)
+
+		return new TrainStateViewModel(state);
+	}
+
+	getTrainRailcars(identifier: string) {
+		const train = this.chain.trains.find(train => train.identifier == identifier);
+
+		return TrainRailcarUnitViewModel.from(
+			train.units.map(unit => unit.railcar)
+		);
 	}
 
 	getUnitTrain(railcarId: string) {
 		const train = this.chain.trains.find(train => train.units.find(unit => unit.railcar.id == railcarId));
 
 		return train.identifier;
+	}
+
+	getProductBrands() {
+		return TrainProductBrandSummaryModel.from(
+			this.database.trainProductBrand
+				.orderByAscending(brand => brand.name)
+		)
+	}
+
+	getActiveLabels() {
+		// TODO filter inactive trains
+		return TrainLabelViewModel.from(
+			this.database.trainLabel
+		);
 	}
 }

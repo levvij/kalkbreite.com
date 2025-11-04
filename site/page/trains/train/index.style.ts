@@ -1,9 +1,11 @@
-import { alignItems, background, backgroundColor, backgroundImage, border, borderColor, boxShadow, child, color, colorStop, display, flexDirection, flexWrap, fontSize, fontWeight, gap, height, hover, linearGradient, marginBottom, marginInline, marginTop, overflowInline, overflowX, padding, paddingBlock, paddingInline, percentage, position, px, rem, turn } from "@acryps/style";
+import { alignItems, background, backgroundColor, backgroundImage, border, borderColor, boxShadow, child, color, colorStop, display, flexDirection, flexWrap, fontFamily, fontSize, fontWeight, gap, height, hover, justifyContent, linearGradient, marginBottom, marginInline, marginRight, marginTop, overflowInline, overflowX, padding, paddingBlock, paddingInline, percentage, position, px, rem, turn } from "@acryps/style";
 import { boxed } from "../../shared/boxed";
-import { captureBackgroundColor, pageColor, pageContrastColor, pageGutter, pageSpacing, primaryColor } from "../../index.style";
+import { captureBackgroundColor, pageColor, pageContrastColor, pageGutter, pageSpacing, primaryColor, runningNumberFont, tagFont } from "../../index.style";
 import { trainIdentifierFont } from "../../assets/font";
 import { clickable } from "../../shared/interaction";
 import { coupleStyle } from "./couple/index.style";
+import { detailSectionStyle } from "../../shared/detail-section/index.style";
+import { layoutStyle } from "../../shared/layout/index.style";
 
 const iconButtonTextSize = rem(1);
 const iconButtonSize = iconButtonTextSize.add(pageGutter.multiply(2));
@@ -18,7 +20,7 @@ export const trainStyle = () => child('ui-train')(
 		display('block'),
 		marginBottom(pageGutter),
 
-		fontSize(rem(2)),
+		fontSize(rem(1.25)),
 		trainIdentifierFont
 	),
 
@@ -26,6 +28,7 @@ export const trainStyle = () => child('ui-train')(
 		display('flex'),
 		alignItems('flex-start'),
 		paddingInline(iconButtonSize.divide(2)),
+		marginBottom(pageSpacing),
 
 		overflowX('scroll'),
 
@@ -52,6 +55,24 @@ export const trainStyle = () => child('ui-train')(
 						colorStop(percentage(50).add(px(1)), 'transparent')
 					)
 				)
+			),
+
+			child('ui-detail') (
+				display('block'),
+				padding(pageGutter),
+
+				detailSectionStyle(
+					child('ui-header') (
+						fontSize(rem(1.25)),
+
+						child('ui-tag') (
+							display('inline-block'),
+							marginRight(pageGutter),
+
+							fontFamily(tagFont)
+						)
+					)
+				)
 			)
 		),
 
@@ -73,5 +94,7 @@ export const trainStyle = () => child('ui-train')(
 				borderColor(pageColor)
 			)
 		)
-	)
+	),
+
+	layoutStyle()
 );

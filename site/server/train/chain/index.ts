@@ -43,6 +43,14 @@ export class TrainChain {
 			await action.restore();
 		}
 
+		for (let label of await database.trainLabel.toArray()) {
+			const train = chain.trains.find(train => train.identifier == label.trainIdentifier);
+
+			if (train) {
+				train.label = label;
+			}
+		}
+
 		return chain;
 	}
 

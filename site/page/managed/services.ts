@@ -363,6 +363,76 @@ export class CouplingViewModel {
 	}
 }
 
+export class TrainLabelViewModel {
+	productBrand: TrainProductBrandSummaryModel;
+	description: string;
+	id: string;
+	label: string;
+	trainIdentifier: string;
+
+	private static $build(raw) {
+		const item = new TrainLabelViewModel();
+		raw.productBrand === undefined || (item.productBrand = raw.productBrand ? TrainProductBrandSummaryModel["$build"](raw.productBrand) : null)
+		raw.description === undefined || (item.description = raw.description === null ? null : `${raw.description}`)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.label === undefined || (item.label = raw.label === null ? null : `${raw.label}`)
+		raw.trainIdentifier === undefined || (item.trainIdentifier = raw.trainIdentifier === null ? null : `${raw.trainIdentifier}`)
+		
+		return item;
+	}
+}
+
+export class TrainHeadPositionViewModel {
+	id: string;
+	offset: number;
+	reversed: boolean;
+	section: string;
+	trainIdentifier: string;
+	updated: Date;
+
+	private static $build(raw) {
+		const item = new TrainHeadPositionViewModel();
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.offset === undefined || (item.offset = raw.offset === null ? null : +raw.offset)
+		raw.reversed === undefined || (item.reversed = !!raw.reversed)
+		raw.section === undefined || (item.section = raw.section === null ? null : `${raw.section}`)
+		raw.trainIdentifier === undefined || (item.trainIdentifier = raw.trainIdentifier === null ? null : `${raw.trainIdentifier}`)
+		raw.updated === undefined || (item.updated = raw.updated ? new Date(raw.updated) : null)
+		
+		return item;
+	}
+}
+
+export class TrainProductBrandSummaryModel {
+	icon: string;
+	id: string;
+	name: string;
+	shortName: string;
+
+	private static $build(raw) {
+		const item = new TrainProductBrandSummaryModel();
+		raw.icon === undefined || (item.icon = raw.icon === null ? null : `${raw.icon}`)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		raw.shortName === undefined || (item.shortName = raw.shortName === null ? null : `${raw.shortName}`)
+		
+		return item;
+	}
+}
+
+export class TrainStateViewModel {
+	label: TrainLabelViewModel;
+	lastHeadPosition: TrainHeadPositionViewModel;
+
+	private static $build(raw) {
+		const item = new TrainStateViewModel();
+		raw.label === undefined || (item.label = raw.label ? TrainLabelViewModel["$build"](raw.label) : null)
+		raw.lastHeadPosition === undefined || (item.lastHeadPosition = raw.lastHeadPosition ? TrainHeadPositionViewModel["$build"](raw.lastHeadPosition) : null)
+		
+		return item;
+	}
+}
+
 export class TrainViewModel {
 	changed: Date;
 	identifier: string;
@@ -624,6 +694,29 @@ export class StorageContainerViewModel {
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
+		
+		return item;
+	}
+}
+
+export class TrainProductBrandViewModel {
+	description: string;
+	icon: string;
+	iconNegative: string;
+	id: string;
+	name: string;
+	shortName: string;
+	summary: string;
+
+	private static $build(raw) {
+		const item = new TrainProductBrandViewModel();
+		raw.description === undefined || (item.description = raw.description === null ? null : `${raw.description}`)
+		raw.icon === undefined || (item.icon = raw.icon === null ? null : `${raw.icon}`)
+		raw.iconNegative === undefined || (item.iconNegative = raw.iconNegative === null ? null : `${raw.iconNegative}`)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		raw.shortName === undefined || (item.shortName = raw.shortName === null ? null : `${raw.shortName}`)
+		raw.summary === undefined || (item.summary = raw.summary === null ? null : `${raw.summary}`)
 		
 		return item;
 	}
@@ -1471,11 +1564,11 @@ export class TrainService {
 		});
 	}
 
-	async getTrain(identifier: string): Promise<Array<RailcarSummaryModel>> {
+	async getTrain(identifier: string): Promise<TrainStateViewModel> {
 		const $data = new FormData();
-		$data.append("F5Z3U5ZXFxeWd3cHY3MmA3YXB2MnV4Zn", Service.stringify(identifier))
+		$data.append("VscDloMTM4aTE5aXU3c2AxN2xsY2oxaT", Service.stringify(identifier))
 
-		return await fetch(Service.toURL("lzOGlqcTd0eWhnYTZ0Y2A3czJsYm95cj"), {
+		return await fetch(Service.toURL("k2NDd3bGNneXpjeTVnYmF2OGYyc3kyMW"), {
 			method: "post",
 			credentials: "include",
 			body: $data
@@ -1483,7 +1576,28 @@ export class TrainService {
 			if ("data" in r) {
 				const d = r.data;
 
-				return d.map(d => d === null ? null : RailcarSummaryModel["$build"](d));
+				return d === null ? null : TrainStateViewModel["$build"](d);
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async getTrainRailcars(identifier: string): Promise<Array<TrainRailcarUnitViewModel>> {
+		const $data = new FormData();
+		$data.append("t2ZXNzdnU2bTRlZHl5OTJjZ3ZhcTAzeW", Service.stringify(identifier))
+
+		return await fetch(Service.toURL("M5a2Nzdz5oMHl2eDM1dWVjM3dnaWprcW"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : TrainRailcarUnitViewModel["$build"](d));
 			} else if ("aborted" in r) {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {
@@ -1505,6 +1619,48 @@ export class TrainService {
 				const d = r.data;
 
 				return d === null ? null : `${d}`;
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async getProductBrands(): Promise<Array<TrainProductBrandSummaryModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("RiNWJ3Zzd1Z35ncnh6d2lzY39laDtjZ2"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : TrainProductBrandSummaryModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async getActiveLabels(): Promise<Array<TrainLabelViewModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("VzeGo0azRsYWE1M2Nybm9tN2hiZ3Rlbj"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : TrainLabelViewModel["$build"](d));
 			} else if ("aborted" in r) {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {
