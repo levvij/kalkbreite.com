@@ -9,7 +9,7 @@ export class CoupledUnit {
 	) {}
 
 	get direction() {
-		if (this.railcar.headCouplerId == this.head.coupler.id) {
+		if (this.railcar.headCouplerId == this.head.coupler?.id) {
 			return RailcarDirection.forward;
 		}
 

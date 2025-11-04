@@ -368,6 +368,7 @@ export class CouplingViewModel {
 }
 
 export class TrainLabelViewModel {
+	operator: CompanySummaryModel;
 	productBrand: TrainProductBrandSummaryModel;
 	description: string;
 	id: string;
@@ -376,6 +377,7 @@ export class TrainLabelViewModel {
 
 	private static $build(raw) {
 		const item = new TrainLabelViewModel();
+		raw.operator === undefined || (item.operator = raw.operator ? CompanySummaryModel["$build"](raw.operator) : null)
 		raw.productBrand === undefined || (item.productBrand = raw.productBrand ? TrainProductBrandSummaryModel["$build"](raw.productBrand) : null)
 		raw.description === undefined || (item.description = raw.description === null ? null : `${raw.description}`)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
@@ -450,11 +452,13 @@ export class TrainProductBrandSummaryModel {
 }
 
 export class TrainStateViewModel {
+	id: string;
 	label: TrainLabelViewModel;
 	lastHeadPosition: TrainHeadPositionViewModel;
 
 	private static $build(raw) {
 		const item = new TrainStateViewModel();
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.label === undefined || (item.label = raw.label ? TrainLabelViewModel["$build"](raw.label) : null)
 		raw.lastHeadPosition === undefined || (item.lastHeadPosition = raw.lastHeadPosition ? TrainHeadPositionViewModel["$build"](raw.lastHeadPosition) : null)
 		
@@ -468,6 +472,8 @@ export class TrainViewModel {
 	created: Date;
 	railcarCount: number;
 	coupledLength: number;
+	headCouplerType: string;
+	tailCouplerType: string;
 
 	private static $build(raw) {
 		const item = new TrainViewModel();
@@ -476,6 +482,8 @@ export class TrainViewModel {
 		raw.created === undefined || (item.created = raw.created ? new Date(raw.created) : null)
 		raw.railcarCount === undefined || (item.railcarCount = raw.railcarCount === null ? null : +raw.railcarCount)
 		raw.coupledLength === undefined || (item.coupledLength = raw.coupledLength === null ? null : +raw.coupledLength)
+		raw.headCouplerType === undefined || (item.headCouplerType = raw.headCouplerType === null ? null : `${raw.headCouplerType}`)
+		raw.tailCouplerType === undefined || (item.tailCouplerType = raw.tailCouplerType === null ? null : `${raw.tailCouplerType}`)
 		
 		return item;
 	}
@@ -1688,6 +1696,28 @@ export class TrainService {
 		
 
 		return await fetch(Service.toURL("FpZXZtYWR5eGRiZzlqMDhyYXRra3M5b2"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : TrainViewModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async getCoupleableTrains(identifier: string, end: string): Promise<Array<TrainViewModel>> {
+		const $data = new FormData();
+		$data.append("IzOXl5ajMwdjFzdXxmcWNlanhwbDhtdz", Service.stringify(identifier))
+		$data.append("xoN2VxMmEyamQ2cHc3cGZzNnVjdD45bT", Service.stringify(end))
+
+		return await fetch(Service.toURL("V2a2BkdWdoeWlkeWF1bndueDZkengwbX"), {
 			method: "post",
 			credentials: "include",
 			body: $data

@@ -1,5 +1,5 @@
 import { Component } from "@acryps/page";
-import { RailcarSummaryModel, TrainRailcarUnitViewModel, TrainService, TrainStateViewModel, TrainUnitViewModel } from "../../managed/services";
+import { RailcarSummaryModel, TrainRailcarUnitViewModel, TrainService, TrainStateViewModel, TrainUnitViewModel, TrainViewModel } from "../../managed/services";
 import { Application } from "../..";
 import { TrainsPage } from "..";
 import { StorageContainerTagComponent } from "../../shared/storage-container-tag";
@@ -14,18 +14,14 @@ export class TrainPage extends Component {
 	declare parameters: { identifier };
 	declare parent: TrainsPage;
 
+	train: TrainViewModel;
 	state: TrainStateViewModel;
 	units: TrainRailcarUnitViewModel[];
 
-	length = 0;
-
 	async onload() {
+		this.train = this.parent.trains.find(train => train.identifier == this.parameters.identifier);
 		this.state = await new TrainService().getTrain(this.parameters.identifier);
 		this.units = await new TrainService().getTrainRailcars(this.parameters.identifier);
-
-		for (let unit of this.units) {
-			this.length += unit.model.lengthIncludingCouplers;
-		}
 	}
 
 	breadcrumb = () => `Train${this.state.label ? ` ${this.state.label.label}` : ''} #${this.parameters.identifier}`;
@@ -37,22 +33,20 @@ export class TrainPage extends Component {
 		}
 
 		return <ui-train>
-			<ui-identifier>
-				{this.parameters.identifier}
-			</ui-identifier>
-
-			{this.state.label && <ui-label>
-				{this.state.label?.productBrand && <img src={URL.createObjectURL(new Blob([this.state.label.productBrand.icon], { type: 'image/svg+xml' }))} />}
-
-				<ui-name>
-					{this.state.label.label}
-				</ui-name>
-			</ui-label>}
+			{new DetailSectionComponent(<ui-identifier>
+				{this.state.label?.label || this.parameters.identifier}
+			</ui-identifier>)
+				.addMetric('Chain Identifier', () => this.parameters.identifier)
+				.addMetric('Railcar Count', () => `${this.train.railcarCount} Units`)
+				.addMetric('Coupled Length', () => `${this.train.coupledLength.toFixed(2)}m`)
+				.addMetric('Created', () => this.train.created.toLocaleString())
+				.addMetric('Changed', () => this.train.changed.toLocaleString())
+				.addMetric('Age', () => `${((+new Date() - +this.train.created) / 1000 / 60 / 60).toFixed(1)}h`)}
 
 			<ui-units>
-				<ui-action ui-href='couple/head'>
+				{this.train.headCouplerType && <ui-action ui-href='couple/head'>
 					{coupleIcon()}
-				</ui-action>
+				</ui-action>}
 
 				{this.units.map((unit, index) => [
 					<ui-unit ui-href={`/railcar/${unit.tag}`}>
@@ -69,10 +63,7 @@ export class TrainPage extends Component {
 								</ui-name>
 							</ui-header>)
 								.addMetric('Type', () => unit.model?.name, `/model/${unit.model?.tag}`)
-								.addMetric('Running Number', () => unit.runningNumber)
-								.addStakeholder('Owner', unit.owner)
-								.addStakeholder('Operator', unit.operator)
-								.addMetric('Storage Container', () => unit.storageContainer?.tag, `/storage-container/${unit.storageContainer?.tag}`)}
+								.addMetric('Running Number', () => unit.runningNumber)}
 						</ui-detail>
 					</ui-unit>,
 
@@ -85,9 +76,9 @@ export class TrainPage extends Component {
 					</ui-action>
 				])}
 
-				<ui-action ui-href='couple/tail'>
+				{this.train.tailCouplerType && <ui-action ui-href='couple/tail'>
 					{coupleIcon()}
-				</ui-action>
+				</ui-action>}
 			</ui-units>
 
 			{this.state.lastHeadPosition && this.renderLayout()}
@@ -115,7 +106,7 @@ export class TrainPage extends Component {
 			layout.highlight(section);
 
 			const head = new SectionPosition(section, this.state.lastHeadPosition.offset, this.state.lastHeadPosition.reversed);
-			const tail = head.advance(-this.length);
+			const tail = head.advance(-this.train.coupledLength);
 
 			layout.mark(markerColor, head, tail);
 		}));

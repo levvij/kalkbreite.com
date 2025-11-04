@@ -30,14 +30,22 @@ export class Train {
 		return this.units.at(0).head.coupler;
 	}
 
+	get headCouplerType(): string {
+		return this.headCoupler?.typeId;
+	}
+
 	get tailCoupler() {
 		return this.units.at(-1).tail.coupler;
+	}
+
+	get tailCouplerType(): string {
+		return this.tailCoupler?.typeId;
 	}
 
 	units: CoupledUnit[] = [];
 
 	split(couplerId: string) {
-		const targetHeadIndex = this.units.findIndex(unit => unit.head.coupler.id == couplerId);
+		const targetHeadIndex = this.units.findIndex(unit => unit.head.coupler?.id && unit.head.coupler?.id == couplerId);
 
 		if (targetHeadIndex != -1) {
 			return {
@@ -46,7 +54,7 @@ export class Train {
 			}
 		}
 
-		const targetTailIndex = this.units.findIndex(unit => unit.tail.coupler.id == couplerId);
+		const targetTailIndex = this.units.findIndex(unit => unit.tail.coupler?.id && unit.tail.coupler?.id == couplerId);
 
 		if (targetTailIndex != -1) {
 			return {

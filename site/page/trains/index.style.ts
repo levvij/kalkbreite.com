@@ -11,6 +11,11 @@ export const trainsStyle = () => child('ui-trains') (
 
 	trainStyle(),
 
+	child('ui-hint') (
+		display('block'),
+		marginBottom(pageSpacing)
+	),
+
 	child('ui-filters') (
 		display('flex'),
 		flexWrap('wrap'),
@@ -69,6 +74,7 @@ export const trainsStyle = () => child('ui-trains') (
 				marginBottom(pageGutter.divide(2)),
 
 				clickable(),
+				fontSize(rem(0.8)),
 
 				child('ui-identifier') (
 					trainIdentifierFont,

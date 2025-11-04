@@ -16,19 +16,24 @@ export const trainStyle = () => child('ui-train')(
 
 	coupleStyle(),
 
-	child('ui-identifier')(
-		display('block'),
-		marginBottom(pageGutter),
+	detailSectionStyle(
+		marginBottom(pageSpacing.multiply(2)),
 
-		fontSize(rem(1.25)),
-		trainIdentifierFont
+		child('ui-identifier') (
+			display('block'),
+			marginBottom(pageGutter),
+
+			fontSize(rem(2)),
+			trainIdentifierFont
+		)
 	),
 
 	child('ui-units') (
 		display('flex'),
 		alignItems('flex-start'),
-		paddingInline(iconButtonSize.divide(2)),
+		marginInline(pageSpacing.invert()),
 		marginBottom(pageSpacing),
+		paddingInline(iconButtonSize.divide(2).add(pageSpacing)),
 
 		overflowX('scroll'),
 
@@ -38,7 +43,7 @@ export const trainStyle = () => child('ui-train')(
 
 			clickable(),
 
-			child('img')(
+			child('img') (
 				height(imageHeight),
 				backgroundColor(captureBackgroundColor),
 				backgroundImage(

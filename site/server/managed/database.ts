@@ -403,6 +403,7 @@ export class Company extends Entity<CompanyQueryProxy> {
 	get logo(): Partial<ForeignReference<CompanyLogo>> { return this.$logo; }
 	manufacturedRailcars: PrimaryReference<Railcar, RailcarQueryProxy>;
 		operatedRailcars: PrimaryReference<Railcar, RailcarQueryProxy>;
+		operatedTrains: PrimaryReference<TrainLabel, TrainLabelQueryProxy>;
 		ownedRailcars: PrimaryReference<Railcar, RailcarQueryProxy>;
 		get parent(): Partial<ForeignReference<Company>> { return this.$parent; }
 	children: PrimaryReference<Company, CompanyQueryProxy>;
@@ -439,6 +440,7 @@ export class Company extends Entity<CompanyQueryProxy> {
 	this.$logo = new ForeignReference<CompanyLogo>(this, "logoId", CompanyLogo);
 	this.manufacturedRailcars = new PrimaryReference<Railcar, RailcarQueryProxy>(this, "manufacturerId", Railcar);
 		this.operatedRailcars = new PrimaryReference<Railcar, RailcarQueryProxy>(this, "operatorId", Railcar);
+		this.operatedTrains = new PrimaryReference<TrainLabel, TrainLabelQueryProxy>(this, "operatorId", TrainLabel);
 		this.ownedRailcars = new PrimaryReference<Railcar, RailcarQueryProxy>(this, "ownerId", Railcar);
 		this.$parent = new ForeignReference<Company>(this, "parentId", Company);
 	this.children = new PrimaryReference<Company, CompanyQueryProxy>(this, "parentId", Company);
@@ -1665,18 +1667,22 @@ export class TrainHeadPosition extends Entity<TrainHeadPositionQueryProxy> {
 }
 			
 export class TrainLabelQueryProxy extends QueryProxy {
+	get operator(): Partial<CompanyQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get productBrand(): Partial<TrainProductBrandQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get description(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get label(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get operatorId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get productBrandId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get trainIdentifier(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
 
 export class TrainLabel extends Entity<TrainLabelQueryProxy> {
+	get operator(): Partial<ForeignReference<Company>> { return this.$operator; }
 	get productBrand(): Partial<ForeignReference<TrainProductBrand>> { return this.$productBrand; }
 	description: string;
 	declare id: string;
 	label: string;
+	operatorId: string;
 	productBrandId: string;
 	trainIdentifier: string;
 	
@@ -1686,6 +1692,7 @@ export class TrainLabel extends Entity<TrainLabelQueryProxy> {
 			description: { type: "text", name: "description" },
 			id: { type: "uuid", name: "id" },
 			label: { type: "text", name: "label" },
+			operatorId: { type: "uuid", name: "operator_id" },
 			productBrandId: { type: "uuid", name: "product_brand_id" },
 			trainIdentifier: { type: "text", name: "train_identifier" }
 		},
@@ -1697,9 +1704,22 @@ export class TrainLabel extends Entity<TrainLabelQueryProxy> {
 	constructor() {
 		super();
 		
-		this.$productBrand = new ForeignReference<TrainProductBrand>(this, "productBrandId", TrainProductBrand);
+		this.$operator = new ForeignReference<Company>(this, "operatorId", Company);
+	this.$productBrand = new ForeignReference<TrainProductBrand>(this, "productBrandId", TrainProductBrand);
 	}
 	
+	private $operator: ForeignReference<Company>;
+
+	set operator(value: Partial<ForeignReference<Company>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.operatorId = value.id as string;
+		} else {
+			this.operatorId = null;
+		}
+	}
+
 	private $productBrand: ForeignReference<TrainProductBrand>;
 
 	set productBrand(value: Partial<ForeignReference<TrainProductBrand>>) {

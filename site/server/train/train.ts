@@ -9,4 +9,7 @@ export class TrainViewModel extends ViewModel<Train> {
 	changed;
 	railcarCount;
 	coupledLength;
+
+	headCouplerType;
+	tailCouplerType;
 }

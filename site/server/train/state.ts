@@ -1,8 +1,9 @@
 import { ResponseModel } from "vlserver/dist/resolve";
-import { Railcar, TrainHeadPosition, TrainLabel } from "../managed/database";
+import { Company, Railcar, TrainHeadPosition, TrainLabel } from "../managed/database";
 import { ViewModel } from "vlserver";
 import { TrainLabelViewModel } from "./label";
 import { TrainHeadPositionViewModel } from "./position";
+import { CompanySummaryModel } from "../company/company";
 
 export class TrainState extends ResponseModel {
 	label: TrainLabel;

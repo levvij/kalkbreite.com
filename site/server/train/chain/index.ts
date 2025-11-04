@@ -84,7 +84,7 @@ export class TrainChain {
 		const split = sourceTrain.split(breakingCouplerId);
 
 		if (split.before.length == 0 || split.after.length == 0) {
-			throw new Error('Cannot uncouple loose coupler');
+			throw new Error(`Cannot uncouple loose coupler '${breakingCouplerId}'`);
 		}
 
 		// remove link between the last railcar and the first railcar of the split off train
@@ -94,7 +94,7 @@ export class TrainChain {
 		let before: CoupledUnit[];
 		let after: CoupledUnit[];
 
-		if (sourceUnit.tail.coupler.id == breakingCouplerId) {
+		if (sourceUnit.tail.coupler?.id && sourceUnit.tail.coupler?.id == breakingCouplerId) {
 			before = split.before;
 			after = split.after;
 		} else {
@@ -142,7 +142,11 @@ export class TrainChain {
 		targetTrain.changed = time;
 
 		// source tail is directly coupled to target head
-		if (sourceUnit.tail.coupler.id == sourceId && targetUnit.head.coupler.id == targetId) {
+		if (
+			sourceUnit.tail.coupler?.id == sourceId &&
+			sourceUnit.tail.coupler?.id == sourceId &&
+			targetUnit.head.coupler?.id == targetId
+		) {
 			sourceTrain.units = [...sourceTrain.units, ...targetTrain.units];
 
 			sourceUnit.tail.target = targetUnit;
@@ -150,7 +154,11 @@ export class TrainChain {
 		}
 
 		// source head is coupled to target tail
-		if (sourceUnit.head.coupler.id == sourceId && targetUnit.tail.coupler.id == targetId) {
+		if (
+			sourceUnit.head.coupler?.id &&
+			sourceUnit.head.coupler?.id == sourceId &&
+			targetUnit.tail.coupler?.id == targetId
+		) {
 			sourceTrain.units = [...targetTrain.units, ...sourceTrain.units];
 
 			sourceUnit.head.target = targetUnit;
@@ -158,7 +166,11 @@ export class TrainChain {
 		}
 
 		// source tail is connected to target tail, flip target
-		if (sourceUnit.tail.coupler.id == sourceId && targetUnit.tail.coupler.id == targetId) {
+		if (
+			sourceUnit.tail.coupler?.id &&
+			sourceUnit.tail.coupler?.id == sourceId &&
+			targetUnit.tail.coupler?.id == targetId
+		) {
 			targetTrain.reverse();
 			sourceTrain.units = [...sourceTrain.units, ...targetTrain.units];
 
@@ -167,7 +179,11 @@ export class TrainChain {
 		}
 
 		// source train is connected with head to target train, which needs to be flipped
-		if (sourceUnit.head.coupler.id == sourceId && targetUnit.head.coupler.id == targetId) {
+		if (
+			sourceUnit.head.coupler?.id &&
+			sourceUnit.head.coupler?.id == sourceId &&
+			targetUnit.head.coupler?.id == targetId
+		) {
 			targetTrain.reverse();
 			sourceTrain.units = [...targetTrain.units, ...sourceTrain.units];
 

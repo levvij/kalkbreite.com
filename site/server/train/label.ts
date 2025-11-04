@@ -1,6 +1,7 @@
 import { ViewModel } from "vlserver";
 import { TrainLabel } from "../managed/database";
 import { TrainProductBrandSummaryModel } from "./product-brand";
+import { CompanySummaryModel } from "../company/company";
 
 export class TrainLabelViewModel extends ViewModel<TrainLabel> {
 	id;
@@ -10,4 +11,5 @@ export class TrainLabelViewModel extends ViewModel<TrainLabel> {
 	description;
 
 	productBrand: TrainProductBrandSummaryModel;
+	operator: CompanySummaryModel;
 }

@@ -19,7 +19,8 @@ CREATE TABLE train_label (
 	label TEXT,
 	description TEXT,
 
-	product_brand_id UUID CONSTRAINT product_brand__trains REFERENCES train_product_brand (id)
+	product_brand_id UUID CONSTRAINT product_brand__trains REFERENCES train_product_brand (id),
+	operator_id UUID CONSTRAINT operator__operated_trains REFERENCES company (id)
 );
 
 CREATE TABLE train_head_position (

@@ -1,5 +1,5 @@
 import { Service } from "vlserver";
-import { Coupling, DbContext, Uncoupling } from "../managed/database";
+import { Coupling, DbContext, RailcarDirection, Uncoupling } from "../managed/database";
 import { TrainChain } from "./chain";
 import { RailcarSummaryModel } from "../railcar/railcar";
 import { TrainViewModel } from "./train";
@@ -24,8 +24,6 @@ export class TrainService extends Service {
 		if (!unit?.tail?.coupler) {
 			return;
 		}
-
-		console.log(train.units.map(peer => `${peer.head.coupler.id}/${peer.railcar.tag}${peer == unit ? '#' : ''}/${peer.tail.coupler.id}`));
 
 		const uncoupling = new Uncoupling();
 		uncoupling.uncoupled = new Date();
@@ -64,6 +62,23 @@ export class TrainService extends Service {
 		);
 	}
 
+	async getCoupleableTrains(identifier: string, end: string) {
+		const train = this.chain.trains.find(train => train.identifier == identifier);
+		const couplerType = end == 'head' ? train.headCouplerType : train.tailCouplerType;
+
+		return TrainViewModel.from(
+			this.chain.trains
+				.filter(train => train.headCouplerType == couplerType || train.tailCouplerType == couplerType)
+				.sort((a, b) => {
+					if (+a.changed == +b.changed) {
+						return a.identifier.localeCompare(b.identifier);
+					}
+
+					return a.changed > b.changed ? -1 : 1;
+				})
+		);
+	}
+
 	async getTrain(identifier: string) {
 		const train = this.chain.trains.find(train => train.identifier == identifier);
 
@@ -74,7 +89,7 @@ export class TrainService extends Service {
 
 		state.lastHeadPosition = await this.database.trainHeadPosition
 			.orderByDescending(position => position.updated)
-			.first(position => position.trainIdentifier.valueOf() == train.identifier)
+			.first(position => position.trainIdentifier.valueOf() == train.identifier);
 
 		return new TrainStateViewModel(state);
 	}
