@@ -4,6 +4,7 @@ import { ManagedServer } from "../../managed/server";
 import { TrainChain } from "../../train/chain";
 import { captureBackgroundColor } from "../../../page/index.style";
 import { CoupledUnit } from "../../train/chain/railcar";
+import { createHash } from "crypto";
 
 export const registerTrainCaptureInterface = (server: ManagedServer, chain: TrainChain) => {
 	const height = 100;
@@ -20,11 +21,16 @@ export const registerTrainCaptureInterface = (server: ManagedServer, chain: Trai
 			const train = chain.trains.find(train => train.identifier == identifier);
 
 			const reversed = reverse(request.params);
-			const cacheIdentifier = [
-				identifier,
-				reversed ? 'reversed' : 'forward',
-				...train.units.flatMap(unit => unit.railcar.tag + (unit.direction == RailcarDirection.forward ? '/f' : '/r'))
-			].join('-');
+
+			const cacheIdentifierHash = createHash('sha1')
+				.update(identifier)
+				.update(reversed ? 'reversed' : 'forward');
+
+			for (let unit of train.units) {
+				cacheIdentifierHash.update(unit.railcar.tag + (unit.direction == RailcarDirection.forward ? '/f' : '/r'));
+			}
+
+			const cacheIdentifier = cacheIdentifierHash.digest('hex');
 
 			if (request.headers['if-none-match'] == cacheIdentifier) {
 				return response.status(304).end();
@@ -33,7 +39,7 @@ export const registerTrainCaptureInterface = (server: ManagedServer, chain: Trai
 			if (trainCache.has(cacheIdentifier)) {
 				response.set({
 					'content-type': 'image/jpeg',
-					'cache-control': 'public, max-age=31536000',
+					'cache-control': 'public, max-age=0, must-revalidate',
 					'etag': cacheIdentifier
 				});
 

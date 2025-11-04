@@ -452,13 +452,11 @@ export class TrainProductBrandSummaryModel {
 }
 
 export class TrainStateViewModel {
-	id: string;
 	label: TrainLabelViewModel;
 	lastHeadPosition: TrainHeadPositionViewModel;
 
 	private static $build(raw) {
 		const item = new TrainStateViewModel();
-		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.label === undefined || (item.label = raw.label ? TrainLabelViewModel["$build"](raw.label) : null)
 		raw.lastHeadPosition === undefined || (item.lastHeadPosition = raw.lastHeadPosition ? TrainHeadPositionViewModel["$build"](raw.lastHeadPosition) : null)
 		

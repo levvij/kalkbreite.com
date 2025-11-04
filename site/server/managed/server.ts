@@ -2594,7 +2594,6 @@ ViewModel.mappings = {
 	[TrainStateViewModel.name]: class ComposedTrainStateViewModel extends TrainStateViewModel {
 		async map() {
 			return {
-				id: this.$$model.id,
 				label: this.$$model.label,
 				lastHeadPosition: this.$$model.lastHeadPosition
 			}
@@ -2626,7 +2625,6 @@ ViewModel.mappings = {
 			}
 
 			return {
-				id: true,
 				get label() {
 					return ViewModel.mappings[TrainLabelViewModel.name].getPrefetchingProperties(
 						level,
@@ -2644,7 +2642,6 @@ ViewModel.mappings = {
 
 		static toViewModel(data) {
 			const item = new TrainStateViewModel(null);
-			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"label" in data && (item.label = data.label && ViewModel.mappings[TrainLabelViewModel.name].toViewModel(data.label));
 			"lastHeadPosition" in data && (item.lastHeadPosition = data.lastHeadPosition && ViewModel.mappings[TrainHeadPositionViewModel.name].toViewModel(data.lastHeadPosition));
 
@@ -2652,15 +2649,8 @@ ViewModel.mappings = {
 		}
 
 		static async toModel(viewModel: TrainStateViewModel) {
-			let model: TrainState;
+			const model = new TrainState();
 
-			if (viewModel.id) {
-				model = await ViewModel.globalFetchingContext.findSet(TrainState).find(viewModel.id)
-			} else {
-				model = new TrainState();
-			}
-
-			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"label" in viewModel && (undefined);
 			"lastHeadPosition" in viewModel && (undefined);
 
