@@ -7,6 +7,7 @@ import { TrainRailcarUnitViewModel, TrainUnitViewModel } from "./unit";
 import { TrainProductBrandSummaryModel } from "./product-brand";
 import { TrainLabelViewModel } from "./label";
 import { TrainState, TrainStateViewModel } from "./state";
+import { LastTrainHeadPositionViewModel, LastTrainPosition } from "./position";
 
 export class TrainService extends Service {
 	constructor(
@@ -90,6 +91,45 @@ export class TrainService extends Service {
 		const train = this.chain.trains.find(train => train.units.find(unit => unit.railcar.id == railcarId));
 
 		return train.identifier;
+	}
+
+	async getLastTrainPositions() {
+		const positions: LastTrainPosition[] = [];
+
+		for (let train of this.chain.trains) {
+			const update = await this.database.trainHeadPosition
+				.orderByDescending(position => position.updated)
+				.first(position => position.trainIdentifier.valueOf() == train.identifier);
+
+			if (update) {
+				const position = new LastTrainPosition();
+				position.trainIdentifier = train.identifier;
+				position.updated = update.updated;
+
+				position.section = update.section;
+				position.offset = update.offset;
+				position.reversed = update.reversed;
+				position.coupledLength = train.coupledLength;
+
+				const label = await this.database.trainLabel
+					.include(label => label.productBrand)
+					.first(label => label.trainIdentifier.valueOf() == train.identifier);
+
+				if (label) {
+					position.label = label.label;
+
+					const brand = await label.productBrand.fetch();
+
+					if (brand) {
+						position.icon = brand.icon;
+					}
+				}
+
+				positions.push(position);
+			}
+		}
+
+		return LastTrainHeadPositionViewModel.from(positions);
 	}
 
 	getProductBrands() {

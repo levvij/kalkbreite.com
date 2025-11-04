@@ -4,15 +4,26 @@ import { CoupledUnit } from "./railcar";
 
 export class Train {
 	changed: Date = this.created;
-	label: TrainLabel;
 
 	constructor(
 		public identifier: string,
 		public created: Date
 	) {}
 
-	get length(): number {
+	get railcarCount(): number {
 		return this.units.length;
+	}
+
+	get coupledLength(): number {
+		let sum = 0;
+
+		for (let unit of this.units) {
+			if (unit.model) {
+				sum += unit.model.lengthIncludingCouplers;
+			}
+		}
+
+		return sum;
 	}
 
 	get headCoupler() {

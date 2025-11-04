@@ -74,7 +74,13 @@ export const trainsStyle = () => child('ui-trains') (
 					trainIdentifierFont,
 				),
 
-				child('ui-type') (
+				child('ui-coupled-length') (
+					monospacedFont,
+
+					opacity(0.5)
+				),
+
+				child('ui-railcar-count') (
 					monospacedFont,
 
 					opacity(0.5)

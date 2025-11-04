@@ -42,6 +42,11 @@ export class TrainsPage extends Component {
 		}
 
 		return <ui-trains>
+			<ui-hint>
+				The following trains are currently assembled on the layout.
+				Explore their composition, where they currently are and where they are headed.
+			</ui-hint>
+
 			<ui-filters>
 				{usedProductBrands.map(brand => <ui-product-brand ui-active={!!this.activeFilters.find(filter => filter.id == brand.id)} ui-click={() => {
 					const index = this.activeFilters.findIndex(filter => filter.id == brand.id);
@@ -76,9 +81,13 @@ export class TrainsPage extends Component {
 								{train.identifier}
 							</ui-identifier>
 
-							<ui-type>
-								{train.length == 1 ? 'S' : train.length}
-							</ui-type>
+							<ui-railcar-count>
+								{train.railcarCount}
+							</ui-railcar-count>
+
+							<ui-coupled-length>
+								{train.coupledLength.toFixed(1)}m
+							</ui-coupled-length>
 
 							<ui-changed>
 								{train.changed.toISOString().replace('T', ' ').replace(/\.[0-9]+Z$/, '')}

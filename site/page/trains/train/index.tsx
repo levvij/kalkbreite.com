@@ -8,7 +8,7 @@ import { coupleIcon, uncoupleIcon } from "../../.built/icons";
 import { LayoutComponent } from "../../shared/layout";
 import { markerColor } from "../../index.style";
 import { LayoutLoader } from "../../shared/layout/loader";
-import { Section } from "@packtrack/layout";
+import { Section, SectionPosition } from "@packtrack/layout";
 
 export class TrainPage extends Component {
 	declare parameters: { identifier };
@@ -17,9 +17,15 @@ export class TrainPage extends Component {
 	state: TrainStateViewModel;
 	units: TrainRailcarUnitViewModel[];
 
+	length = 0;
+
 	async onload() {
 		this.state = await new TrainService().getTrain(this.parameters.identifier);
 		this.units = await new TrainService().getTrainRailcars(this.parameters.identifier);
+
+		for (let unit of this.units) {
+			this.length += unit.model.lengthIncludingCouplers;
+		}
 	}
 
 	breadcrumb = () => `Train${this.state.label ? ` ${this.state.label.label}` : ''} #${this.parameters.identifier}`;
@@ -107,7 +113,11 @@ export class TrainPage extends Component {
 			}
 
 			layout.highlight(section);
-			layout.mark(markerColor, section, this.state.lastHeadPosition.offset);
+
+			const head = new SectionPosition(section, this.state.lastHeadPosition.offset, this.state.lastHeadPosition.reversed);
+			const tail = head.advance(-this.length);
+
+			layout.mark(markerColor, head, tail);
 		}));
 
 		return layout;

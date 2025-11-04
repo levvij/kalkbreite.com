@@ -8,6 +8,8 @@ export class RailcarModelSummaryModel extends ViewModel<RailcarModel> {
 
 	name;
 	shortname;
+
+	lengthIncludingCouplers;
 }
 
 export class RailcarModelViewModel extends RailcarModelSummaryModel {
@@ -15,7 +17,6 @@ export class RailcarModelViewModel extends RailcarModelSummaryModel {
 	uicIdentifier;
 
 	lengthIncludingBuffers;
-	lengthIncludingCouplers;
 
 	uicLocale: UicLocaleViewModel;
 	drawings: RailcarModelSummaryModel[];

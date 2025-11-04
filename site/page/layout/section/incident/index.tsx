@@ -16,9 +16,9 @@ export abstract class ReportIncidentPage extends Component {
 		requestAnimationFrame(() => {
 			this.parent.layout.onSectionClick = position => {
 				if (this.marker) {
-					this.marker.move(position.offset);
+					this.marker.move(position);
 				} else {
-					this.marker = this.parent.layout.mark(markerColor, position.section, position.offset);
+					this.marker = this.parent.layout.mark(markerColor, position);
 				}
 
 				this.position = position;

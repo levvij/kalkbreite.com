@@ -53,6 +53,8 @@ import { TrainProductBrandSummaryModel } from "././../train/product-brand";
 import { TrainLabelViewModel } from "././../train/label";
 import { TrainState } from "././../train/state";
 import { TrainStateViewModel } from "././../train/state";
+import { LastTrainHeadPositionViewModel } from "././../train/position";
+import { LastTrainPosition } from "././../train/position";
 import { TrainService } from "././../train/index";
 import { ArtistSummaryModel } from "./../graffiti/artist";
 import { GraffitiSummaryModel } from "./../graffiti/graffiti";
@@ -620,6 +622,15 @@ export class ManagedServer extends BaseServer {
 			inject => inject.construct(TrainService),
 			(controller, params) => controller.getUnitTrain(
 				params["10czNubHltczN4cXhubmRxNzdiMWR0b3"]
+			)
+		);
+
+		this.expose(
+			"J6eDNvcXZncDFrbDh1Zn54Nzs2cHdjMW",
+			{},
+			inject => inject.construct(TrainService),
+			(controller, params) => controller.getLastTrainPositions(
+				
 			)
 		);
 
@@ -1704,6 +1715,7 @@ ViewModel.mappings = {
 		async map() {
 			return {
 				id: this.$$model.id,
+				lengthIncludingCouplers: this.$$model.lengthIncludingCouplers,
 				name: this.$$model.name,
 				shortname: this.$$model.shortname,
 				tag: this.$$model.tag
@@ -1737,6 +1749,7 @@ ViewModel.mappings = {
 
 			return {
 				id: true,
+				lengthIncludingCouplers: true,
 				name: true,
 				shortname: true,
 				tag: true
@@ -1746,6 +1759,7 @@ ViewModel.mappings = {
 		static toViewModel(data) {
 			const item = new RailcarModelSummaryModel(null);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"lengthIncludingCouplers" in data && (item.lengthIncludingCouplers = data.lengthIncludingCouplers === null ? null : +data.lengthIncludingCouplers);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"shortname" in data && (item.shortname = data.shortname === null ? null : `${data.shortname}`);
 			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
@@ -1763,6 +1777,7 @@ ViewModel.mappings = {
 			}
 
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"lengthIncludingCouplers" in viewModel && (model.lengthIncludingCouplers = viewModel.lengthIncludingCouplers === null ? null : +viewModel.lengthIncludingCouplers);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"shortname" in viewModel && (model.shortname = viewModel.shortname === null ? null : `${viewModel.shortname}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
@@ -2341,6 +2356,86 @@ ViewModel.mappings = {
 			return model;
 		}
 	},
+	[LastTrainHeadPositionViewModel.name]: class ComposedLastTrainHeadPositionViewModel extends LastTrainHeadPositionViewModel {
+		async map() {
+			return {
+				trainIdentifier: this.$$model.trainIdentifier,
+				section: this.$$model.section,
+				offset: this.$$model.offset,
+				reversed: this.$$model.reversed,
+				coupledLength: this.$$model.coupledLength,
+				updated: this.$$model.updated,
+				label: this.$$model.label,
+				icon: this.$$model.icon
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				trainIdentifier: true,
+				section: true,
+				offset: true,
+				reversed: true,
+				coupledLength: true,
+				updated: true,
+				label: true,
+				icon: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new LastTrainHeadPositionViewModel(null);
+			"trainIdentifier" in data && (item.trainIdentifier = data.trainIdentifier === null ? null : `${data.trainIdentifier}`);
+			"section" in data && (item.section = data.section === null ? null : `${data.section}`);
+			"offset" in data && (item.offset = data.offset === null ? null : +data.offset);
+			"reversed" in data && (item.reversed = !!data.reversed);
+			"coupledLength" in data && (item.coupledLength = data.coupledLength === null ? null : +data.coupledLength);
+			"updated" in data && (item.updated = data.updated === null ? null : new Date(data.updated));
+			"label" in data && (item.label = data.label === null ? null : `${data.label}`);
+			"icon" in data && (item.icon = data.icon === null ? null : `${data.icon}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: LastTrainHeadPositionViewModel) {
+			const model = new LastTrainPosition();
+
+			"trainIdentifier" in viewModel && (model.trainIdentifier = viewModel.trainIdentifier === null ? null : `${viewModel.trainIdentifier}`);
+			"section" in viewModel && (model.section = viewModel.section === null ? null : `${viewModel.section}`);
+			"offset" in viewModel && (model.offset = viewModel.offset === null ? null : +viewModel.offset);
+			"reversed" in viewModel && (model.reversed = !!viewModel.reversed);
+			"coupledLength" in viewModel && (model.coupledLength = viewModel.coupledLength === null ? null : +viewModel.coupledLength);
+			"updated" in viewModel && (model.updated = viewModel.updated === null ? null : new Date(viewModel.updated));
+			"label" in viewModel && (model.label = viewModel.label === null ? null : `${viewModel.label}`);
+			"icon" in viewModel && (model.icon = viewModel.icon === null ? null : `${viewModel.icon}`);
+
+			return model;
+		}
+	},
 	[TrainProductBrandSummaryModel.name]: class ComposedTrainProductBrandSummaryModel extends TrainProductBrandSummaryModel {
 		async map() {
 			return {
@@ -2483,7 +2578,8 @@ ViewModel.mappings = {
 				changed: this.$$model.changed,
 				identifier: this.$$model.identifier,
 				created: this.$$model.created,
-				length: this.$$model.length
+				railcarCount: this.$$model.railcarCount,
+				coupledLength: this.$$model.coupledLength
 			}
 		};
 
@@ -2516,7 +2612,8 @@ ViewModel.mappings = {
 				changed: true,
 				identifier: true,
 				created: true,
-				length: true
+				railcarCount: true,
+				coupledLength: true
 			};
 		};
 
@@ -2525,7 +2622,8 @@ ViewModel.mappings = {
 			"changed" in data && (item.changed = data.changed === null ? null : new Date(data.changed));
 			"identifier" in data && (item.identifier = data.identifier === null ? null : `${data.identifier}`);
 			"created" in data && (item.created = data.created === null ? null : new Date(data.created));
-			"length" in data && (item.length = data.length === null ? null : +data.length);
+			"railcarCount" in data && (item.railcarCount = data.railcarCount === null ? null : +data.railcarCount);
+			"coupledLength" in data && (item.coupledLength = data.coupledLength === null ? null : +data.coupledLength);
 
 			return item;
 		}
@@ -2536,7 +2634,8 @@ ViewModel.mappings = {
 			"changed" in viewModel && (model.changed = viewModel.changed === null ? null : new Date(viewModel.changed));
 			"identifier" in viewModel && (model.identifier = viewModel.identifier === null ? null : `${viewModel.identifier}`);
 			"created" in viewModel && (model.created = viewModel.created === null ? null : new Date(viewModel.created));
-			"length" in viewModel && (model.length = viewModel.length === null ? null : +viewModel.length);
+			"railcarCount" in viewModel && (model.railcarCount = viewModel.railcarCount === null ? null : +viewModel.railcarCount);
+			"coupledLength" in viewModel && (model.coupledLength = viewModel.coupledLength === null ? null : +viewModel.coupledLength);
 
 			return model;
 		}

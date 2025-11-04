@@ -43,14 +43,6 @@ export class TrainChain {
 			await action.restore();
 		}
 
-		for (let label of await database.trainLabel.toArray()) {
-			const train = chain.trains.find(train => train.identifier == label.trainIdentifier);
-
-			if (train) {
-				train.label = label;
-			}
-		}
-
 		return chain;
 	}
 
@@ -61,6 +53,7 @@ export class TrainChain {
 	async add(railcar: Railcar, time: Date) {
 		const unit = new CoupledUnit(
 			railcar,
+			await railcar.model.fetch(),
 			{ coupler: await railcar.headCoupler.fetch() },
 			{ coupler: await railcar.tailCoupler.fetch() }
 		);

@@ -7,5 +7,6 @@ export class TrainViewModel extends ViewModel<Train> {
 
 	created;
 	changed;
-	length;
+	railcarCount;
+	coupledLength;
 }

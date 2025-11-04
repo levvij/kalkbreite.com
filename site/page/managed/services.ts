@@ -254,6 +254,7 @@ export class CouplerTypeSummaryModel {
 
 export class RailcarModelSummaryModel {
 	id: string;
+	lengthIncludingCouplers: number;
 	name: string;
 	shortname: string;
 	tag: string;
@@ -261,6 +262,7 @@ export class RailcarModelSummaryModel {
 	private static $build(raw) {
 		const item = new RailcarModelSummaryModel();
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.lengthIncludingCouplers === undefined || (item.lengthIncludingCouplers = raw.lengthIncludingCouplers === null ? null : +raw.lengthIncludingCouplers)
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		raw.shortname === undefined || (item.shortname = raw.shortname === null ? null : `${raw.shortname}`)
 		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
@@ -403,6 +405,31 @@ export class TrainHeadPositionViewModel {
 	}
 }
 
+export class LastTrainHeadPositionViewModel {
+	trainIdentifier: string;
+	section: string;
+	offset: number;
+	reversed: boolean;
+	coupledLength: number;
+	updated: Date;
+	label: string;
+	icon: string;
+
+	private static $build(raw) {
+		const item = new LastTrainHeadPositionViewModel();
+		raw.trainIdentifier === undefined || (item.trainIdentifier = raw.trainIdentifier === null ? null : `${raw.trainIdentifier}`)
+		raw.section === undefined || (item.section = raw.section === null ? null : `${raw.section}`)
+		raw.offset === undefined || (item.offset = raw.offset === null ? null : +raw.offset)
+		raw.reversed === undefined || (item.reversed = !!raw.reversed)
+		raw.coupledLength === undefined || (item.coupledLength = raw.coupledLength === null ? null : +raw.coupledLength)
+		raw.updated === undefined || (item.updated = raw.updated ? new Date(raw.updated) : null)
+		raw.label === undefined || (item.label = raw.label === null ? null : `${raw.label}`)
+		raw.icon === undefined || (item.icon = raw.icon === null ? null : `${raw.icon}`)
+		
+		return item;
+	}
+}
+
 export class TrainProductBrandSummaryModel {
 	icon: string;
 	id: string;
@@ -437,14 +464,16 @@ export class TrainViewModel {
 	changed: Date;
 	identifier: string;
 	created: Date;
-	length: number;
+	railcarCount: number;
+	coupledLength: number;
 
 	private static $build(raw) {
 		const item = new TrainViewModel();
 		raw.changed === undefined || (item.changed = raw.changed ? new Date(raw.changed) : null)
 		raw.identifier === undefined || (item.identifier = raw.identifier === null ? null : `${raw.identifier}`)
 		raw.created === undefined || (item.created = raw.created ? new Date(raw.created) : null)
-		raw.length === undefined || (item.length = raw.length === null ? null : +raw.length)
+		raw.railcarCount === undefined || (item.railcarCount = raw.railcarCount === null ? null : +raw.railcarCount)
+		raw.coupledLength === undefined || (item.coupledLength = raw.coupledLength === null ? null : +raw.coupledLength)
 		
 		return item;
 	}
@@ -1619,6 +1648,27 @@ export class TrainService {
 				const d = r.data;
 
 				return d === null ? null : `${d}`;
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async getLastTrainPositions(): Promise<Array<LastTrainHeadPositionViewModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("J6eDNvcXZncDFrbDh1Zn54Nzs2cHdjMW"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : LastTrainHeadPositionViewModel["$build"](d));
 			} else if ("aborted" in r) {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {

@@ -32,3 +32,20 @@ CREATE TABLE train_head_position (
 
 	updated TIMESTAMP
 );
+
+CREATE OR REPLACE VIEW last_train_head_position AS (
+	SELECT DISTINCT ON (train_head_position.train_identifier)
+		train_head_position.train_identifier,
+		train_head_position.section,
+		train_head_position.offset,
+		train_head_position.reversed,
+		train_head_position.updated,
+		train_label.label,
+		train_product_brand.icon
+	FROM train_head_position
+		INNER JOIN train_label ON train_label.train_identifier = train_head_position.train_identifier
+		INNER JOIN train_product_brand ON train_product_brand.id = train_label.product_brand_id
+	ORDER BY
+		train_head_position.train_identifier DESC,
+		train_head_position.updated DESC
+);
