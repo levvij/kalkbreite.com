@@ -1,6 +1,6 @@
 {
 	"scripts": {
-		"build": "npx vlserver compile && esbuild index.ts --bundle --outfile=.built/index.js --platform=node --target=es2018 --external:skia-canvas --external:jsdom --external:puppeteer-core && vlquery compile",
+		"build": "npx vlserver compile && esbuild index.ts --bundle --outfile=.built/index.js --platform=node --target=es2018 --external:skia-canvas --external:express-ws --external:jsdom --external:puppeteer-core && vlquery compile",
 		"start": "npm run build && environment node .built/index.js",
 		"typecheck": "npx vlserver compile && tsc --noEmit",
 		"database:update": "environment vlquery create-context"
@@ -17,14 +17,17 @@
 	},
 	"dependencies": {
 		"@acryps/environment": "^2.7.2",
+		"@packtrack/train": "^1.2.0",
 		"bwip-js": "^4.5.1",
 		"cookie-parser": "^1.4.7",
+		"express-ws": "^5.0.2",
 		"puppeteer-core": "^24.27.0",
 		"skia-canvas": "^2.0.2",
 		"vlquery": "^7.2.0",
 		"vlserver": "^5.0.1"
 	},
 	"devDependencies": {
+		"@types/express-ws": "^3.0.6",
 		"@types/node": "^18.11.15",
 		"esbuild": "^0.20.1",
 		"typescript": "^5.2.2"

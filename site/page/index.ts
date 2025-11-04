@@ -33,6 +33,7 @@ import { ArtistsPage } from './artists';
 import { LivePage } from './live';
 import { GraffitiInspirationPage } from './graffiti-inspirations/inspiration';
 import { AssignGraffitiInspirationPage } from './graffiti/assign-inspiration';
+import { ScanBridge } from './scan';
 
 // injected by esbuild
 declare const buildDate: string;
@@ -51,6 +52,10 @@ export class Application {
 		}
 
 		this.session = await new SessionService().getSession();
+
+		if (this.session.account) {
+			new ScanBridge();
+		}
 
 		this.router = new PathRouter(PageComponent
 			.route('/home', HomePage)
