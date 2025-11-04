@@ -240,11 +240,13 @@ export class CouplerViewModel {
 }
 
 export class CouplerTypeSummaryModel {
+	flippable: boolean;
 	icon: string;
 	id: string;
 
 	private static $build(raw) {
 		const item = new CouplerTypeSummaryModel();
+		raw.flippable === undefined || (item.flippable = !!raw.flippable)
 		raw.icon === undefined || (item.icon = raw.icon === null ? null : `${raw.icon}`)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		
@@ -616,6 +618,23 @@ export class MaintenanceViewModel {
 	}
 }
 
+export class CouplerTypeViewModel {
+	flippable: boolean;
+	icon: string;
+	id: string;
+	name: string;
+
+	private static $build(raw) {
+		const item = new CouplerTypeViewModel();
+		raw.flippable === undefined || (item.flippable = !!raw.flippable)
+		raw.icon === undefined || (item.icon = raw.icon === null ? null : `${raw.icon}`)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		
+		return item;
+	}
+}
+
 export class RailcarModelViewModel {
 	drawings: RailcarModelSummaryModel[];
 	uicLocale: UicLocaleViewModel;
@@ -828,6 +847,27 @@ export class CompanyService {
 				const d = r.data;
 
 				return d === null ? null : CompanyViewModel["$build"](d);
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async list(): Promise<Array<CompanySummaryModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("gzZGd3aWZ1ZTE5ZDZudTA0dDc5dWZ5Z3"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : CompanySummaryModel["$build"](d));
 			} else if ("aborted" in r) {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {
@@ -1314,6 +1354,27 @@ export class RailcarModelService {
 		});
 	}
 
+	async list(): Promise<Array<RailcarModelSummaryModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("RiNGo2MHxtc2RkZXs3ZTB2b3hxc3txbm"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : RailcarModelSummaryModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
 	async getRailcars(modelId: string): Promise<Array<RailcarSummaryModel>> {
 		const $data = new FormData();
 		$data.append("Y2aWNtZjIxNHxlcj1jYTk1Y39iM2VpM2", Service.stringify(modelId))
@@ -1413,6 +1474,56 @@ export class RailcarService {
 				const d = r.data;
 
 				return d === null ? null : RailcarViewModel["$build"](d);
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async register(tag: string, name: string, runningNumber: string, aquired: Date, price: number, modelId: string, manufactuerId: string, ownerId: string, operatorId: string, headCouplerId: string, tailCouplerId: string): Promise<void> {
+		const $data = new FormData();
+		$data.append("dsaTJpcm9nOWhkazEycGZxcGJzcGZ2bW", Service.stringify(tag))
+		$data.append("h0bHNxc2tvbWN1ZnE4bj1vYj4xNWV6Zm", Service.stringify(name))
+		$data.append("ltdzpmYWoyaWxhOX9lbG0yNDJsODhran", Service.stringify(runningNumber))
+		$data.append("FnYzhvNTJxMGIzYnRmampmMWQwOWhmZD", Service.stringify(aquired))
+		$data.append("llM2AycmI2eGVzeTpsZWVhaGF2M3Vmbm", Service.stringify(price))
+		$data.append("RqcmlwaGl3bmZrYjI0M2ZqcDV6ZXZiem", Service.stringify(modelId))
+		$data.append("RhbH9yZmhsMWh5dm1mcTU4emB4amlveD", Service.stringify(manufactuerId))
+		$data.append("1pc3ZudXVic3V2dDhka2R2MzA0enNpM2", Service.stringify(ownerId))
+		$data.append("NibXhucHYxaWBwc3NsNmZpdHk0ZnUzOT", Service.stringify(operatorId))
+		$data.append("dodmAwZzVyMmBkanZsOXdtNnZ2d3hnZn", Service.stringify(headCouplerId))
+		$data.append("ZjaXR2MDU5ZjU3ZmluY29wczVhcjRreX", Service.stringify(tailCouplerId))
+
+		return await fetch(Service.toURL("V5OHNoNWZxb2J0bTVhcGxtdWI5aTt4OT"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("error" in r) {
+				throw new Error(r.error);
+			}
+
+			if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			}
+		});
+	}
+
+	async getCouplerTypes(): Promise<Array<CouplerTypeViewModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("t4M2k4bGNuY2RmNHRodHA4cDphOHVjNz"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : CouplerTypeViewModel["$build"](d));
 			} else if ("aborted" in r) {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {

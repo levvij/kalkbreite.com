@@ -11,4 +11,9 @@ export class CouplerTypeSummaryModel extends ViewModel<CouplerType> {
 	id;
 
 	icon;
+	flippable;
+}
+
+export class CouplerTypeViewModel extends CouplerTypeSummaryModel {
+	name;
 }

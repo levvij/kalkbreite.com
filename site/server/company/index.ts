@@ -12,4 +12,10 @@ export class CompanyService extends Service {
 	async get(tag: string) {
 		return new CompanyViewModel(await this.database.company.first(company => company.tag.valueOf() == tag));
 	}
+
+	async list() {
+		return CompanySummaryModel.from(
+			this.database.company.orderByAscending(company => company.name)
+		);
+	}
 }

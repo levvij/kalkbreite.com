@@ -1,6 +1,6 @@
 import { Service } from "vlserver";
 import { DbContext, UicIdentifierIndexLetter } from "../managed/database";
-import { RailcarModelViewModel } from "../railcar/model";
+import { RailcarModelSummaryModel, RailcarModelViewModel } from "../railcar/model";
 import { RailcarSummaryModel } from "../railcar/railcar";
 import { UicIdentifierClassViewModel, UicIdentifierIndexLetterViewModel } from "./uic-identifier";
 
@@ -15,6 +15,13 @@ export class RailcarModelService extends Service {
 		return new RailcarModelViewModel(
 			await this.database.railcarModel
 				.first(model => model.tag.valueOf() == tag)
+		)
+	}
+
+	list() {
+		return RailcarModelSummaryModel.from(
+			this.database.railcarModel
+				.orderByAscending(model => model.name)
 		)
 	}
 

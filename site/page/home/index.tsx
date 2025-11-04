@@ -27,7 +27,7 @@ export class HomePage extends Component {
 			</ui-cover>
 
 			<ui-topics>
-				<ui-topic ui-href='/railcars'>
+				<ui-topic ui-href='/railcar'>
 					<img src='/assets/topics/rolling-stock.jpg' />
 
 					<ui-title>

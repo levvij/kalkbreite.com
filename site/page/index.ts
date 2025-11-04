@@ -1,39 +1,39 @@
-import { Component, PathRouter, Router } from '@acryps/page';
-import { registerDirectives } from '@acryps/page-default-directives';
-import { PageComponent } from './page';
-import { HomePage } from './home';
-import { applicationStyle } from './page.style';
-import { RailcarPage } from './railcar';
-import { Service, SessionService, SessionViewModel } from './managed/services';
-import { CompanyPage } from './company';
-import { StorageContainerPage } from './storage-container';
-import { PrintStorageContainerTagPage } from './storage-container/print';
-import { GraffitiPage } from './graffiti';
-import { AssignGraffitiBoundsPage } from './graffiti/assign';
-import { ArtistPage } from './artist';
-import { LoginPage } from './login';
-import { RegisterGraffitiPage } from './railcar/register-graffiti';
-import { GraffitiInspirationsPage } from './graffiti-inspirations';
-import { CaptureAnchorPage } from './railcar/anchor';
-import { RailcarCouplerPage } from './railcar/coupler';
-import { TrainPage } from './trains/train';
-import { TrainsPage } from './trains';
-import { CoupleTrainPage } from './trains/train/couple';
-import { ModelPage } from './model';
-import { LayoutPage } from './layout';
-import { LayoutSectionPage } from './layout/section';
-import { MaintenacePage } from './railcar/maintenance';
-import { MetaCollectionPage, Metadata } from '@acryps/metadata';
-import { ReportDecouplingIncidentPage } from './layout/section/incident/decoupling';
-import { ReportDerailmentIncidentPage } from './layout/section/incident/derailment';
-import { ReportPowerLossIncidentPage } from './layout/section/incident/power-loss';
-import { ReportCollisionIncidentPage } from './layout/section/incident/collision';
-import { RailcarsPage } from './railcars';
-import { ArtistsPage } from './artists';
-import { LivePage } from './live';
-import { GraffitiInspirationPage } from './graffiti-inspirations/inspiration';
-import { AssignGraffitiInspirationPage } from './graffiti/assign-inspiration';
-import { ScanBridge } from './scan';
+import { Router, PathRouter, Component } from "@acryps/page";
+import { registerDirectives } from "@acryps/page-default-directives";
+import { ArtistPage } from "./artist";
+import { ArtistsPage } from "./artists";
+import { CompanyPage } from "./company";
+import { GraffitiPage } from "./graffiti";
+import { GraffitiInspirationsPage } from "./graffiti-inspirations";
+import { GraffitiInspirationPage } from "./graffiti-inspirations/inspiration";
+import { AssignGraffitiBoundsPage } from "./graffiti/assign";
+import { AssignGraffitiInspirationPage } from "./graffiti/assign-inspiration";
+import { HomePage } from "./home";
+import { LayoutPage } from "./layout";
+import { LayoutSectionPage } from "./layout/section";
+import { ReportCollisionIncidentPage } from "./layout/section/incident/collision";
+import { ReportDecouplingIncidentPage } from "./layout/section/incident/decoupling";
+import { ReportDerailmentIncidentPage } from "./layout/section/incident/derailment";
+import { ReportPowerLossIncidentPage } from "./layout/section/incident/power-loss";
+import { LivePage } from "./live";
+import { LoginPage } from "./login";
+import { SessionViewModel, Service, SessionService } from "./managed/services";
+import { ModelPage } from "./model";
+import { PageComponent } from "./page";
+import { applicationStyle } from "./page.style";
+import { RailcarsPage } from "./railcar";
+import { RailcarPage } from "./railcar/railcar";
+import { CaptureAnchorPage } from "./railcar/railcar/anchor";
+import { RailcarCouplerPage } from "./railcar/railcar/coupler";
+import { MaintenacePage } from "./railcar/railcar/maintenance";
+import { RegisterGraffitiPage } from "./railcar/railcar/register-graffiti";
+import { RegisterRailcarPage } from "./railcar/register";
+import { ScanBridge } from "./scan";
+import { StorageContainerPage } from "./storage-container";
+import { PrintStorageContainerTagPage } from "./storage-container/print";
+import { TrainsPage } from "./trains";
+import { TrainPage } from "./trains/train";
+import { CoupleTrainPage } from "./trains/train/couple";
 
 // injected by esbuild
 declare const buildDate: string;
@@ -74,14 +74,16 @@ export class Application {
 				)
 			)
 
-			.route('/railcars', RailcarsPage)
+			.route('/railcar', RailcarsPage
+				.route('/register/:tag', RegisterRailcarPage)
 
-			.route('/railcar/:tag', RailcarPage
-				.route('/anchor/:captureId', CaptureAnchorPage)
-				.route('/register-graffiti', RegisterGraffitiPage)
-				.route('/maintenance/:id', MaintenacePage)
+				.route('/:tag', RailcarPage
+					.route('/anchor/:captureId', CaptureAnchorPage)
+					.route('/register-graffiti', RegisterGraffitiPage)
+					.route('/maintenance/:id', MaintenacePage)
 
-				.route('/coupler/:direction', RailcarCouplerPage)
+					.route('/coupler/:direction', RailcarCouplerPage)
+				)
 			)
 
 			.route('/train', TrainsPage

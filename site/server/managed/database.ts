@@ -551,19 +551,22 @@ export class Coupler extends Entity<CouplerQueryProxy> {
 }
 			
 export class CouplerTypeQueryProxy extends QueryProxy {
+	get flippable(): Partial<QueryBoolean> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get icon(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
 
 export class CouplerType extends Entity<CouplerTypeQueryProxy> {
 	couplers: PrimaryReference<Coupler, CouplerQueryProxy>;
-		icon: string;
+		flippable: boolean;
+	icon: string;
 	declare id: string;
 	name: string;
 	
 	$$meta = {
 		source: "coupler_type",
 		columns: {
+			flippable: { type: "bool", name: "flippable" },
 			icon: { type: "text", name: "icon" },
 			id: { type: "uuid", name: "id" },
 			name: { type: "text", name: "name" }

@@ -28,13 +28,18 @@ import { MaintenanceViewModel } from "././../maintenace/maintenace";
 import { Maintenance } from "././database";
 import { MaintenanceService } from "././../maintenace/index";
 import { UicIdentifierIndexLetter } from "././database";
+import { RailcarModelSummaryModel } from "././../railcar/model";
 import { RailcarModelViewModel } from "././../railcar/model";
 import { RailcarSummaryModel } from "././../railcar/railcar";
 import { UicIdentifierClassViewModel } from "././../model/uic-identifier";
 import { UicIdentifierIndexLetterViewModel } from "././../model/uic-identifier";
 import { RailcarModelService } from "././../model/index";
+import { Coupler } from "././database";
+import { Railcar } from "././database";
 import { RailcarViewModel } from "././../railcar/railcar";
 import { updateThumbnail } from "././../capture/thumbnail";
+import { CouplerTypeSummaryModel } from "././../railcar/coupler";
+import { CouplerTypeViewModel } from "././../railcar/coupler";
 import { RailcarService } from "././../railcar/index";
 import { Session } from "././database";
 import { SessionViewModel } from "././../session/session";
@@ -62,8 +67,6 @@ import { GraffitiInspirationMediaViewModel } from "./../graffiti/inspiration";
 import { MaintenanceSummaryModel } from "./../maintenace/maintenace";
 import { UicLocaleViewModel } from "./../model/uic-identifier";
 import { CouplerViewModel } from "./../railcar/coupler";
-import { CouplerTypeSummaryModel } from "./../railcar/coupler";
-import { RailcarModelSummaryModel } from "./../railcar/model";
 import { RailcarModelDrawingSummaryModel } from "./../railcar/model";
 import { AccountViewModel } from "./../session/session";
 import { StorageContainerSummaryModel } from "./../storage/storage-contaiuner";
@@ -79,11 +82,9 @@ import { GraffitiType } from "./../managed/database";
 import { Camera } from "./../managed/database";
 import { UicIdentifierClass } from "./../managed/database";
 import { UicLocale } from "./../managed/database";
-import { Coupler } from "./../managed/database";
 import { CouplerType } from "./../managed/database";
 import { RailcarModel } from "./../managed/database";
 import { RailcarModelDrawing } from "./../managed/database";
-import { Railcar } from "./../managed/database";
 import { Account } from "./../managed/database";
 import { StorageContainer } from "./../managed/database";
 import { TrainLabel } from "./../managed/database";
@@ -160,6 +161,15 @@ export class ManagedServer extends BaseServer {
 			inject => inject.construct(CompanyService),
 			(controller, params) => controller.get(
 				params["p3ZXR5aTF5cjJtMjlxd2BvamozNDRmMm"]
+			)
+		);
+
+		this.expose(
+			"gzZGd3aWZ1ZTE5ZDZudTA0dDc5dWZ5Z3",
+			{},
+			inject => inject.construct(CompanyService),
+			(controller, params) => controller.list(
+				
 			)
 		);
 
@@ -446,6 +456,15 @@ export class ManagedServer extends BaseServer {
 		);
 
 		this.expose(
+			"RiNGo2MHxtc2RkZXs3ZTB2b3hxc3txbm",
+			{},
+			inject => inject.construct(RailcarModelService),
+			(controller, params) => controller.list(
+				
+			)
+		);
+
+		this.expose(
 			"g1c2NhNjNvM3BlODw2NzN3dnJpcmdtMW",
 			{
 			"Y2aWNtZjIxNHxlcj1jYTk1Y39iM2VpM2": { type: "string", isArray: false, isOptional: false }
@@ -493,6 +512,46 @@ export class ManagedServer extends BaseServer {
 			inject => inject.construct(RailcarService),
 			(controller, params) => controller.get(
 				params["J6ZnUwOHpxNDN2eHlpdjlvcjBtZXRtaH"]
+			)
+		);
+
+		this.expose(
+			"V5OHNoNWZxb2J0bTVhcGxtdWI5aTt4OT",
+			{
+			"dsaTJpcm9nOWhkazEycGZxcGJzcGZ2bW": { type: "string", isArray: false, isOptional: false },
+				"h0bHNxc2tvbWN1ZnE4bj1vYj4xNWV6Zm": { type: "string", isArray: false, isOptional: false },
+				"ltdzpmYWoyaWxhOX9lbG0yNDJsODhran": { type: "string", isArray: false, isOptional: false },
+				"FnYzhvNTJxMGIzYnRmampmMWQwOWhmZD": { type: "date", isArray: false, isOptional: false },
+				"llM2AycmI2eGVzeTpsZWVhaGF2M3Vmbm": { type: "number", isArray: false, isOptional: false },
+				"RqcmlwaGl3bmZrYjI0M2ZqcDV6ZXZiem": { type: "string", isArray: false, isOptional: false },
+				"RhbH9yZmhsMWh5dm1mcTU4emB4amlveD": { type: "string", isArray: false, isOptional: false },
+				"1pc3ZudXVic3V2dDhka2R2MzA0enNpM2": { type: "string", isArray: false, isOptional: false },
+				"NibXhucHYxaWBwc3NsNmZpdHk0ZnUzOT": { type: "string", isArray: false, isOptional: false },
+				"dodmAwZzVyMmBkanZsOXdtNnZ2d3hnZn": { type: "string", isArray: false, isOptional: false },
+				"ZjaXR2MDU5ZjU3ZmluY29wczVhcjRreX": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(RailcarService),
+			(controller, params) => controller.register(
+				params["dsaTJpcm9nOWhkazEycGZxcGJzcGZ2bW"],
+				params["h0bHNxc2tvbWN1ZnE4bj1vYj4xNWV6Zm"],
+				params["ltdzpmYWoyaWxhOX9lbG0yNDJsODhran"],
+				params["FnYzhvNTJxMGIzYnRmampmMWQwOWhmZD"],
+				params["llM2AycmI2eGVzeTpsZWVhaGF2M3Vmbm"],
+				params["RqcmlwaGl3bmZrYjI0M2ZqcDV6ZXZiem"],
+				params["RhbH9yZmhsMWh5dm1mcTU4emB4amlveD"],
+				params["1pc3ZudXVic3V2dDhka2R2MzA0enNpM2"],
+				params["NibXhucHYxaWBwc3NsNmZpdHk0ZnUzOT"],
+				params["dodmAwZzVyMmBkanZsOXdtNnZ2d3hnZn"],
+				params["ZjaXR2MDU5ZjU3ZmluY29wczVhcjRreX"]
+			)
+		);
+
+		this.expose(
+			"t4M2k4bGNuY2RmNHRodHA4cDphOHVjNz",
+			{},
+			inject => inject.construct(RailcarService),
+			(controller, params) => controller.getCouplerTypes(
+				
 			)
 		);
 
@@ -1652,6 +1711,7 @@ ViewModel.mappings = {
 	[CouplerTypeSummaryModel.name]: class ComposedCouplerTypeSummaryModel extends CouplerTypeSummaryModel {
 		async map() {
 			return {
+				flippable: this.$$model.flippable,
 				icon: this.$$model.icon,
 				id: this.$$model.id
 			}
@@ -1683,6 +1743,7 @@ ViewModel.mappings = {
 			}
 
 			return {
+				flippable: true,
 				icon: true,
 				id: true
 			};
@@ -1690,6 +1751,7 @@ ViewModel.mappings = {
 
 		static toViewModel(data) {
 			const item = new CouplerTypeSummaryModel(null);
+			"flippable" in data && (item.flippable = !!data.flippable);
 			"icon" in data && (item.icon = data.icon === null ? null : `${data.icon}`);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 
@@ -1705,6 +1767,7 @@ ViewModel.mappings = {
 				model = new CouplerType();
 			}
 
+			"flippable" in viewModel && (model.flippable = !!viewModel.flippable);
 			"icon" in viewModel && (model.icon = viewModel.icon === null ? null : `${viewModel.icon}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 
@@ -3160,6 +3223,76 @@ ViewModel.mappings = {
 			"issue" in viewModel && (model.issue = viewModel.issue === null ? null : `${viewModel.issue}`);
 			"opened" in viewModel && (model.opened = viewModel.opened === null ? null : new Date(viewModel.opened));
 			"title" in viewModel && (model.title = viewModel.title === null ? null : `${viewModel.title}`);
+
+			return model;
+		}
+	},
+	[CouplerTypeViewModel.name]: class ComposedCouplerTypeViewModel extends CouplerTypeViewModel {
+		async map() {
+			return {
+				flippable: this.$$model.flippable,
+				icon: this.$$model.icon,
+				id: this.$$model.id,
+				name: this.$$model.name
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				flippable: true,
+				icon: true,
+				id: true,
+				name: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new CouplerTypeViewModel(null);
+			"flippable" in data && (item.flippable = !!data.flippable);
+			"icon" in data && (item.icon = data.icon === null ? null : `${data.icon}`);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: CouplerTypeViewModel) {
+			let model: CouplerType;
+
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(CouplerType).find(viewModel.id)
+			} else {
+				model = new CouplerType();
+			}
+
+			"flippable" in viewModel && (model.flippable = !!viewModel.flippable);
+			"icon" in viewModel && (model.icon = viewModel.icon === null ? null : `${viewModel.icon}`);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 
 			return model;
 		}

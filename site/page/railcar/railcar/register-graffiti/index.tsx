@@ -1,6 +1,6 @@
 import { Component } from "@acryps/page";
-import { ArtistSummaryModel, GraffitiService, GraffitiTypeViewModel, RailcarDirection, RailcarService, RailcarViewModel } from "../../managed/services";
-import { SlideshowComponent } from "../../shared/slideshow";
+import { ArtistSummaryModel, GraffitiService, GraffitiTypeViewModel, RailcarDirection, RailcarService, RailcarViewModel } from "../../../managed/services";
+import { SlideshowComponent } from "../../../shared/slideshow";
 import { RailcarPage } from "..";
 
 export class RegisterGraffitiPage extends Component {

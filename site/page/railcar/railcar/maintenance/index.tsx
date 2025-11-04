@@ -1,6 +1,6 @@
 import { Component } from "@acryps/page";
-import { DetailSectionComponent } from "../../shared/detail-section";
-import { MaintenanceService, MaintenanceViewModel } from "../../managed/services";
+import { DetailSectionComponent } from "../../../shared/detail-section";
+import { MaintenanceService, MaintenanceViewModel } from "../../../managed/services";
 
 export class MaintenacePage extends Component {
 	declare parameters: { id };
