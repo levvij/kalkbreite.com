@@ -1,6 +1,8 @@
 <!rml>
 <railway name="kalkbreite.com" version="1">
 	<monitor device="monitor-master"></monitor>
+	<monitor device="kalkbreite-site-relay"></monitor>
+
 	<throttle device="throttle-master"></throttle>
 
 	<district name="fiddle-yard-east">
@@ -39,7 +41,12 @@
 
 			<section name="stem-south">
 				<tracks>
-					<track length="188.703" />
+					<track length="188.703">
+						<positioners>
+							<point offset="10" device="etherrail-axle-counter-feb352297fc7" channel="any" responder="any" />
+							<point offset="160" device="etherrail-axle-counter-4e2c3208887f" channel="any" responder="any" />
+						</positioners>
+					</track>
 				</tracks>
 
 				<tile x="19" y="29" pattern="cc-cr" />
@@ -345,9 +352,27 @@
 
 			<section name="stem-body" power-district="body">
 				<tracks>
-					<track length="63.249" path="890,130,5220 830,60,5220" />
-					<track length="580.812" path="830,60,5220 190,60,5220" />
-					<track length="20.184" path="190,60,5220 160,60,5220" />
+					<track length="63.249" path="890,130,5220 830,60,5220">
+						<positioners>
+							<point offset="50" device="etherrail-axle-counter-c1147368ba14" channel="any" responder="any" />
+						</positioners>
+					</track>
+
+					<track length="580.812" path="830,60,5220 190,60,5220">
+						<positioners>
+							<point offset="100" device="etherrail-axle-counter-85316d252e7b" channel="any" responder="any" />
+							<point offset="200" device="etherrail-axle-counter-35bcceb09025" channel="any" responder="any" />
+							<point offset="300" device="etherrail-axle-counter-8b63e73297fd" channel="any" responder="any" />
+							<point offset="400" device="etherrail-axle-counter-d489b5e247e5" channel="any" responder="any" />
+							<point offset="500" device="etherrail-axle-counter-5d21b53bf9eb" channel="any" responder="any" />
+						</positioners>
+					</track>
+
+					<track length="20.184" path="190,60,5220 160,60,5220">
+						<positioners>
+							<point offset="10" device="etherrail-axle-counter-c5a428001d0b" channel="any" responder="any" />
+						</positioners>
+					</track>
 				</tracks>
 
 				<tile x="22" y="8" pattern="cc-tl" />
@@ -372,7 +397,12 @@
 
 			<section name="stem-north-passover" power-district="body">
 				<tracks>
-					<track length="97.005" path="160,60,5220 50,30,5220" />
+					<track length="97.005" path="160,60,5220 50,30,5220">
+						<positioners>
+							<point offset="10" device="etherrail-axle-counter-cabf17ef3bd5" channel="any" responder="any" />
+							<point offset="80" device="etherrail-axle-counter-e679aab387e7" channel="any" responder="any" />
+						</positioners>
+					</track>
 				</tracks>
 
 				<tile x="9" y="7" pattern="cc-tl" />
@@ -465,8 +495,17 @@
 
 			<section name="stem-north-1" power-district="body">
 				<tracks>
-					<track length="68.208" path="50,30,5220 30,80,5220" />
-					<track length="24.36" path="30,80,5220 30,310,5220" />
+					<track length="68.208" path="50,30,5220 30,80,5220">
+						<positioners>
+							<point offset="30" device="etherrail-axle-counter-ff8f47c75f59" channel="any" responder="any" />
+						</positioners>
+					</track>
+
+					<track length="24.36" path="30,80,5220 30,310,5220">
+						<positioners>
+							<point offset="10" device="etherrail-axle-counter-3415b75a6b34" channel="any" responder="any" />
+						</positioners>
+					</track>
 				</tracks>
 
 				<tile x="3" y="1" pattern="cc-cl" />
@@ -512,7 +551,13 @@
 
 			<section name="stem-north-2" power-district="north">
 				<tracks>
-					<track length="177.306" path="20,160,5220 20,330,5220 50,360,5220" />
+					<track length="177.306" path="20,160,5220 20,330,5220 50,360,5220">
+						<positioners>
+							<point offset="10" device="etherrail-axle-counter-fb1c52ebd5d6" channel="any" responder="any" />
+							<point offset="150" device="etherrail-axle-counter-511dcec83477" channel="any" responder="any" />
+						</positioners>
+					</track>
+
 					<track length="71.949" path="50,360,5220 130,360,5220" />
 				</tracks>
 
@@ -567,7 +612,12 @@
 
 			<section name="loop" power-district="north">
 				<tracks>
-					<track length="358.092" />
+					<track length="358.092">
+						<positioners>
+							<point offset="100" device="etherrail-axle-counter-3b314288d7d2" channel="any" responder="any" />
+							<point offset="250" device="etherrail-axle-counter-3de4654c84fd" channel="any" responder="any" />
+						</positioners>
+					</track>
 				</tracks>
 
 				<tile x="9" y="29" pattern="cc-tr" />
@@ -852,7 +902,11 @@
 
 			<section name="stem-storage-merge-buffer">
 				<tracks>
-					<track length="25.056" />
+					<track length="25.056">
+						<positioners>
+							<point offset="5" device="etherrail-axle-counter-60438617a696" channel="any" responder="any" />
+						</positioners>
+					</track>
 				</tracks>
 
 				<tile x="21" y="16" pattern="tc-br" />
@@ -889,7 +943,12 @@
 
 			<section name="stem-south-2">
 				<tracks>
-					<track length="137.373" />
+					<track length="137.373">
+						<positioners>
+							<point offset="10" device="etherrail-axle-counter-561024093ab3" channel="any" responder="any" />
+							<point offset="120" device="etherrail-axle-counter-c69ec6a41def" channel="any" responder="any" />
+						</positioners>
+					</track>
 				</tracks>
 
 				<tile x="25" y="20" pattern="cc-bc" />
@@ -937,7 +996,14 @@
 
 			<section name="south-loop-1">
 				<tracks>
-					<track length="507.906" />
+					<track length="507.906">
+						<positioners>
+							<point offset="100" device="etherrail-axle-counter-655009258a82" channel="any" responder="any" />
+							<point offset="200" device="etherrail-axle-counter-934a05642f79" channel="any" responder="any" />
+							<point offset="300" device="etherrail-axle-counter-1d184a9036df" channel="any" responder="any" />
+							<point offset="400" device="etherrail-axle-counter-fdb479474423" channel="any" responder="any" />
+						</positioners>
+					</track>
 				</tracks>
 
 				<tile x="21" y="25" pattern="cc-cl" />
@@ -964,8 +1030,8 @@
 				<tracks>
 					<track length="341.301">
 						<positioners>
-							<point offset="337" device="etherrail-magnetic-balise-1000-eb0a994964594bf93ab6d891531f4019" channel="north" responder="magnet:north" />
-							<point offset="337" device="etherrail-magnetic-balise-1000-eb0a994964594bf93ab6d891531f4019" channel="south" responder="magnet:south" />
+							<point offset="100" device="etherrail-axle-counter-hub-533e52213d96" channel="1" responder="any" />
+							<point offset="250" device="etherrail-axle-counter-hub-533e52213d96" channel="2" responder="any" />
 						</positioners>
 					</track>
 				</tracks>
