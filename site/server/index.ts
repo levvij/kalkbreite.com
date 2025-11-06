@@ -20,6 +20,8 @@ import { LiveStreamer } from "./live/stream";
 import { registerGraffitiInspirationCaptureInterface } from "./graffiti/inspiration.interface";
 import { importTrainProductBrands } from "./operators/import-train-product-brand";
 import { registerScanInterface } from "./scan/interface";
+import { registerMonitorRelay } from "./monitor/interface";
+import expressWs from "express-ws";
 
 const streamCameras = process.env.STREAM_CAMERAS == 'ENABLE';
 
@@ -60,6 +62,9 @@ DbClient.connectedClient.connect().then(async () => {
 
 	app.use(new StaticFileRoute('/layout/source/', join(process.cwd(), '..', '..', 'layout')));
 
+
+	expressWs(app.app);
+
 	registerTagInterface(app);
 	registerCaptureInterface(app, database, chain);
 	registerLogoInterface(app, database);
@@ -67,6 +72,7 @@ DbClient.connectedClient.connect().then(async () => {
 	registerRailcarModelDrawingInterface(app, database);
 	registerGraffitiInspirationCaptureInterface(app, database);
 	registerScanInterface(app, database, chain);
+	registerMonitorRelay(app);
 
 	if (streamCameras) {
 		await LiveStreamer.start();

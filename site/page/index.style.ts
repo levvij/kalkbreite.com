@@ -16,6 +16,7 @@ export const dangerContrastColor = hex('fff');
 
 export const markerColor = hex('ff0');
 export const trainOccupiedColor = hex('f00');
+export const positionerColor = hex('66f');
 
 export const pageColor = hex('fff');
 export const pageTransparentColor = hex('fff0');

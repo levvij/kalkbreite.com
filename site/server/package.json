@@ -17,6 +17,7 @@
 	},
 	"dependencies": {
 		"@acryps/environment": "^2.7.2",
+		"@packtrack/protocol": "^1.8.1",
 		"@packtrack/train": "^1.2.0",
 		"bwip-js": "^4.5.1",
 		"cookie-parser": "^1.4.7",

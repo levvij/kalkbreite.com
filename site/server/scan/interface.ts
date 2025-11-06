@@ -9,8 +9,6 @@ import { TrainChain } from "../train/chain";
 export const registerScanInterface = (server: ManagedServer, database: DbContext, chain: TrainChain) => {
 	const listeners: WebSocket[] = [];
 
-	expressWs(server.app);
-
 	for (let route of scanRoutes) {
 		server.app.get(`/scan/${route.source}/:tag`, async (request, response) => {
 			const tag = request.params.tag;

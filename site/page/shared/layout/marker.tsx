@@ -64,7 +64,7 @@ export class LayoutMarker extends Component {
 		this.marker.setAttribute('stroke-dasharray', [
 			0,
 			trail.offset.start,
-			length - trail.offset.end + trail.offset.start,
+			trail.offset.end,
 			length
 		].join(' '));
 
