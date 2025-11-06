@@ -50,3 +50,7 @@ CREATE OR REPLACE VIEW last_train_head_position AS (
 		train_head_position.train_identifier DESC,
 		train_head_position.updated DESC
 );
+
+ALTER TABLE company ADD COLUMN train_prefix TEXT
+	UNIQUE
+	CHECK (train_prefix = UPPER(train_prefix));

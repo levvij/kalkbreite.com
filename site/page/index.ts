@@ -34,6 +34,7 @@ import { PrintStorageContainerTagPage } from "./storage-container/print";
 import { TrainsPage } from "./trains";
 import { TrainPage } from "./trains/train";
 import { CoupleTrainPage } from "./trains/train/couple";
+import { AssignTrainLabelPage } from "./trains/train/label";
 
 // injected by esbuild
 declare const buildDate: string;
@@ -89,6 +90,7 @@ export class Application {
 			.route('/train', TrainsPage
 				.route('/:identifier', TrainPage
 					.route('/couple/:anchor', CoupleTrainPage)
+					.route('/label', AssignTrainLabelPage)
 				)
 			)
 

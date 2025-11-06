@@ -396,6 +396,7 @@ export class CompanyQueryProxy extends QueryProxy {
 	get parentId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get shortname(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get tag(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get trainPrefix(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
 
 export class Company extends Entity<CompanyQueryProxy> {
@@ -415,6 +416,7 @@ export class Company extends Entity<CompanyQueryProxy> {
 	parentId: string;
 	shortname: string;
 	tag: string;
+	trainPrefix: string;
 	
 	$$meta = {
 		source: "company",
@@ -426,7 +428,8 @@ export class Company extends Entity<CompanyQueryProxy> {
 			name: { type: "text", name: "name" },
 			parentId: { type: "uuid", name: "parent_id" },
 			shortname: { type: "text", name: "shortname" },
-			tag: { type: "text", name: "tag" }
+			tag: { type: "text", name: "tag" },
+			trainPrefix: { type: "text", name: "train_prefix" }
 		},
 		get set(): DbSet<Company, CompanyQueryProxy> { 
 			return new DbSet<Company, CompanyQueryProxy>(Company, null);

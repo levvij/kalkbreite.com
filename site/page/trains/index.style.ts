@@ -4,6 +4,7 @@ import { knockoutColor, pageGutter, pageSpacing, radius } from "../index.style";
 import { trainStyle } from "./train/index.style";
 import { monospacedFont, trainIdentifierFont } from "../assets/font";
 import { clickable } from "../shared/interaction";
+import { trainLabelStyle } from "../shared/train-label/index.style";
 
 export const trainsStyle = () => child('ui-trains') (
 	boxed(),
@@ -19,7 +20,7 @@ export const trainsStyle = () => child('ui-trains') (
 	child('ui-filters') (
 		display('flex'),
 		flexWrap('wrap'),
-		gap(pageGutter),
+		gap(pageGutter.divide(2)),
 
 		marginBottom(pageSpacing),
 
@@ -52,20 +53,7 @@ export const trainsStyle = () => child('ui-trains') (
 			display('block'),
 			marginBottom(pageGutter),
 
-			child('ui-label') (
-				display('flex'),
-				alignItems('center'),
-				gap(pageGutter),
-
-				clickable(),
-
-				child('img') (
-					height(rem(1))
-				),
-
-				child('ui-name') (
-				)
-			),
+			trainLabelStyle(),
 
 			child('ui-detail') (
 				display('flex'),

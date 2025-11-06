@@ -49,6 +49,7 @@ import { SessionService } from "././../session/index";
 import { StorageContainerViewModel } from "././../storage/storage-contaiuner";
 import { StorageService } from "././../storage/index";
 import { Coupling } from "././database";
+import { TrainLabel } from "././database";
 import { Uncoupling } from "././database";
 import { TrainChain } from "././../train/chain";
 import { TrainViewModel } from "././../train/train";
@@ -87,7 +88,6 @@ import { RailcarModel } from "./../managed/database";
 import { RailcarModelDrawing } from "./../managed/database";
 import { Account } from "./../managed/database";
 import { StorageContainer } from "./../managed/database";
-import { TrainLabel } from "./../managed/database";
 import { TrainHeadPosition } from "./../managed/database";
 import { TrainProductBrand } from "./../managed/database";
 import { Train } from "./../train/chain/train";
@@ -722,6 +722,34 @@ export class ManagedServer extends BaseServer {
 			(controller, params) => controller.getActiveLabels(
 				
 			)
+		);
+
+		this.expose(
+			"M0MHVoOWR1Z2VoYnVpdj8wZXJ3dTFpd3",
+			{
+			"03ZGMyNWF5eXE5MGoxOHFidT5taGo1MG": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(TrainService),
+			(controller, params) => controller.getLabel(
+				params["03ZGMyNWF5eXE5MGoxOHFidT5taGo1MG"]
+			)
+		);
+
+		this.expose(
+			"JjdnB3cTJucjdidDdoOWdyYjUzYmhwMm",
+			{
+			"c5OXFrMjhzdmltaHU0YWBuMjFha256M3": { type: "string", isArray: false, isOptional: false },
+				"dwa3RzdDpoMTN1anV3MHtoZHQ0N2libj": { type: "string", isArray: false, isOptional: false },
+				"JnZXN5YWI3ej4yc3dtd3dsanZqbXJxZW": { type: "string", isArray: false, isOptional: false },
+				"NuMWViZTFkM2hubDVyczMzanF0anE5a2": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(TrainService),
+			(controller, params) => controller.assignLabel(
+				params["c5OXFrMjhzdmltaHU0YWBuMjFha256M3"],
+				params["dwa3RzdDpoMTN1anV3MHtoZHQ0N2libj"],
+				params["JnZXN5YWI3ej4yc3dtd3dsanZqbXJxZW"],
+				params["NuMWViZTFkM2hubDVyczMzanF0anE5a2"]
+			)
 		)
 	}
 }
@@ -808,7 +836,8 @@ ViewModel.mappings = {
 				id: this.$$model.id,
 				name: this.$$model.name,
 				shortname: this.$$model.shortname,
-				tag: this.$$model.tag
+				tag: this.$$model.tag,
+				trainPrefix: this.$$model.trainPrefix
 			}
 		};
 
@@ -842,7 +871,8 @@ ViewModel.mappings = {
 				id: true,
 				name: true,
 				shortname: true,
-				tag: true
+				tag: true,
+				trainPrefix: true
 			};
 		};
 
@@ -853,6 +883,7 @@ ViewModel.mappings = {
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"shortname" in data && (item.shortname = data.shortname === null ? null : `${data.shortname}`);
 			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
+			"trainPrefix" in data && (item.trainPrefix = data.trainPrefix === null ? null : `${data.trainPrefix}`);
 
 			return item;
 		}
@@ -871,6 +902,7 @@ ViewModel.mappings = {
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"shortname" in viewModel && (model.shortname = viewModel.shortname === null ? null : `${viewModel.shortname}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
+			"trainPrefix" in viewModel && (model.trainPrefix = viewModel.trainPrefix === null ? null : `${viewModel.trainPrefix}`);
 
 			return model;
 		}
@@ -2745,7 +2777,8 @@ ViewModel.mappings = {
 				id: this.$$model.id,
 				name: this.$$model.name,
 				shortname: this.$$model.shortname,
-				tag: this.$$model.tag
+				tag: this.$$model.tag,
+				trainPrefix: this.$$model.trainPrefix
 			}
 		};
 
@@ -2804,7 +2837,8 @@ ViewModel.mappings = {
 				id: true,
 				name: true,
 				shortname: true,
-				tag: true
+				tag: true,
+				trainPrefix: true
 			};
 		};
 
@@ -2820,6 +2854,7 @@ ViewModel.mappings = {
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"shortname" in data && (item.shortname = data.shortname === null ? null : `${data.shortname}`);
 			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
+			"trainPrefix" in data && (item.trainPrefix = data.trainPrefix === null ? null : `${data.trainPrefix}`);
 
 			return item;
 		}
@@ -2843,6 +2878,7 @@ ViewModel.mappings = {
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"shortname" in viewModel && (model.shortname = viewModel.shortname === null ? null : `${viewModel.shortname}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
+			"trainPrefix" in viewModel && (model.trainPrefix = viewModel.trainPrefix === null ? null : `${viewModel.trainPrefix}`);
 
 			return model;
 		}

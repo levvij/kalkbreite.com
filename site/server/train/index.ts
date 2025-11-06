@@ -1,5 +1,5 @@
 import { Service } from "vlserver";
-import { Coupling, DbContext, RailcarDirection, Uncoupling } from "../managed/database";
+import { Coupling, DbContext, RailcarDirection, TrainLabel, Uncoupling } from "../managed/database";
 import { TrainChain } from "./chain";
 import { RailcarSummaryModel } from "../railcar/railcar";
 import { TrainViewModel } from "./train";
@@ -159,5 +159,36 @@ export class TrainService extends Service {
 		return TrainLabelViewModel.from(
 			this.database.trainLabel
 		);
+	}
+
+	async getLabel(identifier: string) {
+		const label = await this.database.trainLabel.first(label => label.trainIdentifier.valueOf() == identifier);
+
+		if (!label) {
+			return null;
+		}
+
+		return new TrainLabelViewModel(label);
+	}
+
+	async assignLabel(identifier: string, name: string, productBrandId: string, operatorId: string) {
+		let label = await this.database.trainLabel.first(label => label.trainIdentifier.valueOf() == identifier);
+
+		if (!label) {
+			label = new TrainLabel();
+			label.trainIdentifier = identifier;
+		}
+
+		label.label = name;
+		label.productBrandId = productBrandId;
+		label.operatorId = operatorId;
+
+		if (label.id) {
+			await label.update();
+		} else {
+			await label.create();
+		}
+
+		return new TrainLabelViewModel(label);
 	}
 }

@@ -28,6 +28,7 @@ export class CompanySummaryModel {
 	name: string;
 	shortname: string;
 	tag: string;
+	trainPrefix: string;
 
 	private static $build(raw) {
 		const item = new CompanySummaryModel();
@@ -36,6 +37,7 @@ export class CompanySummaryModel {
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		raw.shortname === undefined || (item.shortname = raw.shortname === null ? null : `${raw.shortname}`)
 		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
+		raw.trainPrefix === undefined || (item.trainPrefix = raw.trainPrefix === null ? null : `${raw.trainPrefix}`)
 		
 		return item;
 	}
@@ -498,6 +500,7 @@ export class CompanyViewModel {
 	name: string;
 	shortname: string;
 	tag: string;
+	trainPrefix: string;
 
 	private static $build(raw) {
 		const item = new CompanyViewModel();
@@ -511,6 +514,7 @@ export class CompanyViewModel {
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		raw.shortname === undefined || (item.shortname = raw.shortname === null ? null : `${raw.shortname}`)
 		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
+		raw.trainPrefix === undefined || (item.trainPrefix = raw.trainPrefix === null ? null : `${raw.trainPrefix}`)
 		
 		return item;
 	}
@@ -1850,6 +1854,51 @@ export class TrainService {
 				const d = r.data;
 
 				return d.map(d => d === null ? null : TrainLabelViewModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async getLabel(identifier: string): Promise<TrainLabelViewModel> {
+		const $data = new FormData();
+		$data.append("03ZGMyNWF5eXE5MGoxOHFidT5taGo1MG", Service.stringify(identifier))
+
+		return await fetch(Service.toURL("M0MHVoOWR1Z2VoYnVpdj8wZXJ3dTFpd3"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d === null ? null : TrainLabelViewModel["$build"](d);
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async assignLabel(identifier: string, name: string, productBrandId: string, operatorId: string): Promise<TrainLabelViewModel> {
+		const $data = new FormData();
+		$data.append("c5OXFrMjhzdmltaHU0YWBuMjFha256M3", Service.stringify(identifier))
+		$data.append("dwa3RzdDpoMTN1anV3MHtoZHQ0N2libj", Service.stringify(name))
+		$data.append("JnZXN5YWI3ej4yc3dtd3dsanZqbXJxZW", Service.stringify(productBrandId))
+		$data.append("NuMWViZTFkM2hubDVyczMzanF0anE5a2", Service.stringify(operatorId))
+
+		return await fetch(Service.toURL("JjdnB3cTJucjdidDdoOWdyYjUzYmhwMm"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d === null ? null : TrainLabelViewModel["$build"](d);
 			} else if ("aborted" in r) {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {

@@ -6,6 +6,9 @@ import { clickable } from "../../shared/interaction";
 import { coupleStyle } from "./couple/index.style";
 import { detailSectionStyle } from "../../shared/detail-section/index.style";
 import { layoutStyle } from "../../shared/layout/index.style";
+import { buttonGroupStyle, buttonStyle } from "../../shared/button";
+import { trainLabelStyle } from "../../shared/train-label/index.style";
+import { assignTrainLabelStyle } from "./label/index.style";
 
 const iconButtonTextSize = rem(1);
 const iconButtonSize = iconButtonTextSize.add(pageGutter.multiply(2));
@@ -15,6 +18,14 @@ export const trainStyle = () => child('ui-train')(
 	display('block'),
 
 	coupleStyle(),
+	assignTrainLabelStyle(),
+
+	child('ui-label') (
+		display('block'),
+		marginBottom(pageSpacing),
+
+		trainLabelStyle(rem(3))
+	),
 
 	detailSectionStyle(
 		marginBottom(pageSpacing.multiply(2)),
@@ -25,6 +36,15 @@ export const trainStyle = () => child('ui-train')(
 
 			fontSize(rem(2)),
 			trainIdentifierFont
+		)
+	),
+
+	child('ui-actions') (
+		buttonGroupStyle(),
+		marginBottom(pageSpacing),
+
+		child('ui-action') (
+			buttonStyle()
 		)
 	),
 

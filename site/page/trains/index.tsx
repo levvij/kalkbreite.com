@@ -1,6 +1,7 @@
 import { Component } from "@acryps/page";
 import { TrainLabelViewModel, TrainProductBrandSummaryModel, TrainService, TrainViewModel } from "../managed/services";
 import { active } from "@acryps/style";
+import { TrainLabelComponent } from "../shared/train-label";
 
 export class TrainsPage extends Component {
 	trains: TrainViewModel[];
@@ -25,7 +26,8 @@ export class TrainsPage extends Component {
 			.filter(label => this.trains.find(train => train.identifier == label.trainIdentifier))
 			.filter(item => item?.productBrand)
 			.map(label => label.productBrand)
-			.filter((item, index, array) => array.findIndex(peer => peer.id == item.id) == index);
+			.filter((item, index, array) => array.findIndex(peer => peer.id == item.id) == index)
+			.sort((a, b) => a.name.localeCompare(b.name));
 
 		let trains: TrainViewModel[] = [];
 
@@ -68,17 +70,11 @@ export class TrainsPage extends Component {
 					const label = this.labels.find(label => label.trainIdentifier == train.identifier);
 
 					return <ui-train>
-						{label && <ui-label ui-href={train.identifier}>
-							{label?.productBrand && <img src={URL.createObjectURL(new Blob([label.productBrand.icon], { type: 'image/svg+xml' }))} />}
-
-							<ui-name>
-								{label.label}
-							</ui-name>
-						</ui-label>}
+						{label && new TrainLabelComponent(label)}
 
 						<ui-detail ui-href={train.identifier}>
 							<ui-identifier>
-								{train.identifier}
+								{label?.operator?.trainPrefix ? `${label.operator.trainPrefix}-${train.identifier}` : train.identifier}
 							</ui-identifier>
 
 							<ui-railcar-count>
