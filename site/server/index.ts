@@ -18,6 +18,8 @@ import { LayoutPlan } from "./layout-plan/interface";
 import { registerRailcarModelDrawingInterface } from "./model/drawing";
 import { LiveStreamer } from "./live/stream";
 import { registerGraffitiInspirationCaptureInterface } from "./graffiti/inspiration.interface";
+import { importTrainProductBrands } from "./operators/import-train-product-brand";
+import { registerScanInterface } from "./scan/interface";
 
 const streamCameras = process.env.STREAM_CAMERAS == 'ENABLE';
 
@@ -64,6 +66,7 @@ DbClient.connectedClient.connect().then(async () => {
 	registerStorageTagInterface(app);
 	registerRailcarModelDrawingInterface(app, database);
 	registerGraffitiInspirationCaptureInterface(app, database);
+	registerScanInterface(app, database, chain);
 
 	if (streamCameras) {
 		await LiveStreamer.start();

@@ -27,8 +27,8 @@ export class LayoutComponent extends Component {
 		this.layout && this.update();
 	}
 
-	mark(color: ColorValue, section: Section, start: number, end?: number) {
-		const marker = new LayoutMarker(this, color, section, start, end);
+	mark(color: ColorValue, start: SectionPosition, end?: SectionPosition) {
+		const marker = new LayoutMarker(this, color, start, end);
 		this.elements.push(marker);
 
 		if (this.elementContainer) {

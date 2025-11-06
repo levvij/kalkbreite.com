@@ -28,13 +28,18 @@ import { MaintenanceViewModel } from "././../maintenace/maintenace";
 import { Maintenance } from "././database";
 import { MaintenanceService } from "././../maintenace/index";
 import { UicIdentifierIndexLetter } from "././database";
+import { RailcarModelSummaryModel } from "././../railcar/model";
 import { RailcarModelViewModel } from "././../railcar/model";
 import { RailcarSummaryModel } from "././../railcar/railcar";
 import { UicIdentifierClassViewModel } from "././../model/uic-identifier";
 import { UicIdentifierIndexLetterViewModel } from "././../model/uic-identifier";
 import { RailcarModelService } from "././../model/index";
+import { Coupler } from "././database";
+import { Railcar } from "././database";
 import { RailcarViewModel } from "././../railcar/railcar";
 import { updateThumbnail } from "././../capture/thumbnail";
+import { CouplerTypeSummaryModel } from "././../railcar/coupler";
+import { CouplerTypeViewModel } from "././../railcar/coupler";
 import { RailcarService } from "././../railcar/index";
 import { Session } from "././database";
 import { SessionViewModel } from "././../session/session";
@@ -44,11 +49,18 @@ import { SessionService } from "././../session/index";
 import { StorageContainerViewModel } from "././../storage/storage-contaiuner";
 import { StorageService } from "././../storage/index";
 import { Coupling } from "././database";
+import { TrainLabel } from "././database";
 import { Uncoupling } from "././database";
 import { TrainChain } from "././../train/chain";
 import { TrainViewModel } from "././../train/train";
 import { TrainRailcarUnitViewModel } from "././../train/unit";
 import { TrainUnitViewModel } from "././../train/unit";
+import { TrainProductBrandSummaryModel } from "././../train/product-brand";
+import { TrainLabelViewModel } from "././../train/label";
+import { TrainState } from "././../train/state";
+import { TrainStateViewModel } from "././../train/state";
+import { LastTrainHeadPositionViewModel } from "././../train/position";
+import { LastTrainPosition } from "././../train/position";
 import { TrainService } from "././../train/index";
 import { ArtistSummaryModel } from "./../graffiti/artist";
 import { GraffitiSummaryModel } from "./../graffiti/graffiti";
@@ -56,13 +68,13 @@ import { GraffitiInspirationMediaViewModel } from "./../graffiti/inspiration";
 import { MaintenanceSummaryModel } from "./../maintenace/maintenace";
 import { UicLocaleViewModel } from "./../model/uic-identifier";
 import { CouplerViewModel } from "./../railcar/coupler";
-import { CouplerTypeSummaryModel } from "./../railcar/coupler";
-import { RailcarModelSummaryModel } from "./../railcar/model";
 import { RailcarModelDrawingSummaryModel } from "./../railcar/model";
 import { AccountViewModel } from "./../session/session";
 import { StorageContainerSummaryModel } from "./../storage/storage-contaiuner";
 import { CouplingViewModel } from "./../train/coupling";
+import { TrainHeadPositionViewModel } from "./../train/position";
 import { GraffitiRailcarViewModel } from "./../railcar/railcar";
+import { TrainProductBrandViewModel } from "./../train/product-brand";
 import { Capture } from "./../managed/database";
 import { Company } from "./../managed/database";
 import { Artist } from "./../managed/database";
@@ -71,13 +83,13 @@ import { GraffitiType } from "./../managed/database";
 import { Camera } from "./../managed/database";
 import { UicIdentifierClass } from "./../managed/database";
 import { UicLocale } from "./../managed/database";
-import { Coupler } from "./../managed/database";
 import { CouplerType } from "./../managed/database";
 import { RailcarModel } from "./../managed/database";
 import { RailcarModelDrawing } from "./../managed/database";
-import { Railcar } from "./../managed/database";
 import { Account } from "./../managed/database";
 import { StorageContainer } from "./../managed/database";
+import { TrainHeadPosition } from "./../managed/database";
+import { TrainProductBrand } from "./../managed/database";
 import { Train } from "./../train/chain/train";
 
 Inject.mappings = {
@@ -149,6 +161,15 @@ export class ManagedServer extends BaseServer {
 			inject => inject.construct(CompanyService),
 			(controller, params) => controller.get(
 				params["p3ZXR5aTF5cjJtMjlxd2BvamozNDRmMm"]
+			)
+		);
+
+		this.expose(
+			"gzZGd3aWZ1ZTE5ZDZudTA0dDc5dWZ5Z3",
+			{},
+			inject => inject.construct(CompanyService),
+			(controller, params) => controller.list(
+				
 			)
 		);
 
@@ -435,6 +456,15 @@ export class ManagedServer extends BaseServer {
 		);
 
 		this.expose(
+			"RiNGo2MHxtc2RkZXs3ZTB2b3hxc3txbm",
+			{},
+			inject => inject.construct(RailcarModelService),
+			(controller, params) => controller.list(
+				
+			)
+		);
+
+		this.expose(
 			"g1c2NhNjNvM3BlODw2NzN3dnJpcmdtMW",
 			{
 			"Y2aWNtZjIxNHxlcj1jYTk1Y39iM2VpM2": { type: "string", isArray: false, isOptional: false }
@@ -482,6 +512,46 @@ export class ManagedServer extends BaseServer {
 			inject => inject.construct(RailcarService),
 			(controller, params) => controller.get(
 				params["J6ZnUwOHpxNDN2eHlpdjlvcjBtZXRtaH"]
+			)
+		);
+
+		this.expose(
+			"V5OHNoNWZxb2J0bTVhcGxtdWI5aTt4OT",
+			{
+			"dsaTJpcm9nOWhkazEycGZxcGJzcGZ2bW": { type: "string", isArray: false, isOptional: false },
+				"h0bHNxc2tvbWN1ZnE4bj1vYj4xNWV6Zm": { type: "string", isArray: false, isOptional: false },
+				"ltdzpmYWoyaWxhOX9lbG0yNDJsODhran": { type: "string", isArray: false, isOptional: false },
+				"FnYzhvNTJxMGIzYnRmampmMWQwOWhmZD": { type: "date", isArray: false, isOptional: false },
+				"llM2AycmI2eGVzeTpsZWVhaGF2M3Vmbm": { type: "number", isArray: false, isOptional: false },
+				"RqcmlwaGl3bmZrYjI0M2ZqcDV6ZXZiem": { type: "string", isArray: false, isOptional: false },
+				"RhbH9yZmhsMWh5dm1mcTU4emB4amlveD": { type: "string", isArray: false, isOptional: false },
+				"1pc3ZudXVic3V2dDhka2R2MzA0enNpM2": { type: "string", isArray: false, isOptional: false },
+				"NibXhucHYxaWBwc3NsNmZpdHk0ZnUzOT": { type: "string", isArray: false, isOptional: false },
+				"dodmAwZzVyMmBkanZsOXdtNnZ2d3hnZn": { type: "string", isArray: false, isOptional: false },
+				"ZjaXR2MDU5ZjU3ZmluY29wczVhcjRreX": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(RailcarService),
+			(controller, params) => controller.register(
+				params["dsaTJpcm9nOWhkazEycGZxcGJzcGZ2bW"],
+				params["h0bHNxc2tvbWN1ZnE4bj1vYj4xNWV6Zm"],
+				params["ltdzpmYWoyaWxhOX9lbG0yNDJsODhran"],
+				params["FnYzhvNTJxMGIzYnRmampmMWQwOWhmZD"],
+				params["llM2AycmI2eGVzeTpsZWVhaGF2M3Vmbm"],
+				params["RqcmlwaGl3bmZrYjI0M2ZqcDV6ZXZiem"],
+				params["RhbH9yZmhsMWh5dm1mcTU4emB4amlveD"],
+				params["1pc3ZudXVic3V2dDhka2R2MzA0enNpM2"],
+				params["NibXhucHYxaWBwc3NsNmZpdHk0ZnUzOT"],
+				params["dodmAwZzVyMmBkanZsOXdtNnZ2d3hnZn"],
+				params["ZjaXR2MDU5ZjU3ZmluY29wczVhcjRreX"]
+			)
+		);
+
+		this.expose(
+			"t4M2k4bGNuY2RmNHRodHA4cDphOHVjNz",
+			{},
+			inject => inject.construct(RailcarService),
+			(controller, params) => controller.getCouplerTypes(
+				
 			)
 		);
 
@@ -582,13 +652,37 @@ export class ManagedServer extends BaseServer {
 		);
 
 		this.expose(
-			"lzOGlqcTd0eWhnYTZ0Y2A3czJsYm95cj",
+			"V2a2BkdWdoeWlkeWF1bndueDZkengwbX",
 			{
-			"F5Z3U5ZXFxeWd3cHY3MmA3YXB2MnV4Zn": { type: "string", isArray: false, isOptional: false }
+			"IzOXl5ajMwdjFzdXxmcWNlanhwbDhtdz": { type: "string", isArray: false, isOptional: false },
+				"xoN2VxMmEyamQ2cHc3cGZzNnVjdD45bT": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(TrainService),
+			(controller, params) => controller.getCoupleableTrains(
+				params["IzOXl5ajMwdjFzdXxmcWNlanhwbDhtdz"],
+				params["xoN2VxMmEyamQ2cHc3cGZzNnVjdD45bT"]
+			)
+		);
+
+		this.expose(
+			"k2NDd3bGNneXpjeTVnYmF2OGYyc3kyMW",
+			{
+			"VscDloMTM4aTE5aXU3c2AxN2xsY2oxaT": { type: "string", isArray: false, isOptional: false }
 			},
 			inject => inject.construct(TrainService),
 			(controller, params) => controller.getTrain(
-				params["F5Z3U5ZXFxeWd3cHY3MmA3YXB2MnV4Zn"]
+				params["VscDloMTM4aTE5aXU3c2AxN2xsY2oxaT"]
+			)
+		);
+
+		this.expose(
+			"M5a2Nzdz5oMHl2eDM1dWVjM3dnaWprcW",
+			{
+			"t2ZXNzdnU2bTRlZHl5OTJjZ3ZhcTAzeW": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(TrainService),
+			(controller, params) => controller.getTrainRailcars(
+				params["t2ZXNzdnU2bTRlZHl5OTJjZ3ZhcTAzeW"]
 			)
 		);
 
@@ -600,6 +694,61 @@ export class ManagedServer extends BaseServer {
 			inject => inject.construct(TrainService),
 			(controller, params) => controller.getUnitTrain(
 				params["10czNubHltczN4cXhubmRxNzdiMWR0b3"]
+			)
+		);
+
+		this.expose(
+			"J6eDNvcXZncDFrbDh1Zn54Nzs2cHdjMW",
+			{},
+			inject => inject.construct(TrainService),
+			(controller, params) => controller.getLastTrainPositions(
+				
+			)
+		);
+
+		this.expose(
+			"RiNWJ3Zzd1Z35ncnh6d2lzY39laDtjZ2",
+			{},
+			inject => inject.construct(TrainService),
+			(controller, params) => controller.getProductBrands(
+				
+			)
+		);
+
+		this.expose(
+			"VzeGo0azRsYWE1M2Nybm9tN2hiZ3Rlbj",
+			{},
+			inject => inject.construct(TrainService),
+			(controller, params) => controller.getActiveLabels(
+				
+			)
+		);
+
+		this.expose(
+			"M0MHVoOWR1Z2VoYnVpdj8wZXJ3dTFpd3",
+			{
+			"03ZGMyNWF5eXE5MGoxOHFidT5taGo1MG": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(TrainService),
+			(controller, params) => controller.getLabel(
+				params["03ZGMyNWF5eXE5MGoxOHFidT5taGo1MG"]
+			)
+		);
+
+		this.expose(
+			"JjdnB3cTJucjdidDdoOWdyYjUzYmhwMm",
+			{
+			"c5OXFrMjhzdmltaHU0YWBuMjFha256M3": { type: "string", isArray: false, isOptional: false },
+				"dwa3RzdDpoMTN1anV3MHtoZHQ0N2libj": { type: "string", isArray: false, isOptional: false },
+				"JnZXN5YWI3ej4yc3dtd3dsanZqbXJxZW": { type: "string", isArray: false, isOptional: false },
+				"NuMWViZTFkM2hubDVyczMzanF0anE5a2": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(TrainService),
+			(controller, params) => controller.assignLabel(
+				params["c5OXFrMjhzdmltaHU0YWBuMjFha256M3"],
+				params["dwa3RzdDpoMTN1anV3MHtoZHQ0N2libj"],
+				params["JnZXN5YWI3ej4yc3dtd3dsanZqbXJxZW"],
+				params["NuMWViZTFkM2hubDVyczMzanF0anE5a2"]
 			)
 		)
 	}
@@ -656,7 +805,7 @@ ViewModel.mappings = {
 			"bufferAnchorOffset" in data && (item.bufferAnchorOffset = data.bufferAnchorOffset === null ? null : +data.bufferAnchorOffset);
 			"captured" in data && (item.captured = data.captured === null ? null : new Date(data.captured));
 			"corrupted" in data && (item.corrupted = !!data.corrupted);
-			"direction" in data && (item.direction = data.direction === null ? null : data.direction);
+			"direction" in data && (item.direction = data.direction && ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction));
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 
 			return item;
@@ -664,13 +813,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: CaptureViewModel) {
 			let model: Capture;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(Capture).find(viewModel.id)
 			} else {
 				model = new Capture();
 			}
-			
+
 			"bufferAnchorOffset" in viewModel && (model.bufferAnchorOffset = viewModel.bufferAnchorOffset === null ? null : +viewModel.bufferAnchorOffset);
 			"captured" in viewModel && (model.captured = viewModel.captured === null ? null : new Date(viewModel.captured));
 			"corrupted" in viewModel && (model.corrupted = !!viewModel.corrupted);
@@ -687,7 +836,8 @@ ViewModel.mappings = {
 				id: this.$$model.id,
 				name: this.$$model.name,
 				shortname: this.$$model.shortname,
-				tag: this.$$model.tag
+				tag: this.$$model.tag,
+				trainPrefix: this.$$model.trainPrefix
 			}
 		};
 
@@ -721,7 +871,8 @@ ViewModel.mappings = {
 				id: true,
 				name: true,
 				shortname: true,
-				tag: true
+				tag: true,
+				trainPrefix: true
 			};
 		};
 
@@ -732,24 +883,26 @@ ViewModel.mappings = {
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"shortname" in data && (item.shortname = data.shortname === null ? null : `${data.shortname}`);
 			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
+			"trainPrefix" in data && (item.trainPrefix = data.trainPrefix === null ? null : `${data.trainPrefix}`);
 
 			return item;
 		}
 
 		static async toModel(viewModel: CompanySummaryModel) {
 			let model: Company;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(Company).find(viewModel.id)
 			} else {
 				model = new Company();
 			}
-			
+
 			"iconId" in viewModel && (model.iconId = viewModel.iconId === null ? null : `${viewModel.iconId}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"shortname" in viewModel && (model.shortname = viewModel.shortname === null ? null : `${viewModel.shortname}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
+			"trainPrefix" in viewModel && (model.trainPrefix = viewModel.trainPrefix === null ? null : `${viewModel.trainPrefix}`);
 
 			return model;
 		}
@@ -812,13 +965,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: ArtistSummaryModel) {
 			let model: Artist;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(Artist).find(viewModel.id)
 			} else {
 				model = new Artist();
 			}
-			
+
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"logo" in viewModel && (model.logo = viewModel.logo === null ? null : `${viewModel.logo}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
@@ -897,7 +1050,7 @@ ViewModel.mappings = {
 			"artist" in data && (item.artist = data.artist && ViewModel.mappings[ArtistSummaryModel.name].toViewModel(data.artist));
 			"captures" in data && (item.captures = data.captures && [...data.captures].map(i => ViewModel.mappings[GraffitiCaptureViewModel.name].toViewModel(i)));
 			"type" in data && (item.type = data.type && ViewModel.mappings[GraffitiTypeViewModel.name].toViewModel(data.type));
-			"direction" in data && (item.direction = data.direction === null ? null : data.direction);
+			"direction" in data && (item.direction = data.direction && ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction));
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"painted" in data && (item.painted = data.painted === null ? null : new Date(data.painted));
@@ -907,13 +1060,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: GraffitiSummaryModel) {
 			let model: Graffiti;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(Graffiti).find(viewModel.id)
 			} else {
 				model = new Graffiti();
 			}
-			
+
 			"artist" in viewModel && (model.artist.id = viewModel.artist ? viewModel.artist.id : null);
 			"captures" in viewModel && (null);
 			"type" in viewModel && (model.type.id = viewModel.type ? viewModel.type.id : null);
@@ -986,13 +1139,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: GraffitiCaptureViewModel) {
 			let model: GraffitiCapture;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(GraffitiCapture).find(viewModel.id)
 			} else {
 				model = new GraffitiCapture();
 			}
-			
+
 			"height" in viewModel && (model.height = viewModel.height === null ? null : +viewModel.height);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"left" in viewModel && (model.left = viewModel.left === null ? null : +viewModel.left);
@@ -1052,13 +1205,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: GraffitiTypeViewModel) {
 			let model: GraffitiType;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(GraffitiType).find(viewModel.id)
 			} else {
 				model = new GraffitiType();
 			}
-			
+
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 
@@ -1139,13 +1292,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: GraffitiInspirationSummaryModel) {
 			let model: GraffitiInspiration;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(GraffitiInspiration).find(viewModel.id)
 			} else {
 				model = new GraffitiInspiration();
 			}
-			
+
 			"media" in viewModel && (null);
 			"paintings" in viewModel && (null);
 			"captured" in viewModel && (model.captured = viewModel.captured === null ? null : new Date(viewModel.captured));
@@ -1206,13 +1359,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: GraffitiInspirationMediaViewModel) {
 			let model: GraffitiInspirationMedia;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(GraffitiInspirationMedia).find(viewModel.id)
 			} else {
 				model = new GraffitiInspirationMedia();
 			}
-			
+
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"mimeType" in viewModel && (model.mimeType = viewModel.mimeType === null ? null : `${viewModel.mimeType}`);
 
@@ -1268,13 +1421,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: CameraViewModel) {
 			let model: Camera;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(Camera).find(viewModel.id)
 			} else {
 				model = new Camera();
 			}
-			
+
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 
@@ -1336,13 +1489,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: MaintenanceSummaryModel) {
 			let model: Maintenance;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(Maintenance).find(viewModel.id)
 			} else {
 				model = new Maintenance();
 			}
-			
+
 			"completed" in viewModel && (model.completed = viewModel.completed === null ? null : new Date(viewModel.completed));
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"opened" in viewModel && (model.opened = viewModel.opened === null ? null : new Date(viewModel.opened));
@@ -1400,7 +1553,7 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: UicIdentifierClassViewModel) {
 			const model = new UicIdentifierClass();
-			
+
 			"code" in viewModel && (model.code = viewModel.code === null ? null : `${viewModel.code}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 
@@ -1462,7 +1615,7 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: UicIdentifierIndexLetterViewModel) {
 			const model = new UicIdentifierIndexLetter();
-			
+
 			"classFilter" in viewModel && (model.classFilter = viewModel.classFilter === null ? null : `${viewModel.classFilter}`);
 			"code" in viewModel && (model.code = viewModel.code === null ? null : `${viewModel.code}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
@@ -1520,13 +1673,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: UicLocaleViewModel) {
 			let model: UicLocale;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(UicLocale).find(viewModel.id)
 			} else {
 				model = new UicLocale();
 			}
-			
+
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 
@@ -1587,13 +1740,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: CouplerViewModel) {
 			let model: Coupler;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(Coupler).find(viewModel.id)
 			} else {
 				model = new Coupler();
 			}
-			
+
 			"type" in viewModel && (model.type.id = viewModel.type ? viewModel.type.id : null);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 
@@ -1603,6 +1756,7 @@ ViewModel.mappings = {
 	[CouplerTypeSummaryModel.name]: class ComposedCouplerTypeSummaryModel extends CouplerTypeSummaryModel {
 		async map() {
 			return {
+				flippable: this.$$model.flippable,
 				icon: this.$$model.icon,
 				id: this.$$model.id
 			}
@@ -1634,6 +1788,7 @@ ViewModel.mappings = {
 			}
 
 			return {
+				flippable: true,
 				icon: true,
 				id: true
 			};
@@ -1641,6 +1796,7 @@ ViewModel.mappings = {
 
 		static toViewModel(data) {
 			const item = new CouplerTypeSummaryModel(null);
+			"flippable" in data && (item.flippable = !!data.flippable);
 			"icon" in data && (item.icon = data.icon === null ? null : `${data.icon}`);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 
@@ -1649,13 +1805,14 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: CouplerTypeSummaryModel) {
 			let model: CouplerType;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(CouplerType).find(viewModel.id)
 			} else {
 				model = new CouplerType();
 			}
-			
+
+			"flippable" in viewModel && (model.flippable = !!viewModel.flippable);
 			"icon" in viewModel && (model.icon = viewModel.icon === null ? null : `${viewModel.icon}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 
@@ -1666,6 +1823,7 @@ ViewModel.mappings = {
 		async map() {
 			return {
 				id: this.$$model.id,
+				lengthIncludingCouplers: this.$$model.lengthIncludingCouplers,
 				name: this.$$model.name,
 				shortname: this.$$model.shortname,
 				tag: this.$$model.tag
@@ -1699,6 +1857,7 @@ ViewModel.mappings = {
 
 			return {
 				id: true,
+				lengthIncludingCouplers: true,
 				name: true,
 				shortname: true,
 				tag: true
@@ -1708,6 +1867,7 @@ ViewModel.mappings = {
 		static toViewModel(data) {
 			const item = new RailcarModelSummaryModel(null);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"lengthIncludingCouplers" in data && (item.lengthIncludingCouplers = data.lengthIncludingCouplers === null ? null : +data.lengthIncludingCouplers);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"shortname" in data && (item.shortname = data.shortname === null ? null : `${data.shortname}`);
 			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
@@ -1717,14 +1877,15 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: RailcarModelSummaryModel) {
 			let model: RailcarModel;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(RailcarModel).find(viewModel.id)
 			} else {
 				model = new RailcarModel();
 			}
-			
+
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"lengthIncludingCouplers" in viewModel && (model.lengthIncludingCouplers = viewModel.lengthIncludingCouplers === null ? null : +viewModel.lengthIncludingCouplers);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"shortname" in viewModel && (model.shortname = viewModel.shortname === null ? null : `${viewModel.shortname}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
@@ -1784,13 +1945,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: RailcarModelDrawingSummaryModel) {
 			let model: RailcarModelDrawing;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(RailcarModelDrawing).find(viewModel.id)
 			} else {
 				model = new RailcarModelDrawing();
 			}
-			
+
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"source" in viewModel && (model.source = viewModel.source === null ? null : `${viewModel.source}`);
@@ -1864,13 +2025,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: RailcarSummaryModel) {
 			let model: Railcar;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(Railcar).find(viewModel.id)
 			} else {
 				model = new Railcar();
 			}
-			
+
 			"model" in viewModel && (model.model.id = viewModel.model ? viewModel.model.id : null);
 			"givenName" in viewModel && (model.givenName = viewModel.givenName === null ? null : `${viewModel.givenName}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
@@ -1935,13 +2096,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: SessionViewModel) {
 			let model: Session;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(Session).find(viewModel.id)
 			} else {
 				model = new Session();
 			}
-			
+
 			"account" in viewModel && (model.account.id = viewModel.account ? viewModel.account.id : null);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 
@@ -1997,13 +2158,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: AccountViewModel) {
 			let model: Account;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(Account).find(viewModel.id)
 			} else {
 				model = new Account();
 			}
-			
+
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 
@@ -2062,13 +2223,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: StorageContainerSummaryModel) {
 			let model: StorageContainer;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(StorageContainer).find(viewModel.id)
 			} else {
 				model = new StorageContainer();
 			}
-			
+
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
@@ -2131,17 +2292,399 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: CouplingViewModel) {
 			let model: Coupling;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(Coupling).find(viewModel.id)
 			} else {
 				model = new Coupling();
 			}
-			
+
 			"coupled" in viewModel && (model.coupled = viewModel.coupled === null ? null : new Date(viewModel.coupled));
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"sourceId" in viewModel && (model.sourceId = viewModel.sourceId === null ? null : `${viewModel.sourceId}`);
 			"targetId" in viewModel && (model.targetId = viewModel.targetId === null ? null : `${viewModel.targetId}`);
+
+			return model;
+		}
+	},
+	[TrainLabelViewModel.name]: class ComposedTrainLabelViewModel extends TrainLabelViewModel {
+		async map() {
+			return {
+				operator: new CompanySummaryModel(await BaseServer.unwrap(this.$$model.operator)),
+				productBrand: new TrainProductBrandSummaryModel(await BaseServer.unwrap(this.$$model.productBrand)),
+				description: this.$$model.description,
+				id: this.$$model.id,
+				label: this.$$model.label,
+				trainIdentifier: this.$$model.trainIdentifier
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				get operator() {
+					return ViewModel.mappings[CompanySummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "operator-TrainLabelViewModel"]
+					);
+				},
+				get productBrand() {
+					return ViewModel.mappings[TrainProductBrandSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "productBrand-TrainLabelViewModel"]
+					);
+				},
+				description: true,
+				id: true,
+				label: true,
+				trainIdentifier: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new TrainLabelViewModel(null);
+			"operator" in data && (item.operator = data.operator && ViewModel.mappings[CompanySummaryModel.name].toViewModel(data.operator));
+			"productBrand" in data && (item.productBrand = data.productBrand && ViewModel.mappings[TrainProductBrandSummaryModel.name].toViewModel(data.productBrand));
+			"description" in data && (item.description = data.description === null ? null : `${data.description}`);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"label" in data && (item.label = data.label === null ? null : `${data.label}`);
+			"trainIdentifier" in data && (item.trainIdentifier = data.trainIdentifier === null ? null : `${data.trainIdentifier}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: TrainLabelViewModel) {
+			let model: TrainLabel;
+
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(TrainLabel).find(viewModel.id)
+			} else {
+				model = new TrainLabel();
+			}
+
+			"operator" in viewModel && (model.operator.id = viewModel.operator ? viewModel.operator.id : null);
+			"productBrand" in viewModel && (model.productBrand.id = viewModel.productBrand ? viewModel.productBrand.id : null);
+			"description" in viewModel && (model.description = viewModel.description === null ? null : `${viewModel.description}`);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"label" in viewModel && (model.label = viewModel.label === null ? null : `${viewModel.label}`);
+			"trainIdentifier" in viewModel && (model.trainIdentifier = viewModel.trainIdentifier === null ? null : `${viewModel.trainIdentifier}`);
+
+			return model;
+		}
+	},
+	[TrainHeadPositionViewModel.name]: class ComposedTrainHeadPositionViewModel extends TrainHeadPositionViewModel {
+		async map() {
+			return {
+				id: this.$$model.id,
+				offset: this.$$model.offset,
+				reversed: this.$$model.reversed,
+				section: this.$$model.section,
+				trainIdentifier: this.$$model.trainIdentifier,
+				updated: this.$$model.updated
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				id: true,
+				offset: true,
+				reversed: true,
+				section: true,
+				trainIdentifier: true,
+				updated: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new TrainHeadPositionViewModel(null);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"offset" in data && (item.offset = data.offset === null ? null : +data.offset);
+			"reversed" in data && (item.reversed = !!data.reversed);
+			"section" in data && (item.section = data.section === null ? null : `${data.section}`);
+			"trainIdentifier" in data && (item.trainIdentifier = data.trainIdentifier === null ? null : `${data.trainIdentifier}`);
+			"updated" in data && (item.updated = data.updated === null ? null : new Date(data.updated));
+
+			return item;
+		}
+
+		static async toModel(viewModel: TrainHeadPositionViewModel) {
+			let model: TrainHeadPosition;
+
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(TrainHeadPosition).find(viewModel.id)
+			} else {
+				model = new TrainHeadPosition();
+			}
+
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"offset" in viewModel && (model.offset = viewModel.offset === null ? null : +viewModel.offset);
+			"reversed" in viewModel && (model.reversed = !!viewModel.reversed);
+			"section" in viewModel && (model.section = viewModel.section === null ? null : `${viewModel.section}`);
+			"trainIdentifier" in viewModel && (model.trainIdentifier = viewModel.trainIdentifier === null ? null : `${viewModel.trainIdentifier}`);
+			"updated" in viewModel && (model.updated = viewModel.updated === null ? null : new Date(viewModel.updated));
+
+			return model;
+		}
+	},
+	[LastTrainHeadPositionViewModel.name]: class ComposedLastTrainHeadPositionViewModel extends LastTrainHeadPositionViewModel {
+		async map() {
+			return {
+				trainIdentifier: this.$$model.trainIdentifier,
+				section: this.$$model.section,
+				offset: this.$$model.offset,
+				reversed: this.$$model.reversed,
+				coupledLength: this.$$model.coupledLength,
+				updated: this.$$model.updated,
+				label: this.$$model.label,
+				icon: this.$$model.icon
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				trainIdentifier: true,
+				section: true,
+				offset: true,
+				reversed: true,
+				coupledLength: true,
+				updated: true,
+				label: true,
+				icon: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new LastTrainHeadPositionViewModel(null);
+			"trainIdentifier" in data && (item.trainIdentifier = data.trainIdentifier === null ? null : `${data.trainIdentifier}`);
+			"section" in data && (item.section = data.section === null ? null : `${data.section}`);
+			"offset" in data && (item.offset = data.offset === null ? null : +data.offset);
+			"reversed" in data && (item.reversed = !!data.reversed);
+			"coupledLength" in data && (item.coupledLength = data.coupledLength === null ? null : +data.coupledLength);
+			"updated" in data && (item.updated = data.updated === null ? null : new Date(data.updated));
+			"label" in data && (item.label = data.label === null ? null : `${data.label}`);
+			"icon" in data && (item.icon = data.icon === null ? null : `${data.icon}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: LastTrainHeadPositionViewModel) {
+			const model = new LastTrainPosition();
+
+			"trainIdentifier" in viewModel && (model.trainIdentifier = viewModel.trainIdentifier === null ? null : `${viewModel.trainIdentifier}`);
+			"section" in viewModel && (model.section = viewModel.section === null ? null : `${viewModel.section}`);
+			"offset" in viewModel && (model.offset = viewModel.offset === null ? null : +viewModel.offset);
+			"reversed" in viewModel && (model.reversed = !!viewModel.reversed);
+			"coupledLength" in viewModel && (model.coupledLength = viewModel.coupledLength === null ? null : +viewModel.coupledLength);
+			"updated" in viewModel && (model.updated = viewModel.updated === null ? null : new Date(viewModel.updated));
+			"label" in viewModel && (model.label = viewModel.label === null ? null : `${viewModel.label}`);
+			"icon" in viewModel && (model.icon = viewModel.icon === null ? null : `${viewModel.icon}`);
+
+			return model;
+		}
+	},
+	[TrainProductBrandSummaryModel.name]: class ComposedTrainProductBrandSummaryModel extends TrainProductBrandSummaryModel {
+		async map() {
+			return {
+				icon: this.$$model.icon,
+				id: this.$$model.id,
+				name: this.$$model.name,
+				shortName: this.$$model.shortName
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				icon: true,
+				id: true,
+				name: true,
+				shortName: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new TrainProductBrandSummaryModel(null);
+			"icon" in data && (item.icon = data.icon === null ? null : `${data.icon}`);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+			"shortName" in data && (item.shortName = data.shortName === null ? null : `${data.shortName}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: TrainProductBrandSummaryModel) {
+			let model: TrainProductBrand;
+
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(TrainProductBrand).find(viewModel.id)
+			} else {
+				model = new TrainProductBrand();
+			}
+
+			"icon" in viewModel && (model.icon = viewModel.icon === null ? null : `${viewModel.icon}`);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
+			"shortName" in viewModel && (model.shortName = viewModel.shortName === null ? null : `${viewModel.shortName}`);
+
+			return model;
+		}
+	},
+	[TrainStateViewModel.name]: class ComposedTrainStateViewModel extends TrainStateViewModel {
+		async map() {
+			return {
+				label: this.$$model.label,
+				lastHeadPosition: this.$$model.lastHeadPosition
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				get label() {
+					return ViewModel.mappings[TrainLabelViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "label-TrainStateViewModel"]
+					);
+				},
+				get lastHeadPosition() {
+					return ViewModel.mappings[TrainHeadPositionViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "lastHeadPosition-TrainStateViewModel"]
+					);
+				}
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new TrainStateViewModel(null);
+			"label" in data && (item.label = data.label && ViewModel.mappings[TrainLabelViewModel.name].toViewModel(data.label));
+			"lastHeadPosition" in data && (item.lastHeadPosition = data.lastHeadPosition && ViewModel.mappings[TrainHeadPositionViewModel.name].toViewModel(data.lastHeadPosition));
+
+			return item;
+		}
+
+		static async toModel(viewModel: TrainStateViewModel) {
+			const model = new TrainState();
+
+			"label" in viewModel && (undefined);
+			"lastHeadPosition" in viewModel && (undefined);
 
 			return model;
 		}
@@ -2152,7 +2695,10 @@ ViewModel.mappings = {
 				changed: this.$$model.changed,
 				identifier: this.$$model.identifier,
 				created: this.$$model.created,
-				length: this.$$model.length
+				railcarCount: this.$$model.railcarCount,
+				coupledLength: this.$$model.coupledLength,
+				headCouplerType: this.$$model.headCouplerType,
+				tailCouplerType: this.$$model.tailCouplerType
 			}
 		};
 
@@ -2185,7 +2731,10 @@ ViewModel.mappings = {
 				changed: true,
 				identifier: true,
 				created: true,
-				length: true
+				railcarCount: true,
+				coupledLength: true,
+				headCouplerType: true,
+				tailCouplerType: true
 			};
 		};
 
@@ -2194,18 +2743,24 @@ ViewModel.mappings = {
 			"changed" in data && (item.changed = data.changed === null ? null : new Date(data.changed));
 			"identifier" in data && (item.identifier = data.identifier === null ? null : `${data.identifier}`);
 			"created" in data && (item.created = data.created === null ? null : new Date(data.created));
-			"length" in data && (item.length = data.length === null ? null : +data.length);
+			"railcarCount" in data && (item.railcarCount = data.railcarCount === null ? null : +data.railcarCount);
+			"coupledLength" in data && (item.coupledLength = data.coupledLength === null ? null : +data.coupledLength);
+			"headCouplerType" in data && (item.headCouplerType = data.headCouplerType === null ? null : `${data.headCouplerType}`);
+			"tailCouplerType" in data && (item.tailCouplerType = data.tailCouplerType === null ? null : `${data.tailCouplerType}`);
 
 			return item;
 		}
 
 		static async toModel(viewModel: TrainViewModel) {
 			const model = new Train();
-			
+
 			"changed" in viewModel && (model.changed = viewModel.changed === null ? null : new Date(viewModel.changed));
 			"identifier" in viewModel && (model.identifier = viewModel.identifier === null ? null : `${viewModel.identifier}`);
 			"created" in viewModel && (model.created = viewModel.created === null ? null : new Date(viewModel.created));
-			"length" in viewModel && (model.length = viewModel.length === null ? null : +viewModel.length);
+			"railcarCount" in viewModel && (model.railcarCount = viewModel.railcarCount === null ? null : +viewModel.railcarCount);
+			"coupledLength" in viewModel && (model.coupledLength = viewModel.coupledLength === null ? null : +viewModel.coupledLength);
+			"headCouplerType" in viewModel && (model.headCouplerType = viewModel.headCouplerType === null ? null : `${viewModel.headCouplerType}`);
+			"tailCouplerType" in viewModel && (model.tailCouplerType = viewModel.tailCouplerType === null ? null : `${viewModel.tailCouplerType}`);
 
 			return model;
 		}
@@ -2222,7 +2777,8 @@ ViewModel.mappings = {
 				id: this.$$model.id,
 				name: this.$$model.name,
 				shortname: this.$$model.shortname,
-				tag: this.$$model.tag
+				tag: this.$$model.tag,
+				trainPrefix: this.$$model.trainPrefix
 			}
 		};
 
@@ -2281,7 +2837,8 @@ ViewModel.mappings = {
 				id: true,
 				name: true,
 				shortname: true,
-				tag: true
+				tag: true,
+				trainPrefix: true
 			};
 		};
 
@@ -2297,19 +2854,20 @@ ViewModel.mappings = {
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"shortname" in data && (item.shortname = data.shortname === null ? null : `${data.shortname}`);
 			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
+			"trainPrefix" in data && (item.trainPrefix = data.trainPrefix === null ? null : `${data.trainPrefix}`);
 
 			return item;
 		}
 
 		static async toModel(viewModel: CompanyViewModel) {
 			let model: Company;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(Company).find(viewModel.id)
 			} else {
 				model = new Company();
 			}
-			
+
 			"manufacturedRailcars" in viewModel && (null);
 			"operatedRailcars" in viewModel && (null);
 			"ownedRailcars" in viewModel && (null);
@@ -2320,6 +2878,7 @@ ViewModel.mappings = {
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"shortname" in viewModel && (model.shortname = viewModel.shortname === null ? null : `${viewModel.shortname}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
+			"trainPrefix" in viewModel && (model.trainPrefix = viewModel.trainPrefix === null ? null : `${viewModel.trainPrefix}`);
 
 			return model;
 		}
@@ -2396,13 +2955,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: ArtistViewModel) {
 			let model: Artist;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(Artist).find(viewModel.id)
 			} else {
 				model = new Artist();
 			}
-			
+
 			"graffitis" in viewModel && (null);
 			"description" in viewModel && (model.description = viewModel.description === null ? null : `${viewModel.description}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
@@ -2503,7 +3062,7 @@ ViewModel.mappings = {
 			"railcar" in data && (item.railcar = data.railcar && ViewModel.mappings[GraffitiRailcarViewModel.name].toViewModel(data.railcar));
 			"type" in data && (item.type = data.type && ViewModel.mappings[GraffitiTypeViewModel.name].toViewModel(data.type));
 			"description" in data && (item.description = data.description === null ? null : `${data.description}`);
-			"direction" in data && (item.direction = data.direction === null ? null : data.direction);
+			"direction" in data && (item.direction = data.direction && ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction));
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"painted" in data && (item.painted = data.painted === null ? null : new Date(data.painted));
@@ -2513,13 +3072,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: GraffitiViewModel) {
 			let model: Graffiti;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(Graffiti).find(viewModel.id)
 			} else {
 				model = new Graffiti();
 			}
-			
+
 			"artist" in viewModel && (model.artist.id = viewModel.artist ? viewModel.artist.id : null);
 			"captures" in viewModel && (null);
 			"graffitiInspiration" in viewModel && (model.graffitiInspiration.id = viewModel.graffitiInspiration ? viewModel.graffitiInspiration.id : null);
@@ -2622,13 +3181,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: GraffitiInspirationViewModel) {
 			let model: GraffitiInspiration;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(GraffitiInspiration).find(viewModel.id)
 			} else {
 				model = new GraffitiInspiration();
 			}
-			
+
 			"artist" in viewModel && (model.artist.id = viewModel.artist ? viewModel.artist.id : null);
 			"media" in viewModel && (null);
 			"paintings" in viewModel && (null);
@@ -2715,13 +3274,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: MaintenanceViewModel) {
 			let model: Maintenance;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(Maintenance).find(viewModel.id)
 			} else {
 				model = new Maintenance();
 			}
-			
+
 			"railcar" in viewModel && (model.railcar.id = viewModel.railcar ? viewModel.railcar.id : null);
 			"completed" in viewModel && (model.completed = viewModel.completed === null ? null : new Date(viewModel.completed));
 			"cost" in viewModel && (model.cost = viewModel.cost === null ? null : +viewModel.cost);
@@ -2730,6 +3289,76 @@ ViewModel.mappings = {
 			"issue" in viewModel && (model.issue = viewModel.issue === null ? null : `${viewModel.issue}`);
 			"opened" in viewModel && (model.opened = viewModel.opened === null ? null : new Date(viewModel.opened));
 			"title" in viewModel && (model.title = viewModel.title === null ? null : `${viewModel.title}`);
+
+			return model;
+		}
+	},
+	[CouplerTypeViewModel.name]: class ComposedCouplerTypeViewModel extends CouplerTypeViewModel {
+		async map() {
+			return {
+				flippable: this.$$model.flippable,
+				icon: this.$$model.icon,
+				id: this.$$model.id,
+				name: this.$$model.name
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				flippable: true,
+				icon: true,
+				id: true,
+				name: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new CouplerTypeViewModel(null);
+			"flippable" in data && (item.flippable = !!data.flippable);
+			"icon" in data && (item.icon = data.icon === null ? null : `${data.icon}`);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: CouplerTypeViewModel) {
+			let model: CouplerType;
+
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(CouplerType).find(viewModel.id)
+			} else {
+				model = new CouplerType();
+			}
+
+			"flippable" in viewModel && (model.flippable = !!viewModel.flippable);
+			"icon" in viewModel && (model.icon = viewModel.icon === null ? null : `${viewModel.icon}`);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 
 			return model;
 		}
@@ -2817,13 +3446,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: RailcarModelViewModel) {
 			let model: RailcarModel;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(RailcarModel).find(viewModel.id)
 			} else {
 				model = new RailcarModel();
 			}
-			
+
 			"drawings" in viewModel && (null);
 			"uicLocale" in viewModel && (model.uicLocale.id = viewModel.uicLocale ? viewModel.uicLocale.id : null);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
@@ -2912,13 +3541,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: GraffitiRailcarViewModel) {
 			let model: Railcar;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(Railcar).find(viewModel.id)
 			} else {
 				model = new Railcar();
 			}
-			
+
 			"model" in viewModel && (model.model.id = viewModel.model ? viewModel.model.id : null);
 			"graffitis" in viewModel && (null);
 			"givenName" in viewModel && (model.givenName = viewModel.givenName === null ? null : `${viewModel.givenName}`);
@@ -3074,13 +3703,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: RailcarViewModel) {
 			let model: Railcar;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(Railcar).find(viewModel.id)
 			} else {
 				model = new Railcar();
 			}
-			
+
 			"headCoupler" in viewModel && (model.headCoupler.id = viewModel.headCoupler ? viewModel.headCoupler.id : null);
 			"manufacturer" in viewModel && (model.manufacturer.id = viewModel.manufacturer ? viewModel.manufacturer.id : null);
 			"model" in viewModel && (model.model.id = viewModel.model ? viewModel.model.id : null);
@@ -3162,17 +3791,99 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: StorageContainerViewModel) {
 			let model: StorageContainer;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(StorageContainer).find(viewModel.id)
 			} else {
 				model = new StorageContainer();
 			}
-			
+
 			"railcars" in viewModel && (null);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
+
+			return model;
+		}
+	},
+	[TrainProductBrandViewModel.name]: class ComposedTrainProductBrandViewModel extends TrainProductBrandViewModel {
+		async map() {
+			return {
+				description: this.$$model.description,
+				icon: this.$$model.icon,
+				iconNegative: this.$$model.iconNegative,
+				id: this.$$model.id,
+				name: this.$$model.name,
+				shortName: this.$$model.shortName,
+				summary: this.$$model.summary
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				description: true,
+				icon: true,
+				iconNegative: true,
+				id: true,
+				name: true,
+				shortName: true,
+				summary: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new TrainProductBrandViewModel(null);
+			"description" in data && (item.description = data.description === null ? null : `${data.description}`);
+			"icon" in data && (item.icon = data.icon === null ? null : `${data.icon}`);
+			"iconNegative" in data && (item.iconNegative = data.iconNegative === null ? null : `${data.iconNegative}`);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+			"shortName" in data && (item.shortName = data.shortName === null ? null : `${data.shortName}`);
+			"summary" in data && (item.summary = data.summary === null ? null : `${data.summary}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: TrainProductBrandViewModel) {
+			let model: TrainProductBrand;
+
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(TrainProductBrand).find(viewModel.id)
+			} else {
+				model = new TrainProductBrand();
+			}
+
+			"description" in viewModel && (model.description = viewModel.description === null ? null : `${viewModel.description}`);
+			"icon" in viewModel && (model.icon = viewModel.icon === null ? null : `${viewModel.icon}`);
+			"iconNegative" in viewModel && (model.iconNegative = viewModel.iconNegative === null ? null : `${viewModel.iconNegative}`);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
+			"shortName" in viewModel && (model.shortName = viewModel.shortName === null ? null : `${viewModel.shortName}`);
+			"summary" in viewModel && (model.summary = viewModel.summary === null ? null : `${viewModel.summary}`);
 
 			return model;
 		}
@@ -3267,13 +3978,13 @@ ViewModel.mappings = {
 
 		static async toModel(viewModel: TrainRailcarUnitViewModel) {
 			let model: Railcar;
-			
+
 			if (viewModel.id) {
 				model = await ViewModel.globalFetchingContext.findSet(Railcar).find(viewModel.id)
 			} else {
 				model = new Railcar();
 			}
-			
+
 			"model" in viewModel && (model.model.id = viewModel.model ? viewModel.model.id : null);
 			"operator" in viewModel && (model.operator.id = viewModel.operator ? viewModel.operator.id : null);
 			"owner" in viewModel && (model.owner.id = viewModel.owner ? viewModel.owner.id : null);

@@ -1,17 +1,29 @@
 import { Component } from "@acryps/page";
 import { TrainPage } from "..";
 import { Application } from "../../..";
-import { RailcarDirection, TrainService, TrainViewModel } from "../../../managed/services";
+import { RailcarDirection, TrainRailcarUnitViewModel, TrainService, TrainViewModel } from "../../../managed/services";
 import { coupleIcon } from "../../../.built/icons";
 
 export class CoupleTrainPage extends Component {
 	declare parent: TrainPage;
 	declare parameters: { anchor };
 
+	trains: TrainViewModel[];
+
+	sourceCouplerType: string;
+
+	async onload() {
+		this.trains = await new TrainService().getCoupleableTrains(this.parent.parameters.identifier, this.parameters.anchor);
+
+		if (this.parameters.anchor == 'head') {
+			this.sourceCouplerType = this.parent.train.headCouplerType;
+		} else {
+			this.sourceCouplerType = this.parent.train.tailCouplerType;
+		}
+	}
+
 	breadcrumb = 'Couple';
 	render() {
-		const sourceUnit = this.parameters.anchor == 'head' ? this.parent.units.at(0) : this.parent.units.at(-1);
-
 		return <ui-couple>
 			<ui-source>
 				<img src={`/capture/train/${this.parent.parameters.identifier}/${this.parameters.anchor == 'head' ? RailcarDirection.reverse : RailcarDirection.forward}`} />
@@ -20,7 +32,7 @@ export class CoupleTrainPage extends Component {
 			{coupleIcon()}
 
 			<ui-trains>
-				{this.parent.parent.trains
+				{this.trains
 					.filter(train => train.identifier != this.parent.parameters.identifier)
 					.map(train => <ui-train>
 						<ui-identifier>
@@ -38,18 +50,31 @@ export class CoupleTrainPage extends Component {
 	}
 
 	renderTrain(train: TrainViewModel, direction: RailcarDirection) {
-		return <img
-			src={`/capture/train/${train.identifier}/${direction}`}
-			loading='lazy'
+		const coupler = direction == RailcarDirection.forward ? train.headCouplerType : train.tailCouplerType;
 
-		 	ui-click={async () => {
-				await new TrainService().couple(
-					this.parent.parameters.identifier, this.parameters.anchor,
-					train.identifier, direction == RailcarDirection.forward ? 'head' : 'tail'
-				);
+		if (coupler != this.sourceCouplerType) {
+			return;
+		}
 
-				this.navigate('../..');
-			}}
-		/>;
+		return <ui-direction>
+			<ui-side>
+				{direction == RailcarDirection.forward ? 'H' : 'T'}
+			</ui-side>
+
+			<img
+				src={`/capture/train/${train.identifier}/${direction}`}
+				loading='lazy'
+
+			 	ui-click={async () => {
+					await new TrainService().couple(
+						this.parent.parameters.identifier, this.parameters.anchor,
+						train.identifier, direction == RailcarDirection.forward ? 'head' : 'tail'
+					);
+
+					this.parent.reload();
+					this.navigate('../..');
+				}}
+			/>
+		</ui-direction>;
 	}
 }

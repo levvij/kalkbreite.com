@@ -1,7 +1,7 @@
 import { Component } from "@acryps/page";
 import { RailcarPage } from "..";
-import { CaptureViewModel, RailcarService } from "../../managed/services";
-import { CropComponent } from "../../shared/crop";
+import { CaptureViewModel, RailcarService } from "../../../managed/services";
+import { CropComponent } from "../../../shared/crop";
 
 export class CaptureAnchorPage extends Component {
 	declare parent: RailcarPage;

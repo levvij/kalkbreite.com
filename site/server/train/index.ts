@@ -1,9 +1,13 @@
 import { Service } from "vlserver";
-import { Coupling, DbContext, Uncoupling } from "../managed/database";
+import { Coupling, DbContext, RailcarDirection, TrainLabel, Uncoupling } from "../managed/database";
 import { TrainChain } from "./chain";
 import { RailcarSummaryModel } from "../railcar/railcar";
 import { TrainViewModel } from "./train";
 import { TrainRailcarUnitViewModel, TrainUnitViewModel } from "./unit";
+import { TrainProductBrandSummaryModel } from "./product-brand";
+import { TrainLabelViewModel } from "./label";
+import { TrainState, TrainStateViewModel } from "./state";
+import { LastTrainHeadPositionViewModel, LastTrainPosition } from "./position";
 
 export class TrainService extends Service {
 	constructor(
@@ -20,8 +24,6 @@ export class TrainService extends Service {
 		if (!unit?.tail?.coupler) {
 			return;
 		}
-
-		console.log(train.units.map(peer => `${peer.head.coupler.id}/${peer.railcar.tag}${peer == unit ? '#' : ''}/${peer.tail.coupler.id}`));
 
 		const uncoupling = new Uncoupling();
 		uncoupling.uncoupled = new Date();
@@ -60,15 +62,133 @@ export class TrainService extends Service {
 		);
 	}
 
-	getTrain(identifier: string) {
+	async getCoupleableTrains(identifier: string, end: string) {
+		const train = this.chain.trains.find(train => train.identifier == identifier);
+		const couplerType = end == 'head' ? train.headCouplerType : train.tailCouplerType;
+
+		return TrainViewModel.from(
+			this.chain.trains
+				.filter(train => train.headCouplerType == couplerType || train.tailCouplerType == couplerType)
+				.sort((a, b) => {
+					if (+a.changed == +b.changed) {
+						return a.identifier.localeCompare(b.identifier);
+					}
+
+					return a.changed > b.changed ? -1 : 1;
+				})
+		);
+	}
+
+	async getTrain(identifier: string) {
 		const train = this.chain.trains.find(train => train.identifier == identifier);
 
-		return RailcarSummaryModel.from(train.units.map(unit => unit.railcar));
+		const state = new TrainState();
+
+		state.label = await this.database.trainLabel
+			.first(label => label.trainIdentifier.valueOf() == train.identifier);
+
+		state.lastHeadPosition = await this.database.trainHeadPosition
+			.orderByDescending(position => position.updated)
+			.first(position => position.trainIdentifier.valueOf() == train.identifier);
+
+		return new TrainStateViewModel(state);
+	}
+
+	getTrainRailcars(identifier: string) {
+		const train = this.chain.trains.find(train => train.identifier == identifier);
+
+		return TrainRailcarUnitViewModel.from(
+			train.units.map(unit => unit.railcar)
+		);
 	}
 
 	getUnitTrain(railcarId: string) {
 		const train = this.chain.trains.find(train => train.units.find(unit => unit.railcar.id == railcarId));
 
 		return train.identifier;
+	}
+
+	async getLastTrainPositions() {
+		const positions: LastTrainPosition[] = [];
+
+		for (let train of this.chain.trains) {
+			const update = await this.database.trainHeadPosition
+				.orderByDescending(position => position.updated)
+				.first(position => position.trainIdentifier.valueOf() == train.identifier);
+
+			if (update) {
+				const position = new LastTrainPosition();
+				position.trainIdentifier = train.identifier;
+				position.updated = update.updated;
+
+				position.section = update.section;
+				position.offset = update.offset;
+				position.reversed = update.reversed;
+				position.coupledLength = train.coupledLength;
+
+				const label = await this.database.trainLabel
+					.include(label => label.productBrand)
+					.first(label => label.trainIdentifier.valueOf() == train.identifier);
+
+				if (label) {
+					position.label = label.label;
+
+					const brand = await label.productBrand.fetch();
+
+					if (brand) {
+						position.icon = brand.icon;
+					}
+				}
+
+				positions.push(position);
+			}
+		}
+
+		return LastTrainHeadPositionViewModel.from(positions);
+	}
+
+	getProductBrands() {
+		return TrainProductBrandSummaryModel.from(
+			this.database.trainProductBrand
+				.orderByAscending(brand => brand.name)
+		)
+	}
+
+	getActiveLabels() {
+		// TODO filter inactive trains
+		return TrainLabelViewModel.from(
+			this.database.trainLabel
+		);
+	}
+
+	async getLabel(identifier: string) {
+		const label = await this.database.trainLabel.first(label => label.trainIdentifier.valueOf() == identifier);
+
+		if (!label) {
+			return null;
+		}
+
+		return new TrainLabelViewModel(label);
+	}
+
+	async assignLabel(identifier: string, name: string, productBrandId: string, operatorId: string) {
+		let label = await this.database.trainLabel.first(label => label.trainIdentifier.valueOf() == identifier);
+
+		if (!label) {
+			label = new TrainLabel();
+			label.trainIdentifier = identifier;
+		}
+
+		label.label = name;
+		label.productBrandId = productBrandId;
+		label.operatorId = operatorId;
+
+		if (label.id) {
+			await label.update();
+		} else {
+			await label.create();
+		}
+
+		return new TrainLabelViewModel(label);
 	}
 }

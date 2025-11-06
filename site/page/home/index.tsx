@@ -8,24 +8,6 @@ import { LayoutComponent } from "../shared/layout";
 import { goIcon } from "../.built/icons";
 
 export class HomePage extends Component {
-	async onload() {
-		let textBuffer = '';
-		let textBufferReset = setTimeout(() => {});
-
-		onkeypress = event => {
-			clearTimeout(textBufferReset);
-			textBufferReset = setTimeout(() => textBuffer = '', 500);
-
-			if (document.contains(this.rootNode)) {
-				if (event.key == 'Enter' && textBuffer) {
-					this.navigate(`/railcar/${textBuffer}`);
-				} else if (/^[0-9a-z]$/.test(event.key)) {
-					textBuffer += event.key;
-				}
-			}
-		};
-	}
-
 	render() {
 		return <ui-home>
 			<ui-header>
@@ -45,7 +27,7 @@ export class HomePage extends Component {
 			</ui-cover>
 
 			<ui-topics>
-				<ui-topic ui-href='/railcars'>
+				<ui-topic ui-href='/railcar'>
 					<img src='/assets/topics/rolling-stock.jpg' />
 
 					<ui-title>

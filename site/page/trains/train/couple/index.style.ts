@@ -1,7 +1,7 @@
 import { after, alignItems, backgroundImage, boxSizing, child, colorStop, ColorStop, content, display, flexGrow, flexShrink, fontSize, gap, height, insetBlock, justifyContent, left, linearGradient, lineHeight, marginBottom, objectFit, objectPosition, overflow, percentage, position, rem, right, turn, width } from "@acryps/style";
 import { boxed } from "../../../shared/boxed";
 import { pageColor, pageGutter, pageTransparentColor } from "../../../index.style";
-import { trainIdentifierFont } from "../../../assets/font";
+import { monospacedFont, trainIdentifierFont } from "../../../assets/font";
 
 const trainHeight = rem(3);
 
@@ -85,12 +85,22 @@ export const coupleStyle = () => child('ui-couple') (
 					))
 				),
 
-				child('img') (
-					display('block'),
-					height(trainHeight),
+				child('ui-direction') (
+					display('flex'),
+					gap(pageGutter),
 
-					objectPosition('left'),
-					objectFit('contain')
+					child('ui-side') (
+						monospacedFont,
+						fontSize(rem(1))
+					),
+
+					child('img') (
+						display('block'),
+						height(trainHeight),
+
+						objectPosition('left'),
+						objectFit('contain')
+					)
 				)
 			)
 		)

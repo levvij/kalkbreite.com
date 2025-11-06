@@ -1,6 +1,6 @@
 import { Component } from "@acryps/page";
 import { RailcarPage } from "..";
-import { CouplerViewModel } from "../../managed/services";
+import { CouplerViewModel } from "../../../managed/services";
 
 export class RailcarCouplerPage extends Component {
 	declare parent: RailcarPage;

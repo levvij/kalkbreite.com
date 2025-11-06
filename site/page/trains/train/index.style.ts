@@ -1,9 +1,14 @@
-import { alignItems, background, backgroundColor, backgroundImage, border, borderColor, boxShadow, child, color, colorStop, display, flexDirection, flexWrap, fontSize, fontWeight, gap, height, hover, linearGradient, marginBottom, marginInline, marginTop, overflowInline, overflowX, padding, paddingBlock, paddingInline, percentage, position, px, rem, turn } from "@acryps/style";
+import { alignItems, background, backgroundColor, backgroundImage, border, borderColor, boxShadow, child, color, colorStop, display, flexDirection, flexWrap, fontFamily, fontSize, fontWeight, gap, height, hover, justifyContent, linearGradient, marginBottom, marginInline, marginRight, marginTop, overflowInline, overflowX, padding, paddingBlock, paddingInline, percentage, position, px, rem, turn } from "@acryps/style";
 import { boxed } from "../../shared/boxed";
-import { captureBackgroundColor, pageColor, pageContrastColor, pageGutter, pageSpacing, primaryColor } from "../../index.style";
+import { captureBackgroundColor, pageColor, pageContrastColor, pageGutter, pageSpacing, primaryColor, runningNumberFont, tagFont } from "../../index.style";
 import { trainIdentifierFont } from "../../assets/font";
 import { clickable } from "../../shared/interaction";
 import { coupleStyle } from "./couple/index.style";
+import { detailSectionStyle } from "../../shared/detail-section/index.style";
+import { layoutStyle } from "../../shared/layout/index.style";
+import { buttonGroupStyle, buttonStyle } from "../../shared/button";
+import { trainLabelStyle } from "../../shared/train-label/index.style";
+import { assignTrainLabelStyle } from "./label/index.style";
 
 const iconButtonTextSize = rem(1);
 const iconButtonSize = iconButtonTextSize.add(pageGutter.multiply(2));
@@ -13,19 +18,42 @@ export const trainStyle = () => child('ui-train')(
 	display('block'),
 
 	coupleStyle(),
+	assignTrainLabelStyle(),
 
-	child('ui-identifier')(
+	child('ui-label') (
 		display('block'),
-		marginBottom(pageGutter),
+		marginBottom(pageSpacing),
 
-		fontSize(rem(2)),
-		trainIdentifierFont
+		trainLabelStyle(rem(3))
+	),
+
+	detailSectionStyle(
+		marginBottom(pageSpacing.multiply(2)),
+
+		child('ui-identifier') (
+			display('block'),
+			marginBottom(pageGutter),
+
+			fontSize(rem(2)),
+			trainIdentifierFont
+		)
+	),
+
+	child('ui-actions') (
+		buttonGroupStyle(),
+		marginBottom(pageSpacing),
+
+		child('ui-action') (
+			buttonStyle()
+		)
 	),
 
 	child('ui-units') (
 		display('flex'),
 		alignItems('flex-start'),
-		paddingInline(iconButtonSize.divide(2)),
+		marginInline(pageSpacing.invert()),
+		marginBottom(pageSpacing),
+		paddingInline(iconButtonSize.divide(2).add(pageSpacing)),
 
 		overflowX('scroll'),
 
@@ -35,7 +63,7 @@ export const trainStyle = () => child('ui-train')(
 
 			clickable(),
 
-			child('img')(
+			child('img') (
 				height(imageHeight),
 				backgroundColor(captureBackgroundColor),
 				backgroundImage(
@@ -50,6 +78,24 @@ export const trainStyle = () => child('ui-train')(
 						colorStop(percentage(50).subtract(px(1)), pageContrastColor),
 						colorStop(percentage(50).add(px(1)), pageContrastColor),
 						colorStop(percentage(50).add(px(1)), 'transparent')
+					)
+				)
+			),
+
+			child('ui-detail') (
+				display('block'),
+				padding(pageGutter),
+
+				detailSectionStyle(
+					child('ui-header') (
+						fontSize(rem(1.25)),
+
+						child('ui-tag') (
+							display('inline-block'),
+							marginRight(pageGutter),
+
+							fontFamily(tagFont)
+						)
 					)
 				)
 			)
@@ -73,5 +119,7 @@ export const trainStyle = () => child('ui-train')(
 				borderColor(pageColor)
 			)
 		)
-	)
+	),
+
+	layoutStyle()
 );

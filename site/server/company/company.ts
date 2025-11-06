@@ -10,6 +10,8 @@ export class CompanySummaryModel extends ViewModel<Company> {
 
 	name;
 	shortname;
+
+	trainPrefix;
 }
 
 export class CompanyViewModel extends CompanySummaryModel {
