@@ -17,13 +17,13 @@ export class TrainPage extends Component {
 
 	train: TrainViewModel;
 	state: TrainStateViewModel;
-	units: TrainRailcarUnitViewModel[];
+	railcars: TrainRailcarUnitViewModel[];
 	label: TrainLabelViewModel;
 
 	async onload() {
 		this.train = this.parent.trains.find(train => train.identifier == this.parameters.identifier);
 		this.state = await new TrainService().getTrain(this.parameters.identifier);
-		this.units = await new TrainService().getTrainRailcars(this.parameters.identifier);
+		this.railcars = await new TrainService().getTrainRailcars(this.parameters.identifier);
 		this.label = await new TrainService().getLabel(this.parameters.identifier);
 	}
 
@@ -61,27 +61,27 @@ export class TrainPage extends Component {
 					{coupleIcon()}
 				</ui-action>}
 
-				{this.units.map((unit, index) => [
-					<ui-unit ui-href={`/railcar/${unit.tag}`}>
-						<img src={`/capture/railcar/${unit.id}/forward`} />
+				{this.railcars.map((railcar, index) => [
+					<ui-unit ui-href={`/railcar/${railcar.tag}`}>
+						<img src={`/capture/railcar/${railcar.id}/forward`} />
 
 						<ui-detail>
 							{new DetailSectionComponent(<ui-header>
 								<ui-tag>
-									{unit.tag}
+									{railcar.tag}
 								</ui-tag>
 
 								<ui-name>
-									{unit.givenName || unit.model?.name || unit.runningNumber}
+									{railcar.givenName || railcar.model?.name || railcar.runningNumber}
 								</ui-name>
 							</ui-header>)
-								.addMetric('Type', () => unit.model?.name, `/model/${unit.model?.tag}`)
-								.addMetric('Running Number', () => unit.runningNumber)}
+								.addMetric('Type', () => railcar.model?.name, `/model/${railcar.model?.tag}`)
+								.addMetric('Running Number', () => railcar.runningNumber)}
 						</ui-detail>
 					</ui-unit>,
 
-					Application.session.account && index != this.units.length - 1 && <ui-action ui-click={async () => {
-						await new TrainService().uncoupleAfter(unit.id);
+					Application.session.account && index != this.railcars.length - 1 && <ui-action ui-click={async () => {
+						await new TrainService().uncoupleAfter(railcar.id);
 
 						this.reload();
 					}}>

@@ -10,14 +10,16 @@ export const registerMonitorRelay = (server: ManagedServer) => {
 		request.on('data', chunk => body.push(chunk));
 
 		request.on('close', () => {
-			// repackage message for safety
-			const message = Message.from(Buffer.concat(body));
-			const buffer = message.toBuffer();
+			if (listeners.length) {
+				// repackage message for safety
+				const message = Message.from(Buffer.concat(body));
+				const buffer = message.toBuffer();
 
-			console.log(`relaying '${message.route.join('/')}' (${buffer.byteLength}b) to ${listeners.length} listeners`);
+				console.log(`relaying '${message.route.join('/')}' (${buffer.byteLength}b) to ${listeners.length} listeners`);
 
-			for (let listener of listeners) {
-				listener.send(buffer);
+				for (let listener of listeners) {
+					listener.send(buffer);
+				}
 			}
 		});
 	});

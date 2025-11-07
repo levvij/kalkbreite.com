@@ -17,15 +17,18 @@
 	},
 	"dependencies": {
 		"@acryps/environment": "^2.7.2",
+		"@packtrack/layout": "^1.6.5",
 		"@packtrack/protocol": "^1.8.1",
-		"@packtrack/train": "^1.2.0",
+		"@packtrack/train": "^2.0.8",
+		"@types/jsdom": "^27.0.0",
+		"@xmldom/xmldom": "^0.8.11",
 		"bwip-js": "^4.5.1",
 		"cookie-parser": "^1.4.7",
 		"express-ws": "^5.0.2",
 		"puppeteer-core": "^24.27.0",
 		"skia-canvas": "^2.0.2",
 		"vlquery": "^7.2.0",
-		"vlserver": "^5.0.1"
+		"vlserver": "^5.0.2"
 	},
 	"devDependencies": {
 		"@types/express-ws": "^3.0.6",

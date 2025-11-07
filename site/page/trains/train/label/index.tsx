@@ -14,7 +14,13 @@ export class AssignTrainLabelPage extends Component {
 	preview: TrainLabelComponent;
 
 	async onload() {
-		this.label = this.parent.label ?? new TrainLabelViewModel();
+		this.label = this.parent.label;
+
+		if (!this.label) {
+			this.label = new TrainLabelViewModel();
+			this.label.label = '';
+			this.label.description = '';
+		}
 
 		this.productBrands = await new TrainService().getProductBrands();
 		this.operators = await new CompanyService().list();
@@ -29,6 +35,11 @@ export class AssignTrainLabelPage extends Component {
 			<ui-field>
 				<label>Name</label>
 				<input $ui-value={this.label.label} ui-change={() => this.preview.update()} />
+			</ui-field>
+
+			<ui-field>
+				<label>Description</label>
+				<textarea $ui-value={this.label.description} rows='6' />
 			</ui-field>
 
 			<ui-field>
@@ -72,6 +83,7 @@ export class AssignTrainLabelPage extends Component {
 					this.parent.label = await new TrainService().assignLabel(
 						this.parent.train.identifier,
 						this.label.label,
+						this.label.description,
 						this.label.productBrand?.id ?? null,
 						this.label.operator?.id ?? null
 					);

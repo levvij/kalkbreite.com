@@ -1,25 +1,25 @@
-import { Service } from "vlserver";
-import { Coupling, DbContext, RailcarDirection, TrainLabel, Uncoupling } from "../managed/database";
-import { TrainChain } from "./chain";
+import { Service, ViewModel } from "vlserver";
+import { Coupling, DbContext, Railcar, RailcarDirection, TrainLabel, Uncoupling } from "../managed/database";
 import { RailcarSummaryModel } from "../railcar/railcar";
-import { TrainViewModel } from "./train";
-import { TrainRailcarUnitViewModel, TrainUnitViewModel } from "./unit";
+import { TrainResponse, TrainViewModel } from "./train";
 import { TrainProductBrandSummaryModel } from "./product-brand";
 import { TrainLabelViewModel } from "./label";
 import { TrainState, TrainStateViewModel } from "./state";
 import { LastTrainHeadPositionViewModel, LastTrainPosition } from "./position";
+import { TrainRailcarUnitViewModel } from "./unit";
+import { TrainChain } from "@packtrack/train";
+import { Application } from "..";
 
 export class TrainService extends Service {
 	constructor(
-		private database: DbContext,
-		private chain: TrainChain
+		private database: DbContext
 	) {
 		super();
 	}
 
 	async uncoupleAfter(railcarId: string) {
-		const train = this.chain.trains.find(train => train.units.find(unit => unit.railcar.id == railcarId));
-		const unit = train.units.find(unit => unit.railcar.id == railcarId);
+		const train = Application.trainChain.trains.find(train => train.railcars.find(railcar => railcar.identifier == railcarId));
+		const unit = train.railcars.find(unit => unit.identifier == railcarId);
 
 		if (!unit?.tail?.coupler) {
 			return;
@@ -27,9 +27,9 @@ export class TrainService extends Service {
 
 		const uncoupling = new Uncoupling();
 		uncoupling.uncoupled = new Date();
-		uncoupling.sourceId = unit.tail.coupler.id;
+		uncoupling.sourceId = unit.tail.coupler.identifier;
 
-		await this.chain.uncouple(uncoupling.sourceId, uncoupling.uncoupled);
+		await Application.trainChain.uncouple(unit.tail.coupler, uncoupling.uncoupled);
 		await uncoupling.create();
 	}
 
@@ -37,50 +37,65 @@ export class TrainService extends Service {
 		sourceTrainIdentifier: string, sourceAnchor: string,
 		targetTrainIdentifier: string, targetAnchor: string
 	) {
-		const source = this.chain.trains.find(train => train.identifier == sourceTrainIdentifier);
-		const target = this.chain.trains.find(train => train.identifier == targetTrainIdentifier);
+		const source = Application.trainChain.trains.find(train => train.identifier == sourceTrainIdentifier);
+		const target = Application.trainChain.trains.find(train => train.identifier == targetTrainIdentifier);
 
 		const coupling = new Coupling();
 		coupling.coupled = new Date();
-		coupling.sourceId = sourceAnchor == 'head' ? source.headCoupler.id : source.tailCoupler.id;
-		coupling.targetId = targetAnchor == 'head' ? target.headCoupler.id : target.tailCoupler.id;
 
-		await this.chain.couple(coupling.sourceId, coupling.targetId, coupling.coupled);
+		const sourceCoupler = sourceAnchor == 'head' ? source.headCoupler : source.tailCoupler;
+		coupling.sourceId = sourceCoupler.identifier;
+
+		const targetCoupler = targetAnchor == 'head' ? target.headCoupler : target.tailCoupler;
+		coupling.targetId = targetCoupler.identifier;
+
+		await Application.trainChain.couple(sourceCoupler, targetCoupler, coupling.coupled);
 		await coupling.create();
 	}
 
 	getTrains() {
-		return TrainViewModel.from(
-			[...this.chain.trains]
-				.sort((a, b) => {
-					if (+a.changed == +b.changed) {
-						return a.identifier.localeCompare(b.identifier);
-					}
+		const trains: TrainResponse[] = [];
 
-					return a.changed > b.changed ? -1 : 1;
-				})
-		);
+		for (let source of Application.trainChain.trains) {
+			trains.push(TrainResponse.from(source));
+		}
+
+		trains.sort((a, b) => {
+			if (+a.changed == +b.changed) {
+				return a.identifier.localeCompare(b.identifier);
+			}
+
+			return a.changed > b.changed ? -1 : 1;
+		});
+
+		return TrainViewModel.from(trains);
 	}
 
 	async getCoupleableTrains(identifier: string, end: string) {
-		const train = this.chain.trains.find(train => train.identifier == identifier);
+		const train = Application.trainChain.trains.find(train => train.identifier == identifier);
 		const couplerType = end == 'head' ? train.headCouplerType : train.tailCouplerType;
 
-		return TrainViewModel.from(
-			this.chain.trains
-				.filter(train => train.headCouplerType == couplerType || train.tailCouplerType == couplerType)
-				.sort((a, b) => {
-					if (+a.changed == +b.changed) {
-						return a.identifier.localeCompare(b.identifier);
-					}
+		const trains: TrainResponse[] = [];
 
-					return a.changed > b.changed ? -1 : 1;
-				})
-		);
+		for (let source of Application.trainChain.trains) {
+			if (source.headCouplerType == couplerType || source.tailCouplerType == couplerType) {
+				trains.push(TrainResponse.from(source));
+			}
+		}
+
+		trains.sort((a, b) => {
+			if (+a.changed == +b.changed) {
+				return a.identifier.localeCompare(b.identifier);
+			}
+
+			return a.changed > b.changed ? -1 : 1;
+		});
+
+		return TrainViewModel.from(trains);
 	}
 
 	async getTrain(identifier: string) {
-		const train = this.chain.trains.find(train => train.identifier == identifier);
+		const train = Application.trainChain.trains.find(train => train.identifier == identifier);
 
 		const state = new TrainState();
 
@@ -94,16 +109,23 @@ export class TrainService extends Service {
 		return new TrainStateViewModel(state);
 	}
 
-	getTrainRailcars(identifier: string) {
-		const train = this.chain.trains.find(train => train.identifier == identifier);
+	async getTrainRailcars(identifier: string) {
+		const train = Application.trainChain.trains.find(train => train.identifier == identifier);
+		const railcars: Railcar[] = [];
 
-		return TrainRailcarUnitViewModel.from(
-			train.units.map(unit => unit.railcar)
-		);
+		for (let source of train.railcars) {
+			const railcar = await this.database.railcar
+				.includeTree(ViewModel.mappings[TrainRailcarUnitViewModel.name].items)
+				.first(railcar => railcar.id == source.identifier);
+
+			railcars.push(railcar);
+		}
+
+		return TrainRailcarUnitViewModel.from(railcars);
 	}
 
 	getUnitTrain(railcarId: string) {
-		const train = this.chain.trains.find(train => train.units.find(unit => unit.railcar.id == railcarId));
+		const train = Application.trainChain.trains.find(train => train.railcars.find(unit => unit.identifier == railcarId));
 
 		return train.identifier;
 	}
@@ -111,7 +133,7 @@ export class TrainService extends Service {
 	async getLastTrainPositions() {
 		const positions: LastTrainPosition[] = [];
 
-		for (let train of this.chain.trains) {
+		for (let train of Application.trainChain.trains) {
 			const update = await this.database.trainHeadPosition
 				.orderByDescending(position => position.updated)
 				.first(position => position.trainIdentifier.valueOf() == train.identifier);
@@ -171,7 +193,7 @@ export class TrainService extends Service {
 		return new TrainLabelViewModel(label);
 	}
 
-	async assignLabel(identifier: string, name: string, productBrandId: string, operatorId: string) {
+	async assignLabel(identifier: string, name: string, description: string, productBrandId: string, operatorId: string) {
 		let label = await this.database.trainLabel.first(label => label.trainIdentifier.valueOf() == identifier);
 
 		if (!label) {
@@ -180,6 +202,7 @@ export class TrainService extends Service {
 		}
 
 		label.label = name;
+		label.description = description;
 		label.productBrandId = productBrandId;
 		label.operatorId = operatorId;
 

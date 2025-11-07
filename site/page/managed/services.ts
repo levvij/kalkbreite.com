@@ -467,23 +467,29 @@ export class TrainStateViewModel {
 }
 
 export class TrainViewModel {
-	changed: Date;
 	identifier: string;
 	created: Date;
+	changed: Date;
 	railcarCount: number;
 	coupledLength: number;
 	headCouplerType: string;
 	tailCouplerType: string;
+	section: string;
+	offset: number;
+	reversed: boolean;
 
 	private static $build(raw) {
 		const item = new TrainViewModel();
-		raw.changed === undefined || (item.changed = raw.changed ? new Date(raw.changed) : null)
 		raw.identifier === undefined || (item.identifier = raw.identifier === null ? null : `${raw.identifier}`)
 		raw.created === undefined || (item.created = raw.created ? new Date(raw.created) : null)
+		raw.changed === undefined || (item.changed = raw.changed ? new Date(raw.changed) : null)
 		raw.railcarCount === undefined || (item.railcarCount = raw.railcarCount === null ? null : +raw.railcarCount)
 		raw.coupledLength === undefined || (item.coupledLength = raw.coupledLength === null ? null : +raw.coupledLength)
 		raw.headCouplerType === undefined || (item.headCouplerType = raw.headCouplerType === null ? null : `${raw.headCouplerType}`)
 		raw.tailCouplerType === undefined || (item.tailCouplerType = raw.tailCouplerType === null ? null : `${raw.tailCouplerType}`)
+		raw.section === undefined || (item.section = raw.section === null ? null : `${raw.section}`)
+		raw.offset === undefined || (item.offset = raw.offset === null ? null : +raw.offset)
+		raw.reversed === undefined || (item.reversed = !!raw.reversed)
 		
 		return item;
 	}
@@ -1883,14 +1889,15 @@ export class TrainService {
 		});
 	}
 
-	async assignLabel(identifier: string, name: string, productBrandId: string, operatorId: string): Promise<TrainLabelViewModel> {
+	async assignLabel(identifier: string, name: string, description: string, productBrandId: string, operatorId: string): Promise<TrainLabelViewModel> {
 		const $data = new FormData();
-		$data.append("c5OXFrMjhzdmltaHU0YWBuMjFha256M3", Service.stringify(identifier))
-		$data.append("dwa3RzdDpoMTN1anV3MHtoZHQ0N2libj", Service.stringify(name))
-		$data.append("JnZXN5YWI3ej4yc3dtd3dsanZqbXJxZW", Service.stringify(productBrandId))
-		$data.append("NuMWViZTFkM2hubDVyczMzanF0anE5a2", Service.stringify(operatorId))
+		$data.append("14MnFtejM2NGhrOWRiczVsYnluaGJjYX", Service.stringify(identifier))
+		$data.append("lkMXRlZ2Q5a2FubHUyOXFpcHtoZWE5bj", Service.stringify(name))
+		$data.append("JtMGJ6N38zNXVxYjJoNWF0aHR2N316Ym", Service.stringify(description))
+		$data.append("xnZXp4M2QwamQ5dnFqdGU3djU4d2YycD", Service.stringify(productBrandId))
+		$data.append("5nZGRudzU1cnAzMHl5aHtwdGVqYmk2aG", Service.stringify(operatorId))
 
-		return await fetch(Service.toURL("JjdnB3cTJucjdidDdoOWdyYjUzYmhwMm"), {
+		return await fetch(Service.toURL("FtZjlpcWBtYXQ0ZzI0emlkdnAxcWZ0cX"), {
 			method: "post",
 			credentials: "include",
 			body: $data
