@@ -660,13 +660,13 @@ export class ManagedServer extends BaseServer {
 		);
 
 		this.expose(
-			"k2NDd3bGNneXpjeTVnYmF2OGYyc3kyMW",
+			"Y4ZWFhZHZjOWFqdmlpNnBvdHNzZn56dW",
 			{
-			"VscDloMTM4aTE5aXU3c2AxN2xsY2oxaT": { type: "string", isArray: false, isOptional: false }
+			"A4MGIyc2MyazNpcm91MjZ1ZjM3bmRmN3": { type: "string", isArray: false, isOptional: false }
 			},
 			inject => inject.construct(TrainService),
 			(controller, params) => controller.getTrain(
-				params["VscDloMTM4aTE5aXU3c2AxN2xsY2oxaT"]
+				params["A4MGIyc2MyazNpcm91MjZ1ZjM3bmRmN3"]
 			)
 		);
 
@@ -682,13 +682,13 @@ export class ManagedServer extends BaseServer {
 		);
 
 		this.expose(
-			"lrcDJxc3wya2t2bGZlOHMxdTQ3OXI2cH",
+			"hvc3V6ZXVydDV3Z2dvMGsxMXZ5NjFqbm",
 			{
-			"10czNubHltczN4cXhubmRxNzdiMWR0b3": { type: "string", isArray: false, isOptional: false }
+			"h6bmlpbjRhMDh4d2YxcDppaDtlc3MwZG": { type: "string", isArray: false, isOptional: false }
 			},
 			inject => inject.construct(TrainService),
-			(controller, params) => controller.getUnitTrain(
-				params["10czNubHltczN4cXhubmRxNzdiMWR0b3"]
+			(controller, params) => controller.getRailcarTrain(
+				params["h6bmlpbjRhMDh4d2YxcDppaDtlc3MwZG"]
 			)
 		);
 
@@ -802,7 +802,7 @@ ViewModel.mappings = {
 			"bufferAnchorOffset" in data && (item.bufferAnchorOffset = data.bufferAnchorOffset === null ? null : +data.bufferAnchorOffset);
 			"captured" in data && (item.captured = data.captured === null ? null : new Date(data.captured));
 			"corrupted" in data && (item.corrupted = !!data.corrupted);
-			"direction" in data && (item.direction = data.direction && ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction));
+			"direction" in data && (item.direction = data.direction && (data.direction instanceof ViewModel ? data.direction : ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction)));
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 
 			return item;
@@ -1047,7 +1047,7 @@ ViewModel.mappings = {
 			"artist" in data && (item.artist = data.artist && ViewModel.mappings[ArtistSummaryModel.name].toViewModel(data.artist));
 			"captures" in data && (item.captures = data.captures && [...data.captures].map(i => ViewModel.mappings[GraffitiCaptureViewModel.name].toViewModel(i)));
 			"type" in data && (item.type = data.type && ViewModel.mappings[GraffitiTypeViewModel.name].toViewModel(data.type));
-			"direction" in data && (item.direction = data.direction && ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction));
+			"direction" in data && (item.direction = data.direction && (data.direction instanceof ViewModel ? data.direction : ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction)));
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"painted" in data && (item.painted = data.painted === null ? null : new Date(data.painted));
@@ -1686,7 +1686,7 @@ ViewModel.mappings = {
 	[CouplerViewModel.name]: class ComposedCouplerViewModel extends CouplerViewModel {
 		async map() {
 			return {
-				type: new CouplerTypeSummaryModel(await BaseServer.unwrap(this.$$model.type)),
+				type: new CouplerTypeViewModel(await BaseServer.unwrap(this.$$model.type)),
 				id: this.$$model.id
 			}
 		};
@@ -1718,7 +1718,7 @@ ViewModel.mappings = {
 
 			return {
 				get type() {
-					return ViewModel.mappings[CouplerTypeSummaryModel.name].getPrefetchingProperties(
+					return ViewModel.mappings[CouplerTypeViewModel.name].getPrefetchingProperties(
 						level,
 						[...parents, "type-CouplerViewModel"]
 					);
@@ -1729,7 +1729,7 @@ ViewModel.mappings = {
 
 		static toViewModel(data) {
 			const item = new CouplerViewModel(null);
-			"type" in data && (item.type = data.type && ViewModel.mappings[CouplerTypeSummaryModel.name].toViewModel(data.type));
+			"type" in data && (item.type = data.type && ViewModel.mappings[CouplerTypeViewModel.name].toViewModel(data.type));
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 
 			return item;
@@ -2671,8 +2671,8 @@ ViewModel.mappings = {
 
 		static toViewModel(data) {
 			const item = new TrainStateViewModel(null);
-			"label" in data && (item.label = data.label && ViewModel.mappings[TrainLabelViewModel.name].toViewModel(data.label));
-			"lastHeadPosition" in data && (item.lastHeadPosition = data.lastHeadPosition && ViewModel.mappings[TrainHeadPositionViewModel.name].toViewModel(data.lastHeadPosition));
+			"label" in data && (item.label = data.label && (data.label instanceof ViewModel ? data.label : ViewModel.mappings[TrainLabelViewModel.name].toViewModel(data.label)));
+			"lastHeadPosition" in data && (item.lastHeadPosition = data.lastHeadPosition && (data.lastHeadPosition instanceof ViewModel ? data.lastHeadPosition : ViewModel.mappings[TrainHeadPositionViewModel.name].toViewModel(data.lastHeadPosition)));
 
 			return item;
 		}
@@ -2698,7 +2698,8 @@ ViewModel.mappings = {
 				tailCouplerType: this.$$model.tailCouplerType,
 				section: this.$$model.section,
 				offset: this.$$model.offset,
-				reversed: this.$$model.reversed
+				reversed: this.$$model.reversed,
+				label: this.$$model.label
 			}
 		};
 
@@ -2737,7 +2738,13 @@ ViewModel.mappings = {
 				tailCouplerType: true,
 				section: true,
 				offset: true,
-				reversed: true
+				reversed: true,
+				get label() {
+					return ViewModel.mappings[TrainLabelViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "label-TrainViewModel"]
+					);
+				}
 			};
 		};
 
@@ -2753,6 +2760,7 @@ ViewModel.mappings = {
 			"section" in data && (item.section = data.section === null ? null : `${data.section}`);
 			"offset" in data && (item.offset = data.offset === null ? null : +data.offset);
 			"reversed" in data && (item.reversed = !!data.reversed);
+			"label" in data && (item.label = data.label && (data.label instanceof ViewModel ? data.label : ViewModel.mappings[TrainLabelViewModel.name].toViewModel(data.label)));
 
 			return item;
 		}
@@ -2770,6 +2778,7 @@ ViewModel.mappings = {
 			"section" in viewModel && (model.section = viewModel.section === null ? null : `${viewModel.section}`);
 			"offset" in viewModel && (model.offset = viewModel.offset === null ? null : +viewModel.offset);
 			"reversed" in viewModel && (model.reversed = !!viewModel.reversed);
+			"label" in viewModel && (undefined);
 
 			return model;
 		}
@@ -3071,7 +3080,7 @@ ViewModel.mappings = {
 			"railcar" in data && (item.railcar = data.railcar && ViewModel.mappings[GraffitiRailcarViewModel.name].toViewModel(data.railcar));
 			"type" in data && (item.type = data.type && ViewModel.mappings[GraffitiTypeViewModel.name].toViewModel(data.type));
 			"description" in data && (item.description = data.description === null ? null : `${data.description}`);
-			"direction" in data && (item.direction = data.direction && ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction));
+			"direction" in data && (item.direction = data.direction && (data.direction instanceof ViewModel ? data.direction : ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction)));
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"painted" in data && (item.painted = data.painted === null ? null : new Date(data.painted));

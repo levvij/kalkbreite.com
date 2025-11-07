@@ -2,6 +2,7 @@ import { ViewModel } from "vlserver";
 import { TrainLabelViewModel } from "./label";
 import { Train } from "@packtrack/train";
 import { ResponseModel } from "vlserver/dist/resolve";
+import { DbContext, TrainLabel } from "../managed/database";
 
 export class TrainResponse extends ResponseModel {
 	identifier: string;
@@ -18,7 +19,9 @@ export class TrainResponse extends ResponseModel {
 	offset: number;
 	reversed: boolean;
 
-	static from(source: Train) {
+	label: TrainLabelViewModel;
+
+	static async from(source: Train, database: DbContext) {
 		const train = new TrainResponse();
 		train.identifier = source.identifier;
 
@@ -34,6 +37,12 @@ export class TrainResponse extends ResponseModel {
 		train.section = head.section.domainName;
 		train.offset = head.offset;
 		train.reversed = head.reversed;
+
+		train.label = new TrainLabelViewModel(
+			await database.trainLabel
+			.	include(ViewModel.mappings[TrainLabelViewModel.name].items)
+				.first(label => label.trainIdentifier.valueOf() == train.identifier)
+		);
 
 		return train;
 	}
@@ -53,4 +62,6 @@ export class TrainViewModel extends ViewModel<TrainResponse> {
 	section;
 	offset;
 	reversed;
+
+	label: TrainLabelViewModel;
 }

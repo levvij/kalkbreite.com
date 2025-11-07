@@ -229,12 +229,12 @@ export class UicLocaleViewModel {
 }
 
 export class CouplerViewModel {
-	type: CouplerTypeSummaryModel;
+	type: CouplerTypeViewModel;
 	id: string;
 
 	private static $build(raw) {
 		const item = new CouplerViewModel();
-		raw.type === undefined || (item.type = raw.type ? CouplerTypeSummaryModel["$build"](raw.type) : null)
+		raw.type === undefined || (item.type = raw.type ? CouplerTypeViewModel["$build"](raw.type) : null)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		
 		return item;
@@ -477,6 +477,7 @@ export class TrainViewModel {
 	section: string;
 	offset: number;
 	reversed: boolean;
+	label: TrainLabelViewModel;
 
 	private static $build(raw) {
 		const item = new TrainViewModel();
@@ -490,6 +491,7 @@ export class TrainViewModel {
 		raw.section === undefined || (item.section = raw.section === null ? null : `${raw.section}`)
 		raw.offset === undefined || (item.offset = raw.offset === null ? null : +raw.offset)
 		raw.reversed === undefined || (item.reversed = !!raw.reversed)
+		raw.label === undefined || (item.label = raw.label ? TrainLabelViewModel["$build"](raw.label) : null)
 		
 		return item;
 	}
@@ -1742,11 +1744,11 @@ export class TrainService {
 		});
 	}
 
-	async getTrain(identifier: string): Promise<TrainStateViewModel> {
+	async getTrain(identifier: string): Promise<TrainViewModel> {
 		const $data = new FormData();
-		$data.append("VscDloMTM4aTE5aXU3c2AxN2xsY2oxaT", Service.stringify(identifier))
+		$data.append("A4MGIyc2MyazNpcm91MjZ1ZjM3bmRmN3", Service.stringify(identifier))
 
-		return await fetch(Service.toURL("k2NDd3bGNneXpjeTVnYmF2OGYyc3kyMW"), {
+		return await fetch(Service.toURL("Y4ZWFhZHZjOWFqdmlpNnBvdHNzZn56dW"), {
 			method: "post",
 			credentials: "include",
 			body: $data
@@ -1754,7 +1756,7 @@ export class TrainService {
 			if ("data" in r) {
 				const d = r.data;
 
-				return d === null ? null : TrainStateViewModel["$build"](d);
+				return d === null ? null : TrainViewModel["$build"](d);
 			} else if ("aborted" in r) {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {
@@ -1784,11 +1786,11 @@ export class TrainService {
 		});
 	}
 
-	async getUnitTrain(railcarId: string): Promise<string> {
+	async getRailcarTrain(railcarId: string): Promise<TrainViewModel> {
 		const $data = new FormData();
-		$data.append("10czNubHltczN4cXhubmRxNzdiMWR0b3", Service.stringify(railcarId))
+		$data.append("h6bmlpbjRhMDh4d2YxcDppaDtlc3MwZG", Service.stringify(railcarId))
 
-		return await fetch(Service.toURL("lrcDJxc3wya2t2bGZlOHMxdTQ3OXI2cH"), {
+		return await fetch(Service.toURL("hvc3V6ZXVydDV3Z2dvMGsxMXZ5NjFqbm"), {
 			method: "post",
 			credentials: "include",
 			body: $data
@@ -1796,7 +1798,7 @@ export class TrainService {
 			if ("data" in r) {
 				const d = r.data;
 
-				return d === null ? null : `${d}`;
+				return d === null ? null : TrainViewModel["$build"](d);
 			} else if ("aborted" in r) {
 				throw new Error("request aborted by server");
 			} else if ("error" in r) {

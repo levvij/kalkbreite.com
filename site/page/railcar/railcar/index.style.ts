@@ -1,8 +1,8 @@
-import { rem, child, display, padding, marginBottom, fontSize, gap, alignItems, lineHeight, flexGrow, fontFamily, height, em, backgroundColor, hex, imageRendering, justifyContent, width, percentage, maxWidth, maxHeight, vh, objectFit, objectPosition, position, marginTop, paddingInline, alignContent, hover, filter, invert, attribute, transform, rotate, turn, borderRight, px, not, firstOfType, paddingTop, flexShrink, paddingBlock, whiteSpace, textAlign, marginLeft, paddingLeft, borderLeft, ch, color, scaleX, minHeight } from "@acryps/style";
+import { rem, child, display, padding, marginBottom, fontSize, gap, alignItems, lineHeight, flexGrow, fontFamily, height, em, backgroundColor, hex, imageRendering, justifyContent, width, percentage, maxWidth, maxHeight, vh, objectFit, objectPosition, position, marginTop, paddingInline, alignContent, hover, filter, invert, attribute, transform, rotate, turn, borderRight, px, firstOfType, paddingTop, flexShrink, paddingBlock, whiteSpace, textAlign, marginLeft, paddingLeft, borderLeft, ch, color, scaleX, minHeight, firstChild, not, border, marginInline } from "@acryps/style";
 import { trainIdentifierFont, monospacedFont } from "../../assets/font";
-import { pageSpacing, pageGutter, runningNumberFont, tagFont, captureBackgroundColor, pageColor, primaryContrastColor, primaryColor } from "../../index.style";
+import { pageSpacing, pageGutter, runningNumberFont, tagFont, captureBackgroundColor, pageColor, primaryContrastColor, primaryColor, pageContrastColor } from "../../index.style";
 import { boxed, maximumBoxedWidth } from "../../shared/boxed";
-import { buttonGroupStyle, buttonStyle } from "../../shared/button";
+import { activateButtonStyle, buttonGroupStyle, buttonStyle } from "../../shared/button";
 import { detailSectionStyle } from "../../shared/detail-section/index.style";
 import { endDivider } from "../../shared/divider";
 import { graffitiCollectionStyle } from "../../shared/graffiti-collection/index.style";
@@ -11,13 +11,17 @@ import { storageContainerTagStyle } from "../../shared/storage-container-tag/ind
 import { anchorStyle } from "./anchor/index.style";
 import { maintenanceStyle } from "./maintenance/index.style";
 import { registerGraffitiStyle } from "./register-graffiti/index.style";
+import { trainLabelStyle } from "../../shared/train-label/index.style";
+import { couplerStyle } from "./coupler/index.style";
 
 const timeDayLength = rem(6);
 
 export const railcarStyle = () => child('ui-railcar')(
 	display('block'),
 
-	child('ui-header')(
+	couplerStyle(),
+
+	child('ui-header') (
 		boxed(),
 
 		padding(pageSpacing),
@@ -33,6 +37,7 @@ export const railcarStyle = () => child('ui-railcar')(
 			display('flex'),
 			gap(pageGutter),
 			alignItems('center'),
+			marginBottom(pageGutter),
 
 			lineHeight(1),
 			fontSize(rem(1.5)),
@@ -53,6 +58,18 @@ export const railcarStyle = () => child('ui-railcar')(
 
 				backgroundColor(hex('fff')),
 				imageRendering('pixelated')
+			)
+		),
+
+		child('ui-train') (
+			display('flex'),
+			justifyContent('flex-start'),
+			gap(pageGutter),
+
+			trainLabelStyle(),
+
+			child('ui-identifier') (
+				trainIdentifierFont
 			)
 		)
 	),
@@ -108,38 +125,37 @@ export const railcarStyle = () => child('ui-railcar')(
 				alignContent('center'),
 				gap(pageGutter),
 
-				padding(pageGutter),
-
-				backgroundColor(pageColor),
-				clickable(),
+				buttonStyle(),
 
 				hover() (
 					filter(invert(1))
 				),
 
 				attribute('ui-active') (
-					filter(invert(1))
+					activateButtonStyle()
 				),
 
 				attribute('ui-side', 'tail') (
-					transform(rotate(turn(0.5))),
+					child('svg') (
+						transform(rotate(turn(0.5))),
+					),
 
 					attribute('ui-flippable') (
-						transform(scaleX(-1))
+						child('svg') (
+							transform(scaleX(-1))
+						)
 					)
 				),
 
 				child('svg') (
-					height(rem(1.5)),
-					width(rem(2))
+					height(rem(1.25)),
+					width(rem(2)),
+
+					filter(invert(1))
 				),
 
 				child('ui-icon') (
-					fontSize(rem(1.5))
-				),
-
-				child('ui-train') (
-					trainIdentifierFont
+					fontSize(rem(1.25))
 				)
 			)
 		)

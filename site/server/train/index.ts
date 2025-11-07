@@ -53,11 +53,11 @@ export class TrainService extends Service {
 		await coupling.create();
 	}
 
-	getTrains() {
+	async getTrains() {
 		const trains: TrainResponse[] = [];
 
 		for (let source of Application.trainChain.trains) {
-			trains.push(TrainResponse.from(source));
+			trains.push(await TrainResponse.from(source, this.database));
 		}
 
 		trains.sort((a, b) => {
@@ -79,7 +79,7 @@ export class TrainService extends Service {
 
 		for (let source of Application.trainChain.trains) {
 			if (source.headCouplerType == couplerType || source.tailCouplerType == couplerType) {
-				trains.push(TrainResponse.from(source));
+				trains.push(await TrainResponse.from(source, this.database));
 			}
 		}
 
@@ -97,16 +97,7 @@ export class TrainService extends Service {
 	async getTrain(identifier: string) {
 		const train = Application.trainChain.trains.find(train => train.identifier == identifier);
 
-		const state = new TrainState();
-
-		state.label = await this.database.trainLabel
-			.first(label => label.trainIdentifier.valueOf() == train.identifier);
-
-		state.lastHeadPosition = await this.database.trainHeadPosition
-			.orderByDescending(position => position.updated)
-			.first(position => position.trainIdentifier.valueOf() == train.identifier);
-
-		return new TrainStateViewModel(state);
+		return new TrainViewModel(await TrainResponse.from(train, this.database));
 	}
 
 	async getTrainRailcars(identifier: string) {
@@ -124,10 +115,14 @@ export class TrainService extends Service {
 		return TrainRailcarUnitViewModel.from(railcars);
 	}
 
-	getUnitTrain(railcarId: string) {
+	async getRailcarTrain(railcarId: string) {
 		const train = Application.trainChain.trains.find(train => train.railcars.find(unit => unit.identifier == railcarId));
 
-		return train.identifier;
+		if (!train) {
+			return null;
+		}
+
+		return new TrainViewModel(await TrainResponse.from(train, this.database));
 	}
 
 	async getLastTrainPositions() {

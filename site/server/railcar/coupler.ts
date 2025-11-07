@@ -4,7 +4,7 @@ import { Coupler, CouplerType } from "../managed/database";
 export class CouplerViewModel extends ViewModel<Coupler> {
 	id;
 
-	type: CouplerTypeSummaryModel;
+	type: CouplerTypeViewModel;
 }
 
 export class CouplerTypeSummaryModel extends ViewModel<CouplerType> {

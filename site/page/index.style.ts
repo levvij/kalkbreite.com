@@ -7,6 +7,7 @@ export const primaryOutlineColor = hex('428a5a');
 
 export const knockoutColor = hex('222');
 export const knockoutContrastColor = hex('fff');
+export const knockoutOutlineColor = hex('444');
 
 export const warningColor = hex('ffd61b');
 export const warningContrastColor = hex('000');

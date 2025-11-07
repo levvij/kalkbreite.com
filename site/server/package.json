@@ -28,7 +28,7 @@
 		"puppeteer-core": "^24.27.0",
 		"skia-canvas": "^2.0.2",
 		"vlquery": "^7.2.0",
-		"vlserver": "^5.0.2"
+		"vlserver": "^5.1.0"
 	},
 	"devDependencies": {
 		"@types/express-ws": "^3.0.6",
