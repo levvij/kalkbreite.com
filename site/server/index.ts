@@ -12,7 +12,6 @@ import { updateThumbnail } from "./capture/thumbnail";
 import { registerStorageTagInterface } from "./storage/tag";
 import cookieParser from 'cookie-parser';
 import { RequestContext } from "./session/context";
-import { TrainChain } from "./train/chain";
 import { writeFile } from "fs/promises";
 import { LayoutPlan } from "./layout-plan/interface";
 import { registerRailcarModelDrawingInterface } from "./model/drawing";
@@ -20,73 +19,94 @@ import { LiveStreamer } from "./live/stream";
 import { registerGraffitiInspirationCaptureInterface } from "./graffiti/inspiration.interface";
 import { importTrainProductBrands } from "./operators/import-train-product-brand";
 import { registerScanInterface } from "./scan/interface";
+import { registerMonitorRelay } from "./monitor/interface";
+import expressWs from "express-ws";
+import { TrainChain } from "@packtrack/train";
+import { ChainRestorer } from "./chain/restore";
+import { Layout } from "@packtrack/layout";
+import { LayoutLoader } from "./chain/layout";
+import { registerExportInterface } from "./chain/export";
 
 const streamCameras = process.env.STREAM_CAMERAS == 'ENABLE';
 
-DbClient.connectedClient = new DbClient({});
+export class Application {
+	static trainChain: TrainChain;
+	static layout: Layout;
 
-DbClient.connectedClient.connect().then(async () => {
-	const app = new ManagedServer();
-	const database = new DbContext(new RunContext());
+	static async main() {
+		DbClient.connectedClient = new DbClient({});
+		await DbClient.connectedClient.connect();
 
-	// load chain
-	const chain = await TrainChain.restore(database);
-	chain.dump();
+		const server = new ManagedServer();
+		const database = new DbContext(new RunContext());
 
-	// fill in missing thumbnails
-	for (let capture of await database.capture.where(capture => capture.thumbnail == null).toArray()) {
-		await updateThumbnail(capture);
-	}
+		// load layout & chain
+		this.layout = await new LayoutLoader().load();
 
-	app.app.use(cookieParser());
+		this.trainChain = await new ChainRestorer(database).importDatabase();
+		this.trainChain.dump();
 
-	app.app.use(async (request, response, next) => {
-		const context = await RequestContext.create(request, response, database);
-		app.createRunContext = () => context;
-
-		next();
-	});
-
-	app.createInjector = (context: RequestContext) => new Inject({
-		DbContext: database,
-		Session: context.session,
-		Authentication: context.authentication,
-		TrainChain: chain
-	});
-
-	app.use(new StaticFileRoute('/assets/icons', join(process.cwd(), '..', 'page', '.built', 'icons', 'font')));
-	app.use(new StaticFileRoute('/assets/', join(process.cwd(), '..', 'page', 'assets')));
-	app.use(new StaticFileRoute('/bundle/', join(process.cwd(), '..', 'page', '.built')));
-
-	app.use(new StaticFileRoute('/layout/source/', join(process.cwd(), '..', '..', 'layout')));
-
-	registerTagInterface(app);
-	registerCaptureInterface(app, database, chain);
-	registerLogoInterface(app, database);
-	registerStorageTagInterface(app);
-	registerRailcarModelDrawingInterface(app, database);
-	registerGraffitiInspirationCaptureInterface(app, database);
-	registerScanInterface(app, database, chain);
-
-	if (streamCameras) {
-		await LiveStreamer.start();
-
-		for (let camera of await database.camera.toArray()) {
-			const stream = new LiveStreamer(camera);
-			stream.register(app);
-
-			// wait with streaming between updates
-			// the monitoring website needs quite some delay between sessions or it will not work
-			setTimeout(() => stream.start(), 1000 * 60);
+		// fill in missing thumbnails
+		for (let capture of await database.capture.where(capture => capture.thumbnail == null).toArray()) {
+			await updateThumbnail(capture);
 		}
+
+		server.app.use(cookieParser());
+
+		server.app.use(async (request, response, next) => {
+			const context = await RequestContext.create(request, response, database);
+			server.createRunContext = () => context;
+
+			next();
+		});
+
+		server.createInjector = (context: RequestContext) => new Inject({
+			DbContext: database,
+			Session: context.session,
+			Authentication: context.authentication
+		});
+
+		server.use(new StaticFileRoute('/assets/icons', join(process.cwd(), '..', 'page', '.built', 'icons', 'font')));
+		server.use(new StaticFileRoute('/assets/', join(process.cwd(), '..', 'page', 'assets')));
+		server.use(new StaticFileRoute('/bundle/', join(process.cwd(), '..', 'page', '.built')));
+
+		server.use(new StaticFileRoute('/layout/source/', join(process.cwd(), '..', '..', 'layout')));
+
+
+		expressWs(server.app);
+
+		registerTagInterface(server);
+		registerCaptureInterface(server, database);
+		registerLogoInterface(server, database);
+		registerStorageTagInterface(server);
+		registerRailcarModelDrawingInterface(server, database);
+		registerGraffitiInspirationCaptureInterface(server, database);
+		registerScanInterface(server, database);
+		registerMonitorRelay(server);
+		registerExportInterface(server, database);
+
+		if (streamCameras) {
+			await LiveStreamer.start();
+
+			for (let camera of await database.camera.toArray()) {
+				const stream = new LiveStreamer(camera);
+				stream.register(server);
+
+				// wait with streaming between updates
+				// the monitoring website needs quite some delay between sessions or it will not work
+				setTimeout(() => stream.start(), 1000 * 60);
+			}
+		}
+
+		server.prepareRoutes();
+
+		server.app.use('*', (request, response) => response.sendFile(join(process.cwd(), '..', 'page', 'assets', 'index.html')));
+
+		ViewModel.globalFetchingContext = database;
+
+		const port = +process.env.PORT! || 8004;
+		server.start(port);
 	}
+}
 
-	app.prepareRoutes();
-
-	app.app.use('*', (request, response) => response.sendFile(join(process.cwd(), '..', 'page', 'assets', 'index.html')));
-
-	ViewModel.globalFetchingContext = database;
-
-	const port = +process.env.PORT! || 8004;
-	app.start(port);
-});
+Application.main();

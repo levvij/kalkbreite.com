@@ -1,24 +1,25 @@
 import { Component, ComponentContent } from "@acryps/page";
 import { MetaProduct } from "@acryps/metadata";
 import { Application } from "../..";
-import { trainLinkupIcon, flipIcon, downloadIcon } from "../../.built/icons";
+import { trainLinkupIcon, flipIcon, downloadIcon, goIcon } from "../../.built/icons";
 import { DetailSectionComponent } from "../../shared/detail-section";
 import { GraffitiCollectionComponent } from "../../shared/graffiti-collection";
 import { StorageContainerTagComponent } from "../../shared/storage-container-tag";
 import { TimelineComponent } from "./timeline";
-import { CaptureViewModel, CouplerViewModel, MaintenanceService, RailcarDirection, RailcarService, RailcarViewModel, TrainService } from "../../managed/services";
+import { CaptureViewModel, CouplerViewModel, MaintenanceService, RailcarDirection, RailcarService, RailcarViewModel, TrainService, TrainViewModel } from "../../managed/services";
+import { TrainLabelComponent } from "../../shared/train-label";
 
 export class RailcarPage extends Component {
 	declare parameters: { tag };
 
 	railcar: RailcarViewModel;
-	train: string;
+	train: TrainViewModel;
 
 	captureImage = new Image();
 
 	async onload() {
 		this.railcar = await new RailcarService().get(this.parameters.tag);
-		this.train = await new TrainService().getUnitTrain(this.railcar.id);
+		this.train = await new TrainService().getRailcarTrain(this.railcar.id);
 
 		new MetaProduct({
 			name: this.railcar.givenName ?? this.railcar.model?.name ?? '-',
@@ -102,6 +103,14 @@ export class RailcarPage extends Component {
 
 					<img src={`/tag/${this.railcar.tag}`} />
 				</ui-identifiers>
+
+				{this.train && <ui-train ui-href={`/train/${this.train.identifier}`}>
+					{this.train.label ? new TrainLabelComponent(this.train.label) : <ui-identifier>
+						{this.train.identifier}
+					</ui-identifier>}
+
+					{goIcon()}
+				</ui-train>}
 			</ui-header>
 
 			<ui-capture>
@@ -113,15 +122,6 @@ export class RailcarPage extends Component {
 			<ui-toolbar>
 				<ui-group>
 					{this.renderCoupler('head', this.railcar.headCoupler)}
-
-					<ui-tool ui-href={`/train/${this.train}`}>
-						{trainLinkupIcon()}
-
-						<ui-train>
-							{this.train}
-						</ui-train>
-					</ui-tool>
-
 					{this.renderCoupler('tail', this.railcar.tailCoupler)}
 				</ui-group>
 

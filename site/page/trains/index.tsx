@@ -88,6 +88,10 @@ export class TrainsPage extends Component {
 							<ui-changed>
 								{train.changed.toISOString().replace('T', ' ').replace(/\.[0-9]+Z$/, '')}
 							</ui-changed>
+
+							<ui-location ui-href={`/layout/section/${train.section}`}>
+								{train.section.split('.')[0]}
+							</ui-location>
 						</ui-detail>
 
 						<ui-capture>

@@ -40,6 +40,7 @@ import { RailcarViewModel } from "././../railcar/railcar";
 import { updateThumbnail } from "././../capture/thumbnail";
 import { CouplerTypeSummaryModel } from "././../railcar/coupler";
 import { CouplerTypeViewModel } from "././../railcar/coupler";
+import { CouplingViewModel } from "././../train/coupling";
 import { RailcarService } from "././../railcar/index";
 import { Session } from "././database";
 import { SessionViewModel } from "././../session/session";
@@ -51,16 +52,16 @@ import { StorageService } from "././../storage/index";
 import { Coupling } from "././database";
 import { TrainLabel } from "././database";
 import { Uncoupling } from "././database";
-import { TrainChain } from "././../train/chain";
+import { TrainResponse } from "././../train/train";
 import { TrainViewModel } from "././../train/train";
-import { TrainRailcarUnitViewModel } from "././../train/unit";
-import { TrainUnitViewModel } from "././../train/unit";
 import { TrainProductBrandSummaryModel } from "././../train/product-brand";
 import { TrainLabelViewModel } from "././../train/label";
 import { TrainState } from "././../train/state";
 import { TrainStateViewModel } from "././../train/state";
 import { LastTrainHeadPositionViewModel } from "././../train/position";
 import { LastTrainPosition } from "././../train/position";
+import { TrainRailcarUnitViewModel } from "././../train/unit";
+import { Application } from "././..";
 import { TrainService } from "././../train/index";
 import { ArtistSummaryModel } from "./../graffiti/artist";
 import { GraffitiSummaryModel } from "./../graffiti/graffiti";
@@ -71,7 +72,6 @@ import { CouplerViewModel } from "./../railcar/coupler";
 import { RailcarModelDrawingSummaryModel } from "./../railcar/model";
 import { AccountViewModel } from "./../session/session";
 import { StorageContainerSummaryModel } from "./../storage/storage-contaiuner";
-import { CouplingViewModel } from "./../train/coupling";
 import { TrainHeadPositionViewModel } from "./../train/position";
 import { GraffitiRailcarViewModel } from "./../railcar/railcar";
 import { TrainProductBrandViewModel } from "./../train/product-brand";
@@ -90,7 +90,6 @@ import { Account } from "./../managed/database";
 import { StorageContainer } from "./../managed/database";
 import { TrainHeadPosition } from "./../managed/database";
 import { TrainProductBrand } from "./../managed/database";
-import { Train } from "./../train/chain/train";
 
 Inject.mappings = {
 	"CompanyService": {
@@ -143,11 +142,7 @@ Inject.mappings = {
 	},
 	"TrainService": {
 		objectConstructor: TrainService,
-		parameters: ["DbContext","TrainChain"]
-	},
-	"TrainChain": {
-		objectConstructor: TrainChain,
-		parameters: []
+		parameters: ["DbContext"]
 	}
 };
 
@@ -665,13 +660,13 @@ export class ManagedServer extends BaseServer {
 		);
 
 		this.expose(
-			"k2NDd3bGNneXpjeTVnYmF2OGYyc3kyMW",
+			"Y4ZWFhZHZjOWFqdmlpNnBvdHNzZn56dW",
 			{
-			"VscDloMTM4aTE5aXU3c2AxN2xsY2oxaT": { type: "string", isArray: false, isOptional: false }
+			"A4MGIyc2MyazNpcm91MjZ1ZjM3bmRmN3": { type: "string", isArray: false, isOptional: false }
 			},
 			inject => inject.construct(TrainService),
 			(controller, params) => controller.getTrain(
-				params["VscDloMTM4aTE5aXU3c2AxN2xsY2oxaT"]
+				params["A4MGIyc2MyazNpcm91MjZ1ZjM3bmRmN3"]
 			)
 		);
 
@@ -687,13 +682,13 @@ export class ManagedServer extends BaseServer {
 		);
 
 		this.expose(
-			"lrcDJxc3wya2t2bGZlOHMxdTQ3OXI2cH",
+			"hvc3V6ZXVydDV3Z2dvMGsxMXZ5NjFqbm",
 			{
-			"10czNubHltczN4cXhubmRxNzdiMWR0b3": { type: "string", isArray: false, isOptional: false }
+			"h6bmlpbjRhMDh4d2YxcDppaDtlc3MwZG": { type: "string", isArray: false, isOptional: false }
 			},
 			inject => inject.construct(TrainService),
-			(controller, params) => controller.getUnitTrain(
-				params["10czNubHltczN4cXhubmRxNzdiMWR0b3"]
+			(controller, params) => controller.getRailcarTrain(
+				params["h6bmlpbjRhMDh4d2YxcDppaDtlc3MwZG"]
 			)
 		);
 
@@ -736,19 +731,21 @@ export class ManagedServer extends BaseServer {
 		);
 
 		this.expose(
-			"JjdnB3cTJucjdidDdoOWdyYjUzYmhwMm",
+			"FtZjlpcWBtYXQ0ZzI0emlkdnAxcWZ0cX",
 			{
-			"c5OXFrMjhzdmltaHU0YWBuMjFha256M3": { type: "string", isArray: false, isOptional: false },
-				"dwa3RzdDpoMTN1anV3MHtoZHQ0N2libj": { type: "string", isArray: false, isOptional: false },
-				"JnZXN5YWI3ej4yc3dtd3dsanZqbXJxZW": { type: "string", isArray: false, isOptional: false },
-				"NuMWViZTFkM2hubDVyczMzanF0anE5a2": { type: "string", isArray: false, isOptional: false }
+			"14MnFtejM2NGhrOWRiczVsYnluaGJjYX": { type: "string", isArray: false, isOptional: false },
+				"lkMXRlZ2Q5a2FubHUyOXFpcHtoZWE5bj": { type: "string", isArray: false, isOptional: false },
+				"JtMGJ6N38zNXVxYjJoNWF0aHR2N316Ym": { type: "string", isArray: false, isOptional: false },
+				"xnZXp4M2QwamQ5dnFqdGU3djU4d2YycD": { type: "string", isArray: false, isOptional: false },
+				"5nZGRudzU1cnAzMHl5aHtwdGVqYmk2aG": { type: "string", isArray: false, isOptional: false }
 			},
 			inject => inject.construct(TrainService),
 			(controller, params) => controller.assignLabel(
-				params["c5OXFrMjhzdmltaHU0YWBuMjFha256M3"],
-				params["dwa3RzdDpoMTN1anV3MHtoZHQ0N2libj"],
-				params["JnZXN5YWI3ej4yc3dtd3dsanZqbXJxZW"],
-				params["NuMWViZTFkM2hubDVyczMzanF0anE5a2"]
+				params["14MnFtejM2NGhrOWRiczVsYnluaGJjYX"],
+				params["lkMXRlZ2Q5a2FubHUyOXFpcHtoZWE5bj"],
+				params["JtMGJ6N38zNXVxYjJoNWF0aHR2N316Ym"],
+				params["xnZXp4M2QwamQ5dnFqdGU3djU4d2YycD"],
+				params["5nZGRudzU1cnAzMHl5aHtwdGVqYmk2aG"]
 			)
 		)
 	}
@@ -805,7 +802,7 @@ ViewModel.mappings = {
 			"bufferAnchorOffset" in data && (item.bufferAnchorOffset = data.bufferAnchorOffset === null ? null : +data.bufferAnchorOffset);
 			"captured" in data && (item.captured = data.captured === null ? null : new Date(data.captured));
 			"corrupted" in data && (item.corrupted = !!data.corrupted);
-			"direction" in data && (item.direction = data.direction && ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction));
+			"direction" in data && (item.direction = data.direction && (data.direction instanceof ViewModel ? data.direction : ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction)));
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 
 			return item;
@@ -1050,7 +1047,7 @@ ViewModel.mappings = {
 			"artist" in data && (item.artist = data.artist && ViewModel.mappings[ArtistSummaryModel.name].toViewModel(data.artist));
 			"captures" in data && (item.captures = data.captures && [...data.captures].map(i => ViewModel.mappings[GraffitiCaptureViewModel.name].toViewModel(i)));
 			"type" in data && (item.type = data.type && ViewModel.mappings[GraffitiTypeViewModel.name].toViewModel(data.type));
-			"direction" in data && (item.direction = data.direction && ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction));
+			"direction" in data && (item.direction = data.direction && (data.direction instanceof ViewModel ? data.direction : ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction)));
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"painted" in data && (item.painted = data.painted === null ? null : new Date(data.painted));
@@ -1689,7 +1686,7 @@ ViewModel.mappings = {
 	[CouplerViewModel.name]: class ComposedCouplerViewModel extends CouplerViewModel {
 		async map() {
 			return {
-				type: new CouplerTypeSummaryModel(await BaseServer.unwrap(this.$$model.type)),
+				type: new CouplerTypeViewModel(await BaseServer.unwrap(this.$$model.type)),
 				id: this.$$model.id
 			}
 		};
@@ -1721,7 +1718,7 @@ ViewModel.mappings = {
 
 			return {
 				get type() {
-					return ViewModel.mappings[CouplerTypeSummaryModel.name].getPrefetchingProperties(
+					return ViewModel.mappings[CouplerTypeViewModel.name].getPrefetchingProperties(
 						level,
 						[...parents, "type-CouplerViewModel"]
 					);
@@ -1732,7 +1729,7 @@ ViewModel.mappings = {
 
 		static toViewModel(data) {
 			const item = new CouplerViewModel(null);
-			"type" in data && (item.type = data.type && ViewModel.mappings[CouplerTypeSummaryModel.name].toViewModel(data.type));
+			"type" in data && (item.type = data.type && ViewModel.mappings[CouplerTypeViewModel.name].toViewModel(data.type));
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 
 			return item;
@@ -2674,8 +2671,8 @@ ViewModel.mappings = {
 
 		static toViewModel(data) {
 			const item = new TrainStateViewModel(null);
-			"label" in data && (item.label = data.label && ViewModel.mappings[TrainLabelViewModel.name].toViewModel(data.label));
-			"lastHeadPosition" in data && (item.lastHeadPosition = data.lastHeadPosition && ViewModel.mappings[TrainHeadPositionViewModel.name].toViewModel(data.lastHeadPosition));
+			"label" in data && (item.label = data.label && (data.label instanceof ViewModel ? data.label : ViewModel.mappings[TrainLabelViewModel.name].toViewModel(data.label)));
+			"lastHeadPosition" in data && (item.lastHeadPosition = data.lastHeadPosition && (data.lastHeadPosition instanceof ViewModel ? data.lastHeadPosition : ViewModel.mappings[TrainHeadPositionViewModel.name].toViewModel(data.lastHeadPosition)));
 
 			return item;
 		}
@@ -2692,13 +2689,17 @@ ViewModel.mappings = {
 	[TrainViewModel.name]: class ComposedTrainViewModel extends TrainViewModel {
 		async map() {
 			return {
-				changed: this.$$model.changed,
 				identifier: this.$$model.identifier,
 				created: this.$$model.created,
+				changed: this.$$model.changed,
 				railcarCount: this.$$model.railcarCount,
 				coupledLength: this.$$model.coupledLength,
 				headCouplerType: this.$$model.headCouplerType,
-				tailCouplerType: this.$$model.tailCouplerType
+				tailCouplerType: this.$$model.tailCouplerType,
+				section: this.$$model.section,
+				offset: this.$$model.offset,
+				reversed: this.$$model.reversed,
+				label: this.$$model.label
 			}
 		};
 
@@ -2728,39 +2729,56 @@ ViewModel.mappings = {
 			}
 
 			return {
-				changed: true,
 				identifier: true,
 				created: true,
+				changed: true,
 				railcarCount: true,
 				coupledLength: true,
 				headCouplerType: true,
-				tailCouplerType: true
+				tailCouplerType: true,
+				section: true,
+				offset: true,
+				reversed: true,
+				get label() {
+					return ViewModel.mappings[TrainLabelViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "label-TrainViewModel"]
+					);
+				}
 			};
 		};
 
 		static toViewModel(data) {
 			const item = new TrainViewModel(null);
-			"changed" in data && (item.changed = data.changed === null ? null : new Date(data.changed));
 			"identifier" in data && (item.identifier = data.identifier === null ? null : `${data.identifier}`);
 			"created" in data && (item.created = data.created === null ? null : new Date(data.created));
+			"changed" in data && (item.changed = data.changed === null ? null : new Date(data.changed));
 			"railcarCount" in data && (item.railcarCount = data.railcarCount === null ? null : +data.railcarCount);
 			"coupledLength" in data && (item.coupledLength = data.coupledLength === null ? null : +data.coupledLength);
 			"headCouplerType" in data && (item.headCouplerType = data.headCouplerType === null ? null : `${data.headCouplerType}`);
 			"tailCouplerType" in data && (item.tailCouplerType = data.tailCouplerType === null ? null : `${data.tailCouplerType}`);
+			"section" in data && (item.section = data.section === null ? null : `${data.section}`);
+			"offset" in data && (item.offset = data.offset === null ? null : +data.offset);
+			"reversed" in data && (item.reversed = !!data.reversed);
+			"label" in data && (item.label = data.label && (data.label instanceof ViewModel ? data.label : ViewModel.mappings[TrainLabelViewModel.name].toViewModel(data.label)));
 
 			return item;
 		}
 
 		static async toModel(viewModel: TrainViewModel) {
-			const model = new Train();
+			const model = new TrainResponse();
 
-			"changed" in viewModel && (model.changed = viewModel.changed === null ? null : new Date(viewModel.changed));
 			"identifier" in viewModel && (model.identifier = viewModel.identifier === null ? null : `${viewModel.identifier}`);
 			"created" in viewModel && (model.created = viewModel.created === null ? null : new Date(viewModel.created));
+			"changed" in viewModel && (model.changed = viewModel.changed === null ? null : new Date(viewModel.changed));
 			"railcarCount" in viewModel && (model.railcarCount = viewModel.railcarCount === null ? null : +viewModel.railcarCount);
 			"coupledLength" in viewModel && (model.coupledLength = viewModel.coupledLength === null ? null : +viewModel.coupledLength);
 			"headCouplerType" in viewModel && (model.headCouplerType = viewModel.headCouplerType === null ? null : `${viewModel.headCouplerType}`);
 			"tailCouplerType" in viewModel && (model.tailCouplerType = viewModel.tailCouplerType === null ? null : `${viewModel.tailCouplerType}`);
+			"section" in viewModel && (model.section = viewModel.section === null ? null : `${viewModel.section}`);
+			"offset" in viewModel && (model.offset = viewModel.offset === null ? null : +viewModel.offset);
+			"reversed" in viewModel && (model.reversed = !!viewModel.reversed);
+			"label" in viewModel && (undefined);
 
 			return model;
 		}
@@ -3062,7 +3080,7 @@ ViewModel.mappings = {
 			"railcar" in data && (item.railcar = data.railcar && ViewModel.mappings[GraffitiRailcarViewModel.name].toViewModel(data.railcar));
 			"type" in data && (item.type = data.type && ViewModel.mappings[GraffitiTypeViewModel.name].toViewModel(data.type));
 			"description" in data && (item.description = data.description === null ? null : `${data.description}`);
-			"direction" in data && (item.direction = data.direction && ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction));
+			"direction" in data && (item.direction = data.direction && (data.direction instanceof ViewModel ? data.direction : ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction)));
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"painted" in data && (item.painted = data.painted === null ? null : new Date(data.painted));

@@ -1,5 +1,5 @@
 import { ViewModel } from "vlserver";
-import { LastTrainHeadPositionView, TrainHeadPosition } from "../managed/database";
+import { TrainHeadPosition } from "../managed/database";
 import { ResponseModel } from "vlserver/dist/resolve";
 
 export class TrainHeadPositionViewModel extends ViewModel<TrainHeadPosition> {

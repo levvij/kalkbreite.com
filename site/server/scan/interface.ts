@@ -4,12 +4,10 @@ import { WebSocket } from "ws";
 import 'express-ws';
 import { scanRoutes } from "../../shared/scan";
 import { DbContext, Railcar } from "../managed/database";
-import { TrainChain } from "../train/chain";
+import { Application } from "..";
 
-export const registerScanInterface = (server: ManagedServer, database: DbContext, chain: TrainChain) => {
+export const registerScanInterface = (server: ManagedServer, database: DbContext) => {
 	const listeners: WebSocket[] = [];
-
-	expressWs(server.app);
 
 	for (let route of scanRoutes) {
 		server.app.get(`/scan/${route.source}/:tag`, async (request, response) => {
@@ -18,7 +16,7 @@ export const registerScanInterface = (server: ManagedServer, database: DbContext
 			const railcar = await database.railcar.first(railcar => railcar.tag.valueOf() == tag);
 			const model = await railcar?.model.fetch();
 			const storageContainer = await railcar?.storageContainer.fetch();
-			const train = chain.trains.find(train => train.units.find(unit => unit.railcar.tag == tag));
+			const train = Application.trainChain.trains.find(train => train.railcars.find(peer => peer.identifier == railcar.id));
 			const openMaintenanceJob = await railcar?.maintenanceJobs.where(job => job.completed == null).first();
 
 			for (let listener of listeners) {

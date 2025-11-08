@@ -3,5 +3,10 @@
 	"version": "1.0.0",
 	"scripts": {
 		"build": "cd page; npm run build; cd ..; cd server; npm run build; cd .."
+	},
+	"dependencies": {
+		"@packtrack/layout": "^1.6.7",
+		"@packtrack/protocol": "^1.8.1",
+		"@packtrack/train": "^2.2.1"
 	}
 }

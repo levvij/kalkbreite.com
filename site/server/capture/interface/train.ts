@@ -1,24 +1,24 @@
 import { Canvas, Image, loadImage } from "skia-canvas";
-import { RailcarDirection } from "../../managed/database";
+import { DbContext, RailcarDirection } from "../../managed/database";
 import { ManagedServer } from "../../managed/server";
-import { TrainChain } from "../../train/chain";
 import { captureBackgroundColor } from "../../../page/index.style";
-import { CoupledUnit } from "../../train/chain/railcar";
 import { createHash } from "crypto";
+import { Railcar } from "@packtrack/train";
+import { Application } from "../..";
 
-export const registerTrainCaptureInterface = (server: ManagedServer, chain: TrainChain) => {
+export const registerTrainCaptureInterface = (server: ManagedServer, database: DbContext) => {
 	const height = 100;
 
 	const registerRoute = (
 		route: string,
 		reverse: (parameters: any) => boolean,
-		transformDirection: (unit: CoupledUnit, parameters: any) => RailcarDirection
+		transformDirection: (railcar: Railcar, parameters: any) => RailcarDirection
 	) => {
 		const trainCache = new Map<string, Buffer>();
 
 		server.app.get(route, async (request, response) => {
 			const identifier = request.params.identifier;
-			const train = chain.trains.find(train => train.identifier == identifier);
+			const train = Application.trainChain.trains.find(train => train.identifier == identifier);
 
 			const reversed = reverse(request.params);
 
@@ -26,8 +26,8 @@ export const registerTrainCaptureInterface = (server: ManagedServer, chain: Trai
 				.update(identifier)
 				.update(reversed ? 'reversed' : 'forward');
 
-			for (let unit of train.units) {
-				cacheIdentifierHash.update(unit.railcar.tag + (unit.direction == RailcarDirection.forward ? '/f' : '/r'));
+			for (let railcar of train.railcars) {
+				cacheIdentifierHash.update(railcar.identifier + (railcar.reversed ? '/f' : '/r'));
 			}
 
 			const cacheIdentifier = cacheIdentifierHash.digest('hex');
@@ -53,12 +53,13 @@ export const registerTrainCaptureInterface = (server: ManagedServer, chain: Trai
 			const canvas = new Canvas(height, height);
 			const context = canvas.getContext('2d');
 
-			for (let unit of train.units) {
-				const direction = transformDirection(unit, request.params);
+			for (let railcar of train.railcars) {
+				const storedRailcar = await database.railcar.first(stored => stored.id == railcar.identifier);
+				const direction = transformDirection(railcar, request.params);
 
-				const capture = await unit.railcar.captures
-					.includeTree({ thumbnail: true })
+				const capture = await storedRailcar.captures
 					.where(capture => capture.direction == direction)
+					.includeTree({ thumbnail: true })
 					.orderByDescending(capture => capture.captured)
 					.first();
 
@@ -91,7 +92,7 @@ export const registerTrainCaptureInterface = (server: ManagedServer, chain: Trai
 					context.textAlign = 'center';
 					context.textBaseline = 'middle';
 					context.font = `${height / 4}px monospace`;
-					context.fillText(unit.railcar.tag, height / 2, height / 2);
+					context.fillText(storedRailcar.tag, height / 2, height / 2);
 
 					thumbnails.push(await loadImage(await canvas.toBuffer('png')));
 				}
@@ -126,22 +127,18 @@ export const registerTrainCaptureInterface = (server: ManagedServer, chain: Trai
 	registerRoute(
 		'/capture/train/:identifier',
 		() => false,
-		unit => unit.direction
+		railcar => railcar.reversed ? RailcarDirection.reverse : RailcarDirection.forward
 	);
 
 	registerRoute(
 		'/capture/train/:identifier/:direction',
 		parameters => parameters.direction == RailcarDirection.reverse,
-		(unit, parameters) => {
+		(railcar, parameters) => {
 			if (parameters.direction == RailcarDirection.forward) {
-				return unit.direction;
+				return railcar.reversed ? RailcarDirection.reverse : RailcarDirection.forward
 			}
 
-			if (unit.direction == RailcarDirection.forward) {
-				return RailcarDirection.reverse;
-			}
-
-			return RailcarDirection.forward;
+			return railcar.reversed ? RailcarDirection.forward : RailcarDirection.reverse;
 		}
 	);
 }

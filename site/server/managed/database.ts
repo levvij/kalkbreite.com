@@ -1384,6 +1384,60 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 	
 }
 			
+export class RailcarComissionQueryProxy extends QueryProxy {
+	get railcar(): Partial<RailcarQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get comissioned(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get offset(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get railcarId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get reversed(): Partial<QueryBoolean> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get section(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class RailcarComission extends Entity<RailcarComissionQueryProxy> {
+	get railcar(): Partial<ForeignReference<Railcar>> { return this.$railcar; }
+	comissioned: Date;
+	declare id: string;
+	offset: number;
+	railcarId: string;
+	reversed: boolean;
+	section: string;
+	
+	$$meta = {
+		source: "railcar_comission",
+		columns: {
+			comissioned: { type: "timestamp", name: "comissioned" },
+			id: { type: "uuid", name: "id" },
+			offset: { type: "float4", name: "offset" },
+			railcarId: { type: "uuid", name: "railcar_id" },
+			reversed: { type: "bool", name: "reversed" },
+			section: { type: "text", name: "section" }
+		},
+		get set(): DbSet<RailcarComission, RailcarComissionQueryProxy> { 
+			return new DbSet<RailcarComission, RailcarComissionQueryProxy>(RailcarComission, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.$railcar = new ForeignReference<Railcar>(this, "railcarId", Railcar);
+	}
+	
+	private $railcar: ForeignReference<Railcar>;
+
+	set railcar(value: Partial<ForeignReference<Railcar>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.railcarId = value.id as string;
+		} else {
+			this.railcarId = null;
+		}
+	}
+
+	
+}
+			
 export class RailcarModelQueryProxy extends QueryProxy {
 	get uicLocale(): Partial<UicLocaleQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get description(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -1499,6 +1553,51 @@ export class RailcarModelDrawing extends Entity<RailcarModelDrawingQueryProxy> {
 			this.railcarModelId = value.id as string;
 		} else {
 			this.railcarModelId = null;
+		}
+	}
+
+	
+}
+			
+export class RailcarWithdrawalQueryProxy extends QueryProxy {
+	get railcar(): Partial<RailcarQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get railcarId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get withdrawn(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class RailcarWithdrawal extends Entity<RailcarWithdrawalQueryProxy> {
+	get railcar(): Partial<ForeignReference<Railcar>> { return this.$railcar; }
+	declare id: string;
+	railcarId: string;
+	withdrawn: Date;
+	
+	$$meta = {
+		source: "railcar_withdrawal",
+		columns: {
+			id: { type: "uuid", name: "id" },
+			railcarId: { type: "uuid", name: "railcar_id" },
+			withdrawn: { type: "timestamp", name: "withdrawn" }
+		},
+		get set(): DbSet<RailcarWithdrawal, RailcarWithdrawalQueryProxy> { 
+			return new DbSet<RailcarWithdrawal, RailcarWithdrawalQueryProxy>(RailcarWithdrawal, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.$railcar = new ForeignReference<Railcar>(this, "railcarId", Railcar);
+	}
+	
+	private $railcar: ForeignReference<Railcar>;
+
+	set railcar(value: Partial<ForeignReference<Railcar>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.railcarId = value.id as string;
+		} else {
+			this.railcarId = null;
 		}
 	}
 
@@ -1739,6 +1838,7 @@ export class TrainLabel extends Entity<TrainLabelQueryProxy> {
 }
 			
 export class TrainProductBrandQueryProxy extends QueryProxy {
+	get Name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get description(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get icon(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get iconNegative(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -1749,7 +1849,8 @@ export class TrainProductBrandQueryProxy extends QueryProxy {
 
 export class TrainProductBrand extends Entity<TrainProductBrandQueryProxy> {
 	trains: PrimaryReference<TrainLabel, TrainLabelQueryProxy>;
-		description: string;
+		Name: string;
+	description: string;
 	icon: string;
 	iconNegative: string;
 	declare id: string;
@@ -1760,6 +1861,7 @@ export class TrainProductBrand extends Entity<TrainProductBrandQueryProxy> {
 	$$meta = {
 		source: "train_product_brand",
 		columns: {
+			Name: { type: "text", name: "_name" },
 			description: { type: "text", name: "description" },
 			icon: { type: "text", name: "icon" },
 			iconNegative: { type: "text", name: "icon_negative" },
@@ -1954,8 +2056,10 @@ export class DbContext {
 	maintenance: DbSet<Maintenance, MaintenanceQueryProxy>;
 	powerLossIncident: DbSet<PowerLossIncident, PowerLossIncidentQueryProxy>;
 	railcar: DbSet<Railcar, RailcarQueryProxy>;
+	railcarComission: DbSet<RailcarComission, RailcarComissionQueryProxy>;
 	railcarModel: DbSet<RailcarModel, RailcarModelQueryProxy>;
 	railcarModelDrawing: DbSet<RailcarModelDrawing, RailcarModelDrawingQueryProxy>;
+	railcarWithdrawal: DbSet<RailcarWithdrawal, RailcarWithdrawalQueryProxy>;
 	session: DbSet<Session, SessionQueryProxy>;
 	storageContainer: DbSet<StorageContainer, StorageContainerQueryProxy>;
 	traction: DbSet<Traction, TractionQueryProxy>;
@@ -1991,8 +2095,10 @@ export class DbContext {
 		this.maintenance = new DbSet<Maintenance, MaintenanceQueryProxy>(Maintenance, this.runContext);
 		this.powerLossIncident = new DbSet<PowerLossIncident, PowerLossIncidentQueryProxy>(PowerLossIncident, this.runContext);
 		this.railcar = new DbSet<Railcar, RailcarQueryProxy>(Railcar, this.runContext);
+		this.railcarComission = new DbSet<RailcarComission, RailcarComissionQueryProxy>(RailcarComission, this.runContext);
 		this.railcarModel = new DbSet<RailcarModel, RailcarModelQueryProxy>(RailcarModel, this.runContext);
 		this.railcarModelDrawing = new DbSet<RailcarModelDrawing, RailcarModelDrawingQueryProxy>(RailcarModelDrawing, this.runContext);
+		this.railcarWithdrawal = new DbSet<RailcarWithdrawal, RailcarWithdrawalQueryProxy>(RailcarWithdrawal, this.runContext);
 		this.session = new DbSet<Session, SessionQueryProxy>(Session, this.runContext);
 		this.storageContainer = new DbSet<StorageContainer, StorageContainerQueryProxy>(StorageContainer, this.runContext);
 		this.traction = new DbSet<Traction, TractionQueryProxy>(Traction, this.runContext);

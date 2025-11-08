@@ -1,4 +1,4 @@
-import { alignItems, AnimationDurationStyleProperty, attribute, backgroundColor, border, borderRadius, boxShadow, child, display, flexWrap, fontSize, gap, height, hex, marginBottom, marginRight, opacity, overflowX, padding, percentage, px, rad, rem, width } from "@acryps/style";
+import { alignItems, AnimationDurationStyleProperty, attribute, backgroundColor, border, borderRadius, boxShadow, child, display, flexWrap, fontSize, gap, height, hex, marginBottom, marginLeft, marginRight, opacity, overflowX, padding, percentage, px, rad, rem, width } from "@acryps/style";
 import { boxed } from "../shared/boxed";
 import { knockoutColor, pageGutter, pageSpacing, radius } from "../index.style";
 import { trainStyle } from "./train/index.style";
@@ -82,6 +82,10 @@ export const trainsStyle = () => child('ui-trains') (
 
 				child('ui-changed') (
 					monospacedFont
+				),
+
+				child('ui-location') (
+					marginLeft('auto')
 				)
 			),
 

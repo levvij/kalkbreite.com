@@ -7,6 +7,7 @@ export const primaryOutlineColor = hex('428a5a');
 
 export const knockoutColor = hex('222');
 export const knockoutContrastColor = hex('fff');
+export const knockoutOutlineColor = hex('444');
 
 export const warningColor = hex('ffd61b');
 export const warningContrastColor = hex('000');
@@ -16,6 +17,7 @@ export const dangerContrastColor = hex('fff');
 
 export const markerColor = hex('ff0');
 export const trainOccupiedColor = hex('f00');
+export const positionerColor = hex('66f');
 
 export const pageColor = hex('fff');
 export const pageTransparentColor = hex('fff0');

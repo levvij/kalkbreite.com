@@ -4,7 +4,7 @@ import { LayoutComponent } from ".";
 import { ColorValue } from "@acryps/style";
 
 export class LayoutMarker extends Component {
-	pointLength = 10;
+	pointLength = 0.1;
 
 	marker: SVGPathElement;
 
@@ -31,20 +31,21 @@ export class LayoutMarker extends Component {
 
 		// add some to both ends to make a single point visible
 		if (!end) {
+			const scale = start.section.length / start.section.tileLength;
+
 			// advance may extend beyond rail end, fall back to rail end
 			try {
-				start = this.start.advance(-this.pointLength / 2);
+				start = this.start.advance(-this.pointLength / 2 * scale);
 			} catch {}
 
 			try {
-				end = this.start.advance(this.pointLength / 2);
+				end = this.start.advance(this.pointLength / 2 * scale);
 			} catch {
 				end = this.start;
 			}
 		}
 
 		const trail = this.start.section.getTilesInRange(start, end);
-		console.log(trail)
 
 		const pathSegments = [];
 		let length = 0;
@@ -64,7 +65,7 @@ export class LayoutMarker extends Component {
 		this.marker.setAttribute('stroke-dasharray', [
 			0,
 			trail.offset.start,
-			length - trail.offset.end + trail.offset.start,
+			trail.offset.end - trail.offset.start,
 			length
 		].join(' '));
 

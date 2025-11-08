@@ -14,7 +14,13 @@ export class RailcarCouplerPage extends Component {
 
 	render() {
 		return <ui-coupler>
-			{this.coupler.id}
+			<ui-type>
+				{this.coupler.type.name}
+			</ui-type>
+
+			<ui-identifier>
+				{this.coupler.id}
+			</ui-identifier>
 		</ui-coupler>
 	}
 }

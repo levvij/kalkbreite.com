@@ -24,7 +24,7 @@ export const trainStyle = () => child('ui-train')(
 		display('block'),
 		marginBottom(pageSpacing),
 
-		trainLabelStyle(rem(3))
+		trainLabelStyle(rem(1.75))
 	),
 
 	detailSectionStyle(

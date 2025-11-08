@@ -4,6 +4,7 @@ import { RailcarSummaryModel, RailcarViewModel } from "./railcar";
 import { updateThumbnail } from "../capture/thumbnail";
 import { RailcarModelViewModel } from "./model";
 import { CouplerTypeSummaryModel, CouplerTypeViewModel } from "./coupler";
+import { CouplingViewModel } from "../train/coupling";
 
 export class RailcarService extends Service {
 	constructor(

@@ -1,5 +1,5 @@
 import { alignItems, alignSelf, backgroundColor, border, borderRadius, boxShadow, color, cursor, display, flexWrap, gap, hover, justifyContent, lineHeight, marginBlock, marginBottom, padding, px, rem, style, textAlign } from "@acryps/style";
-import { pageGutter, primaryColor, primaryContrastColor, primaryOutlineColor, radius } from "../index.style";
+import { knockoutColor, knockoutContrastColor, knockoutOutlineColor, pageGutter, primaryColor, primaryContrastColor, primaryOutlineColor, radius } from "../index.style";
 import { clickable } from "./interaction";
 
 export const buttonDepth = px(4);
@@ -24,6 +24,17 @@ export const buttonStyle = () => [
 	hover() (
 		boxShadow(primaryOutlineColor, 0, buttonDepth.divide(2), 0, 0),
 		marginBlock(buttonDepth.divide(2))
+	)
+];
+
+export const activateButtonStyle = () => [
+	color(knockoutContrastColor),
+	backgroundColor(knockoutColor),
+
+	boxShadow(knockoutOutlineColor, 0, buttonDepth, 0, 0),
+
+	hover() (
+		boxShadow(knockoutOutlineColor, 0, buttonDepth.divide(2), 0, 0),
 	)
 ];
 
