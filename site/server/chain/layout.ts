@@ -13,7 +13,7 @@ export class LayoutLoader {
 
 		const document = new DOMParser().parseFromString(content, 'application/xml');
 
-		return Layout.from(document);
+		return Layout.from(document.firstChild);
 	}
 }
 

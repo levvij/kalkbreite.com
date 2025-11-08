@@ -25,6 +25,7 @@ import { TrainChain } from "@packtrack/train";
 import { ChainRestorer } from "./chain/restore";
 import { Layout } from "@packtrack/layout";
 import { LayoutLoader } from "./chain/layout";
+import { registerExportInterface } from "./chain/export";
 
 const streamCameras = process.env.STREAM_CAMERAS == 'ENABLE';
 
@@ -82,6 +83,7 @@ export class Application {
 		registerGraffitiInspirationCaptureInterface(server, database);
 		registerScanInterface(server, database);
 		registerMonitorRelay(server);
+		registerExportInterface(server, database);
 
 		if (streamCameras) {
 			await LiveStreamer.start();

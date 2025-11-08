@@ -1,5 +1,8 @@
 import { Message } from "@packtrack/protocol";
 import { ManagedServer } from "../managed/server";
+import { JSDOM } from 'jsdom';
+import { Application } from "..";
+import { Snapshot } from "@packtrack/train";
 
 export const registerMonitorRelay = (server: ManagedServer) => {
 	const listeners: WebSocket[] = [];
@@ -25,6 +28,9 @@ export const registerMonitorRelay = (server: ManagedServer) => {
 	});
 
 	(server.app as any).ws('/monitor/listen', socket => {
+		const snapshot = Snapshot.export(new JSDOM().window.document, Application.trainChain);
+		socket.send(snapshot.outerHTML);
+
 		listeners.push(socket);
 
 		socket.onclose = () => listeners.splice(listeners.indexOf(socket), 1);

@@ -21,7 +21,7 @@ export class LayoutLoader {
 
 			const document = new DOMParser().parseFromString(source, 'application/xml');
 
-			done(this.cache = Layout.from(document));
+			done(this.cache = Layout.from(document.querySelector('railway')));
 		});
 
 		return await this.task;

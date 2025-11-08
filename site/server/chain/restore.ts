@@ -1,4 +1,4 @@
-import { Coupler, CouplerType, Railcar, TrainChain } from "@packtrack/train";
+import { Coupler, CouplerType, Railcar, Traction, TrainChain } from "@packtrack/train";
 import { Coupling, Coupler as DatabaseCoupler, Railcar as DatabaseRailcar, DbContext, RailcarComission, RailcarModel, RailcarWithdrawal, Uncoupling } from "../managed/database";
 import { LayoutPlan } from "../layout-plan/interface";
 import { SectionPosition } from "@packtrack/layout";
@@ -19,14 +19,14 @@ export class ChainRestorer {
 	) { }
 
 	async importDatabase() {
+		for (let type of await this.database.couplerType.toArray()) {
+			this.couplerTypes.set(type.id, new CouplerType(type.name));
+		}
+
 		for (let railcar of await this.database.railcar.toArray()) {
 			if (railcar.modelId) {
 				await this.importRailcar(railcar);
 			}
-		}
-
-		for (let type of await this.database.couplerType.toArray()) {
-			this.couplerTypes.set(type.id, new CouplerType(type.name));
 		}
 
 		const chain = new TrainChain();
@@ -126,6 +126,12 @@ export class ChainRestorer {
 		}
 
 		this.railcars.push(railcar);
+
+		for (let tractionSource of await source.tractionActors.toArray()) {
+			const traction = new Traction(tractionSource.acceleration, tractionSource.maximumSpeed);
+
+			railcar.traction.push(traction);
+		}
 
 		return railcar;
 	}

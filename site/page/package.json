@@ -11,9 +11,6 @@
 		"@acryps/page": "^1.7.3",
 		"@acryps/page-default-directives": "^1.0.3",
 		"@acryps/style": "^0.23.0",
-		"@packtrack/layout": "^1.6.0",
-		"@packtrack/protocol": "^1.8.1",
-		"@packtrack/train": "^1.2.1",
 		"@zxing/library": "^0.21.3"
 	},
 	"devDependencies": {

@@ -46,7 +46,6 @@ export class LayoutMarker extends Component {
 		}
 
 		const trail = this.start.section.getTilesInRange(start, end);
-		console.log(trail)
 
 		const pathSegments = [];
 		let length = 0;

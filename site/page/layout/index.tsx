@@ -8,9 +8,12 @@ import { LastTrainHeadPositionViewModel, TrainService, TrainViewModel } from "..
 import { LayoutMarker } from "../shared/layout/marker";
 import { findMessageType, Message, MonitorTrainSpeedPermitMessage, TypedMessage } from "@packtrack/protocol";
 import { LayoutTrainListComponent } from "./trains";
+import { Snapshot, TrainChain } from "@packtrack/train";
 
 export class LayoutPage extends Component {
 	layout: Layout;
+	chain: TrainChain;
+
 	renderer: LayoutComponent;
 
 	socket: WebSocket;
@@ -21,31 +24,38 @@ export class LayoutPage extends Component {
 		this.layout = await LayoutLoader.load();
 
 		this.socket = new WebSocket(`${location.protocol.replace('http', 'ws')}//${location.host}/monitor/listen`);
-		console.log(this.socket);
 
 		const router = this.createMessageRouter();
 
-		this.socket.onmessage = async event => {
-			const buffer = new Uint8Array(await (event.data as Blob).arrayBuffer());
-			const message = Message.from(buffer);
+		this.socket.onmessage = event => {
+			const snapshotDocument = new DOMParser().parseFromString(event.data, 'application/xml');
+			this.chain = Snapshot.import(snapshotDocument.querySelector('snapshot'), this.layout);
+			this.chain.dump();
 
-			const type = findMessageType(message);
+			this.trainList.chain = this.chain;
 
-			if (!type) {
-				console.warn(`message type '${message.route.join('/')}' not found`);
+			this.socket.onmessage = async event => {
+				const buffer = new Uint8Array(await (event.data as Blob).arrayBuffer());
+				const message = Message.from(buffer);
 
-				return;
-			}
+				const type = findMessageType(message);
 
-			const handler = router.get(type);
+				if (!type) {
+					console.warn(`message type '${message.route.join('/')}' not found`);
 
-			if (!handler) {
-				console.warn(`message type '${message.route.join('/')}' not supported`);
+					return;
+				}
 
-				return;
-			}
+				const handler = router.get(type);
 
-			handler(message);
+				if (!handler) {
+					console.warn(`message type '${message.route.join('/')}' not supported`);
+
+					return;
+				}
+
+				handler(message);
+			};
 		};
 	}
 
@@ -53,7 +63,12 @@ export class LayoutPage extends Component {
 		const router = new Map<any, (message: TypedMessage) => void>();
 
 		router.set(MonitorTrainSpeedPermitMessage, message => {
-			this.trainList.permit(message);
+			const train = this.chain.trains.find(train => train.identifier == message.headers.train);
+
+			train.permit(
+				+message.headers.speed,
+				new Date(message.headers.issued as string)
+			);
 		});
 
 		return router;

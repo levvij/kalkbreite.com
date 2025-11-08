@@ -1,31 +1,24 @@
 import { Component } from "@acryps/page";
 import { MonitorTrainSpeedPermitMessage } from "@packtrack/protocol";
-import { SpeedPermit, Train } from "@packtrack/train";
+import { SpeedPermit, Train, TrainChain } from "@packtrack/train";
 
 export class LayoutTrainListComponent extends Component {
-	trains: Train[] = [];
-
-	permit(message: MonitorTrainSpeedPermitMessage) {
-		let train = this.trains.find(train => train.name == message.headers.train);
-
-		if (!train) {
-			train = new Train(message.headers.train as string, null, null, false);
-			this.trains.push(train);
-		}
-
-		train.permit(+message.headers.speed, new Date(message.headers.issued as string));
-	}
+	chain: TrainChain;
 
 	render() {
 		requestAnimationFrame(() => {
 			if (document.contains(this.rootNode)) {
-				this.update();
+				///this.update();
 			};
 		});
 
+		if (!this.chain) {
+			return document.createComment('');
+		}
+
 		return <ui-trains>
-			{this.trains.map(train => <ui-train>
-				{train.name} {train.currentSpeed * 3.6}km/h
+			{this.chain.trains.map(train => <ui-train>
+				{train.identifier} {train.currentSpeed * 3.6}km/h
 			</ui-train>)}
 		</ui-trains>
 	}
