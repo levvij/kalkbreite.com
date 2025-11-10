@@ -75,7 +75,7 @@ export class RegisterRailcarPage extends Component {
 			{this.renderCouplerField('headCoupler', 'Head Coupler')}
 			{this.renderCouplerField('tailCoupler', 'Tail Coupler')}
 			<ui-actions>
-				<ui-action ui-href={async () => {
+				<ui-action ui-click={async () => {
 					await new RailcarService().register(
 						this.tag,
 						this.name,

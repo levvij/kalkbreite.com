@@ -8,6 +8,7 @@ import { StorageContainerTagComponent } from "../../shared/storage-container-tag
 import { TimelineComponent } from "./timeline";
 import { CaptureViewModel, CouplerViewModel, MaintenanceService, RailcarDirection, RailcarService, RailcarViewModel, TrainService, TrainViewModel } from "../../managed/services";
 import { TrainLabelComponent } from "../../shared/train-label";
+import { InsetStyleShorthandBlockInline } from "@acryps/style";
 
 export class RailcarPage extends Component {
 	declare parameters: { tag };
@@ -86,6 +87,31 @@ export class RailcarPage extends Component {
 			this.showCapture(newestSideCaptures[0]);
 		}
 
+		let inStorage = true;
+		let lastAction: Date;
+
+		for (let withdrawal of this.railcar.withdrawals) {
+			timeline.addItem(withdrawal.withdrawn, <ui-withdraw>
+				Railcar withdrawn from layout to storage.
+			</ui-withdraw>);
+
+			if (!lastAction || +withdrawal.withdrawn > +lastAction) {
+				inStorage = true;
+				lastAction = withdrawal.withdrawn;
+			}
+		}
+
+		for (let comission of this.railcar.comissions) {
+			timeline.addItem(comission.comissioned, <ui-comission>
+				Railcar comissioned to layout at {comission.section}
+			</ui-comission>);
+
+			if (!lastAction || +comission.comissioned > +lastAction) {
+				inStorage = false;
+				lastAction = comission.comissioned;
+			}
+		}
+
 		return <ui-railcar>
 			<ui-header>
 				<ui-name>
@@ -162,13 +188,16 @@ export class RailcarPage extends Component {
 						Open Maintenance
 					</ui-action>}
 
-					{Application.session?.account && <ui-action ui-click={async () => {
-						await new RailcarService().updateStorageState(this.railcar.id, !this.railcar.stored);
-						this.railcar.stored = !this.railcar.stored;
+					{Application.session?.account && inStorage && this.railcar.model && <ui-action ui-href='comission'>
+						Comission to layout
+					</ui-action>}
 
-						this.update();
+					{Application.session?.account && !inStorage && <ui-action ui-click={async () => {
+						await new RailcarService().withdraw(this.railcar.id);
+
+						this.reload();
 					}}>
-						Put {this.railcar.stored ? 'on Layout' : 'into Storage'}
+						Withdraw to storage
 					</ui-action>}
 				</ui-actions>
 

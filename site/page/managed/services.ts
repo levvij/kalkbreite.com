@@ -295,7 +295,6 @@ export class RailcarSummaryModel {
 	givenName: string;
 	id: string;
 	runningNumber: string;
-	stored: boolean;
 	tag: string;
 
 	private static $build(raw) {
@@ -304,8 +303,31 @@ export class RailcarSummaryModel {
 		raw.givenName === undefined || (item.givenName = raw.givenName === null ? null : `${raw.givenName}`)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.runningNumber === undefined || (item.runningNumber = raw.runningNumber === null ? null : `${raw.runningNumber}`)
-		raw.stored === undefined || (item.stored = !!raw.stored)
 		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
+		
+		return item;
+	}
+}
+
+export class RailcarComissionViewModel {
+	comissioned: Date;
+	section: string;
+
+	private static $build(raw) {
+		const item = new RailcarComissionViewModel();
+		raw.comissioned === undefined || (item.comissioned = raw.comissioned ? new Date(raw.comissioned) : null)
+		raw.section === undefined || (item.section = raw.section === null ? null : `${raw.section}`)
+		
+		return item;
+	}
+}
+
+export class RailcarWithdrawalViewModel {
+	withdrawn: Date;
+
+	private static $build(raw) {
+		const item = new RailcarWithdrawalViewModel();
+		raw.withdrawn === undefined || (item.withdrawn = raw.withdrawn ? new Date(raw.withdrawn) : null)
 		
 		return item;
 	}
@@ -688,7 +710,6 @@ export class GraffitiRailcarViewModel {
 	givenName: string;
 	id: string;
 	runningNumber: string;
-	stored: boolean;
 	tag: string;
 
 	private static $build(raw) {
@@ -698,7 +719,6 @@ export class GraffitiRailcarViewModel {
 		raw.givenName === undefined || (item.givenName = raw.givenName === null ? null : `${raw.givenName}`)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.runningNumber === undefined || (item.runningNumber = raw.runningNumber === null ? null : `${raw.runningNumber}`)
-		raw.stored === undefined || (item.stored = !!raw.stored)
 		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
 		
 		return item;
@@ -712,8 +732,10 @@ export class RailcarViewModel {
 	operator: CompanySummaryModel;
 	owner: CompanySummaryModel;
 	captures: CaptureViewModel[];
+	comissions: RailcarComissionViewModel[];
 	graffitis: GraffitiSummaryModel[];
 	maintenanceJobs: MaintenanceSummaryModel[];
+	withdrawals: RailcarWithdrawalViewModel[];
 	storageContainer: StorageContainerSummaryModel;
 	tailCoupler: CouplerViewModel;
 	aquired: Date;
@@ -721,7 +743,6 @@ export class RailcarViewModel {
 	id: string;
 	note: string;
 	runningNumber: string;
-	stored: boolean;
 	tag: string;
 
 	private static $build(raw) {
@@ -732,8 +753,10 @@ export class RailcarViewModel {
 		raw.operator === undefined || (item.operator = raw.operator ? CompanySummaryModel["$build"](raw.operator) : null)
 		raw.owner === undefined || (item.owner = raw.owner ? CompanySummaryModel["$build"](raw.owner) : null)
 		raw.captures === undefined || (item.captures = raw.captures ? raw.captures.map(i => CaptureViewModel["$build"](i)) : null)
+		raw.comissions === undefined || (item.comissions = raw.comissions ? raw.comissions.map(i => RailcarComissionViewModel["$build"](i)) : null)
 		raw.graffitis === undefined || (item.graffitis = raw.graffitis ? raw.graffitis.map(i => GraffitiSummaryModel["$build"](i)) : null)
 		raw.maintenanceJobs === undefined || (item.maintenanceJobs = raw.maintenanceJobs ? raw.maintenanceJobs.map(i => MaintenanceSummaryModel["$build"](i)) : null)
+		raw.withdrawals === undefined || (item.withdrawals = raw.withdrawals ? raw.withdrawals.map(i => RailcarWithdrawalViewModel["$build"](i)) : null)
 		raw.storageContainer === undefined || (item.storageContainer = raw.storageContainer ? StorageContainerSummaryModel["$build"](raw.storageContainer) : null)
 		raw.tailCoupler === undefined || (item.tailCoupler = raw.tailCoupler ? CouplerViewModel["$build"](raw.tailCoupler) : null)
 		raw.aquired === undefined || (item.aquired = raw.aquired ? new Date(raw.aquired) : null)
@@ -741,7 +764,6 @@ export class RailcarViewModel {
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.note === undefined || (item.note = raw.note === null ? null : `${raw.note}`)
 		raw.runningNumber === undefined || (item.runningNumber = raw.runningNumber === null ? null : `${raw.runningNumber}`)
-		raw.stored === undefined || (item.stored = !!raw.stored)
 		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
 		
 		return item;
@@ -796,7 +818,6 @@ export class TrainRailcarUnitViewModel {
 	givenName: string;
 	id: string;
 	runningNumber: string;
-	stored: boolean;
 	tag: string;
 
 	private static $build(raw) {
@@ -808,7 +829,6 @@ export class TrainRailcarUnitViewModel {
 		raw.givenName === undefined || (item.givenName = raw.givenName === null ? null : `${raw.givenName}`)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.runningNumber === undefined || (item.runningNumber = raw.runningNumber === null ? null : `${raw.runningNumber}`)
-		raw.stored === undefined || (item.stored = !!raw.stored)
 		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
 		
 		return item;
@@ -1570,12 +1590,11 @@ export class RailcarService {
 		});
 	}
 
-	async updateStorageState(railcarId: string, stored: boolean): Promise<void> {
+	async withdraw(railcarId: string): Promise<void> {
 		const $data = new FormData();
-		$data.append("Yzaz8ybj11aHplNzc2djVsZXhmbXRtZX", Service.stringify(railcarId))
-		$data.append("NiYT8xcGpzbHd6Y2c1YT41MWUyeH9maX", Service.stringify(stored))
+		$data.append("04eGxqNmljejBza2FhaWkwdHxsOHdnen", Service.stringify(railcarId))
 
-		return await fetch(Service.toURL("B5eW82MmZ5M3RwMTJieHRzdmU4cHllaj"), {
+		return await fetch(Service.toURL("xyOWBjaG92dX42YWAzYWE0bzt6Ynw0aD"), {
 			method: "post",
 			credentials: "include",
 			body: $data
@@ -1586,6 +1605,30 @@ export class RailcarService {
 
 			if ("aborted" in r) {
 				throw new Error("request aborted by server");
+			}
+		});
+	}
+
+	async comission(railcarId: string, sectionName: string, offset: number, reversed: boolean): Promise<string> {
+		const $data = new FormData();
+		$data.append("95Yjp2N39naXg2cWg0MjY0MnkwZGh4ZG", Service.stringify(railcarId))
+		$data.append("ZuM2wyMm5sazlraDFvdnJ3dTdxdWRhZm", Service.stringify(sectionName))
+		$data.append("RzODgwZ3JkZ3VlNn5zM2A1cGB2MXVudD", Service.stringify(offset))
+		$data.append("14eDF4bztvbGI5anwwdmBmMzVtOGl1eW", Service.stringify(reversed))
+
+		return await fetch(Service.toURL("oxYjU3enQ1Yzl2NzRubWhuNHttbH9qY3"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d === null ? null : `${d}`;
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
 			}
 		});
 	}

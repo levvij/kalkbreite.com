@@ -7,6 +7,7 @@ import { GraffitiSummaryModel } from "../graffiti/graffiti";
 import { CaptureViewModel } from "../capture/capture";
 import { CouplerViewModel } from "./coupler";
 import { MaintenanceSummaryModel } from "../maintenace/maintenace";
+import { RailcarComissionViewModel, RailcarWithdrawalViewModel } from "./storage";
 
 export class RailcarSummaryModel extends ViewModel<Railcar> {
 	id;
@@ -14,8 +15,6 @@ export class RailcarSummaryModel extends ViewModel<Railcar> {
 
 	givenName;
 	runningNumber;
-
-	stored;
 
 	model: RailcarModelSummaryModel;
 }
@@ -42,4 +41,7 @@ export class RailcarViewModel extends RailcarSummaryModel {
 	tailCoupler: CouplerViewModel;
 
 	maintenanceJobs: MaintenanceSummaryModel[];
+
+	comissions: RailcarComissionViewModel[];
+	withdrawals: RailcarWithdrawalViewModel[];
 }

@@ -1228,11 +1228,13 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 	get operator(): Partial<ForeignReference<Company>> { return this.$operator; }
 	get owner(): Partial<ForeignReference<Company>> { return this.$owner; }
 	captures: PrimaryReference<Capture, CaptureQueryProxy>;
+		comissions: PrimaryReference<RailcarComission, RailcarComissionQueryProxy>;
 		derailingIncidents: PrimaryReference<DerailingIncident, DerailingIncidentQueryProxy>;
 		graffitis: PrimaryReference<Graffiti, GraffitiQueryProxy>;
 		maintenanceJobs: PrimaryReference<Maintenance, MaintenanceQueryProxy>;
 		powerLossIncidents: PrimaryReference<PowerLossIncident, PowerLossIncidentQueryProxy>;
 		tractionActors: PrimaryReference<Traction, TractionQueryProxy>;
+		withdrawals: PrimaryReference<RailcarWithdrawal, RailcarWithdrawalQueryProxy>;
 		colisionSourceIncidents: PrimaryReference<CollisionIncident, CollisionIncidentQueryProxy>;
 		get storageContainer(): Partial<ForeignReference<StorageContainer>> { return this.$storageContainer; }
 	get tailCoupler(): Partial<ForeignReference<Coupler>> { return this.$tailCoupler; }
@@ -1286,11 +1288,13 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 	this.$operator = new ForeignReference<Company>(this, "operatorId", Company);
 	this.$owner = new ForeignReference<Company>(this, "ownerId", Company);
 	this.captures = new PrimaryReference<Capture, CaptureQueryProxy>(this, "railcarId", Capture);
+		this.comissions = new PrimaryReference<RailcarComission, RailcarComissionQueryProxy>(this, "railcarId", RailcarComission);
 		this.derailingIncidents = new PrimaryReference<DerailingIncident, DerailingIncidentQueryProxy>(this, "railcarId", DerailingIncident);
 		this.graffitis = new PrimaryReference<Graffiti, GraffitiQueryProxy>(this, "railcarId", Graffiti);
 		this.maintenanceJobs = new PrimaryReference<Maintenance, MaintenanceQueryProxy>(this, "railcarId", Maintenance);
 		this.powerLossIncidents = new PrimaryReference<PowerLossIncident, PowerLossIncidentQueryProxy>(this, "railcarId", PowerLossIncident);
 		this.tractionActors = new PrimaryReference<Traction, TractionQueryProxy>(this, "railcarId", Traction);
+		this.withdrawals = new PrimaryReference<RailcarWithdrawal, RailcarWithdrawalQueryProxy>(this, "railcarId", RailcarWithdrawal);
 		this.colisionSourceIncidents = new PrimaryReference<CollisionIncident, CollisionIncidentQueryProxy>(this, "sourceRailcarId", CollisionIncident);
 		this.$storageContainer = new ForeignReference<StorageContainer>(this, "storageContainerId", StorageContainer);
 	this.$tailCoupler = new ForeignReference<Coupler>(this, "tailCouplerId", Coupler);

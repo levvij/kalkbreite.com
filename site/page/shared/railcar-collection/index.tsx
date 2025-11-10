@@ -27,10 +27,6 @@ export class RailcarCollectionComponent extends Component {
 					<ui-running-number>
 						{railcar.runningNumber}
 					</ui-running-number>
-
-					{railcar.stored && <ui-tag>
-						In Storage
-					</ui-tag>}
 				</ui-tagline>
 			</ui-railcar>)}
 		</ui-railcars>;

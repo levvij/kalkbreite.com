@@ -1,4 +1,4 @@
-import { alignItems, alignSelf, backgroundColor, border, borderRadius, boxShadow, color, cursor, display, flexWrap, gap, hover, justifyContent, lineHeight, marginBlock, marginBottom, padding, px, rem, style, textAlign } from "@acryps/style";
+import { alignItems, alignSelf, backgroundColor, border, borderBottomLeftRadius, borderBottomRightRadius, borderRadius, borderRight, borderTopLeftRadius, borderTopRightRadius, boxShadow, child, color, cursor, descendant, display, firstChild, flexWrap, gap, hover, justifyContent, lastChild, lineHeight, marginBlock, marginBottom, padding, px, rem, style, textAlign } from "@acryps/style";
 import { knockoutColor, knockoutContrastColor, knockoutOutlineColor, pageGutter, primaryColor, primaryContrastColor, primaryOutlineColor, radius } from "../index.style";
 import { clickable } from "./interaction";
 
@@ -42,4 +42,25 @@ export const buttonGroupStyle = () => [
 	display('flex'),
 	flexWrap('wrap'),
 	gap(pageGutter)
+];
+
+export const mergedButtonGroup = () => [
+	display('flex'),
+
+	child('*') (
+		borderRadius(0).important(),
+		borderRight(px(1), 'solid', primaryOutlineColor),
+
+		firstChild() (
+			borderTopLeftRadius(radius).important(),
+			borderBottomLeftRadius(radius).important()
+		),
+
+		lastChild() (
+			borderTopRightRadius(radius).important(),
+			borderBottomRightRadius(radius).important(),
+
+			borderRight('none')
+		)
+	)
 ];
