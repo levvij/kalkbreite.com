@@ -4,6 +4,7 @@ import { ManagedServer } from "../managed/server";
 import { updateThumbnail } from "./thumbnail";
 import { registerCaptureSessionInterface } from "./session";
 import { registerTrainCaptureInterface } from "./interface/train";
+import { registerTrainRailcarCaptureInterface } from "./interface/train-railcar";
 
 export const registerCaptureInterface = (server: ManagedServer, database: DbContext) => {
 	registerTrainCaptureInterface(server, database);
@@ -17,6 +18,7 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 	const imageCache = new Map<string, Capture>();
 
 	registerCaptureSessionInterface(server, database);
+	registerTrainRailcarCaptureInterface(server, database, empty);
 
 	server.app.get('/capture/random', async (request, response) => {
 		const thumbnails = [...thumbnailCache.values()];

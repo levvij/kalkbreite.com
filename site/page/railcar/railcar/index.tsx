@@ -9,6 +9,7 @@ import { TimelineComponent } from "./timeline";
 import { CaptureViewModel, CouplerViewModel, MaintenanceService, RailcarDirection, RailcarService, RailcarViewModel, TrainService, TrainViewModel } from "../../managed/services";
 import { TrainLabelComponent } from "../../shared/train-label";
 import { InsetStyleShorthandBlockInline } from "@acryps/style";
+import { bufferAnchorOffset } from "./index.style";
 
 export class RailcarPage extends Component {
 	declare parameters: { tag };
@@ -17,6 +18,7 @@ export class RailcarPage extends Component {
 	train: TrainViewModel;
 
 	captureImage = new Image();
+	bufferAnchorLine: HTMLElement = <ui-buffer-anchor></ui-buffer-anchor>;
 
 	async onload() {
 		this.railcar = await new RailcarService().get(this.parameters.tag);
@@ -43,6 +45,12 @@ export class RailcarPage extends Component {
 				</ui-name>
 
 				<img src={`/capture/${capture.id}`} />
+
+				<ui-actions>
+					{!capture.bufferAnchorOffset && <ui-action ui-href={`anchor/${capture.id}`}>
+						Anchor
+					</ui-action>}
+				</ui-actions>
 			</ui-capture>
 		]);
 
@@ -142,6 +150,7 @@ export class RailcarPage extends Component {
 			<ui-capture>
 				<ui-container>
 					{this.captureImage}
+					{this.bufferAnchorLine}
 				</ui-container>
 			</ui-capture>
 
@@ -250,5 +259,12 @@ export class RailcarPage extends Component {
 
 	showCapture(capture: CaptureViewModel) {
 		this.captureImage.src = `/capture/${capture.id}`;
+
+		if (capture.bufferAnchorOffset) {
+			this.bufferAnchorLine.setAttribute('ui-active', '');
+			this.bufferAnchorLine.style.setProperty(bufferAnchorOffset.propertyName, capture.bufferAnchorOffset.toString());
+		} else {
+			this.bufferAnchorLine.removeAttribute('ui-active');
+		}
 	}
 }

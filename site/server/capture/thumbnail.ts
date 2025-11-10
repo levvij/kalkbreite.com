@@ -18,11 +18,6 @@ export const updateThumbnail = async (source: Capture) => {
 	const context = canvas.getContext('2d');
 	context.drawImage(image, 0, 0, width, height);
 
-	// shift image
-	if (source.bufferAnchorOffset) {
-		anchorShift(canvas as any, await loadImage(await canvas.toBuffer('png')) as any, source.bufferAnchorOffset);
-	}
-
 	source.thumbnail = await canvas.toBuffer('jpeg');
 
 	await source.update();

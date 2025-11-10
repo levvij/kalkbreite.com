@@ -1,4 +1,4 @@
-import { rem, child, display, padding, marginBottom, fontSize, gap, alignItems, lineHeight, flexGrow, fontFamily, height, em, backgroundColor, hex, imageRendering, justifyContent, width, percentage, maxWidth, maxHeight, vh, objectFit, objectPosition, position, marginTop, paddingInline, alignContent, hover, filter, invert, attribute, transform, rotate, turn, borderRight, px, firstOfType, paddingTop, flexShrink, paddingBlock, whiteSpace, textAlign, marginLeft, paddingLeft, borderLeft, ch, color, scaleX, minHeight, firstChild, not, border, marginInline } from "@acryps/style";
+import { rem, child, display, padding, marginBottom, fontSize, gap, alignItems, lineHeight, flexGrow, fontFamily, height, em, backgroundColor, hex, imageRendering, justifyContent, width, percentage, maxWidth, maxHeight, vh, objectFit, objectPosition, position, marginTop, paddingInline, alignContent, hover, filter, invert, attribute, transform, rotate, turn, borderRight, px, firstOfType, paddingTop, flexShrink, paddingBlock, whiteSpace, textAlign, marginLeft, paddingLeft, borderLeft, ch, color, scaleX, minHeight, firstChild, not, border, marginInline, descendant, empty, Variable, left, insetBlock } from "@acryps/style";
 import { trainIdentifierFont, monospacedFont } from "../../assets/font";
 import { pageSpacing, pageGutter, runningNumberFont, tagFont, captureBackgroundColor, pageColor, primaryContrastColor, primaryColor, pageContrastColor } from "../../index.style";
 import { boxed, maximumBoxedWidth } from "../../shared/boxed";
@@ -16,6 +16,8 @@ import { couplerStyle } from "./coupler/index.style";
 import { comissionRailcarStyle } from "./comission/index.style";
 
 const timeDayLength = rem(6);
+
+export const bufferAnchorOffset = new Variable<Number>('buffer-anchor-offset');
 
 export const railcarStyle = () => child('ui-railcar')(
 	display('block'),
@@ -91,6 +93,8 @@ export const railcarStyle = () => child('ui-railcar')(
 			maxWidth(maximumBoxedWidth),
 			maxHeight(vh(40)),
 
+			position('relative'),
+
 			child('img') (
 				maxWidth(percentage(100)),
 				height('auto'),
@@ -98,6 +102,16 @@ export const railcarStyle = () => child('ui-railcar')(
 
 				objectFit('contain'),
 				objectPosition('left')
+			),
+
+			child('ui-buffer-anchor') (
+				position('absolute'),
+				insetBlock(0),
+				left(percentage(100).multiply(bufferAnchorOffset)),
+
+				attribute('ui-active') (
+					borderRight(px(1), 'dashed', hex('fff4'))
+				)
 			)
 		)
 	),
@@ -251,6 +265,19 @@ export const railcarStyle = () => child('ui-railcar')(
 					paddingLeft(pageGutter),
 
 					borderLeft(px(2), 'solid', 'currentColor'),
+
+					descendant('ui-actions') (
+						buttonGroupStyle(),
+						marginTop(pageGutter.divide(2)),
+
+						empty() (
+							display('none')
+						),
+
+						child('ui-action') (
+							buttonStyle()
+						)
+					),
 
 					child('ui-capture') (
 						clickable(),

@@ -8,13 +8,14 @@ import { LastTrainHeadPositionViewModel, TrainService, TrainViewModel } from "..
 import { LayoutMarker } from "../shared/layout/marker";
 import { findMessageType, Message, MonitorTrainSpeedPermitMessage, TypedMessage } from "@packtrack/protocol";
 import { LayoutTrainListComponent } from "./trains";
-import { Snapshot, TrainChain } from "@packtrack/train";
+import { Snapshot, TrainChain, Train } from "@packtrack/train";
 
 export class LayoutPage extends Component {
 	layout: Layout;
 	chain: TrainChain;
 
 	renderer: LayoutComponent;
+	trainMarkers = new Map<Train, LayoutMarker>();
 
 	socket: WebSocket;
 
@@ -33,6 +34,10 @@ export class LayoutPage extends Component {
 			this.chain.dump();
 
 			this.trainList.chain = this.chain;
+
+			for (let train of this.chain.trains) {
+				this.trainMarkers.set(train, this.renderer.mark(trainOccupiedColor, train.head.nominal, train.tail.nominal));
+			}
 
 			this.socket.onmessage = async event => {
 				const buffer = new Uint8Array(await (event.data as Blob).arrayBuffer());
@@ -64,6 +69,8 @@ export class LayoutPage extends Component {
 
 		router.set(MonitorTrainSpeedPermitMessage, message => {
 			const train = this.chain.trains.find(train => train.identifier == message.headers.train);
+
+			this.trainMarkers.get(train).move(train.head.nominal, train.tail.nominal);
 
 			train.permit(
 				+message.headers.speed,

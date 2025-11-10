@@ -83,7 +83,7 @@ export class RailcarService extends Service {
 		const capture = await this.database.capture.find(captureId);
 		capture.bufferAnchorOffset = offset;
 
-		await updateThumbnail(capture);
+		await capture.update();
 	}
 
 	async withdraw(railcarId: string) {

@@ -8,7 +8,7 @@ export class LayoutTrainListComponent extends Component {
 	render() {
 		requestAnimationFrame(() => {
 			if (document.contains(this.rootNode)) {
-				///this.update();
+				this.update();
 			};
 		});
 
@@ -18,7 +18,7 @@ export class LayoutTrainListComponent extends Component {
 
 		return <ui-trains>
 			{this.chain.trains.map(train => <ui-train>
-				{train.identifier} {train.currentSpeed * 3.6}km/h
+				{train.identifier} {train.currentSpeed * 3.6}km/h {train.head.nominal.toString()} {train.head.maximal.toString()}
 			</ui-train>)}
 		</ui-trains>
 	}

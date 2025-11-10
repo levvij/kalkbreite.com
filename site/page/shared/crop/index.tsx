@@ -1,10 +1,11 @@
 import { Component } from "@acryps/page";
-import { percentage } from "@acryps/style";
+import { ContentAppendable, percentage } from "@acryps/style";
 
 type Handle = {
 	property: string;
 	direction: 'x' | 'y';
-	inverted: boolean
+	inverted: boolean,
+	content: ContentAppendable
 }
 
 export class CropComponent<ItemType> extends Component {
@@ -20,11 +21,12 @@ export class CropComponent<ItemType> extends Component {
 		super();
 	}
 
-	addHandle(property: keyof ItemType, direction: 'x' | 'y', inverted = false) {
+	addHandle(property: keyof ItemType, direction: 'x' | 'y', inverted = false, content?: ContentAppendable) {
 		this.handles.push({
 			property: property as string,
 			direction,
-			inverted
+			inverted,
+			content
 		});
 
 		return this;
@@ -38,14 +40,17 @@ export class CropComponent<ItemType> extends Component {
 				{this.handles.map(handle => this.renderHandle(
 					handle.property as keyof ItemType,
 					handle.direction,
-					handle.inverted
+					handle.inverted,
+					handle.content
 				))}
 			</ui-canvas>
 		</ui-crop>
 	}
 
-	renderHandle(property: keyof ItemType, direction: 'x' | 'y', inverted = false) {
-		const handle: HTMLElement = <ui-handle></ui-handle>;
+	renderHandle(property: keyof ItemType, direction: 'x' | 'y', inverted = false, content: ContentAppendable) {
+		const handle: HTMLElement = <ui-handle>
+			{content}
+		</ui-handle>;
 
 		const element: HTMLElement = <ui-crop ui-property={property}>
 			{handle}
