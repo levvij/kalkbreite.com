@@ -10,3 +10,6 @@ export const anchorShift = (canvas: Partial<HTMLCanvasElement>, image: HTMLImage
 
 	context.drawImage(image, -sourceWidth * offset + sourceWidth * margin, 0);
 };
+
+// 1 image height = ~6.6 real life meters
+export const lengthMultiplier = 6.585;

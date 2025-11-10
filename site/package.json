@@ -7,6 +7,6 @@
 	"dependencies": {
 		"@packtrack/layout": "^1.6.7",
 		"@packtrack/protocol": "^1.8.1",
-		"@packtrack/train": "^2.2.1"
+		"@packtrack/train": "^2.2.2"
 	}
 }

@@ -43,6 +43,12 @@ export class RailcarPage extends Component {
 				</ui-name>
 
 				<img src={`/capture/${capture.id}`} />
+
+				<ui-actions>
+					{!capture.bufferAnchorOffset && <ui-action ui-href={`anchor/${capture.id}`}>
+						Anchor
+					</ui-action>}
+				</ui-actions>
 			</ui-capture>
 		]);
 

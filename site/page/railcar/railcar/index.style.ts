@@ -1,4 +1,4 @@
-import { rem, child, display, padding, marginBottom, fontSize, gap, alignItems, lineHeight, flexGrow, fontFamily, height, em, backgroundColor, hex, imageRendering, justifyContent, width, percentage, maxWidth, maxHeight, vh, objectFit, objectPosition, position, marginTop, paddingInline, alignContent, hover, filter, invert, attribute, transform, rotate, turn, borderRight, px, firstOfType, paddingTop, flexShrink, paddingBlock, whiteSpace, textAlign, marginLeft, paddingLeft, borderLeft, ch, color, scaleX, minHeight, firstChild, not, border, marginInline } from "@acryps/style";
+import { rem, child, display, padding, marginBottom, fontSize, gap, alignItems, lineHeight, flexGrow, fontFamily, height, em, backgroundColor, hex, imageRendering, justifyContent, width, percentage, maxWidth, maxHeight, vh, objectFit, objectPosition, position, marginTop, paddingInline, alignContent, hover, filter, invert, attribute, transform, rotate, turn, borderRight, px, firstOfType, paddingTop, flexShrink, paddingBlock, whiteSpace, textAlign, marginLeft, paddingLeft, borderLeft, ch, color, scaleX, minHeight, firstChild, not, border, marginInline, descendant, empty } from "@acryps/style";
 import { trainIdentifierFont, monospacedFont } from "../../assets/font";
 import { pageSpacing, pageGutter, runningNumberFont, tagFont, captureBackgroundColor, pageColor, primaryContrastColor, primaryColor, pageContrastColor } from "../../index.style";
 import { boxed, maximumBoxedWidth } from "../../shared/boxed";
@@ -251,6 +251,19 @@ export const railcarStyle = () => child('ui-railcar')(
 					paddingLeft(pageGutter),
 
 					borderLeft(px(2), 'solid', 'currentColor'),
+
+					descendant('ui-actions') (
+						buttonGroupStyle(),
+						marginTop(pageGutter.divide(2)),
+
+						empty() (
+							display('none')
+						),
+
+						child('ui-action') (
+							buttonStyle()
+						)
+					),
 
 					child('ui-capture') (
 						clickable(),

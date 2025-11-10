@@ -1,13 +1,14 @@
-import { child, display, margin, userSelect, position, marginBlock, marginInline, width, percentage, backgroundColor, hex, inset, insetInline, left, insetBlock, right, bottom, rem, top, attribute } from "@acryps/style";
+import { child, display, margin, userSelect, position, marginBlock, marginInline, width, percentage, backgroundColor, hex, inset, insetInline, left, insetBlock, right, bottom, rem, top, attribute, StyleSelectorBody, overflow } from "@acryps/style";
 import { pageSpacing } from "../../index.style";
 
 const handleSize = rem(5);
 
-export const cropStyle = () => child('ui-crop') (
+export const cropStyle = (...handleContent: StyleSelectorBody[]) => child('ui-crop') (
 	display('block'),
 	margin(pageSpacing),
 
 	userSelect('none'),
+	overflow('hidden'),
 
 	child('ui-canvas') (
 		display('block'),
@@ -64,7 +65,9 @@ export const cropStyle = () => child('ui-crop') (
 				position('absolute'),
 				inset(0),
 
-				backgroundColor(hex('f00c'))
+				backgroundColor(hex('f00c')),
+
+				handleContent
 			)
 		)
 	)

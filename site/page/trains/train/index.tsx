@@ -63,7 +63,7 @@ export class TrainPage extends Component {
 
 				{this.railcars.map((railcar, index) => [
 					<ui-unit ui-href={`/railcar/${railcar.tag}`}>
-						<img src={`/capture/railcar/${railcar.id}/forward`} />
+						<img src={`/capture/train/railcar/${railcar.id}/forward`} />
 
 						<ui-detail>
 							{new DetailSectionComponent(<ui-header>
