@@ -36,11 +36,14 @@ import { UicIdentifierIndexLetterViewModel } from "././../model/uic-identifier";
 import { RailcarModelService } from "././../model/index";
 import { Coupler } from "././database";
 import { Railcar } from "././database";
+import { RailcarComission } from "././database";
+import { RailcarWithdrawal } from "././database";
 import { RailcarViewModel } from "././../railcar/railcar";
 import { updateThumbnail } from "././../capture/thumbnail";
 import { CouplerTypeSummaryModel } from "././../railcar/coupler";
 import { CouplerTypeViewModel } from "././../railcar/coupler";
 import { CouplingViewModel } from "././../train/coupling";
+import { Application } from "././..";
 import { RailcarService } from "././../railcar/index";
 import { Session } from "././database";
 import { SessionViewModel } from "././../session/session";
@@ -61,7 +64,6 @@ import { TrainStateViewModel } from "././../train/state";
 import { LastTrainHeadPositionViewModel } from "././../train/position";
 import { LastTrainPosition } from "././../train/position";
 import { TrainRailcarUnitViewModel } from "././../train/unit";
-import { Application } from "././..";
 import { TrainService } from "././../train/index";
 import { ArtistSummaryModel } from "./../graffiti/artist";
 import { GraffitiSummaryModel } from "./../graffiti/graffiti";
@@ -70,6 +72,8 @@ import { MaintenanceSummaryModel } from "./../maintenace/maintenace";
 import { UicLocaleViewModel } from "./../model/uic-identifier";
 import { CouplerViewModel } from "./../railcar/coupler";
 import { RailcarModelDrawingSummaryModel } from "./../railcar/model";
+import { RailcarComissionViewModel } from "./../railcar/storage";
+import { RailcarWithdrawalViewModel } from "./../railcar/storage";
 import { AccountViewModel } from "./../session/session";
 import { StorageContainerSummaryModel } from "./../storage/storage-contaiuner";
 import { TrainHeadPositionViewModel } from "./../train/position";
@@ -564,15 +568,30 @@ export class ManagedServer extends BaseServer {
 		);
 
 		this.expose(
-			"B5eW82MmZ5M3RwMTJieHRzdmU4cHllaj",
+			"xyOWBjaG92dX42YWAzYWE0bzt6Ynw0aD",
 			{
-			"Yzaz8ybj11aHplNzc2djVsZXhmbXRtZX": { type: "string", isArray: false, isOptional: false },
-				"NiYT8xcGpzbHd6Y2c1YT41MWUyeH9maX": { type: "boolean", isArray: false, isOptional: false }
+			"04eGxqNmljejBza2FhaWkwdHxsOHdnen": { type: "string", isArray: false, isOptional: false }
 			},
 			inject => inject.construct(RailcarService),
-			(controller, params) => controller.updateStorageState(
-				params["Yzaz8ybj11aHplNzc2djVsZXhmbXRtZX"],
-				params["NiYT8xcGpzbHd6Y2c1YT41MWUyeH9maX"]
+			(controller, params) => controller.withdraw(
+				params["04eGxqNmljejBza2FhaWkwdHxsOHdnen"]
+			)
+		);
+
+		this.expose(
+			"oxYjU3enQ1Yzl2NzRubWhuNHttbH9qY3",
+			{
+			"95Yjp2N39naXg2cWg0MjY0MnkwZGh4ZG": { type: "string", isArray: false, isOptional: false },
+				"ZuM2wyMm5sazlraDFvdnJ3dTdxdWRhZm": { type: "string", isArray: false, isOptional: false },
+				"RzODgwZ3JkZ3VlNn5zM2A1cGB2MXVudD": { type: "number", isArray: false, isOptional: false },
+				"14eDF4bztvbGI5anwwdmBmMzVtOGl1eW": { type: "boolean", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(RailcarService),
+			(controller, params) => controller.comission(
+				params["95Yjp2N39naXg2cWg0MjY0MnkwZGh4ZG"],
+				params["ZuM2wyMm5sazlraDFvdnJ3dTdxdWRhZm"],
+				params["RzODgwZ3JkZ3VlNn5zM2A1cGB2MXVudD"],
+				params["14eDF4bztvbGI5anwwdmBmMzVtOGl1eW"]
 			)
 		);
 
@@ -1963,7 +1982,6 @@ ViewModel.mappings = {
 				givenName: this.$$model.givenName,
 				id: this.$$model.id,
 				runningNumber: this.$$model.runningNumber,
-				stored: this.$$model.stored,
 				tag: this.$$model.tag
 			}
 		};
@@ -2003,7 +2021,6 @@ ViewModel.mappings = {
 				givenName: true,
 				id: true,
 				runningNumber: true,
-				stored: true,
 				tag: true
 			};
 		};
@@ -2014,7 +2031,6 @@ ViewModel.mappings = {
 			"givenName" in data && (item.givenName = data.givenName === null ? null : `${data.givenName}`);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"runningNumber" in data && (item.runningNumber = data.runningNumber === null ? null : `${data.runningNumber}`);
-			"stored" in data && (item.stored = !!data.stored);
 			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
 
 			return item;
@@ -2033,8 +2049,115 @@ ViewModel.mappings = {
 			"givenName" in viewModel && (model.givenName = viewModel.givenName === null ? null : `${viewModel.givenName}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"runningNumber" in viewModel && (model.runningNumber = viewModel.runningNumber === null ? null : `${viewModel.runningNumber}`);
-			"stored" in viewModel && (model.stored = !!viewModel.stored);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
+
+			return model;
+		}
+	},
+	[RailcarComissionViewModel.name]: class ComposedRailcarComissionViewModel extends RailcarComissionViewModel {
+		async map() {
+			return {
+				comissioned: this.$$model.comissioned,
+				section: this.$$model.section
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				comissioned: true,
+				section: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new RailcarComissionViewModel(null);
+			"comissioned" in data && (item.comissioned = data.comissioned === null ? null : new Date(data.comissioned));
+			"section" in data && (item.section = data.section === null ? null : `${data.section}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: RailcarComissionViewModel) {
+			const model = new RailcarComission();
+
+			"comissioned" in viewModel && (model.comissioned = viewModel.comissioned === null ? null : new Date(viewModel.comissioned));
+			"section" in viewModel && (model.section = viewModel.section === null ? null : `${viewModel.section}`);
+
+			return model;
+		}
+	},
+	[RailcarWithdrawalViewModel.name]: class ComposedRailcarWithdrawalViewModel extends RailcarWithdrawalViewModel {
+		async map() {
+			return {
+				withdrawn: this.$$model.withdrawn
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				withdrawn: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new RailcarWithdrawalViewModel(null);
+			"withdrawn" in data && (item.withdrawn = data.withdrawn === null ? null : new Date(data.withdrawn));
+
+			return item;
+		}
+
+		static async toModel(viewModel: RailcarWithdrawalViewModel) {
+			const model = new RailcarWithdrawal();
+
+			"withdrawn" in viewModel && (model.withdrawn = viewModel.withdrawn === null ? null : new Date(viewModel.withdrawn));
 
 			return model;
 		}
@@ -3493,7 +3616,6 @@ ViewModel.mappings = {
 				givenName: this.$$model.givenName,
 				id: this.$$model.id,
 				runningNumber: this.$$model.runningNumber,
-				stored: this.$$model.stored,
 				tag: this.$$model.tag
 			}
 		};
@@ -3539,7 +3661,6 @@ ViewModel.mappings = {
 				givenName: true,
 				id: true,
 				runningNumber: true,
-				stored: true,
 				tag: true
 			};
 		};
@@ -3551,7 +3672,6 @@ ViewModel.mappings = {
 			"givenName" in data && (item.givenName = data.givenName === null ? null : `${data.givenName}`);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"runningNumber" in data && (item.runningNumber = data.runningNumber === null ? null : `${data.runningNumber}`);
-			"stored" in data && (item.stored = !!data.stored);
 			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
 
 			return item;
@@ -3571,7 +3691,6 @@ ViewModel.mappings = {
 			"givenName" in viewModel && (model.givenName = viewModel.givenName === null ? null : `${viewModel.givenName}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"runningNumber" in viewModel && (model.runningNumber = viewModel.runningNumber === null ? null : `${viewModel.runningNumber}`);
-			"stored" in viewModel && (model.stored = !!viewModel.stored);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
 
 			return model;
@@ -3586,8 +3705,10 @@ ViewModel.mappings = {
 				operator: new CompanySummaryModel(await BaseServer.unwrap(this.$$model.operator)),
 				owner: new CompanySummaryModel(await BaseServer.unwrap(this.$$model.owner)),
 				captures: (await this.$$model.captures.includeTree(ViewModel.mappings[CaptureViewModel.name].items).toArray()).map(item => new CaptureViewModel(item)),
+				comissions: (await this.$$model.comissions.includeTree(ViewModel.mappings[RailcarComissionViewModel.name].items).toArray()).map(item => new RailcarComissionViewModel(item)),
 				graffitis: (await this.$$model.graffitis.includeTree(ViewModel.mappings[GraffitiSummaryModel.name].items).toArray()).map(item => new GraffitiSummaryModel(item)),
 				maintenanceJobs: (await this.$$model.maintenanceJobs.includeTree(ViewModel.mappings[MaintenanceSummaryModel.name].items).toArray()).map(item => new MaintenanceSummaryModel(item)),
+				withdrawals: (await this.$$model.withdrawals.includeTree(ViewModel.mappings[RailcarWithdrawalViewModel.name].items).toArray()).map(item => new RailcarWithdrawalViewModel(item)),
 				storageContainer: new StorageContainerSummaryModel(await BaseServer.unwrap(this.$$model.storageContainer)),
 				tailCoupler: new CouplerViewModel(await BaseServer.unwrap(this.$$model.tailCoupler)),
 				aquired: this.$$model.aquired,
@@ -3595,7 +3716,6 @@ ViewModel.mappings = {
 				id: this.$$model.id,
 				note: this.$$model.note,
 				runningNumber: this.$$model.runningNumber,
-				stored: this.$$model.stored,
 				tag: this.$$model.tag
 			}
 		};
@@ -3662,6 +3782,12 @@ ViewModel.mappings = {
 						[...parents, "captures-RailcarViewModel"]
 					);
 				},
+				get comissions() {
+					return ViewModel.mappings[RailcarComissionViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "comissions-RailcarViewModel"]
+					);
+				},
 				get graffitis() {
 					return ViewModel.mappings[GraffitiSummaryModel.name].getPrefetchingProperties(
 						level,
@@ -3672,6 +3798,12 @@ ViewModel.mappings = {
 					return ViewModel.mappings[MaintenanceSummaryModel.name].getPrefetchingProperties(
 						level,
 						[...parents, "maintenanceJobs-RailcarViewModel"]
+					);
+				},
+				get withdrawals() {
+					return ViewModel.mappings[RailcarWithdrawalViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "withdrawals-RailcarViewModel"]
 					);
 				},
 				get storageContainer() {
@@ -3691,7 +3823,6 @@ ViewModel.mappings = {
 				id: true,
 				note: true,
 				runningNumber: true,
-				stored: true,
 				tag: true
 			};
 		};
@@ -3704,8 +3835,10 @@ ViewModel.mappings = {
 			"operator" in data && (item.operator = data.operator && ViewModel.mappings[CompanySummaryModel.name].toViewModel(data.operator));
 			"owner" in data && (item.owner = data.owner && ViewModel.mappings[CompanySummaryModel.name].toViewModel(data.owner));
 			"captures" in data && (item.captures = data.captures && [...data.captures].map(i => ViewModel.mappings[CaptureViewModel.name].toViewModel(i)));
+			"comissions" in data && (item.comissions = data.comissions && [...data.comissions].map(i => ViewModel.mappings[RailcarComissionViewModel.name].toViewModel(i)));
 			"graffitis" in data && (item.graffitis = data.graffitis && [...data.graffitis].map(i => ViewModel.mappings[GraffitiSummaryModel.name].toViewModel(i)));
 			"maintenanceJobs" in data && (item.maintenanceJobs = data.maintenanceJobs && [...data.maintenanceJobs].map(i => ViewModel.mappings[MaintenanceSummaryModel.name].toViewModel(i)));
+			"withdrawals" in data && (item.withdrawals = data.withdrawals && [...data.withdrawals].map(i => ViewModel.mappings[RailcarWithdrawalViewModel.name].toViewModel(i)));
 			"storageContainer" in data && (item.storageContainer = data.storageContainer && ViewModel.mappings[StorageContainerSummaryModel.name].toViewModel(data.storageContainer));
 			"tailCoupler" in data && (item.tailCoupler = data.tailCoupler && ViewModel.mappings[CouplerViewModel.name].toViewModel(data.tailCoupler));
 			"aquired" in data && (item.aquired = data.aquired === null ? null : new Date(data.aquired));
@@ -3713,7 +3846,6 @@ ViewModel.mappings = {
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"note" in data && (item.note = data.note === null ? null : `${data.note}`);
 			"runningNumber" in data && (item.runningNumber = data.runningNumber === null ? null : `${data.runningNumber}`);
-			"stored" in data && (item.stored = !!data.stored);
 			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
 
 			return item;
@@ -3734,8 +3866,10 @@ ViewModel.mappings = {
 			"operator" in viewModel && (model.operator.id = viewModel.operator ? viewModel.operator.id : null);
 			"owner" in viewModel && (model.owner.id = viewModel.owner ? viewModel.owner.id : null);
 			"captures" in viewModel && (null);
+			"comissions" in viewModel && (null);
 			"graffitis" in viewModel && (null);
 			"maintenanceJobs" in viewModel && (null);
+			"withdrawals" in viewModel && (null);
 			"storageContainer" in viewModel && (model.storageContainer.id = viewModel.storageContainer ? viewModel.storageContainer.id : null);
 			"tailCoupler" in viewModel && (model.tailCoupler.id = viewModel.tailCoupler ? viewModel.tailCoupler.id : null);
 			"aquired" in viewModel && (model.aquired = viewModel.aquired === null ? null : new Date(viewModel.aquired));
@@ -3743,7 +3877,6 @@ ViewModel.mappings = {
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"note" in viewModel && (model.note = viewModel.note === null ? null : `${viewModel.note}`);
 			"runningNumber" in viewModel && (model.runningNumber = viewModel.runningNumber === null ? null : `${viewModel.runningNumber}`);
-			"stored" in viewModel && (model.stored = !!viewModel.stored);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
 
 			return model;
@@ -3916,7 +4049,6 @@ ViewModel.mappings = {
 				givenName: this.$$model.givenName,
 				id: this.$$model.id,
 				runningNumber: this.$$model.runningNumber,
-				stored: this.$$model.stored,
 				tag: this.$$model.tag
 			}
 		};
@@ -3974,7 +4106,6 @@ ViewModel.mappings = {
 				givenName: true,
 				id: true,
 				runningNumber: true,
-				stored: true,
 				tag: true
 			};
 		};
@@ -3988,7 +4119,6 @@ ViewModel.mappings = {
 			"givenName" in data && (item.givenName = data.givenName === null ? null : `${data.givenName}`);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"runningNumber" in data && (item.runningNumber = data.runningNumber === null ? null : `${data.runningNumber}`);
-			"stored" in data && (item.stored = !!data.stored);
 			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
 
 			return item;
@@ -4010,7 +4140,6 @@ ViewModel.mappings = {
 			"givenName" in viewModel && (model.givenName = viewModel.givenName === null ? null : `${viewModel.givenName}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"runningNumber" in viewModel && (model.runningNumber = viewModel.runningNumber === null ? null : `${viewModel.runningNumber}`);
-			"stored" in viewModel && (model.stored = !!viewModel.stored);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
 
 			return model;

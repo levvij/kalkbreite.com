@@ -35,6 +35,7 @@ import { TrainsPage } from "./trains";
 import { TrainPage } from "./trains/train";
 import { CoupleTrainPage } from "./trains/train/couple";
 import { AssignTrainLabelPage } from "./trains/train/label";
+import { ComissionRailcarPage } from "./railcar/railcar/comission";
 
 // injected by esbuild
 declare const buildDate: string;
@@ -82,6 +83,7 @@ export class Application {
 					.route('/anchor/:captureId', CaptureAnchorPage)
 					.route('/register-graffiti', RegisterGraffitiPage)
 					.route('/maintenance/:id', MaintenacePage)
+					.route('/comission', ComissionRailcarPage)
 
 					.route('/coupler/:direction', RailcarCouplerPage)
 				)

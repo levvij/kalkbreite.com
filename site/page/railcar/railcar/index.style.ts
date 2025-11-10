@@ -2,7 +2,7 @@ import { rem, child, display, padding, marginBottom, fontSize, gap, alignItems, 
 import { trainIdentifierFont, monospacedFont } from "../../assets/font";
 import { pageSpacing, pageGutter, runningNumberFont, tagFont, captureBackgroundColor, pageColor, primaryContrastColor, primaryColor, pageContrastColor } from "../../index.style";
 import { boxed, maximumBoxedWidth } from "../../shared/boxed";
-import { activateButtonStyle, buttonGroupStyle, buttonStyle } from "../../shared/button";
+import { activateButtonStyle, buttonGroupStyle, buttonStyle, mergedButtonGroup } from "../../shared/button";
 import { detailSectionStyle } from "../../shared/detail-section/index.style";
 import { endDivider } from "../../shared/divider";
 import { graffitiCollectionStyle } from "../../shared/graffiti-collection/index.style";
@@ -13,6 +13,7 @@ import { maintenanceStyle } from "./maintenance/index.style";
 import { registerGraffitiStyle } from "./register-graffiti/index.style";
 import { trainLabelStyle } from "../../shared/train-label/index.style";
 import { couplerStyle } from "./coupler/index.style";
+import { comissionRailcarStyle } from "./comission/index.style";
 
 const timeDayLength = rem(6);
 
@@ -20,6 +21,7 @@ export const railcarStyle = () => child('ui-railcar')(
 	display('block'),
 
 	couplerStyle(),
+	comissionRailcarStyle(),
 
 	child('ui-header') (
 		boxed(),
@@ -117,8 +119,7 @@ export const railcarStyle = () => child('ui-railcar')(
 		paddingInline(pageSpacing),
 
 		child('ui-group') (
-			display('flex'),
-			gap(pageGutter),
+			mergedButtonGroup(),
 
 			child('ui-tool') (
 				display('flex'),
@@ -126,10 +127,6 @@ export const railcarStyle = () => child('ui-railcar')(
 				gap(pageGutter),
 
 				buttonStyle(),
-
-				hover() (
-					filter(invert(1))
-				),
 
 				attribute('ui-active') (
 					activateButtonStyle()

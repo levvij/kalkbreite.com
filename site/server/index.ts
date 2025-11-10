@@ -30,8 +30,10 @@ import { registerExportInterface } from "./chain/export";
 const streamCameras = process.env.STREAM_CAMERAS == 'ENABLE';
 
 export class Application {
-	static trainChain: TrainChain;
 	static layout: Layout;
+
+	static trainChain: TrainChain;
+	static chainRestorer: ChainRestorer;
 
 	static async main() {
 		DbClient.connectedClient = new DbClient({});
@@ -43,7 +45,8 @@ export class Application {
 		// load layout & chain
 		this.layout = await new LayoutLoader().load();
 
-		this.trainChain = await new ChainRestorer(database).importDatabase();
+		this.chainRestorer = new ChainRestorer(database);
+		this.trainChain = await this.chainRestorer.importDatabase();
 		this.trainChain.dump();
 
 		// fill in missing thumbnails
