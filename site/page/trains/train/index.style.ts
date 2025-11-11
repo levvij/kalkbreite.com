@@ -1,4 +1,4 @@
-import { alignItems, background, backgroundColor, backgroundImage, border, borderColor, boxShadow, child, color, colorStop, display, flexDirection, flexWrap, fontFamily, fontSize, fontWeight, gap, height, hover, justifyContent, linearGradient, marginBottom, marginInline, marginRight, marginTop, overflowInline, overflowX, padding, paddingBlock, paddingInline, percentage, position, px, rem, turn } from "@acryps/style";
+import { alignItems, background, backgroundColor, backgroundImage, border, borderBlock, borderColor, borderLeft, borderRight, boxShadow, child, color, colorStop, display, firstChild, flexDirection, flexWrap, fontFamily, fontSize, fontWeight, gap, height, hover, justifyContent, lastChild, linearGradient, marginBottom, marginInline, marginRight, marginTop, overflowInline, overflowX, padding, paddingBlock, paddingInline, percentage, position, px, rem, turn } from "@acryps/style";
 import { boxed } from "../../shared/boxed";
 import { captureBackgroundColor, pageColor, pageContrastColor, pageGutter, pageSpacing, primaryColor, runningNumberFont, tagFont } from "../../index.style";
 import { trainIdentifierFont } from "../../assets/font";
@@ -12,7 +12,7 @@ import { assignTrainLabelStyle } from "./label/index.style";
 
 const iconButtonTextSize = rem(1);
 const iconButtonSize = iconButtonTextSize.add(pageGutter.multiply(2));
-const imageHeight = rem(8);
+const imageHeight = rem(4);
 
 export const trainStyle = () => child('ui-train')(
 	display('block'),
@@ -51,11 +51,10 @@ export const trainStyle = () => child('ui-train')(
 	child('ui-units') (
 		display('flex'),
 		alignItems('flex-start'),
-		marginInline(pageSpacing.invert()),
-		marginBottom(pageSpacing),
-		paddingInline(iconButtonSize.divide(2).add(pageSpacing)),
+		gap(pageGutter, 0),
+		flexWrap('wrap'),
 
-		overflowX('scroll'),
+		marginBottom(pageSpacing),
 
 		child('ui-unit') (
 			display('flex'),
@@ -83,35 +82,36 @@ export const trainStyle = () => child('ui-train')(
 			),
 
 			child('ui-detail') (
-				display('block'),
-				padding(pageGutter),
+				display('flex'),
+				gap(rem(1)),
 
-				detailSectionStyle(
-					child('ui-header') (
-						fontSize(rem(1.25)),
-
-						child('ui-tag') (
-							display('inline-block'),
-							marginRight(pageGutter),
-
-							fontFamily(tagFont)
-						)
-					)
+				child('ui-tag') (
+					fontFamily(tagFont)
 				)
 			)
 		),
 
 		child('ui-action') (
 			display('flex'),
-			marginInline(iconButtonSize.divide(2).invert()),
-			marginTop(imageHeight.divide(2).subtract(iconButtonSize.divide(2))),
-			padding(pageGutter.subtract(px(1))),
+			alignItems('center'),
+
+			height(imageHeight.subtract(px(2))),
+			paddingInline(pageGutter.divide(2).subtract(px(1))),
+
 			position('relative'),
 
 			clickable(),
 			fontSize(iconButtonTextSize),
 			backgroundColor(pageColor),
-			border(px(1), 'solid', pageContrastColor),
+			borderBlock(px(1), 'solid', pageContrastColor),
+
+			firstChild() (
+				borderLeft(px(1), 'solid', pageContrastColor)
+			),
+
+			lastChild() (
+				borderRight(px(1), 'solid', pageContrastColor)
+			),
 
 			hover() (
 				color(pageColor),

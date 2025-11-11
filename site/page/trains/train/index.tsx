@@ -57,7 +57,7 @@ export class TrainPage extends Component {
 			</ui-actions>}
 
 			<ui-units>
-				{this.train.headCouplerType && <ui-action ui-href='couple/head'>
+				{Application.session.account && this.train.headCouplerType && <ui-action ui-href='couple/head'>
 					{coupleIcon()}
 				</ui-action>}
 
@@ -66,17 +66,13 @@ export class TrainPage extends Component {
 						<img src={`/capture/train/railcar/${railcar.id}/forward`} />
 
 						<ui-detail>
-							{new DetailSectionComponent(<ui-header>
-								<ui-tag>
-									{railcar.tag}
-								</ui-tag>
+							<ui-tag>
+								{railcar.tag}
+							</ui-tag>
 
-								<ui-name>
-									{railcar.givenName || railcar.model?.name || railcar.runningNumber}
-								</ui-name>
-							</ui-header>)
-								.addMetric('Type', () => railcar.model?.name, `/model/${railcar.model?.tag}`)
-								.addMetric('Running Number', () => railcar.runningNumber)}
+							<ui-name>
+								{railcar.givenName || railcar.runningNumber || railcar.model?.name}
+							</ui-name>
 						</ui-detail>
 					</ui-unit>,
 
@@ -89,7 +85,7 @@ export class TrainPage extends Component {
 					</ui-action>
 				])}
 
-				{this.train.tailCouplerType && <ui-action ui-href='couple/tail'>
+				{Application.session.account && this.train.tailCouplerType && <ui-action ui-href='couple/tail'>
 					{coupleIcon()}
 				</ui-action>}
 			</ui-units>
