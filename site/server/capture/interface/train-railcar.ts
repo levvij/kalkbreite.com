@@ -58,8 +58,7 @@ export const registerTrainRailcarCaptureInterface = (server: ManagedServer, data
 		if (model && capture.bufferAnchorOffset) {
 			const image = await loadImage(thumbnail);
 			const left = image.width * capture.bufferAnchorOffset;
-			const length = model.lengthIncludingBuffers
-				/ lengthMultiplier * image.height;
+			const length = model.lengthIncludingBuffers / lengthMultiplier * image.height;
 
 			const canvas = new Canvas(Math.floor(length), image.height);
 			const context = canvas.getContext('2d');

@@ -5,6 +5,7 @@ import { captureBackgroundColor } from "../../../page/index.style";
 import { createHash } from "crypto";
 import { Railcar } from "@packtrack/train";
 import { Application } from "../..";
+import { lengthMultiplier } from "../../../shared/anchor-shift";
 
 export const registerTrainCaptureInterface = (server: ManagedServer, database: DbContext) => {
 	const height = 100;
@@ -54,20 +55,35 @@ export const registerTrainCaptureInterface = (server: ManagedServer, database: D
 			const context = canvas.getContext('2d');
 
 			for (let railcar of train.railcars) {
-				const storedRailcar = await database.railcar.first(stored => stored.id == railcar.identifier);
+				const storedRailcar = await database.railcar
+					.include(railcar => railcar.model)
+					.first(stored => stored.id == railcar.identifier);
+
 				const direction = transformDirection(railcar, request.params);
 
 				const capture = await storedRailcar.captures
 					.where(capture => capture.direction == direction)
-					.includeTree({ thumbnail: true })
+					.includeTree({
+						thumbnail: true,
+						bufferAnchorOffset: true
+					})
 					.orderByDescending(capture => capture.captured)
 					.first();
 
 				if (capture) {
 					// scale thumbnail to union size
 					const image = await loadImage(capture.thumbnail);
-					canvas.width = height / image.height * image.width;
-					context.drawImage(image, 0, 0, canvas.width, height);
+					const model = await storedRailcar.model.fetch();
+
+					if (capture.bufferAnchorOffset && model) {
+						const length = model.lengthIncludingBuffers / lengthMultiplier * image.height;
+
+						canvas.width = height / image.height * length;
+						context.drawImage(image, -canvas.width * capture.bufferAnchorOffset, 0, height / image.height * image.width, height);
+					} else {
+						canvas.width = height / image.height * image.width;
+						context.drawImage(image, 0, 0, canvas.width, height);
+					}
 
 					thumbnails.push(await loadImage(await canvas.toBuffer('png')));
 				} else {
