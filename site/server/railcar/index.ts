@@ -45,8 +45,8 @@ export class RailcarService extends Service {
 	) {
 		const railcar = new Railcar();
 		railcar.tag = tag;
-		railcar.givenName = name;
-		railcar.runningNumber = runningNumber;
+		railcar.givenName = name || null;
+		railcar.runningNumber = runningNumber || null;
 		railcar.aquired = aquired;
 		railcar.salePrice = price;
 		railcar.modelId = modelId;
