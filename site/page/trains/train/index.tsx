@@ -6,10 +6,10 @@ import { StorageContainerTagComponent } from "../../shared/storage-container-tag
 import { DetailSectionComponent } from "../../shared/detail-section";
 import { coupleIcon, uncoupleIcon } from "../../.built/icons";
 import { LayoutComponent } from "../../shared/layout";
-import { markerColor } from "../../index.style";
 import { LayoutLoader } from "../../shared/layout/loader";
 import { Section, SectionPosition } from "@packtrack/layout";
 import { TrainLabelComponent } from "../../shared/train-label";
+import { markerColor } from "../../layout/layout.style";
 
 export class TrainPage extends Component {
 	declare parameters: { identifier };
@@ -22,7 +22,6 @@ export class TrainPage extends Component {
 
 	async onload() {
 		this.train = this.parent.trains.find(train => train.identifier == this.parameters.identifier);
-		this.state = await new TrainService().getTrain(this.parameters.identifier);
 		this.railcars = await new TrainService().getTrainRailcars(this.parameters.identifier);
 		this.label = await new TrainService().getLabel(this.parameters.identifier);
 	}

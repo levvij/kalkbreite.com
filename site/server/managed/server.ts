@@ -21,6 +21,10 @@ import { CollisionIncident } from "././database";
 import { DecouplingIncident } from "././database";
 import { DerailingIncident } from "././database";
 import { PowerLossIncident } from "././database";
+import { DecouplingIncidentViewModel } from "././../incident/decoupling";
+import { PowerLossIncidentViewModel } from "././../incident/power-loss";
+import { CollisionIncidentViewModel } from "././../incident/collision";
+import { DerailingIncidentViewModel } from "././../incident/derailing";
 import { IncidentService } from "././../incident/index";
 import { CameraViewModel } from "././../live/camera";
 import { LiveService } from "././../live/index";
@@ -338,19 +342,19 @@ export class ManagedServer extends BaseServer {
 		);
 
 		this.expose(
-			"lremFlenJmcXFuNDNwMGx1c3ZhMmdkZH",
+			"03eXFoeXkydXhmeHNvcGMyeWZ3d3Vya2",
 			{
-			"pxOG8zbGY4ODRubmJ5cjFjb3lpZT4ya2": { type: "string", isArray: false, isOptional: false },
-				"p3OTw0YWp6eWM1NnNqZWFzZmYwZTlwZG": { type: "number", isArray: false, isOptional: false },
-				"NxejQ1bXE1cmhnMHBtYTprODdzc3N5Zn": { type: "string", isArray: false, isOptional: false },
-				"hraWdneWx3NnNyM2F3aDh2a2NxNnV0YW": { type: "date", isArray: false, isOptional: false }
+			"5yN2Y5ajEwZ3J1OGdyeGRqY2RxcWVuZH": { type: "string", isArray: false, isOptional: false },
+				"J1aWYyYmo5bGA0bGhhbWgzOGljamRnNW": { type: "number", isArray: false, isOptional: false },
+				"g4Mmo3ej50dj9maXM0bjM3Y2R5c2NncG": { type: "string", isArray: false, isOptional: false },
+				"VkZXp2anw4dDE1eDFnd2l4YjVpN3ViNW": { type: "date", isArray: false, isOptional: false }
 			},
 			inject => inject.construct(IncidentService),
-			(controller, params) => controller.reportDerailment(
-				params["pxOG8zbGY4ODRubmJ5cjFjb3lpZT4ya2"],
-				params["p3OTw0YWp6eWM1NnNqZWFzZmYwZTlwZG"],
-				params["NxejQ1bXE1cmhnMHBtYTprODdzc3N5Zn"],
-				params["hraWdneWx3NnNyM2F3aDh2a2NxNnV0YW"]
+			(controller, params) => controller.reportDerailing(
+				params["5yN2Y5ajEwZ3J1OGdyeGRqY2RxcWVuZH"],
+				params["J1aWYyYmo5bGA0bGhhbWgzOGljamRnNW"],
+				params["g4Mmo3ej50dj9maXM0bjM3Y2R5c2NncG"],
+				params["VkZXp2anw4dDE1eDFnd2l4YjVpN3ViNW"]
 			)
 		);
 
@@ -387,6 +391,42 @@ export class ManagedServer extends BaseServer {
 				params["pkYn80Mn41dWhtY2dhcD1yNmNmOGZ6bT"],
 				params["JoZmdjcDpqbGh2bHF5aHNyMnN1NHs4dW"],
 				params["M3dDRiaXdkODZzNnx5eXh2emM3a3Y3a3"]
+			)
+		);
+
+		this.expose(
+			"FyazExd35hdm92enRyNXo4OGZ3dTU5bj",
+			{},
+			inject => inject.construct(IncidentService),
+			(controller, params) => controller.getDecouplingIncidents(
+				
+			)
+		);
+
+		this.expose(
+			"N6cDB0eD5tNTlmeXJraWV0bTowNWBxZG",
+			{},
+			inject => inject.construct(IncidentService),
+			(controller, params) => controller.getDerailingIncidents(
+				
+			)
+		);
+
+		this.expose(
+			"hucHdtd2Rta2lyeGR4OHd6NWpqNXEyc2",
+			{},
+			inject => inject.construct(IncidentService),
+			(controller, params) => controller.getCollisionIncidents(
+				
+			)
+		);
+
+		this.expose(
+			"Jyb31yMnNpcjYxdGI1bDNjbD1tcjtxZ2",
+			{},
+			inject => inject.construct(IncidentService),
+			(controller, params) => controller.getPowerLossIncidents(
+				
 			)
 		);
 
@@ -1384,6 +1424,286 @@ ViewModel.mappings = {
 
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"mimeType" in viewModel && (model.mimeType = viewModel.mimeType === null ? null : `${viewModel.mimeType}`);
+
+			return model;
+		}
+	},
+	[CollisionIncidentViewModel.name]: class ComposedCollisionIncidentViewModel extends CollisionIncidentViewModel {
+		async map() {
+			return {
+				failed: this.$$model.failed,
+				id: this.$$model.id,
+				position: this.$$model.position,
+				section: this.$$model.section
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				failed: true,
+				id: true,
+				position: true,
+				section: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new CollisionIncidentViewModel(null);
+			"failed" in data && (item.failed = data.failed === null ? null : new Date(data.failed));
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"position" in data && (item.position = data.position === null ? null : +data.position);
+			"section" in data && (item.section = data.section === null ? null : `${data.section}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: CollisionIncidentViewModel) {
+			let model: CollisionIncident;
+
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(CollisionIncident).find(viewModel.id)
+			} else {
+				model = new CollisionIncident();
+			}
+
+			"failed" in viewModel && (model.failed = viewModel.failed === null ? null : new Date(viewModel.failed));
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"position" in viewModel && (model.position = viewModel.position === null ? null : +viewModel.position);
+			"section" in viewModel && (model.section = viewModel.section === null ? null : `${viewModel.section}`);
+
+			return model;
+		}
+	},
+	[DecouplingIncidentViewModel.name]: class ComposedDecouplingIncidentViewModel extends DecouplingIncidentViewModel {
+		async map() {
+			return {
+				failed: this.$$model.failed,
+				id: this.$$model.id,
+				position: this.$$model.position,
+				section: this.$$model.section
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				failed: true,
+				id: true,
+				position: true,
+				section: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new DecouplingIncidentViewModel(null);
+			"failed" in data && (item.failed = data.failed === null ? null : new Date(data.failed));
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"position" in data && (item.position = data.position === null ? null : +data.position);
+			"section" in data && (item.section = data.section === null ? null : `${data.section}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: DecouplingIncidentViewModel) {
+			let model: DecouplingIncident;
+
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(DecouplingIncident).find(viewModel.id)
+			} else {
+				model = new DecouplingIncident();
+			}
+
+			"failed" in viewModel && (model.failed = viewModel.failed === null ? null : new Date(viewModel.failed));
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"position" in viewModel && (model.position = viewModel.position === null ? null : +viewModel.position);
+			"section" in viewModel && (model.section = viewModel.section === null ? null : `${viewModel.section}`);
+
+			return model;
+		}
+	},
+	[DerailingIncidentViewModel.name]: class ComposedDerailingIncidentViewModel extends DerailingIncidentViewModel {
+		async map() {
+			return {
+				failed: this.$$model.failed,
+				id: this.$$model.id,
+				position: this.$$model.position,
+				section: this.$$model.section
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				failed: true,
+				id: true,
+				position: true,
+				section: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new DerailingIncidentViewModel(null);
+			"failed" in data && (item.failed = data.failed === null ? null : new Date(data.failed));
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"position" in data && (item.position = data.position === null ? null : +data.position);
+			"section" in data && (item.section = data.section === null ? null : `${data.section}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: DerailingIncidentViewModel) {
+			let model: DerailingIncident;
+
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(DerailingIncident).find(viewModel.id)
+			} else {
+				model = new DerailingIncident();
+			}
+
+			"failed" in viewModel && (model.failed = viewModel.failed === null ? null : new Date(viewModel.failed));
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"position" in viewModel && (model.position = viewModel.position === null ? null : +viewModel.position);
+			"section" in viewModel && (model.section = viewModel.section === null ? null : `${viewModel.section}`);
+
+			return model;
+		}
+	},
+	[PowerLossIncidentViewModel.name]: class ComposedPowerLossIncidentViewModel extends PowerLossIncidentViewModel {
+		async map() {
+			return {
+				failed: this.$$model.failed,
+				id: this.$$model.id,
+				position: this.$$model.position,
+				section: this.$$model.section
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				failed: true,
+				id: true,
+				position: true,
+				section: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new PowerLossIncidentViewModel(null);
+			"failed" in data && (item.failed = data.failed === null ? null : new Date(data.failed));
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"position" in data && (item.position = data.position === null ? null : +data.position);
+			"section" in data && (item.section = data.section === null ? null : `${data.section}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: PowerLossIncidentViewModel) {
+			let model: PowerLossIncident;
+
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(PowerLossIncident).find(viewModel.id)
+			} else {
+				model = new PowerLossIncident();
+			}
+
+			"failed" in viewModel && (model.failed = viewModel.failed === null ? null : new Date(viewModel.failed));
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"position" in viewModel && (model.position = viewModel.position === null ? null : +viewModel.position);
+			"section" in viewModel && (model.section = viewModel.section === null ? null : `${viewModel.section}`);
 
 			return model;
 		}

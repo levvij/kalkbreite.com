@@ -3,23 +3,24 @@ import { LayoutLoader } from "../shared/layout/loader";
 import { Layout, PointPositioner, Section, SectionPosition } from "@packtrack/layout";
 import { LayoutComponent } from "../shared/layout";
 import { legendItemColor } from "./index.style";
-import { positionerColor, primaryColor, trainOccupiedColor } from "../index.style";
-import { LastTrainHeadPositionViewModel, TrainService, TrainViewModel } from "../managed/services";
+import { primaryColor } from "../index.style";
+import { CollisionIncidentViewModel, DecouplingIncidentViewModel, DerailingIncidentViewModel, IncidentService, LastTrainHeadPositionViewModel, PowerLossIncidentViewModel, TrainService, TrainViewModel } from "../managed/services";
 import { LayoutMarker } from "../shared/layout/marker";
 import { findMessageType, Message, MonitorTrainSpeedPermitMessage, TypedMessage } from "@packtrack/protocol";
 import { LayoutTrainListComponent } from "./trains";
 import { Snapshot, TrainChain, Train } from "@packtrack/train";
+import { Incident, incidentColor, positionerColor, trainOccupiedColor } from "./layout.style";
 
 export class LayoutPage extends Component {
 	layout: Layout;
 	chain: TrainChain;
 
-	renderer: LayoutComponent;
+	renderer = new LayoutComponent();
 	trainMarkers = new Map<Train, LayoutMarker>();
 
 	socket: WebSocket;
 
-	trainList = new LayoutTrainListComponent();
+	incidents?: Incident[];
 
 	async onload() {
 		this.layout = await LayoutLoader.load();
@@ -32,8 +33,6 @@ export class LayoutPage extends Component {
 			const snapshotDocument = new DOMParser().parseFromString(event.data, 'application/xml');
 			this.chain = Snapshot.import(snapshotDocument.querySelector('snapshot'), this.layout);
 			this.chain.dump();
-
-			this.trainList.chain = this.chain;
 
 			for (let train of this.chain.trains) {
 				this.trainMarkers.set(train, this.renderer.mark(trainOccupiedColor, train.head.nominal, train.tail.nominal));
@@ -89,7 +88,6 @@ export class LayoutPage extends Component {
 			</ui-layout>;
 		}
 
-		this.renderer = new LayoutComponent();
 		this.renderer.onSectionClick = position => this.navigate(`section/${position.section.domainName}`);
 
 		for (let district of this.layout.allDistricts) {
@@ -106,8 +104,37 @@ export class LayoutPage extends Component {
 			}
 		}
 
+		if (this.incidents) {
+			for (let incident of this.incidents) {
+				this.renderer.mark(
+					incidentColor.get(incident.constructor as any).color,
+
+					new SectionPosition(
+						this.renderer.findSection(incident.section),
+						incident.position,
+						false
+					)
+				);
+			}
+		}
+
 		return <ui-layout>
 			<ui-overview>
+				<ui-actions>
+					<ui-action ui-click={async () => {
+						this.incidents = [
+							...await new IncidentService().getDecouplingIncidents(),
+							...await new IncidentService().getDerailingIncidents(),
+							...await new IncidentService().getCollisionIncidents(),
+							...await new IncidentService().getPowerLossIncidents()
+						];
+
+						this.update();
+					}}>
+						Show Incidents
+					</ui-action>
+				</ui-actions>
+
 				{this.renderer}
 
 				<ui-legend>
@@ -155,9 +182,21 @@ export class LayoutPage extends Component {
 							</ui-description>
 						</ui-detail>
 					</ui-item>
-				</ui-legend>
 
-				{this.trainList}
+					{this.incidents && [...incidentColor.entries().map(([type, display]) => <ui-item>
+						<ui-color style={legendItemColor.provide(display.color)}></ui-color>
+
+						<ui-detail>
+							<ui-name>
+								{display.label}
+							</ui-name>
+
+							<ui-description>
+								{this.incidents.filter(incident => incident.constructor as any == type).length} Reported incidents
+							</ui-description>
+						</ui-detail>
+					</ui-item>)]}
+				</ui-legend>
 			</ui-overview>
 		</ui-layout>
 	}

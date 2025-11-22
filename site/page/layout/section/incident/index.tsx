@@ -2,7 +2,7 @@ import { Component, ComponentContent } from "@acryps/page";
 import { LayoutSectionPage } from "..";
 import { SectionPosition } from "@packtrack/layout";
 import { LayoutMarker } from "../../../shared/layout/marker";
-import { markerColor, primaryColor } from "../../../index.style";
+import { markerColor } from "../../layout.style";
 
 export abstract class ReportIncidentPage extends Component {
 	declare parent: LayoutSectionPage;
@@ -32,7 +32,7 @@ export abstract class ReportIncidentPage extends Component {
 			</ui-position>}
 
 			<ui-field>
-				<label>Decoupled</label>
+				<label>Failed</label>
 
 				<input type='datetime-local' $ui-value={this.failed}></input>
 			</ui-field>

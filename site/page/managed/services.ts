@@ -155,6 +155,74 @@ export class GraffitiInspirationMediaViewModel {
 	}
 }
 
+export class CollisionIncidentViewModel {
+	failed: Date;
+	id: string;
+	position: number;
+	section: string;
+
+	private static $build(raw) {
+		const item = new CollisionIncidentViewModel();
+		raw.failed === undefined || (item.failed = raw.failed ? new Date(raw.failed) : null)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.position === undefined || (item.position = raw.position === null ? null : +raw.position)
+		raw.section === undefined || (item.section = raw.section === null ? null : `${raw.section}`)
+		
+		return item;
+	}
+}
+
+export class DecouplingIncidentViewModel {
+	failed: Date;
+	id: string;
+	position: number;
+	section: string;
+
+	private static $build(raw) {
+		const item = new DecouplingIncidentViewModel();
+		raw.failed === undefined || (item.failed = raw.failed ? new Date(raw.failed) : null)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.position === undefined || (item.position = raw.position === null ? null : +raw.position)
+		raw.section === undefined || (item.section = raw.section === null ? null : `${raw.section}`)
+		
+		return item;
+	}
+}
+
+export class DerailingIncidentViewModel {
+	failed: Date;
+	id: string;
+	position: number;
+	section: string;
+
+	private static $build(raw) {
+		const item = new DerailingIncidentViewModel();
+		raw.failed === undefined || (item.failed = raw.failed ? new Date(raw.failed) : null)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.position === undefined || (item.position = raw.position === null ? null : +raw.position)
+		raw.section === undefined || (item.section = raw.section === null ? null : `${raw.section}`)
+		
+		return item;
+	}
+}
+
+export class PowerLossIncidentViewModel {
+	failed: Date;
+	id: string;
+	position: number;
+	section: string;
+
+	private static $build(raw) {
+		const item = new PowerLossIncidentViewModel();
+		raw.failed === undefined || (item.failed = raw.failed ? new Date(raw.failed) : null)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.position === undefined || (item.position = raw.position === null ? null : +raw.position)
+		raw.section === undefined || (item.section = raw.section === null ? null : `${raw.section}`)
+		
+		return item;
+	}
+}
+
 export class CameraViewModel {
 	id: string;
 	name: string;
@@ -1197,14 +1265,14 @@ export class IncidentService {
 		});
 	}
 
-	async reportDerailment(section: string, position: number, railcarId: string, failed: Date): Promise<void> {
+	async reportDerailing(section: string, position: number, railcarId: string, failed: Date): Promise<void> {
 		const $data = new FormData();
-		$data.append("pxOG8zbGY4ODRubmJ5cjFjb3lpZT4ya2", Service.stringify(section))
-		$data.append("p3OTw0YWp6eWM1NnNqZWFzZmYwZTlwZG", Service.stringify(position))
-		$data.append("NxejQ1bXE1cmhnMHBtYTprODdzc3N5Zn", Service.stringify(railcarId))
-		$data.append("hraWdneWx3NnNyM2F3aDh2a2NxNnV0YW", Service.stringify(failed))
+		$data.append("5yN2Y5ajEwZ3J1OGdyeGRqY2RxcWVuZH", Service.stringify(section))
+		$data.append("J1aWYyYmo5bGA0bGhhbWgzOGljamRnNW", Service.stringify(position))
+		$data.append("g4Mmo3ej50dj9maXM0bjM3Y2R5c2NncG", Service.stringify(railcarId))
+		$data.append("VkZXp2anw4dDE1eDFnd2l4YjVpN3ViNW", Service.stringify(failed))
 
-		return await fetch(Service.toURL("lremFlenJmcXFuNDNwMGx1c3ZhMmdkZH"), {
+		return await fetch(Service.toURL("03eXFoeXkydXhmeHNvcGMyeWZ3d3Vya2"), {
 			method: "post",
 			credentials: "include",
 			body: $data
@@ -1260,6 +1328,90 @@ export class IncidentService {
 
 			if ("aborted" in r) {
 				throw new Error("request aborted by server");
+			}
+		});
+	}
+
+	async getDecouplingIncidents(): Promise<Array<DecouplingIncidentViewModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("FyazExd35hdm92enRyNXo4OGZ3dTU5bj"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : DecouplingIncidentViewModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async getDerailingIncidents(): Promise<Array<DerailingIncidentViewModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("N6cDB0eD5tNTlmeXJraWV0bTowNWBxZG"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : DerailingIncidentViewModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async getCollisionIncidents(): Promise<Array<CollisionIncidentViewModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("hucHdtd2Rta2lyeGR4OHd6NWpqNXEyc2"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : CollisionIncidentViewModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async getPowerLossIncidents(): Promise<Array<PowerLossIncidentViewModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("Jyb31yMnNpcjYxdGI1bDNjbD1tcjtxZ2"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : PowerLossIncidentViewModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
 			}
 		});
 	}

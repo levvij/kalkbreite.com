@@ -13,7 +13,6 @@ import { LayoutPage } from "./layout";
 import { LayoutSectionPage } from "./layout/section";
 import { ReportCollisionIncidentPage } from "./layout/section/incident/collision";
 import { ReportDecouplingIncidentPage } from "./layout/section/incident/decoupling";
-import { ReportDerailmentIncidentPage } from "./layout/section/incident/derailment";
 import { ReportPowerLossIncidentPage } from "./layout/section/incident/power-loss";
 import { LivePage } from "./live";
 import { LoginPage } from "./login";
@@ -36,6 +35,7 @@ import { TrainPage } from "./trains/train";
 import { CoupleTrainPage } from "./trains/train/couple";
 import { AssignTrainLabelPage } from "./trains/train/label";
 import { ComissionRailcarPage } from "./railcar/railcar/comission";
+import { ReportDerailingIncidentPage } from "./layout/section/incident/derailing";
 
 // injected by esbuild
 declare const buildDate: string;
@@ -70,7 +70,7 @@ export class Application {
 			.route('/layout', LayoutPage
 				.route('/section/:domainName', LayoutSectionPage
 					.route('/incident/decoupling', ReportDecouplingIncidentPage)
-					.route('/incident/derailment', ReportDerailmentIncidentPage)
+					.route('/incident/derailing', ReportDerailingIncidentPage)
 					.route('/incident/collision', ReportCollisionIncidentPage)
 					.route('/incident/power-loss', ReportPowerLossIncidentPage)
 				)

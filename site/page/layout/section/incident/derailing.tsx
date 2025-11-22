@@ -3,7 +3,7 @@ import { ReportIncidentPage } from ".";
 import { RailcarSelect } from "../../../shared/railcar-select";
 import { IncidentService, RailcarSummaryModel } from "../../../managed/services";
 
-export class ReportDerailmentIncidentPage extends ReportIncidentPage {
+export class ReportDerailingIncidentPage extends ReportIncidentPage {
 	railcar: RailcarSummaryModel;
 
 	renderFields() {
@@ -17,7 +17,7 @@ export class ReportDerailmentIncidentPage extends ReportIncidentPage {
 	}
 
 	async report() {
-		await new IncidentService().reportDerailment(
+		await new IncidentService().reportDerailing(
 			this.position.section.domainName,
 			this.position.offset,
 			this.railcar.id,

@@ -1,5 +1,9 @@
 import { Service } from "vlserver";
 import { CollisionIncident, DbContext, DecouplingIncident, DerailingIncident, PowerLossIncident } from "../managed/database";
+import { DecouplingIncidentViewModel } from "./decoupling";
+import { PowerLossIncidentViewModel } from "./power-loss";
+import { CollisionIncidentViewModel } from "./collision";
+import { DerailingIncidentViewModel } from "./derailing";
 
 export class IncidentService extends Service {
 	constructor(
@@ -18,7 +22,7 @@ export class IncidentService extends Service {
 		await report.create();
 	}
 
-	async reportDerailment(section: string, position: number, railcarId: string, failed: Date) {
+	async reportDerailing(section: string, position: number, railcarId: string, failed: Date) {
 		const report = new DerailingIncident();
 		report.section = section;
 		report.position = position;
@@ -47,5 +51,21 @@ export class IncidentService extends Service {
 		report.failed = failed;
 
 		await report.create();
+	}
+
+	async getDecouplingIncidents() {
+		return DecouplingIncidentViewModel.from(this.database.decouplingIncident);
+	}
+
+	async getDerailingIncidents() {
+		return DerailingIncidentViewModel.from(this.database.derailingIncident);
+	}
+
+	async getCollisionIncidents() {
+		return CollisionIncidentViewModel.from(this.database.collisionIncident);
+	}
+
+	async getPowerLossIncidents() {
+		return PowerLossIncidentViewModel.from(this.database.powerLossIncident);
 	}
 }

@@ -57,8 +57,8 @@ export class LayoutSectionPage extends Component {
 					Report Decoupling
 				</ui-action>
 
-				<ui-action ui-href='incident/derailment'>
-					Report Derailment
+				<ui-action ui-href='incident/derailing'>
+					Report Derailing
 				</ui-action>
 
 				<ui-action ui-href='incident/power-loss'>
