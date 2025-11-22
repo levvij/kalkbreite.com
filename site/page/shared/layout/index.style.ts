@@ -8,7 +8,7 @@ export const layoutStyle = () => child('ui-layout') (
 
 	child('svg') (
 		width(percentage(100)),
-		maxHeight(vh(70)),
+		maxHeight(vh(80)),
 
 		descendant('g') (
 			hover() (child('path') (attribute('ui-main') (

@@ -175,4 +175,14 @@ export class LayoutComponent extends Component {
 			bottom: Math.max(...tiles.map(tile => tile.y)) + margin
 		}
 	}
+
+	findSection(domainName: string) {
+		for (let district of this.layout.allDistricts) {
+			for (let section of district.sections) {
+				if (section.domainName == domainName) {
+					return section;
+				}
+			}
+		}
+	}
 }

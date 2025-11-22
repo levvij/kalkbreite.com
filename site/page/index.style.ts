@@ -1,5 +1,7 @@
-import { aspectRatio, backgroundImage, colorStop, hex, linearGradient, percentage, ratio, rem, turn } from "@acryps/style";
+import { aspectRatio, backgroundImage, colorStop, ColorValue, hex, linearGradient, percentage, ratio, rem, turn } from "@acryps/style";
 import { monospacedFont } from "./assets/font";
+import { DecouplingIncidentViewModel, DerailingIncidentViewModel, PowerLossIncidentViewModel, CollisionIncidentViewModel } from "./managed/services";
+
 
 export const primaryColor = hex('64ab7d');
 export const primaryContrastColor = hex('fff');
@@ -14,10 +16,6 @@ export const warningContrastColor = hex('000');
 
 export const dangerColor = hex('ba3d3b');
 export const dangerContrastColor = hex('fff');
-
-export const markerColor = hex('ff0');
-export const trainOccupiedColor = hex('f00');
-export const positionerColor = hex('66f');
 
 export const pageColor = hex('fff');
 export const pageTransparentColor = hex('fff0');

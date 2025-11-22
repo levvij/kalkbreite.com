@@ -4,6 +4,7 @@ import { sectionStyle } from "./section/index.style";
 import { layoutStyle } from "../shared/layout/index.style";
 import { pageGutter, pageSpacing } from "../index.style";
 import { collection, collectionItem } from "../shared/collection";
+import { buttonGroupStyle, buttonStyle } from "../shared/button";
 
 export const legendItemColor = new Variable<ColorValue>('legend-item-color');
 const legendItemColorSize = rem(0.8);
@@ -17,6 +18,15 @@ export const layoutPageStyle = () => child('ui-layout') (
 	child('ui-overview') (
 		display('block'),
 		padding(pageSpacing),
+
+		child('ui-actions') (
+			buttonGroupStyle(),
+			marginBottom(pageSpacing),
+
+			child('ui-action') (
+				buttonStyle()
+			)
+		),
 
 		layoutStyle(),
 

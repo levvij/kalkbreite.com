@@ -15,7 +15,7 @@ export class RailcarCollectionComponent extends Component {
 
 				<ui-header>
 					<ui-name>
-						{railcar.givenName ?? railcar.model?.name ?? '-'}
+						{railcar.givenName || railcar.model?.name || '-'}
 					</ui-name>
 
 					<ui-tag>
