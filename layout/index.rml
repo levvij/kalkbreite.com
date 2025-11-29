@@ -1025,6 +1025,164 @@
 			</section>
 		</district>
 
+		<district name="reverse">
+			<power-districts>
+				<power-district name="north" />
+				<power-district name="body" />
+				<power-district name="skip" />
+				<power-district name="flyover" />
+			</power-districts>
+
+			<section name="stem-north" power-district="north">
+				<tracks>
+					<track length="365.4" />
+				</tracks>
+
+				<tile x="7" y="26" pattern="cc-bl" />
+				<tile x="6" y="27" pattern="tr-cl" />
+				<tile x="5" y="27" pattern="cr-tl" />
+
+				<tile x="4" y="26" pattern="br-tc" />
+				<tile x="4" y="25" pattern="bc-tc" />
+				<tile x="4" y="24" pattern="bc-tc" />
+				<tile x="4" y="23" pattern="bc-tc" />
+				<tile x="4" y="22" pattern="bc-tc" />
+				<tile x="4" y="21" pattern="bc-tc" />
+				<tile x="4" y="20" pattern="bc-tc" />
+				<tile x="4" y="19" pattern="bc-tc" />
+				<tile x="4" y="18" pattern="bc-tc" />
+				<tile x="4" y="17" pattern="bc-tc" />
+				<tile x="4" y="16" pattern="bc-tc" />
+				<tile x="4" y="15" pattern="bc-tc" />
+				<tile x="4" y="14" pattern="bc-tc" />
+				<tile x="4" y="13" pattern="bc-tc" />
+				<tile x="4" y="12" pattern="bc-tc" />
+
+				<tile x="4" y="11" pattern="bc-tr" />
+				<tile x="5" y="10" pattern="bl-tr" />
+				<tile x="6" y="9" pattern="bl-cc" />
+			</section>
+
+			<router name="north-split" active="left">
+				<route name="left" in="stem-body-storage-buffer-1" out="stem-north" />
+				<route name="straight" in="stem-body-storage-buffer-1" out="flyover" />
+			</router>
+
+			<section name="flyover" power-district="flyover">
+				<tracks>
+					<track length="158.34" />
+				</tracks>
+
+				<tile x="6" y="9" pattern="cc-cl" />
+				<tile x="5" y="9" pattern="cr-cl" />
+				<tile x="4" y="9" pattern="cr-cl" />
+				<tile x="3" y="9" pattern="cr-cl" />  <!-- skip -->
+				<tile x="2" y="10" pattern="tc-cc" />
+			</section>
+
+			<section name="stem-body-storage-buffer-1" power-district="body">
+				<tracks>
+					<track length="31.32" />
+				</tracks>
+
+				<tile x="6" y="9" pattern="cc-cr" />
+				<tile x="7" y="9" pattern="cl-cr" />
+				<tile x="8" y="9" pattern="cl-cc" />
+			</section>
+
+			<router name="storage-1-split" active="straight">
+				<route name="left" in="storage-1" out="stem-body-storage-buffer-1" />
+				<route name="straight" in="stem-body-storage-buffer-2" out="stem-body-storage-buffer-1" />
+			</router>
+
+			<section name="storage-1" power-district="body">
+				<tracks>
+					<track length="100" />
+				</tracks>
+
+				<tile x="8" y="9" pattern="cc-tl" />
+				<tile x="7" y="8" pattern="br-cl" />
+				<tile x="6" y="8" pattern="cr-cl" />
+				<tile x="5" y="8" pattern="cr-cl" />
+				<tile x="4" y="8" pattern="cr-cl" />
+				<tile x="3" y="8" pattern="cr-cc" />
+			</section>
+
+			<section name="stem-body-storage-buffer-2" power-district="body">
+				<tracks>
+					<track length="21.75" />
+				</tracks>
+
+				<tile x="8" y="9" pattern="cc-cr" />
+				<tile x="9" y="9" pattern="cl-cc" />
+			</section>
+
+			<router name="storage-2-split" active="straight">
+				<route name="left" in="storage-2" out="stem-body-storage-buffer-2" />
+				<route name="straight" in="stem-body-skip-buffer" out="stem-body-storage-buffer-2" />
+			</router>
+
+			<section name="storage-2" power-district="body">
+				<tracks>
+					<track length="109.62" />
+				</tracks>
+
+				<tile x="9" y="9" pattern="cc-tl" />
+				<tile x="8" y="8" pattern="br-tl" />
+				<tile x="7" y="7" pattern="br-cl" />
+				<tile x="6" y="7" pattern="cr-cl" />
+				<tile x="5" y="7" pattern="cr-cl" />
+				<tile x="4" y="7" pattern="cr-cl" />
+				<tile x="3" y="7" pattern="cr-cc" />
+			</section>
+
+			<section name="stem-body-skip-buffer" power-district="body">
+				<tracks>
+					<track length="55.68" />
+				</tracks>
+
+				<tile x="9" y="9" pattern="cc-cr" />
+				<tile x="10" y="9" pattern="cl-cr" />
+				<tile x="11" y="9" pattern="cl-cc" />
+			</section>
+
+			<section name="skip" power-district="skip">
+				<tracks>
+					<track length="76.56" />
+				</tracks>
+
+				<tile x="11" y="9" pattern="cc-tl" />
+				<tile x="10" y="8" pattern="br-tl" />
+				<tile x="9" y="7" pattern="br-cc" />
+			</section>
+
+			<router name="skip-split" active="straight">
+				<route name="right" in="stem-body" out="skip" />
+				<route name="straight" in="stem-body" out="stem-body-skip-buffer" />
+			</router>
+
+			<section name="stem-body" power-district="body">
+				<tracks>
+					<track length="469.8" />
+				</tracks>
+
+				<tile x="11" y="9" pattern="cc-cr" />
+				<tile x="12" y="9" pattern="cl-cr" />
+				<tile x="13" y="9" pattern="cl-cr" />
+				<tile x="14" y="9" pattern="cl-cr" />
+				<tile x="15" y="9" pattern="cl-cr" />
+				<tile x="16" y="9" pattern="cl-cr" />
+				<tile x="17" y="9" pattern="cl-cr" />
+				<tile x="18" y="9" pattern="cl-cr" />
+				<tile x="19" y="9" pattern="cl-cr" />
+
+				<tile x="20" y="9" pattern="cc-br" /> <!-- skip -->
+				<tile x="21" y="10" pattern="tl-bc" />
+				<tile x="21" y="11" pattern="tc-bc" />
+				<tile x="21" y="12" pattern="tc-bc" />
+			</section>
+		</district>
+
 		<district name="automatic-distribution-unit">
 			<section name="source">
 				<tracks>

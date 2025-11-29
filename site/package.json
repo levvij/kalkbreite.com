@@ -5,7 +5,7 @@
 		"build": "cd page; npm run build; cd ..; cd server; npm run build; cd .."
 	},
 	"dependencies": {
-		"@packtrack/layout": "^1.6.7",
+		"@packtrack/layout": "^1.6.9",
 		"@packtrack/protocol": "^1.8.1",
 		"@packtrack/train": "^2.2.2"
 	}

@@ -1,6 +1,6 @@
 import { Component } from "@acryps/page";
 import { LayoutLoader } from "../shared/layout/loader";
-import { Layout, PointPositioner, Section, SectionPosition } from "@packtrack/layout";
+import { Layout, PointPositioner, PowerDistrict, Section, SectionPosition } from "@packtrack/layout";
 import { LayoutComponent } from "../shared/layout";
 import { legendItemColor } from "./index.style";
 import { primaryColor } from "../index.style";
@@ -10,6 +10,7 @@ import { findMessageType, Message, MonitorTrainSpeedPermitMessage, TypedMessage 
 import { LayoutTrainListComponent } from "./trains";
 import { Snapshot, TrainChain, Train } from "@packtrack/train";
 import { Incident, incidentColor, positionerColor, trainOccupiedColor } from "./layout.style";
+import { ColorValue, hex, hsl, percentage, turn } from "@acryps/style";
 
 export class LayoutPage extends Component {
 	layout: Layout;
@@ -21,6 +22,7 @@ export class LayoutPage extends Component {
 	socket: WebSocket;
 
 	incidents?: Incident[];
+	powerDistricts = new Map<PowerDistrict, ColorValue>();
 
 	async onload() {
 		this.layout = await LayoutLoader.load();
@@ -118,6 +120,22 @@ export class LayoutPage extends Component {
 			}
 		}
 
+		if (this.powerDistricts.size) {
+			for (let district of this.layout.allDistricts) {
+				for (let section of district.sections) {
+					if (section.powerDistrict) {
+						const marker = this.renderer.mark(
+							this.powerDistricts.get(section.powerDistrict) ?? hex('f0f'),
+							new SectionPosition(section, 0, false),
+							new SectionPosition(section, section.length, false)
+						);
+
+						marker.onClick = () => this.navigate(section.domainName);
+					}
+				}
+			}
+		}
+
 		return <ui-layout>
 			<ui-overview>
 				<ui-actions>
@@ -132,6 +150,28 @@ export class LayoutPage extends Component {
 						this.update();
 					}}>
 						Show Incidents
+					</ui-action>
+
+					<ui-action ui-click={() => {
+						this.powerDistricts.clear();
+
+						for (let district of this.layout.allDistricts) {
+							for (let powerDistrict of district.powerDistricts) {
+								this.powerDistricts.set(powerDistrict, null);
+							}
+						}
+
+						for (let powerDistrict of this.powerDistricts.keys()) {
+							this.powerDistricts.set(powerDistrict, hsl(
+								turn(1 / this.powerDistricts.size * [...this.powerDistricts.keys()].indexOf(powerDistrict)),
+								percentage(100),
+								percentage(50)
+							));
+						}
+
+						this.update();
+					}}>
+						Show Power Districts
 					</ui-action>
 				</ui-actions>
 
@@ -193,6 +233,20 @@ export class LayoutPage extends Component {
 
 							<ui-description>
 								{this.incidents.filter(incident => incident.constructor as any == type).length} Reported incidents
+							</ui-description>
+						</ui-detail>
+					</ui-item>)]}
+
+					{this.powerDistricts.size && [...this.powerDistricts.entries().map(([district, color]) => <ui-item>
+						<ui-color style={legendItemColor.provide(color)}></ui-color>
+
+						<ui-detail>
+							<ui-name>
+								{district.name}
+							</ui-name>
+
+							<ui-description>
+								Power district
 							</ui-description>
 						</ui-detail>
 					</ui-item>)]}
