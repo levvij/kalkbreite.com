@@ -1,5 +1,6 @@
 import { Component, ComponentContent } from "@acryps/page";
 import { CompanySummaryModel } from "../../managed/services";
+import { goIcon } from "../../.built/icons";
 
 export class DetailSectionComponent extends Component {
 	sections: ComponentContent[] = [];
@@ -20,6 +21,8 @@ export class DetailSectionComponent extends Component {
 				<ui-value>
 					{value()}
 				</ui-value>
+
+				{link && goIcon()}
 			</ui-metric>);
 		} catch {}
 

@@ -36,6 +36,7 @@ import { CoupleTrainPage } from "./trains/train/couple";
 import { AssignTrainLabelPage } from "./trains/train/label";
 import { ComissionRailcarPage } from "./railcar/railcar/comission";
 import { ReportDerailingIncidentPage } from "./layout/section/incident/derailing";
+import { PowerDistrictPage } from "./layout/power-district";
 
 // injected by esbuild
 declare const buildDate: string;
@@ -74,6 +75,8 @@ export class Application {
 					.route('/incident/collision', ReportCollisionIncidentPage)
 					.route('/incident/power-loss', ReportPowerLossIncidentPage)
 				)
+
+				.route('/power-district/:domainName', PowerDistrictPage)
 			)
 
 			.route('/railcar', RailcarsPage

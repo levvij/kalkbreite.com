@@ -22,7 +22,7 @@ export class LayoutPage extends Component {
 	socket: WebSocket;
 
 	incidents?: Incident[];
-	powerDistricts = new Map<PowerDistrict, ColorValue>();
+	powerDistricts: Map<PowerDistrict, ColorValue>;
 
 	async onload() {
 		this.layout = await LayoutLoader.load();
@@ -120,7 +120,7 @@ export class LayoutPage extends Component {
 			}
 		}
 
-		if (this.powerDistricts.size) {
+		if (this.powerDistricts) {
 			for (let district of this.layout.allDistricts) {
 				for (let section of district.sections) {
 					if (section.powerDistrict) {
@@ -130,7 +130,7 @@ export class LayoutPage extends Component {
 							new SectionPosition(section, section.length, false)
 						);
 
-						marker.onClick = () => this.navigate(section.domainName);
+						marker.onClick = () => this.navigate(`section/${section.domainName}`);
 					}
 				}
 			}
@@ -153,7 +153,7 @@ export class LayoutPage extends Component {
 					</ui-action>
 
 					<ui-action ui-click={() => {
-						this.powerDistricts.clear();
+						this.powerDistricts = new Map<PowerDistrict, ColorValue>();
 
 						for (let district of this.layout.allDistricts) {
 							for (let powerDistrict of district.powerDistricts) {
@@ -237,7 +237,7 @@ export class LayoutPage extends Component {
 						</ui-detail>
 					</ui-item>)]}
 
-					{this.powerDistricts.size && [...this.powerDistricts.entries().map(([district, color]) => <ui-item>
+					{this.powerDistricts && [...this.powerDistricts.entries().map(([district, color]) => <ui-item>
 						<ui-color style={legendItemColor.provide(color)}></ui-color>
 
 						<ui-detail>
