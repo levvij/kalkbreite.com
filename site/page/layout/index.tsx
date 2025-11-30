@@ -242,7 +242,7 @@ export class LayoutPage extends Component {
 
 						<ui-detail>
 							<ui-name>
-								{district.name}
+								District '{district.name}'
 							</ui-name>
 
 							<ui-description>

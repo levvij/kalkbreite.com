@@ -46,12 +46,12 @@ export const layoutStyle = () => child('ui-layout') (
 			)
 		),
 
-		descendant('rect') (
+		child('path') (
 			width(px(1)),
 			height(px(1)),
 
 			fill('transparent'),
-			stroke(hex('eee')),
+			stroke(hex('ccc')),
 			strokeWidth(px(1)),
 			vectorEffect('non-scaling-stroke')
 		)

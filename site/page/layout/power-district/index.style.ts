@@ -1,4 +1,4 @@
-import { child, display, fontSize, marginBottom, marginTop, rem } from "@acryps/style";
+import { child, display, fontSize, marginBottom, marginTop, padding, rem } from "@acryps/style";
 import { boxed } from "../../shared/boxed";
 import { layoutStyle } from "../../shared/layout/index.style";
 import { detailSectionStyle } from "../../shared/detail-section/index.style";
@@ -8,6 +8,7 @@ import { clickable } from "../../shared/interaction";
 
 export const powerDistrictStyle = () => child('ui-power-district')(
 	boxed(),
+	padding(pageSpacing),
 
 	layoutStyle(),
 

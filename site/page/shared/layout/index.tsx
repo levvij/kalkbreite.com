@@ -59,19 +59,6 @@ export class LayoutComponent extends Component {
 		const viewBox = this.getBoundary(viewBoxTiles, margin);
 		svg.setAttribute('viewBox', `${viewBox.left} ${viewBox.top} ${viewBox.right - viewBox.left + 1} ${viewBox.bottom - viewBox.top + 1}`);
 
-		const grid = this.getBoundary(tiles);
-		const overscan = Math.max(grid.right - grid.left, grid.bottom - grid.top) / 2;
-
-		for (let x = grid.left - overscan; x <= grid.right + overscan; x++) {
-			for (let y = grid.top - overscan; y <= grid.bottom + overscan; y++) {
-				const brick = document.createElementNS(svg.namespaceURI, 'rect') as SVGRectElement;
-				brick.setAttribute('x', x.toString());
-				brick.setAttribute('y', y.toString());
-
-				svg.appendChild(brick);
-			}
-		}
-
 		this.canvas = svg;
 
 		for (let root of this.layout.districts) {
@@ -85,9 +72,38 @@ export class LayoutComponent extends Component {
 			element.host(this.elementContainer);
 		}
 
+		svg.appendChild(this.renderGrid(svg, tiles));
+
 		return <ui-layout>
 			{svg}
 		</ui-layout>;
+	}
+
+	renderGrid(svg: SVGElement, tiles: Tile[]) {
+		const grid = this.getBoundary(tiles);
+		const overscan = Math.max(grid.right - grid.left, grid.bottom - grid.top) / 2;
+
+		const gridPath = [];
+
+		for (let x = grid.left - overscan; x <= grid.right + overscan; x++) {
+			gridPath.push(
+				`M ${x} ${grid.top - overscan}`,
+				`L ${x} ${grid.bottom + overscan}`
+			);
+		}
+
+		for (let y = grid.top - overscan; y <= grid.bottom + overscan; y++) {
+			gridPath.push(
+				`M ${grid.left - overscan} ${y}`,
+				`L ${grid.right + overscan} ${y}`
+			);
+		}
+
+		const gridElement = document.createElementNS(svg.namespaceURI, 'path') as SVGRectElement;
+		gridElement.setAttribute('ui-grid', '');
+		gridElement.setAttribute('d', gridPath.join());
+
+		return gridElement;
 	}
 
 	renderDistrict(district: District, svg: SVGElement | SVGGElement) {
