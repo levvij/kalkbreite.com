@@ -30,8 +30,6 @@ export const detailSectionStyle = (...header) => child('ui-detail-section') (
 			alignItems('center'),
 
 			attribute('ui-link') (
-				textDecorationLine('underline'),
-
 				clickable()
 			),
 

@@ -25,7 +25,7 @@ export class LayoutSectionPage extends Component {
 		}
 	}
 
-	breadcrumb = () => this.section.name;
+	breadcrumb = () => `Section ${this.section.name}`;
 	render(child) {
 		this.layout.highlight(this.section);
 		this.layout.onSectionClick = position => this.navigate(`../${position.section.domainName}`);
@@ -50,6 +50,7 @@ export class LayoutSectionPage extends Component {
 			</ui-name>)
 				.addMetric('Real Length', () => `${(this.section.length).toFixed(1)} m`)
 				.addMetric('Scale Length', () => `${(this.section.length / 87).toFixed(2)} m`)
+				.addMetric('Power District', () => this.section.powerDistrict.name, `/layout/power-district/${this.section.powerDistrict?.domainName}`)
 			}
 
 			{Application.session.account && <ui-actions>
