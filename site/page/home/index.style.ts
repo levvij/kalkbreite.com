@@ -1,4 +1,4 @@
-import { after, alignItems, aspectRatio, backgroundColor, backgroundImage, border, borderRadius, borderRight, bottom, boxShadow, child, color, colorStop, content, display, flexDirection, flexGrow, focus, fontFamily, fontSize, fontStyle, fontWeight, height, hover, inset, insetInline, justifyContent, justifySelf, linearGradient, margin, marginBlock, marginBottom, marginInline, marginTop, maxWidth, objectFit, outline, overflow, padding, paddingInline, percentage, position, px, ratio, rem, textAlign, top, vh, width, zIndex } from "@acryps/style";
+import { after, alignItems, aspectRatio, backgroundColor, backgroundImage, border, borderBottomLeftRadius, borderBottomRightRadius, borderRadius, borderRight, borderTopLeftRadius, borderTopRightRadius, bottom, boxShadow, child, color, colorStop, content, display, flexDirection, flexGrow, focus, fontFamily, fontSize, fontStyle, fontWeight, height, hover, inset, insetInline, justifyContent, justifySelf, linearGradient, margin, marginBlock, marginBottom, marginInline, marginTop, maxWidth, objectFit, outline, overflow, padding, paddingInline, percentage, position, px, ratio, rem, textAlign, top, vh, width, zIndex } from "@acryps/style";
 import { captureAspectRatio, captureBackgroundColor, knockoutColor, knockoutContrastColor, pageColor, pageGutter, pageSpacing, pageTransparentColor, primaryColor, primaryContrastColor, primaryOutlineColor, radius, runningNumberFont, tagFont } from "../index.style";
 import { boxed } from "../shared/boxed";
 import { collection, collectionItem } from "../shared/collection";
@@ -52,6 +52,9 @@ export const homeStyle = () => child('ui-home') (
 				borderRadius(0),
 				outline(0, 'none', 'transparent'),
 
+				borderTopLeftRadius(radius),
+				borderBottomLeftRadius(radius),
+
 				focus() (
 					boxShadow(primaryOutlineColor, 0, 0, 0, px(1), 'inset')
 				)
@@ -67,6 +70,9 @@ export const homeStyle = () => child('ui-home') (
 				color(primaryContrastColor),
 				backgroundColor(primaryColor),
 				fontSize(rem(1.25)),
+
+				borderTopRightRadius(radius),
+				borderBottomRightRadius(radius),
 
 				clickable()
 			)
