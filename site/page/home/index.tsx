@@ -1,14 +1,29 @@
 import { Component } from "@acryps/page";
-import { RailcarService, RailcarSummaryModel } from "../managed/services";
+import { RailcarService, RailcarSummaryModel, SearchService } from "../managed/services";
 import { ReaderComponent } from "./reader";
 import { RailcarCollectionComponent } from "../shared/railcar-collection";
 import { SlideshowComponent } from "../shared/slideshow";
 import { Application } from "..";
 import { LayoutComponent } from "../shared/layout";
-import { goIcon } from "../.built/icons";
+import { goIcon, searchIcon } from "../.built/icons";
+import { MetaSearchRescueOrganization } from "@acryps/metadata";
 
 export class HomePage extends Component {
+	searchField: HTMLInputElement = <input type='search' />;
+
 	render() {
+		this.searchField.onkeyup = event => {
+			if (event.key == 'Enter') {
+				this.search();
+			}
+		};
+
+		window.onkeydown = () => {
+			if (document.contains(this.searchField)) {
+				this.searchField.focus();
+			}
+		}
+
 		return <ui-home>
 			<ui-header>
 				<ui-title>
@@ -20,6 +35,14 @@ export class HomePage extends Component {
 					A playground for railway operations, electronics, robust controlling software and street art.
 					Layout built and run by train nerd Levi Hechenberger in Zürich, Switzerland.
 				</ui-introduction>
+
+				<ui-search>
+					{this.searchField}
+
+					<ui-action ui-click={() => this.search()}>
+						{searchIcon()}
+					</ui-action>
+				</ui-search>
 			</ui-header>
 
 			<ui-cover>
@@ -98,5 +121,13 @@ export class HomePage extends Component {
 				</ui-topic>
 			</ui-topics>
 		</ui-home>
+	}
+
+	async search() {
+		const result = await new SearchService().search(this.searchField.value);
+
+		if (result) {
+			this.navigate(result);
+		}
 	}
 }

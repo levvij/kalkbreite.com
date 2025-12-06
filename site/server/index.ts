@@ -26,6 +26,8 @@ import { ChainRestorer } from "./chain/restore";
 import { Layout } from "@packtrack/layout";
 import { LayoutLoader } from "./chain/layout";
 import { registerExportInterface } from "./chain/export";
+import { SearchManager } from "./search/term";
+import { registerSearchTopics } from "./search/topics";
 
 const streamCameras = process.env.STREAM_CAMERAS == 'ENABLE';
 
@@ -49,6 +51,12 @@ export class Application {
 		this.trainChain = await this.chainRestorer.importDatabase();
 		this.trainChain.dump();
 
+		// register search service
+		const search = new SearchManager();
+		registerSearchTopics(database, this.trainChain, search);
+
+		search.scheduleIndexUpdate();
+
 		// fill in missing thumbnails
 		for (let capture of await database.capture.where(capture => capture.thumbnail == null).toArray()) {
 			await updateThumbnail(capture);
@@ -66,7 +74,8 @@ export class Application {
 		server.createInjector = (context: RequestContext) => new Inject({
 			DbContext: database,
 			Session: context.session,
-			Authentication: context.authentication
+			Authentication: context.authentication,
+			SearchManager: search
 		});
 
 		server.use(new StaticFileRoute('/assets/icons', join(process.cwd(), '..', 'page', '.built', 'icons', 'font')));
@@ -74,7 +83,6 @@ export class Application {
 		server.use(new StaticFileRoute('/bundle/', join(process.cwd(), '..', 'page', '.built')));
 
 		server.use(new StaticFileRoute('/layout/source/', join(process.cwd(), '..', '..', 'layout')));
-
 
 		expressWs(server.app);
 
@@ -86,7 +94,7 @@ export class Application {
 		registerGraffitiInspirationCaptureInterface(server, database);
 		registerScanInterface(server, database);
 		registerMonitorRelay(server);
-		registerExportInterface(server, database);
+		registerExportInterface(server);
 
 		if (streamCameras) {
 			await LiveStreamer.start();
