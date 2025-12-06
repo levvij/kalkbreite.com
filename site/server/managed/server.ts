@@ -49,6 +49,8 @@ import { CouplerTypeViewModel } from "././../railcar/coupler";
 import { CouplingViewModel } from "././../train/coupling";
 import { Application } from "././..";
 import { RailcarService } from "././../railcar/index";
+import { SearchManager } from "././../search/term";
+import { SearchService } from "././../search/index";
 import { Session } from "././database";
 import { SessionViewModel } from "././../session/session";
 import { RequestContext } from "././../session/context";
@@ -131,6 +133,14 @@ Inject.mappings = {
 	"RailcarService": {
 		objectConstructor: RailcarService,
 		parameters: ["DbContext"]
+	},
+	"SearchService": {
+		objectConstructor: SearchService,
+		parameters: ["SearchManager"]
+	},
+	"SearchManager": {
+		objectConstructor: SearchManager,
+		parameters: []
 	},
 	"SessionService": {
 		objectConstructor: SessionService,
@@ -632,6 +642,17 @@ export class ManagedServer extends BaseServer {
 				params["ZuM2wyMm5sazlraDFvdnJ3dTdxdWRhZm"],
 				params["RzODgwZ3JkZ3VlNn5zM2A1cGB2MXVudD"],
 				params["14eDF4bztvbGI5anwwdmBmMzVtOGl1eW"]
+			)
+		);
+
+		this.expose(
+			"81ZWxic3hxN2hvb2BmN3d6MX41ZTFrMH",
+			{
+			"hkc2Zmd3hydHN6cHV1b3NxY3A1d2Fic2": { type: "string", isArray: false, isOptional: false }
+			},
+			inject => inject.construct(SearchService),
+			(controller, params) => controller.search(
+				params["hkc2Zmd3hydHN6cHV1b3NxY3A1d2Fic2"]
 			)
 		);
 

@@ -6,7 +6,7 @@ import { powerDistrictIdentifierFont, sectionIdentifierFont } from "../../assets
 import { pageGutter, pageSpacing } from "../../index.style";
 import { clickable } from "../../shared/interaction";
 
-export const powerDistrictStyle = () => child('ui-power-district')(
+export const powerDistrictStyle = () => child('ui-power-district') (
 	boxed(),
 	padding(pageSpacing),
 

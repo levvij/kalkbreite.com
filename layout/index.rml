@@ -3,6 +3,8 @@
 	<monitor device="monitor-master"></monitor>
 	<monitor device="kalkbreite-site-relay"></monitor>
 
+	<monitor device="etherrail-dcc-basestation-e756e2a0ed30"></monitor>
+
 	<throttle device="throttle-master"></throttle>
 
 	<district name="fiddle-yard-east">

@@ -1786,6 +1786,29 @@ export class RailcarService {
 	}
 }
 
+export class SearchService {
+	async search(query: string): Promise<string> {
+		const $data = new FormData();
+		$data.append("hkc2Zmd3hydHN6cHV1b3NxY3A1d2Fic2", Service.stringify(query))
+
+		return await fetch(Service.toURL("81ZWxic3hxN2hvb2BmN3d6MX41ZTFrMH"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d === null ? null : `${d}`;
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+}
+
 export class SessionService {
 	async getSession(): Promise<SessionViewModel> {
 		const $data = new FormData();
