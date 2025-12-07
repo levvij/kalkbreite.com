@@ -1,4 +1,4 @@
-import { root, child, padding, margin, display, position, top, backgroundColor, color, fontSize, rem, fontFamily, borderBottom, px, paddingBlock, paddingInline, flexGrow, alignItems, zIndex, boxShadow, hex, descendant, marginRight, lineHeight, percentage, maxWidth, marginInline, insetInline, after, content, inset, backdropFilter, grayscale, before, empty, blur, seconds, brightness, contrast } from "@acryps/style";
+import { root, child, padding, margin, display, position, top, backgroundColor, color, fontSize, rem, fontFamily, borderBottom, px, paddingBlock, paddingInline, flexGrow, alignItems, zIndex, boxShadow, hex, descendant, marginRight, lineHeight, percentage, maxWidth, marginInline, insetInline, after, content, inset, backdropFilter, grayscale, before, empty, blur, seconds, brightness, contrast, gap } from "@acryps/style";
 import { homeStyle } from "./home/index.style";
 import { pageColor, pageContrastColor, pageGutter, pageSpacing, primaryColor, primaryContrastColor } from "./index.style";
 import { boxed, maximumBoxedWidth } from "./shared/boxed";
@@ -70,18 +70,38 @@ export const applicationStyle = () => root() (
 					lineHeight(1),
 
 					display('flex'),
-					alignItems('center'),
-					paddingBlock(pageGutter),
-					paddingInline(pageSpacing),
+					paddingInline(pageSpacing.divide(2)),
 
 					child('ui-logo') (
 						flexGrow(1),
+
+						padding(pageGutter, pageSpacing.divide(2)),
 
 						fontSize(rem(1.5))
 					),
 
 					child('ui-login') (
-						clickable()
+						clickable(),
+
+						display('flex'),
+						alignItems('center'),
+						paddingInline(pageSpacing.divide(2)),
+					),
+
+					child('ui-account') (
+						display('flex'),
+						alignItems('center'),
+						paddingInline(pageSpacing.divide(2)),
+					),
+
+					child('ui-action') (
+						clickable(),
+
+						display('flex'),
+						alignItems('center'),
+						paddingInline(pageSpacing.divide(2)),
+
+						fontSize(rem(1.25))
 					)
 				)
 			),

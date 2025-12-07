@@ -2,42 +2,30 @@ import { Component } from '@acryps/page';
 import { Application } from '.';
 import { BreadcrumbComponent } from './breadcrumb';
 import { SearchComponent } from './shared/search';
+import { searchIcon } from './.built/icons';
 
 export class PageComponent extends Component {
+	globalSearch: SearchComponent;
+	globalSearchContainer: HTMLElement = <ui-global-search></ui-global-search>;
+
 	render(child) {
-		const globalSearch: HTMLElement = <ui-global-search></ui-global-search>;
-		let search: SearchComponent;
 
 		addEventListener('keydown', event => {
 			// open if nothing is being edited
 			if (event.key == ' ' && document.activeElement == document.body || document.activeElement == document.documentElement) {
-				globalSearch.textContent = '';
-
-				search = new SearchComponent(
-					link => {
-						this.navigate(link);
-
-						globalSearch.textContent = '';
-					},
-					() => search?.remove()
-				);
-
-				search.router = this.router;
-				search.host(globalSearch);
-
-				requestAnimationFrame(() => search.field.focus());
+				this.showSearch();
 
 				event.preventDefault();
 			}
 
 			// remove search again if space is pressed again (toggle effect)
-			if (event.key == ' ' && !search?.field.value) {
-				globalSearch.textContent = '';
+			if (event.key == ' ' && !this.globalSearch?.field.value) {
+				this.removeSearch();
 			}
 
 			// remove when pressing escape
 			if (event.key == 'Escape') {
-				globalSearch.textContent = '';
+				this.removeSearch();
 			}
 		});
 
@@ -53,6 +41,10 @@ export class PageComponent extends Component {
 					</ui-account> : <ui-login ui-href='/login'>
 						Login
 					</ui-login>}
+
+					<ui-action ui-click={() => this.showSearch()}>
+						{searchIcon()}
+					</ui-action>
 				</ui-content>
 			</ui-navigation>
 
@@ -60,7 +52,29 @@ export class PageComponent extends Component {
 
 			{child}
 
-			{globalSearch}
+			{this.globalSearchContainer}
 		</ui-page>;
 	}
+
+	showSearch() {
+		this.removeSearch();
+
+		this.globalSearch = new SearchComponent(
+			link => {
+				this.navigate(link);
+
+				this.removeSearch();
+			},
+			() => this.globalSearch?.remove()
+		);
+
+		this.globalSearch.router = this.router;
+		this.globalSearch.host(this.globalSearchContainer);
+
+		requestAnimationFrame(() => this.globalSearch.field.focus());
+	}
+
+		removeSearch() {
+			this.globalSearchContainer.textContent = '';
+		}
 }
