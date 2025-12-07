@@ -25,7 +25,9 @@ export class GraffitiPage extends Component {
 		}
 
 		return <ui-graffiti>
-			{this.graffiti.captures.length != 0 && <img src={`/capture/graffiti/${this.graffiti.id}`} />}
+			{this.graffiti.captures.length != 0 && <ui-preview>
+				<img src={`/capture/graffiti/${this.graffiti.id}`} />
+			</ui-preview>}
 
 			<ui-detail>
 				{Application.session.account && <ui-actions>
