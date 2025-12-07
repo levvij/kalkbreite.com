@@ -13,6 +13,7 @@ export class GraffitiSummaryModel extends ViewModel<Graffiti> {
 	direction;
 
 	artist: ArtistSummaryModel;
+	painter: ArtistSummaryModel;
 	captures: GraffitiCaptureViewModel[];
 	type: GraffitiTypeViewModel;
 }

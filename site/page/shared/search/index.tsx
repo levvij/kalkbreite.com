@@ -43,7 +43,7 @@ export class SearchComponent extends Component {
 				this.search();
 			}
 
-			const shortcut = this.shortcuts.get(this.field.value);
+			const shortcut = this.shortcuts.get(this.field.value.trim());
 
 			if (shortcut) {
 				shortcutPreview.textContent = shortcut;
@@ -74,7 +74,7 @@ export class SearchComponent extends Component {
 	}
 
 		async search() {
-			const shortcut = this.shortcuts.get(this.field.value);
+			const shortcut = this.shortcuts.get(this.field.value.trim());
 
 			if (shortcut) {
 				this.go(shortcut);

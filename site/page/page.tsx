@@ -11,6 +11,10 @@ export class PageComponent extends Component {
 
 	render(child) {
 		addEventListener('keydown', event => {
+			if (this.child instanceof HomePage) {
+				return;
+			}
+
 			// open if nothing is being edited
 			if (event.key == ' ' && document.activeElement == document.body || document.activeElement == document.documentElement) {
 				this.showSearch();
@@ -19,7 +23,7 @@ export class PageComponent extends Component {
 			}
 
 			// remove search again if space is pressed again (toggle effect)
-			if (event.key == ' ' && !this.globalSearch?.field.value) {
+			if (event.key == ' ' && !this.globalSearch?.field.value.trim()) {
 				this.removeSearch();
 			}
 
@@ -80,7 +84,7 @@ export class PageComponent extends Component {
 		requestAnimationFrame(() => this.globalSearch.field.focus());
 	}
 
-		removeSearch() {
-			this.globalSearchContainer.textContent = '';
-		}
+	removeSearch() {
+		this.globalSearchContainer.textContent = '';
+	}
 }

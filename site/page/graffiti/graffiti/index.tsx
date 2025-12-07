@@ -52,6 +52,7 @@ export class GraffitiPage extends Component {
 					</ui-summary>
 				</ui-artist>)
 					.addMetric('Painted', () => this.graffiti.painted.toLocaleDateString())
+					.addMetric('Painter', () => this.graffiti.painter?.name ?? '- REDACTED -', this.graffiti.painter && `/artist/${this.graffiti.painter.tag}`)
 					.addMetric('Class', () => this.graffiti.type.name)
 					.addMetric('Railcar', () => this.graffiti.railcar.givenName ?? this.graffiti.railcar.model?.shortname, `/railcar/${this.graffiti.railcar.tag}`)
 					.addMetric('Railcar Side', () => this.graffiti.direction == RailcarDirection.forward ? 'Left' : 'Right')

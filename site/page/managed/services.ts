@@ -65,6 +65,7 @@ export class ArtistSummaryModel {
 export class GraffitiSummaryModel {
 	artist: ArtistSummaryModel;
 	captures: GraffitiCaptureViewModel[];
+	painter: ArtistSummaryModel;
 	type: GraffitiTypeViewModel;
 	direction: RailcarDirection;
 	id: string;
@@ -75,6 +76,7 @@ export class GraffitiSummaryModel {
 		const item = new GraffitiSummaryModel();
 		raw.artist === undefined || (item.artist = raw.artist ? ArtistSummaryModel["$build"](raw.artist) : null)
 		raw.captures === undefined || (item.captures = raw.captures ? raw.captures.map(i => GraffitiCaptureViewModel["$build"](i)) : null)
+		raw.painter === undefined || (item.painter = raw.painter ? ArtistSummaryModel["$build"](raw.painter) : null)
 		raw.type === undefined || (item.type = raw.type ? GraffitiTypeViewModel["$build"](raw.type) : null)
 		raw.direction === undefined || (item.direction = raw.direction)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
@@ -647,6 +649,7 @@ export class GraffitiViewModel {
 	artist: ArtistSummaryModel;
 	captures: GraffitiCaptureViewModel[];
 	graffitiInspiration: GraffitiInspirationSummaryModel;
+	painter: ArtistSummaryModel;
 	railcar: GraffitiRailcarViewModel;
 	type: GraffitiTypeViewModel;
 	description: string;
@@ -660,6 +663,7 @@ export class GraffitiViewModel {
 		raw.artist === undefined || (item.artist = raw.artist ? ArtistSummaryModel["$build"](raw.artist) : null)
 		raw.captures === undefined || (item.captures = raw.captures ? raw.captures.map(i => GraffitiCaptureViewModel["$build"](i)) : null)
 		raw.graffitiInspiration === undefined || (item.graffitiInspiration = raw.graffitiInspiration ? GraffitiInspirationSummaryModel["$build"](raw.graffitiInspiration) : null)
+		raw.painter === undefined || (item.painter = raw.painter ? ArtistSummaryModel["$build"](raw.painter) : null)
 		raw.railcar === undefined || (item.railcar = raw.railcar ? GraffitiRailcarViewModel["$build"](raw.railcar) : null)
 		raw.type === undefined || (item.type = raw.type ? GraffitiTypeViewModel["$build"](raw.type) : null)
 		raw.description === undefined || (item.description = raw.description === null ? null : `${raw.description}`)
