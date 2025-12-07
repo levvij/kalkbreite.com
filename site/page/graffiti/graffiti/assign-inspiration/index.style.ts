@@ -4,7 +4,6 @@ import { knockoutColor, knockoutContrastColor, pageSpacing, radius } from "../..
 
 export const assignGraffitiInspirationStyle = () => child('ui-assign-inspiration') (
 	collection(rem(10)),
-	margin(pageSpacing),
 
 	child('ui-empty') (
 		collectionItem(),

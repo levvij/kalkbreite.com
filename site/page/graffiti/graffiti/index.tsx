@@ -26,7 +26,7 @@ export class GraffitiPage extends Component {
 		}
 
 		return <ui-graffiti>
-			{this.graffiti.captures.length != 0 && new SlideshowComponent(index => `/capture/graffiti/capture/${this.graffiti.captures[index % this.graffiti.captures.length].id}`)}
+			{this.graffiti.captures.length != 0 && <img src={`/capture/graffiti/${this.graffiti.id}`} />}
 
 			<ui-detail>
 				{Application.session.account && <ui-actions>

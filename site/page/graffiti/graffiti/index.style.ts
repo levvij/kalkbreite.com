@@ -14,11 +14,16 @@ export const graffitiStyle = () => child('ui-graffiti') (
 	assignStyle(),
 	assignGraffitiInspirationStyle(),
 
-	slideshowStyle(),
+	child('img') (
+		width(percentage(100)),
+		marginBottom(pageSpacing),
+
+		borderRadius(radius),
+		backgroundColor(captureBackgroundColor)
+	),
 
 	child('ui-detail') (
 		display('block'),
-		padding(pageSpacing),
 
 		child('ui-actions') (
 			buttonGroupStyle(),
