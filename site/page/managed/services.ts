@@ -1047,6 +1047,48 @@ export class GraffitiService {
 		});
 	}
 
+	async getFeaturedArtists(): Promise<Array<ArtistSummaryModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("l3ZTkybzZzbGNtNX5laWBraWo1cG9qNm"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : ArtistSummaryModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async getGraffitis(): Promise<Array<GraffitiSummaryModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("U2N2UyeTc3Z3l1a2o2ZG1tdmYzNmk3cG"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : GraffitiSummaryModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
 	async getSourceCaptures(id: string): Promise<Array<CaptureViewModel>> {
 		const $data = new FormData();
 		$data.append("1kemNjbGd5YXdxMHkyc2t6eHo3emNyeW", Service.stringify(id))

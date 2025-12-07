@@ -1,125 +1,115 @@
-import { aspectRatio, backgroundColor, border, borderRadius, child, color, display, filter, flexDirection, fontSize, fontWeight, height, invert, marginBottom, marginTop, maxHeight, objectFit, objectPosition, overflow, padding, paddingBlock, paddingInline, percentage, px, rad, ratio, rem, vh, width } from "@acryps/style";
+import { alignItems, backgroundColor, borderRadius, child, color, display, flexDirection, flexWrap, fontSize, fontWeight, gap, height, justifyContent, margin, marginBlock, marginBottom, marginTop, maxHeight, maxWidth, minHeight, objectFit, objectPosition, padding, paddingBlock, paddingInline, percentage, rem, vh, vw, width } from "@acryps/style";
+import { graffitiStyle } from "./graffiti/index.style";
 import { boxed } from "../shared/boxed";
-import { captureAspectRatio, captureBackgroundColor, knockoutColor, knockoutContrastColor, pageGutter, pageSpacing, primaryColor, radius } from "../index.style";
-import { detailSectionStyle } from "../shared/detail-section/index.style";
+import { graffitiInspirationsStyle } from "./inspirations/index.style";
+import { captureBackgroundColor, pageColor, pageContrastColor, pageGutter, pageSpacing, radius } from "../index.style";
 import { clickable } from "../shared/interaction";
-import { endDivider } from "../shared/divider";
-import { collection, collectionItem } from "../shared/collection";
-import { buttonGroupStyle, buttonStyle } from "../shared/button";
-import { assignStyle } from "./assign/index.style";
-import { slideshowStyle } from "../shared/slideshow/index.style";
-import { assignGraffitiInspirationStyle } from "./assign-inspiration/index.style";
 
-export const graffitiStyle = () => child('ui-graffiti') (
+export const graffitisStyle = () => child('ui-graffitis')(
+	graffitiStyle(),
+	graffitiInspirationsStyle(),
+
 	boxed(),
+	padding(pageSpacing),
 
-	assignStyle(),
-	assignGraffitiInspirationStyle(),
-
-	slideshowStyle(),
-
-	child('ui-detail') (
+	child('ui-overview')(
 		display('block'),
-		padding(pageSpacing),
 
-		child('ui-actions') (
-			buttonGroupStyle(),
-			marginBottom(pageSpacing),
-
-			child('ui-action') (
-				buttonStyle()
-			)
-		),
-
-		child('ui-name') (
-			display('block'),
-			marginBottom(pageGutter),
-
-			fontSize(rem(1.5)),
-			fontWeight('bold')
-		),
-
-		child('ui-description') (
+		child('ui-hint')(
 			display('block'),
 			marginBottom(pageSpacing)
 		),
 
-		detailSectionStyle(
-			endDivider(),
-
-			child('ui-artist') (
-				clickable(),
-
-				child('img') (
-					height(rem(3))
-				),
-
-				child('ui-name') (
-					fontSize(rem(2))
-				),
-
-				child('ui-summary') (
-					display('block'),
-					marginTop(rem(0.5))
-				)
-			)
-		),
-
-		child('ui-crosses') (
+		child('ui-section')(
 			display('block'),
+			marginBlock(pageSpacing.multiply(2)),
 
-			endDivider()
-		),
+			child('ui-title')(
+				display('block'),
 
-		child('ui-inspiration') (
-			display('block'),
+				fontSize(rem(1.5)),
+				fontWeight('bold')
+			),
 
-			endDivider(),
+			child('ui-hint')(
+				display('block'),
+				marginBottom(pageGutter)
+			),
 
-			child('img') (
-				width(percentage(100)),
-				maxHeight(vh(40)),
-
-				objectFit('cover'),
-				borderRadius(radius)
-			)
-		),
-
-		child('ui-captures') (
-			collection(rem(15)),
-
-			child('ui-capture') (
-				collectionItem(),
-
+			child('ui-artists')(
 				display('flex'),
-				flexDirection('column'),
-				height(percentage(100)),
+				flexWrap('wrap'),
+				alignItems('center'),
+				gap(pageGutter),
 
-				border(px(1), 'solid', primaryColor),
-				borderRadius(radius),
-				overflow('hidden'),
+				marginBlock(pageGutter.divide(2)),
 
-				child('img') (
-					width(percentage(100)),
-					aspectRatio(captureAspectRatio),
-					backgroundColor(captureBackgroundColor),
+				child('ui-artist')(
+					child('img')(
+						height(rem(1.75))
+					),
 
-					objectFit('contain')
+					child('ui-name')(
+						display('block'),
+						padding(rem(0.25), rem(0.75)),
+
+						color(pageColor),
+						backgroundColor(pageContrastColor)
+					)
+				)
+			),
+
+			child('ui-graffitis')(
+				display('block'),
+
+				child('ui-date')(
+					display('block'),
+					marginBottom(pageGutter),
+
+					fontWeight('bold')
 				),
 
-				child('ui-detail') (
-					paddingInline(pageSpacing),
-					paddingBlock(pageSpacing.divide(2)),
+				child('ui-graffiti')(
+					display('flex'),
+					flexDirection('column'),
+					alignItems('flex-start'),
+					marginBottom(pageSpacing),
 
-					child('ui-actions') (
-						buttonGroupStyle(),
-						marginTop(pageSpacing.divide(2)),
+					child('img')(
+						display('block'),
+						maxHeight(vh(25)),
+						maxWidth(percentage(100)),
+						minHeight(rem(3)),
 
-						child('ui-action') (
-							buttonStyle()
+						objectFit('contain'),
+						objectPosition('left'),
+
+						borderRadius(radius),
+						backgroundColor(captureBackgroundColor)
+					),
+
+					child('ui-detail')(
+						display('flex'),
+						alignItems('center'),
+						flexWrap('wrap'),
+						gap(rem(0.75)),
+
+						marginTop(rem(0.25)),
+
+						child('ui-name')(
+							fontWeight('bold')
 						)
 					)
 				)
+			),
+
+			child('ui-more') (
+				display('flex'),
+				alignItems('center'),
+				gap(rem(0.75)),
+				marginTop(pageSpacing),
+
+				clickable()
 			)
 		)
 	)

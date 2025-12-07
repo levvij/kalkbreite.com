@@ -1,10 +1,10 @@
 import { borderRadius, child, display, flexShrink, fontSize, height, justifyContent, lastOfType, marginBottom, maxHeight, maxWidth, objectFit, objectPosition, percentage, rem, vh } from "@acryps/style";
-import { fieldStyle } from "../../shared/field.style";
-import { pageGutter, pageSpacing, radius } from "../../index.style";
-import { detailSectionStyle } from "../../shared/detail-section/index.style";
-import { graffitiCollectionStyle } from "../../shared/graffiti-collection/index.style";
-import { endDivider } from "../../shared/divider";
-import { buttonGroupStyle, buttonStyle } from "../../shared/button";
+import { pageGutter, pageSpacing, radius } from "../../../index.style";
+import { buttonGroupStyle, buttonStyle } from "../../../shared/button";
+import { detailSectionStyle } from "../../../shared/detail-section/index.style";
+import { endDivider } from "../../../shared/divider";
+import { fieldStyle } from "../../../shared/field.style";
+import { graffitiCollectionStyle } from "../../../shared/graffiti-collection/index.style";
 
 export const graffitiInspirationStyle = () => child('ui-graffiti-inspiration') (
 	display('block'),

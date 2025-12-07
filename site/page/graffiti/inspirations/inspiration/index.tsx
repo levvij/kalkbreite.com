@@ -1,9 +1,9 @@
 import { Component } from "@acryps/page";
-import { ArtistSummaryModel, GraffitiInspirationViewModel, GraffitiService } from "../../managed/services";
-import { Application } from "../..";
-import { DetailSectionComponent } from "../../shared/detail-section";
-import { RailcarCollectionComponent } from "../../shared/railcar-collection";
-import { GraffitiCollectionComponent } from "../../shared/graffiti-collection";
+import { ArtistSummaryModel, GraffitiInspirationViewModel, GraffitiService } from "../../../managed/services";
+import { Application } from "../../..";
+import { DetailSectionComponent } from "../../../shared/detail-section";
+import { RailcarCollectionComponent } from "../../../shared/railcar-collection";
+import { GraffitiCollectionComponent } from "../../../shared/graffiti-collection";
 import { GraffitiInspirationsPage } from "..";
 
 export class GraffitiInspirationPage extends Component {

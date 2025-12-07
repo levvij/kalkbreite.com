@@ -77,7 +77,7 @@ export class HomePage extends Component {
 					{goIcon()}
 				</ui-topic>
 
-				<ui-topic ui-href='/artists'>
+				<ui-topic ui-href='/graffiti'>
 					<img src='/assets/topics/graffiti.jpg' />
 
 					<ui-title>

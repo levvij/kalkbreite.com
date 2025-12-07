@@ -1,6 +1,6 @@
 import { Component } from "@acryps/page";
-import { GraffitiInspirationSummaryModel, GraffitiInspirationViewModel, GraffitiService } from "../managed/services";
-import { Application } from "..";
+import { GraffitiInspirationSummaryModel, GraffitiInspirationViewModel, GraffitiService } from "../../managed/services";
+import { Application } from "../..";
 
 export class GraffitiInspirationsPage extends Component {
 	static shortcuts = ['inspiration', 'inspo', 'i'];

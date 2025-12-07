@@ -1,10 +1,9 @@
 import { alignItems, aspectRatio, backgroundColor, borderRadius, child, color, display, fontSize, justifyContent, margin, objectFit, padding, percentage, Rad, ratio, Ratio, rem, width } from "@acryps/style";
-import { collection, collectionItem } from "../../shared/collection";
-import { knockoutColor, knockoutContrastColor, pageSpacing, radius } from "../../index.style";
+import { collection, collectionItem } from "../../../shared/collection";
+import { knockoutColor, knockoutContrastColor, pageSpacing, radius } from "../../../index.style";
 
 export const assignGraffitiInspirationStyle = () => child('ui-assign-inspiration') (
 	collection(rem(10)),
-	margin(pageSpacing),
 
 	child('ui-empty') (
 		collectionItem(),

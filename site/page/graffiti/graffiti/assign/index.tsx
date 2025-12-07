@@ -1,8 +1,8 @@
 import { Component } from "@acryps/page";
 import { GraffitiPage } from "..";
-import { GraffitiCaptureViewModel, GraffitiService } from "../../managed/services";
-import { cropGraffiti } from "../../../shared/crop-graffiti";
-import { CropComponent } from "../../shared/crop";
+import { GraffitiCaptureViewModel, GraffitiService } from "../../../managed/services";
+import { cropGraffiti } from "../../../../shared/crop-graffiti";
+import { CropComponent } from "../../../shared/crop";
 
 type Inset = { top: number, left: number, right: number, bottom: number };
 

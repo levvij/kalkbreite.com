@@ -1,6 +1,6 @@
 import { Component } from "@acryps/page";
 import { GraffitiPage } from "..";
-import { GraffitiInspirationSummaryModel, GraffitiService } from "../../managed/services";
+import { GraffitiInspirationSummaryModel, GraffitiService } from "../../../managed/services";
 
 export class AssignGraffitiInspirationPage extends Component {
 	declare parent: GraffitiPage;

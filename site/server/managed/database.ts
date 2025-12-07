@@ -43,6 +43,7 @@ export class Account extends Entity<AccountQueryProxy> {
 			
 export class ArtistQueryProxy extends QueryProxy {
 	get description(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get featured(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get logo(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get origin(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -55,6 +56,7 @@ export class Artist extends Entity<ArtistQueryProxy> {
 	graffitis: PrimaryReference<Graffiti, GraffitiQueryProxy>;
 		originals: PrimaryReference<GraffitiInspiration, GraffitiInspirationQueryProxy>;
 		description: string;
+	featured: number;
 	declare id: string;
 	logo: string;
 	name: string;
@@ -67,6 +69,7 @@ export class Artist extends Entity<ArtistQueryProxy> {
 		source: "artist",
 		columns: {
 			description: { type: "text", name: "description" },
+			featured: { type: "int4", name: "featured" },
 			id: { type: "uuid", name: "id" },
 			logo: { type: "text", name: "logo" },
 			name: { type: "text", name: "name" },
@@ -761,6 +764,7 @@ export class GraffitiQueryProxy extends QueryProxy {
 	get artistId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get description(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get direction(): "forward" | "reverse" { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get featured(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get graffitiInspirationId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get painted(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -777,6 +781,7 @@ export class Graffiti extends Entity<GraffitiQueryProxy> {
 	artistId: string;
 	description: string;
 	direction: RailcarDirection;
+	featured: number;
 	graffitiInspirationId: string;
 	declare id: string;
 	name: string;
@@ -790,6 +795,7 @@ export class Graffiti extends Entity<GraffitiQueryProxy> {
 			artistId: { type: "uuid", name: "artist_id" },
 			description: { type: "text", name: "description" },
 			direction: { type: "railcar_direction", name: "direction" },
+			featured: { type: "int4", name: "featured" },
 			graffitiInspirationId: { type: "uuid", name: "graffiti_inspiration_id" },
 			id: { type: "uuid", name: "id" },
 			name: { type: "text", name: "name" },

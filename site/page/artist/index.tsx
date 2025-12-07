@@ -1,35 +1,73 @@
 import { Component } from "@acryps/page";
-import { ArtistViewModel, GraffitiService } from "../managed/services";
-import { GraffitiCollectionComponent } from "../shared/graffiti-collection";
+import { ArtistViewModel, GraffitiService, GraffitiSummaryModel } from "../managed/services";
+import { goIcon } from "../.built/icons";
 
-export class ArtistPage extends Component {
-	declare parameters: { tag };
+export class ArtistsPage extends Component {
+	static shortcuts = ['artists', 'a'];
 
-	artist: ArtistViewModel;
+	artists: ArtistViewModel[];
 
 	async onload() {
-		this.artist = await new GraffitiService().getArtist(this.parameters.tag);
+		this.artists = await new GraffitiService().getArtists();
 	}
 
-	render() {
-		return <ui-artist>
-			<ui-header>
-				{this.artist.logo ? <img src={URL.createObjectURL(new Blob([this.artist.logo], { type: 'image/svg+xml' }))} /> : <ui-name>
-					{this.artist.name}
-				</ui-name>}
+	render(child) {
+		if (child) {
+			return <ui-artists>
+				{child}
+			</ui-artists>;
+		}
 
-				{this.artist.origin && <ui-origin>
-					{this.artist.origin}
-				</ui-origin>}
-			</ui-header>
+		return <ui-artists>
+			<ui-overview>
+				<ui-hint>
+					Explore artists from the swiss and international graffiti scene.
+					Some of them even came down to draw on the rolling stock themselves!
+				</ui-hint>
 
-			<ui-detail>
-				<ui-description>
-					{this.artist.description ?? '- REDACTED -'}
-				</ui-description>
+				<ui-actions>
+					<ui-action ui-href='/graffiti/inspiration'>
+						View Inspirations
+					</ui-action>
+				</ui-actions>
 
-				{new GraffitiCollectionComponent(this.artist.graffitis)}
-			</ui-detail>
-		</ui-artist>
+				{this.artists.map(artist => <ui-artist>
+					<ui-header ui-href={`/artist/${artist.tag}`}>
+						{this.renderLogo(artist)}
+
+						{goIcon()}
+					</ui-header>
+
+					<ui-summary>
+						{artist.summary}
+					</ui-summary>
+
+					<ui-graffitis>
+						{artist.graffitis.sort((a, b) => a.painted > b.painted ? -1 : 1).map(graffiti => <ui-graffiti ui-href={`/graffiti/${graffiti.id}`}>
+							<img src={`/capture/graffiti/${graffiti.id}`} />
+						</ui-graffiti>)}
+					</ui-graffitis>
+				</ui-artist>)}
+			</ui-overview>
+		</ui-artists>
+	}
+
+	renderLogo(artist: ArtistViewModel) {
+		if (!artist.logo) {
+			return <ui-name>
+				{artist.name}
+			</ui-name>
+		}
+
+		return <ui-logo>
+			<img
+				loading='lazy'
+				src={URL.createObjectURL(new Blob([artist.logo], { type: 'image/svg+xml' }))}
+			/>
+
+			<ui-name>
+				{artist.name}
+			</ui-name>
+		</ui-logo>;
 	}
 }

@@ -1,6 +1,6 @@
 import { Component } from "@acryps/page";
 import { GraffitiPage } from ".";
-import { GraffitiViewModel } from "../managed/services";
+import { GraffitiViewModel } from "../../managed/services";
 
 export class InspirationComponent extends Component {
 	constructor(

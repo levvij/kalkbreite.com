@@ -9,10 +9,12 @@ import { GraffitiInspiration } from "././database";
 import { GraffitiInspirationMedia } from "././database";
 import { RailcarDirection } from "././database";
 import { GraffitiCaptureViewModel } from "././../graffiti/graffiti";
+import { GraffitiSummaryModel } from "././../graffiti/graffiti";
 import { GraffitiTypeViewModel } from "././../graffiti/graffiti";
 import { GraffitiViewModel } from "././../graffiti/graffiti";
 import { CaptureViewModel } from "././../capture/capture";
 import { cropGraffiti } from "././../../shared/crop-graffiti";
+import { ArtistSummaryModel } from "././../graffiti/artist";
 import { ArtistViewModel } from "././../graffiti/artist";
 import { GraffitiInspirationSummaryModel } from "././../graffiti/inspiration";
 import { GraffitiInspirationViewModel } from "././../graffiti/inspiration";
@@ -71,8 +73,6 @@ import { LastTrainHeadPositionViewModel } from "././../train/position";
 import { LastTrainPosition } from "././../train/position";
 import { TrainRailcarUnitViewModel } from "././../train/unit";
 import { TrainService } from "././../train/index";
-import { ArtistSummaryModel } from "./../graffiti/artist";
-import { GraffitiSummaryModel } from "./../graffiti/graffiti";
 import { GraffitiInspirationMediaViewModel } from "./../graffiti/inspiration";
 import { MaintenanceSummaryModel } from "./../maintenace/maintenace";
 import { UicLocaleViewModel } from "./../model/uic-identifier";
@@ -213,6 +213,24 @@ export class ManagedServer extends BaseServer {
 			{},
 			inject => inject.construct(GraffitiService),
 			(controller, params) => controller.getArtists(
+				
+			)
+		);
+
+		this.expose(
+			"l3ZTkybzZzbGNtNX5laWBraWo1cG9qNm",
+			{},
+			inject => inject.construct(GraffitiService),
+			(controller, params) => controller.getFeaturedArtists(
+				
+			)
+		);
+
+		this.expose(
+			"U2N2UyeTc3Z3l1a2o2ZG1tdmYzNmk3cG",
+			{},
+			inject => inject.construct(GraffitiService),
+			(controller, params) => controller.getGraffitis(
 				
 			)
 		);
