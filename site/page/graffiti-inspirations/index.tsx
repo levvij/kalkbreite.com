@@ -3,6 +3,8 @@ import { GraffitiInspirationSummaryModel, GraffitiInspirationViewModel, Graffiti
 import { Application } from "..";
 
 export class GraffitiInspirationsPage extends Component {
+	static shortcuts = ['inspiration', 'inspo', 'i'];
+
 	inspirations: GraffitiInspirationSummaryModel[];
 
 	async onload() {

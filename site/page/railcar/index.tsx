@@ -4,6 +4,8 @@ import { RailcarCollectionComponent } from "../shared/railcar-collection";
 import { Application } from "..";
 
 export class RailcarsPage extends Component {
+	static shortcuts = ['railcars', 'r'];
+
 	railcars: RailcarSummaryModel[];
 
 	async onload() {

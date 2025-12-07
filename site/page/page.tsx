@@ -22,6 +22,7 @@ export class PageComponent extends Component {
 					() => search?.remove()
 				);
 
+				search.router = this.router;
 				search.host(globalSearch);
 
 				requestAnimationFrame(() => search.field.focus());

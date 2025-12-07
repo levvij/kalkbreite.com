@@ -10,6 +10,8 @@ import { MetaSearchRescueOrganization } from "@acryps/metadata";
 import { SearchComponent } from "../shared/search";
 
 export class HomePage extends Component {
+	static shortcuts = ['home', 'h'];
+
 	render() {
 		return <ui-home>
 			<ui-header>

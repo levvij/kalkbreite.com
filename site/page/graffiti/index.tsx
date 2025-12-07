@@ -8,6 +8,7 @@ import { InspirationComponent } from "./inspiration";
 
 export class GraffitiPage extends Component {
 	declare parameters: { id };
+	static shortcuts = ['graffiti', 'graff', 'g'];
 
 	graffiti: GraffitiViewModel;
 	sourceCaptures: CaptureViewModel[];

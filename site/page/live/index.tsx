@@ -2,6 +2,8 @@ import { Component } from "@acryps/page";
 import { CameraViewModel, LiveService } from "../managed/services";
 
 export class LivePage extends Component {
+	static shortcuts = ['live'];
+
 	cameras: CameraViewModel[];
 
 	async onload() {
