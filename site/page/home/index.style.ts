@@ -36,7 +36,9 @@ export const homeStyle = () => child('ui-home') (
 			marginBottom(pageSpacing)
 		),
 
-		searchStyle()
+		searchStyle(
+			maxWidth(rem(25))
+		)
 	),
 
 	child('ui-cover') (

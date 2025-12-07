@@ -23,7 +23,7 @@ export class HomePage extends Component {
 					Layout built and run by train nerd Levi Hechenberger in Zürich, Switzerland.
 				</ui-introduction>
 
-				{new SearchComponent()}
+				{new SearchComponent(link => this.navigate(link))}
 			</ui-header>
 
 			<ui-cover>

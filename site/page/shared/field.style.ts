@@ -1,11 +1,11 @@
-import { resize, paddingBlock, rem, paddingInline, fontFamily, fontSize, color, backgroundColor, border, borderRadius, outline, child, display, flexDirection, marginBottom, StyleSelectorBody, height, padding, style, alignItems, marginLeft, paddingLeft, margin, width, position, left, top, lineHeight, paddingTop, px, content, justifyContent, appearance, has, attribute, checked, after } from "@acryps/style";
+import { resize, paddingBlock, rem, paddingInline, fontFamily, fontSize, color, backgroundColor, border, borderRadius, outline, child, display, flexDirection, marginBottom, StyleSelectorBody, height, padding, style, alignItems, marginLeft, paddingLeft, margin, width, position, left, top, lineHeight, paddingTop, px, content, justifyContent, appearance, has, attribute, checked, after, em } from "@acryps/style";
 import { pageColor, pageContrastColor, primaryColor, radius } from "../index.style";
 
 export const inputTextColor = pageContrastColor;
 export const inputBackgroundColor = pageColor;
 
-export const inputSpacingInline = rem(0.75);
-export const inputSpacingBlock = rem(0.5);
+export const inputSpacingInline = em(0.75);
+export const inputSpacingBlock = em(0.5);
 
 export const inputStyle = () => [
 	resize('none'),
