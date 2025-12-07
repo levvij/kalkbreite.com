@@ -3,13 +3,13 @@ import { Application } from '.';
 import { BreadcrumbComponent } from './breadcrumb';
 import { SearchComponent } from './shared/search';
 import { searchIcon } from './.built/icons';
+import { HomePage } from './home';
 
 export class PageComponent extends Component {
 	globalSearch: SearchComponent;
 	globalSearchContainer: HTMLElement = <ui-global-search></ui-global-search>;
 
 	render(child) {
-
 		addEventListener('keydown', event => {
 			// open if nothing is being edited
 			if (event.key == ' ' && document.activeElement == document.body || document.activeElement == document.documentElement) {
@@ -42,7 +42,13 @@ export class PageComponent extends Component {
 						Login
 					</ui-login>}
 
-					<ui-action ui-click={() => this.showSearch()}>
+					<ui-action ui-click={() => {
+						if (this.child instanceof HomePage) {
+							this.child.search.field.focus();
+						} else {
+							this.showSearch();
+						}
+					}}>
 						{searchIcon()}
 					</ui-action>
 				</ui-content>

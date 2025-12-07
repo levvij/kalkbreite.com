@@ -12,6 +12,8 @@ import { SearchComponent } from "../shared/search";
 export class HomePage extends Component {
 	static shortcuts = ['home', 'h'];
 
+	search = new SearchComponent(link => this.navigate(link));
+
 	render() {
 		return <ui-home>
 			<ui-header>
@@ -25,7 +27,7 @@ export class HomePage extends Component {
 					Layout built and run by train nerd Levi Hechenberger in Zürich, Switzerland.
 				</ui-introduction>
 
-				{new SearchComponent(link => this.navigate(link))}
+				{this.search}
 			</ui-header>
 
 			<ui-cover>
