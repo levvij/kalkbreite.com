@@ -9,6 +9,7 @@ import { slideshowStyle } from "../shared/slideshow/index.style";
 import { layoutStyle } from "../shared/layout/index.style";
 import { clickable } from "../shared/interaction";
 import { fieldStyle, inputSpacingBlock, inputSpacingInline } from "../shared/field.style";
+import { searchStyle } from "../shared/search/index.style";
 
 const coverOverscan = percentage(-15);
 
@@ -35,48 +36,7 @@ export const homeStyle = () => child('ui-home') (
 			marginBottom(pageSpacing)
 		),
 
-		child('ui-search') (
-			display('flex'),
-			maxWidth(rem(25)),
-			marginInline('auto'),
-
-			child('input') (
-				flexGrow(1),
-
-				padding(inputSpacingBlock, inputSpacingInline),
-
-				fontFamily('inherit'),
-				fontSize(rem(1)),
-				border(px(2), 'solid', primaryColor),
-				borderRight('none'),
-				borderRadius(0),
-				outline(0, 'none', 'transparent'),
-
-				borderTopLeftRadius(radius),
-				borderBottomLeftRadius(radius),
-
-				focus() (
-					boxShadow(primaryOutlineColor, 0, 0, 0, px(1), 'inset')
-				)
-			),
-
-			child('ui-action') (
-				display('flex'),
-				alignItems('center'),
-				justifyContent('center'),
-
-				padding(rem(0.5).add(px(2)), rem(0.75)),
-
-				color(primaryContrastColor),
-				backgroundColor(primaryColor),
-				fontSize(rem(1.25)),
-
-				borderTopRightRadius(radius),
-				borderBottomRightRadius(radius),
-
-				clickable()
-			)
-		)
+		searchStyle()
 	),
 
 	child('ui-cover') (

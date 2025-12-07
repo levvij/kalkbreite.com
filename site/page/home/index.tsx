@@ -7,23 +7,10 @@ import { Application } from "..";
 import { LayoutComponent } from "../shared/layout";
 import { goIcon, searchIcon } from "../.built/icons";
 import { MetaSearchRescueOrganization } from "@acryps/metadata";
+import { SearchComponent } from "../shared/search";
 
 export class HomePage extends Component {
-	searchField: HTMLInputElement = <input type='search' />;
-
 	render() {
-		this.searchField.onkeyup = event => {
-			if (event.key == 'Enter') {
-				this.search();
-			}
-		};
-
-		window.onkeydown = () => {
-			if (document.contains(this.searchField)) {
-				this.searchField.focus();
-			}
-		}
-
 		return <ui-home>
 			<ui-header>
 				<ui-title>
@@ -36,13 +23,7 @@ export class HomePage extends Component {
 					Layout built and run by train nerd Levi Hechenberger in Zürich, Switzerland.
 				</ui-introduction>
 
-				<ui-search>
-					{this.searchField}
-
-					<ui-action ui-click={() => this.search()}>
-						{searchIcon()}
-					</ui-action>
-				</ui-search>
+				{new SearchComponent()}
 			</ui-header>
 
 			<ui-cover>
@@ -121,13 +102,5 @@ export class HomePage extends Component {
 				</ui-topic>
 			</ui-topics>
 		</ui-home>
-	}
-
-	async search() {
-		const result = await new SearchService().search(this.searchField.value);
-
-		if (result) {
-			this.navigate(result);
-		}
 	}
 }

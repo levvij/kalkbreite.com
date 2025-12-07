@@ -50,8 +50,24 @@ export class SearchManager {
 						return result;
 					}
 
-					if (!best || result.distance < best.distance) {
+					if (!best) {
 						best = result;
+					}
+
+					if (result.distance <= best.distance) {
+						let previous = 0;
+						let updated = 0;
+
+						for (let index = 1; index < query.length; index++) {
+							const subsearch = query.substring(0, index);
+
+							previous += best.term.shorten(index).matches(subsearch)?.distance ?? Infinity;
+							updated += term.shorten(index).matches(subsearch)?.distance ?? Infinity;
+						}
+
+						if (previous > updated) {
+							best = result;
+						}
 					}
 				}
 			}
@@ -108,6 +124,13 @@ export class SearchTopic<ItemType> {
 
 				if (term.searchable) {
 					terms.push(term);
+
+					const plain = term.plain();
+
+					if (plain) {
+						plain.link = this.linkItem(item);
+						terms.push(plain);
+					}
 				}
 			}
 
@@ -125,13 +148,29 @@ export class SearchTerm {
 
 	constructor(
 		public term: string,
-		public match = SearchMatch.prefix
+		public match = SearchMatch.prefix,
+		public weight = 1
 	) {
 		this.term = SearchManager.normalize(term);
 	}
 
 	get searchable() {
 		return !!this.term;
+	}
+
+	plain() {
+		const plain = this.term.replace(/[^a-z0-9]/g, '');
+
+		if (plain != this.term && plain) {
+			return new SearchTerm(plain, this.match, this.weight * 1.1);
+		}
+	}
+
+	shorten(length: number) {
+		return new SearchTerm(
+			this.term.substring(0, length),
+			this.match
+		);
 	}
 
 	matches(query: string) {
@@ -146,14 +185,14 @@ export class SearchTerm {
 
 			case SearchMatch.prefix: {
 				if (this.term.startsWith(query)) {
-					return new SearchResult(this, this.term.length - query.length);
+					return new SearchResult(this, (this.term.length - query.length) * this.weight);
 				}
 
 				return;
 			}
 
 			case SearchMatch.near: {
-				return new SearchResult(this, this.levenshtein(this.term, query));
+				return new SearchResult(this, this.levenshtein(this.term, query) * this.weight);
 			}
 		}
 	}

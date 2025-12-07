@@ -8,6 +8,7 @@ export const registerSearchTopics = (database: DbContext, chain: TrainChain, sea
 	);
 
 	search.register(new SearchTopic(() => database.company.toArray(), item => `/company/${item.tag}`)
+		.expose(item => new SearchTerm(item.shortname, SearchMatch.near))
 		.expose(item => new SearchTerm(item.name, SearchMatch.near))
 	);
 
