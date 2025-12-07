@@ -1,10 +1,10 @@
 import { Service } from "vlserver";
 import { DbContext, Graffiti, GraffitiInspiration, GraffitiInspirationMedia, RailcarDirection } from "../managed/database";
-import { GraffitiCaptureViewModel, GraffitiTypeViewModel, GraffitiViewModel } from "./graffiti";
+import { GraffitiCaptureViewModel, GraffitiSummaryModel, GraffitiTypeViewModel, GraffitiViewModel } from "./graffiti";
 import { CaptureViewModel } from "../capture/capture";
 import { Canvas, loadImage } from "skia-canvas";
 import { cropGraffiti } from "../../shared/crop-graffiti";
-import { ArtistViewModel } from "./artist";
+import { ArtistSummaryModel, ArtistViewModel } from "./artist";
 import { GraffitiInspirationSummaryModel, GraffitiInspirationViewModel } from "./inspiration";
 
 export class GraffitiService extends Service {
@@ -30,6 +30,21 @@ export class GraffitiService extends Service {
 		return ArtistViewModel.from(
 			this.database.artist.orderByAscending(artist => artist.name)
 		)
+	}
+
+	async getFeaturedArtists() {
+		return ArtistSummaryModel.from(
+			this.database.artist
+				.where(artist => artist.featured != null)
+				.orderByDescending(artist => artist.featured)
+		);
+	}
+
+	async getGraffitis() {
+		return GraffitiSummaryModel.from(
+			this.database.graffiti
+				.orderByDescending(graffiti => graffiti.painted)
+		);
 	}
 
 	async getSourceCaptures(id: string) {

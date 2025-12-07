@@ -1,13 +1,11 @@
 import { Router, PathRouter, Component } from "@acryps/page";
 import { registerDirectives } from "@acryps/page-default-directives";
-import { ArtistPage } from "./artist";
-import { ArtistsPage } from "./artists";
+import { ArtistPage } from "./artist/artist";
+import { ArtistsPage } from "./artist";
 import { CompanyPage } from "./company";
-import { GraffitiPage } from "./graffiti";
-import { GraffitiInspirationsPage } from "./graffiti-inspirations";
-import { GraffitiInspirationPage } from "./graffiti-inspirations/inspiration";
-import { AssignGraffitiBoundsPage } from "./graffiti/assign";
-import { AssignGraffitiInspirationPage } from "./graffiti/assign-inspiration";
+import { GraffitiPage } from "./graffiti/graffiti";
+import { AssignGraffitiBoundsPage } from "./graffiti/graffiti/assign";
+import { AssignGraffitiInspirationPage } from "./graffiti/graffiti/assign-inspiration";
 import { HomePage } from "./home";
 import { LayoutPage } from "./layout";
 import { LayoutSectionPage } from "./layout/section";
@@ -37,6 +35,9 @@ import { AssignTrainLabelPage } from "./trains/train/label";
 import { ComissionRailcarPage } from "./railcar/railcar/comission";
 import { ReportDerailingIncidentPage } from "./layout/section/incident/derailing";
 import { PowerDistrictPage } from "./layout/power-district";
+import { GraffitisPage } from "./graffiti";
+import { GraffitiInspirationsPage } from "./graffiti/inspirations";
+import { GraffitiInspirationPage } from "./graffiti/inspirations/inspiration";
 
 // injected by esbuild
 declare const buildDate: string;
@@ -64,9 +65,9 @@ export class Application {
 			.route('/home', HomePage)
 			.route('/login', LoginPage)
 
-			.route('/artist/:tag', ArtistPage)
-
-			.route('/artists', ArtistsPage)
+			.route('/artist', ArtistsPage
+				.route('/:tag', ArtistPage)
+			)
 
 			.route('/layout', LayoutPage
 				.route('/section/:domainName', LayoutSectionPage
@@ -106,13 +107,15 @@ export class Application {
 			.route('/storage-container/print', PrintStorageContainerTagPage)
 			.route('/storage-container/:tag', StorageContainerPage)
 
-			.route('/graffiti/inspiration', GraffitiInspirationsPage
-				.route('/:id', GraffitiInspirationPage)
-			)
+			.route('/graffiti', GraffitisPage
+				.route('/inspiration', GraffitiInspirationsPage
+					.route('/:id', GraffitiInspirationPage)
+				)
 
-			.route('/graffiti/:id', GraffitiPage
-				.route('/assign/:captureId', AssignGraffitiBoundsPage)
-				.route('/assign-inspiration', AssignGraffitiInspirationPage)
+				.route('/:id', GraffitiPage
+					.route('/assign/:captureId', AssignGraffitiBoundsPage)
+					.route('/assign-inspiration', AssignGraffitiInspirationPage)
+				)
 			)
 
 			.route('/live', LivePage)

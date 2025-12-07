@@ -1,41 +1,101 @@
-import { child, display, fontSize, height, marginBottom, marginTop, maxWidth, objectFit, padding, percentage, rem } from "@acryps/style";
+import { alignItems, backgroundColor, borderRadius, child, display, empty, fontSize, fontStyle, gap, height, justifyContent, marginBottom, marginRight, marginTop, maxWidth, objectFit, objectPosition, overflowX, padding, percentage, rem, vw } from "@acryps/style";
 import { boxed } from "../shared/boxed";
-import { pageGutter, pageSpacing } from "../index.style";
-import { graffitiCollectionStyle } from "../shared/graffiti-collection/index.style";
+import { captureBackgroundColor, pageGutter, pageSpacing, radius } from "../index.style";
+import { clickable } from "../shared/interaction";
+import { buttonGroupStyle, buttonStyle } from "../shared/button";
+import { artistStyle } from "./artist/index.style";
 
-export const artistStyle = () => child('ui-artist') (
+export const artistsStyle = () => child('ui-artists') (
+	artistStyle(),
+
 	boxed(),
 	padding(pageSpacing),
 
-	child('ui-header') (
-		display('block'),
-		marginBottom(pageSpacing),
-
-		child('img') (
-			height(rem(4)),
-			maxWidth(percentage(70)),
-
-			objectFit('contain')
-		),
-
-		child('ui-name') (
-			fontSize(rem(2))
-		),
-
-		child('ui-origin') (
-			display('block'),
-			marginTop(pageGutter)
-		)
-	),
-
-	child('ui-detail') (
+	child('ui-overview') (
 		display('block'),
 
-		child('ui-description') (
+		child('ui-hint') (
 			display('block'),
 			marginBottom(pageSpacing)
 		),
 
-		graffitiCollectionStyle()
+		child('ui-actions') (
+			buttonGroupStyle(),
+
+			child('ui-action') (
+				buttonStyle()
+			)
+		),
+
+		child('ui-artist') (
+			display('block'),
+			marginTop(pageSpacing),
+
+			child('ui-header') (
+				display('flex'),
+				alignItems('center'),
+				gap(pageGutter),
+
+				clickable(),
+
+				child('ui-name') (
+					display('block'),
+					fontSize(rem(1.5))
+				),
+
+				child('ui-logo') (
+					display('block'),
+
+					child('img') (
+						display('block'),
+						height(rem(2)),
+						maxWidth(vw(50)),
+
+						objectFit('contain'),
+						objectPosition('left')
+					),
+
+					child('ui-name') (
+						display('block'),
+						marginTop(rem(0.125)),
+
+						fontStyle('italic')
+					)
+				),
+
+				child('ui-icon') (
+					fontSize(rem(1.5))
+				)
+			),
+
+			child('ui-summary') (
+				display('block'),
+				marginTop(rem(0.25)),
+
+				empty() (
+					display('none')
+				)
+			),
+
+			child('ui-graffitis') (
+				display('flex'),
+				gap(pageGutter),
+				overflowX('auto'),
+
+				marginTop(pageGutter),
+
+				child('ui-graffiti') (
+					display('block'),
+					clickable(),
+
+					child('img') (
+						height(rem(5)),
+						borderRadius(radius),
+
+						backgroundColor(captureBackgroundColor)
+					)
+				)
+			)
+		)
 	)
 );

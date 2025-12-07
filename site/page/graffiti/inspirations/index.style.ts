@@ -1,13 +1,11 @@
 import { aspectRatio, border, borderRadius, child, display, fontSize, fontWeight, marginBottom, maxHeight, objectFit, overflow, padding, percentage, px, ratio, rem, vh, width } from "@acryps/style";
-import { boxed } from "../shared/boxed";
-import { pageGutter, pageSpacing, primaryColor, radius } from "../index.style";
-import { buttonGroupStyle, buttonStyle } from "../shared/button";
-import { collection, collectionItem } from "../shared/collection";
+import { pageGutter, pageSpacing, primaryColor, radius } from "../../index.style";
+import { buttonGroupStyle, buttonStyle } from "../../shared/button";
+import { collection, collectionItem } from "../../shared/collection";
 import { graffitiInspirationStyle } from "./inspiration/index.style";
-import { clickable } from "../shared/interaction";
+import { clickable } from "../../shared/interaction";
 
 export const graffitiInspirationsStyle = () => child('ui-graffiti-inspirations') (
-	boxed(),
 	padding(pageSpacing),
 
 	graffitiInspirationStyle(),

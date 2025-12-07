@@ -1,6 +1,6 @@
 import { Component } from "@acryps/page";
-import { GraffitiCaptureViewModel, GraffitiViewModel } from "../managed/services";
-import { crossesGraffiti } from "../../shared/cross-graffiti";
+import { GraffitiCaptureViewModel, GraffitiViewModel } from "../../managed/services";
+import { crossesGraffiti } from "../../../shared/cross-graffiti";
 
 export class GraffitiCrossComponent extends Component {
 	constructor(

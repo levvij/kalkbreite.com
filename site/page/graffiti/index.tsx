@@ -1,101 +1,87 @@
 import { Component } from "@acryps/page";
-import { CaptureViewModel, GraffitiService, GraffitiViewModel, RailcarDirection } from "../managed/services";
-import { DetailSectionComponent } from "../shared/detail-section";
-import { SlideshowComponent } from "../shared/slideshow";
-import { GraffitiCrossComponent } from "./cross";
-import { Application } from "..";
-import { InspirationComponent } from "./inspiration";
+import { ArtistSummaryModel, ArtistViewModel, GraffitiService, GraffitiSummaryModel } from "../managed/services";
+import { goIcon } from "../.built/icons";
 
-export class GraffitiPage extends Component {
-	declare parameters: { id };
-	static shortcuts = ['graffiti', 'graff', 'g'];
-
-	graffiti: GraffitiViewModel;
-	sourceCaptures: CaptureViewModel[];
+export class GraffitisPage extends Component {
+	artists: ArtistSummaryModel[];
+	graffitis: GraffitiSummaryModel[];
 
 	async onload() {
-		this.graffiti = await new GraffitiService().getGraffiti(this.parameters.id);
-		this.sourceCaptures = await new GraffitiService().getSourceCaptures(this.graffiti.id);
+		this.artists = await new GraffitiService().getFeaturedArtists();
+		this.graffitis = await new GraffitiService().getGraffitis();
 	}
 
+	breadcrumb = 'Graffitis';
 	render(child) {
 		if (child) {
-			return <ui-graffiti>
+			return <ui-graffitis>
 				{child}
-			</ui-graffiti>
+			</ui-graffitis>
 		}
 
-		return <ui-graffiti>
-			{this.graffiti.captures.length != 0 && new SlideshowComponent(index => `/capture/graffiti/capture/${this.graffiti.captures[index % this.graffiti.captures.length].id}`)}
+		return <ui-graffitis>
+			<ui-overview>
+				<ui-hint>
+					Explore the {this.graffitis.length} graffitis painted on the railcars by hand.
+					This is my favourite past time activity when I am unable to work on the layout.
+					Friends help me too some times, as painting cars makes for a great at-home evening activity.
+				</ui-hint>
 
-			<ui-detail>
-				{Application.session.account && <ui-actions>
-					<ui-action ui-href='assign-inspiration'>
-						Assign Inspiration
-					</ui-action>
-				</ui-actions>}
+				<ui-section>
+					<ui-title>
+						Featured Artists
+					</ui-title>
 
-				{this.graffiti.name && <ui-name>
-					{this.graffiti.name}
-				</ui-name>}
+					<ui-hint>
+						Some of my favourite artists
+					</ui-hint>
 
-				{this.graffiti.description && <ui-description>
-					{this.graffiti.description}
-				</ui-description>}
+					<ui-artists>
+						{this.artists.map(artist => <ui-artist ui-href={`/artist/${artist.tag}`}>
+							{artist.logo ? <img src={URL.createObjectURL(new Blob([artist.logo], { type: 'image/svg+xml' }))} /> : <ui-name>
+								{artist.name}
+							</ui-name>}
+						</ui-artist>)}
+					</ui-artists>
 
-				{new DetailSectionComponent(this.graffiti.artist && <ui-artist ui-href={`/artist/${this.graffiti.artist.tag}`}>
-					{this.graffiti.artist.logo ? <img src={URL.createObjectURL(new Blob([this.graffiti.artist.logo], { type: 'image/svg+xml' }))} /> : <ui-name>
-						{this.graffiti.artist.name}
-					</ui-name>}
+					<ui-more ui-href='/artist'>
+						View All {goIcon()}
+					</ui-more>
+				</ui-section>
 
-					<ui-summary>
-						{this.graffiti.artist.summary ?? '- REDACTED -'}
-					</ui-summary>
-				</ui-artist>)
-					.addMetric('Painted', () => this.graffiti.painted.toLocaleDateString())
-					.addMetric('Class', () => this.graffiti.type.name)
-					.addMetric('Railcar', () => this.graffiti.railcar.givenName ?? this.graffiti.railcar.model?.shortname, `/railcar/${this.graffiti.railcar.tag}`)
-					.addMetric('Railcar Side', () => this.graffiti.direction == RailcarDirection.forward ? 'Left' : 'Right')
-					.addMetric('Captures', () => this.graffiti.captures.length.toString())
-				}
+				<ui-section>
+					<ui-title>
+						Latest Paintings
+					</ui-title>
 
-				{new GraffitiCrossComponent(this.graffiti)}
-				{new InspirationComponent(this.graffiti)}
+					<ui-hint>
+						A timeline of all painted graffitis.
+						Beware that some graffitis were not photographed yet and will be listed with a small grey rectangle.
+					</ui-hint>
 
-				<ui-captures>
-					{this.sourceCaptures.map(capture => {
-						const assigned = this.graffiti.captures.find(assigned => assigned.sourceId == capture.id);
-
-						if (assigned) {
-							return <ui-capture>
-								<img src={`/capture/graffiti/capture/${assigned.id}`} />
-
-								<ui-detail>
-									<ui-captured>
-										{capture.captured?.toLocaleDateString()}
-									</ui-captured>
-								</ui-detail>
-							</ui-capture>
-						}
-
-						return <ui-capture>
-							<img src={`/capture/${capture.id}`} />
+					<ui-graffitis>
+						{this.graffitis.map(graffiti => <ui-graffiti ui-href={graffiti.id}>
+							<img src={`/capture/graffiti/${graffiti.id}`} loading='lazy' />
 
 							<ui-detail>
-								<ui-captured>
-									{capture.captured?.toLocaleDateString()}
-								</ui-captured>
+								<ui-date>
+									{graffiti.painted.toLocaleDateString()}
+								</ui-date>
 
-								<ui-actions>
-									<ui-action ui-href={`assign/${capture.id}`}>
-										Assign Manually
-									</ui-action>
-								</ui-actions>
+								{!!graffiti.name && <ui-name>
+									{graffiti.name}
+								</ui-name>}
+
+								{!!graffiti.artist && <ui-artist>
+									{graffiti.artist?.name}
+								</ui-artist>}
+
+								{goIcon()}
 							</ui-detail>
-						</ui-capture>
-					})}
-				</ui-captures>
-			</ui-detail>
-		</ui-graffiti>
+						</ui-graffiti>)}
+					</ui-graffitis>
+				</ui-section>
+			</ui-overview>
+		</ui-graffitis>
 	}
 }
