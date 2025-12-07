@@ -33,8 +33,6 @@ export class SearchComponent extends Component {
 				this.shortcuts.set(shortcut, route.matchingPath);
 			}
 		}
-
-		console.log(this.shortcuts, this.router['constructedRoutes'])
 	}
 
 	render() {
