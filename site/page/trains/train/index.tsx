@@ -16,7 +16,6 @@ export class TrainPage extends Component {
 	declare parent: TrainsPage;
 
 	train: TrainViewModel;
-	state: TrainStateViewModel;
 	railcars: TrainRailcarUnitViewModel[];
 	label: TrainLabelViewModel;
 
@@ -26,7 +25,7 @@ export class TrainPage extends Component {
 		this.label = await new TrainService().getLabel(this.parameters.identifier);
 	}
 
-	breadcrumb = () => `Train${this.state.label ? ` ${this.state.label.label}` : ''} #${this.parameters.identifier}`;
+	breadcrumb = () => `Train${this.label ? ` ${this.label.label}` : ''} #${this.parameters.identifier}`;
 	render(child) {
 		if (child) {
 			return <ui-train>
@@ -88,37 +87,6 @@ export class TrainPage extends Component {
 					{coupleIcon()}
 				</ui-action>}
 			</ui-units>
-
-			{this.state.lastHeadPosition && this.renderLayout()}
 		</ui-train>
-	}
-
-	private renderLayout() {
-		const layout = new LayoutComponent();
-
-		LayoutLoader.load().then(() => requestAnimationFrame(() => {
-			let section: Section;
-
-			for (let district of layout.layout.allDistricts) {
-				for (let peer of district.sections) {
-					if (peer.domainName == this.state.lastHeadPosition.section) {
-						section = peer;
-					}
-				}
-			}
-
-			if (!section) {
-				return;
-			}
-
-			layout.highlight(section);
-
-			const head = new SectionPosition(section, this.state.lastHeadPosition.offset, this.state.lastHeadPosition.reversed);
-			const tail = head.advance(-this.train.coupledLength);
-
-			layout.mark(markerColor, head, tail);
-		}));
-
-		return layout;
 	}
 }
