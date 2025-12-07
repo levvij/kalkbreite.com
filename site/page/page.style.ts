@@ -1,4 +1,4 @@
-import { root, child, padding, margin, display, position, top, backgroundColor, color, fontSize, rem, fontFamily, borderBottom, px, paddingBlock, paddingInline, flexGrow, alignItems, zIndex, boxShadow, hex, descendant, marginRight, lineHeight, percentage, maxWidth, marginInline } from "@acryps/style";
+import { root, child, padding, margin, display, position, top, backgroundColor, color, fontSize, rem, fontFamily, borderBottom, px, paddingBlock, paddingInline, flexGrow, alignItems, zIndex, boxShadow, hex, descendant, marginRight, lineHeight, percentage, maxWidth, marginInline, insetInline, after, content, inset, backdropFilter, grayscale, before, empty, blur, seconds, brightness, contrast, gap } from "@acryps/style";
 import { homeStyle } from "./home/index.style";
 import { pageColor, pageContrastColor, pageGutter, pageSpacing, primaryColor, primaryContrastColor } from "./index.style";
 import { boxed, maximumBoxedWidth } from "./shared/boxed";
@@ -19,6 +19,7 @@ import { iconFont, icons } from "./.built/icons";
 import { artistsStyle } from "./artists/index.style";
 import { liveStyle } from "./live/index.style";
 import { graffitiInspirationsStyle } from "./graffiti-inspirations/index.style";
+import { searchStyle } from "./shared/search/index.style";
 
 export const applicationStyle = () => root() (
 	monospacedFont,
@@ -69,18 +70,38 @@ export const applicationStyle = () => root() (
 					lineHeight(1),
 
 					display('flex'),
-					alignItems('center'),
-					paddingBlock(pageGutter),
-					paddingInline(pageSpacing),
+					paddingInline(pageSpacing.divide(2)),
 
 					child('ui-logo') (
 						flexGrow(1),
+
+						padding(pageGutter, pageSpacing.divide(2)),
 
 						fontSize(rem(1.5))
 					),
 
 					child('ui-login') (
-						clickable()
+						clickable(),
+
+						display('flex'),
+						alignItems('center'),
+						paddingInline(pageSpacing.divide(2)),
+					),
+
+					child('ui-account') (
+						display('flex'),
+						alignItems('center'),
+						paddingInline(pageSpacing.divide(2)),
+					),
+
+					child('ui-action') (
+						clickable(),
+
+						display('flex'),
+						alignItems('center'),
+						paddingInline(pageSpacing.divide(2)),
+
+						fontSize(rem(1.25))
 					)
 				)
 			),
@@ -112,6 +133,43 @@ export const applicationStyle = () => root() (
 							clickable()
 						)
 					)
+				)
+			),
+
+			child('ui-global-search') (
+				position('fixed'),
+				insetInline(pageSpacing),
+				top(percentage(30)),
+				zIndex(2000),
+
+				display('flex'),
+				alignItems('center'),
+
+				fontSize(rem(1.5)),
+
+				empty() (
+					display('none')
+				),
+
+				before() (
+					content(''),
+
+					position('fixed'),
+					inset(0),
+					zIndex(-1),
+
+					backdropFilter(
+						contrast(0.5),
+						brightness(1.5),
+						blur(px(2))
+					)
+				),
+
+				searchStyle(
+					flexGrow(1),
+					maxWidth(rem(40)),
+
+					boxShadow(hex('0006'), 0, rem(0.5), rem(2))
 				)
 			)
 		)

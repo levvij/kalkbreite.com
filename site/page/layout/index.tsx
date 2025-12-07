@@ -13,6 +13,8 @@ import { Incident, incidentColor, positionerColor, trainOccupiedColor } from "./
 import { ColorValue, hex, hsl, percentage, turn } from "@acryps/style";
 
 export class LayoutPage extends Component {
+	static shortcuts = ['layout', 'l'];
+
 	layout: Layout;
 	chain: TrainChain;
 

@@ -1,4 +1,4 @@
-import { after, alignItems, aspectRatio, backgroundColor, backgroundImage, border, borderRadius, borderRight, bottom, boxShadow, child, color, colorStop, content, display, flexDirection, flexGrow, focus, fontFamily, fontSize, fontStyle, fontWeight, height, hover, inset, insetInline, justifyContent, justifySelf, linearGradient, margin, marginBlock, marginBottom, marginInline, marginTop, maxWidth, objectFit, outline, overflow, padding, paddingInline, percentage, position, px, ratio, rem, textAlign, top, vh, width, zIndex } from "@acryps/style";
+import { after, alignItems, aspectRatio, backgroundColor, backgroundImage, border, borderBottomLeftRadius, borderBottomRightRadius, borderRadius, borderRight, borderTopLeftRadius, borderTopRightRadius, bottom, boxShadow, child, color, colorStop, content, display, flexDirection, flexGrow, focus, fontFamily, fontSize, fontStyle, fontWeight, height, hover, inset, insetInline, justifyContent, justifySelf, linearGradient, margin, marginBlock, marginBottom, marginInline, marginTop, maxWidth, objectFit, outline, overflow, padding, paddingInline, percentage, position, px, ratio, rem, textAlign, top, vh, width, zIndex } from "@acryps/style";
 import { captureAspectRatio, captureBackgroundColor, knockoutColor, knockoutContrastColor, pageColor, pageGutter, pageSpacing, pageTransparentColor, primaryColor, primaryContrastColor, primaryOutlineColor, radius, runningNumberFont, tagFont } from "../index.style";
 import { boxed } from "../shared/boxed";
 import { collection, collectionItem } from "../shared/collection";
@@ -9,6 +9,7 @@ import { slideshowStyle } from "../shared/slideshow/index.style";
 import { layoutStyle } from "../shared/layout/index.style";
 import { clickable } from "../shared/interaction";
 import { fieldStyle, inputSpacingBlock, inputSpacingInline } from "../shared/field.style";
+import { searchStyle } from "../shared/search/index.style";
 
 const coverOverscan = percentage(-15);
 
@@ -35,41 +36,8 @@ export const homeStyle = () => child('ui-home') (
 			marginBottom(pageSpacing)
 		),
 
-		child('ui-search') (
-			display('flex'),
-			maxWidth(rem(25)),
-			marginInline('auto'),
-
-			child('input') (
-				flexGrow(1),
-
-				padding(inputSpacingBlock, inputSpacingInline),
-
-				fontFamily('inherit'),
-				fontSize(rem(1)),
-				border(px(2), 'solid', primaryColor),
-				borderRight('none'),
-				borderRadius(0),
-				outline(0, 'none', 'transparent'),
-
-				focus() (
-					boxShadow(primaryOutlineColor, 0, 0, 0, px(1), 'inset')
-				)
-			),
-
-			child('ui-action') (
-				display('flex'),
-				alignItems('center'),
-				justifyContent('center'),
-
-				padding(rem(0.5).add(px(2)), rem(0.75)),
-
-				color(primaryContrastColor),
-				backgroundColor(primaryColor),
-				fontSize(rem(1.25)),
-
-				clickable()
-			)
+		searchStyle(
+			maxWidth(rem(25))
 		)
 	),
 

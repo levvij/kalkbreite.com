@@ -4,6 +4,8 @@ import { active } from "@acryps/style";
 import { TrainLabelComponent } from "../shared/train-label";
 
 export class TrainsPage extends Component {
+	static shortcuts = ['trains', 't'];
+
 	trains: TrainViewModel[];
 	labels: TrainLabelViewModel[];
 

@@ -51,7 +51,7 @@ export const layoutStyle = () => child('ui-layout') (
 			height(px(1)),
 
 			fill('transparent'),
-			stroke(hex('ccc')),
+			stroke(hex('ccc8')),
 			strokeWidth(px(1)),
 			vectorEffect('non-scaling-stroke')
 		)

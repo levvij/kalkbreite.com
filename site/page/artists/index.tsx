@@ -4,6 +4,8 @@ import { goIcon } from "../.built/icons";
 import { Application } from "..";
 
 export class ArtistsPage extends Component {
+	static shortcuts = ['artists'];
+
 	artists: ArtistViewModel[];
 
 	async onload() {
