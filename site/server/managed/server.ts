@@ -1081,6 +1081,7 @@ ViewModel.mappings = {
 			return {
 				artist: new ArtistSummaryModel(await BaseServer.unwrap(this.$$model.artist)),
 				captures: (await this.$$model.captures.includeTree(ViewModel.mappings[GraffitiCaptureViewModel.name].items).toArray()).map(item => new GraffitiCaptureViewModel(item)),
+				painter: new ArtistSummaryModel(await BaseServer.unwrap(this.$$model.painter)),
 				type: new GraffitiTypeViewModel(await BaseServer.unwrap(this.$$model.type)),
 				direction: this.$$model.direction,
 				id: this.$$model.id,
@@ -1127,6 +1128,12 @@ ViewModel.mappings = {
 						[...parents, "captures-GraffitiSummaryModel"]
 					);
 				},
+				get painter() {
+					return ViewModel.mappings[ArtistSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "painter-GraffitiSummaryModel"]
+					);
+				},
 				get type() {
 					return ViewModel.mappings[GraffitiTypeViewModel.name].getPrefetchingProperties(
 						level,
@@ -1144,6 +1151,7 @@ ViewModel.mappings = {
 			const item = new GraffitiSummaryModel(null);
 			"artist" in data && (item.artist = data.artist && ViewModel.mappings[ArtistSummaryModel.name].toViewModel(data.artist));
 			"captures" in data && (item.captures = data.captures && [...data.captures].map(i => ViewModel.mappings[GraffitiCaptureViewModel.name].toViewModel(i)));
+			"painter" in data && (item.painter = data.painter && ViewModel.mappings[ArtistSummaryModel.name].toViewModel(data.painter));
 			"type" in data && (item.type = data.type && ViewModel.mappings[GraffitiTypeViewModel.name].toViewModel(data.type));
 			"direction" in data && (item.direction = data.direction && (data.direction instanceof ViewModel ? data.direction : ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction)));
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
@@ -1164,6 +1172,7 @@ ViewModel.mappings = {
 
 			"artist" in viewModel && (model.artist.id = viewModel.artist ? viewModel.artist.id : null);
 			"captures" in viewModel && (null);
+			"painter" in viewModel && (model.painter.id = viewModel.painter ? viewModel.painter.id : null);
 			"type" in viewModel && (model.type.id = viewModel.type ? viewModel.type.id : null);
 			"direction" in viewModel && (model.direction = viewModel.direction === null ? null : viewModel.direction);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
@@ -3480,6 +3489,7 @@ ViewModel.mappings = {
 				artist: new ArtistSummaryModel(await BaseServer.unwrap(this.$$model.artist)),
 				captures: (await this.$$model.captures.includeTree(ViewModel.mappings[GraffitiCaptureViewModel.name].items).toArray()).map(item => new GraffitiCaptureViewModel(item)),
 				graffitiInspiration: new GraffitiInspirationSummaryModel(await BaseServer.unwrap(this.$$model.graffitiInspiration)),
+				painter: new ArtistSummaryModel(await BaseServer.unwrap(this.$$model.painter)),
 				railcar: new GraffitiRailcarViewModel(await BaseServer.unwrap(this.$$model.railcar)),
 				type: new GraffitiTypeViewModel(await BaseServer.unwrap(this.$$model.type)),
 				description: this.$$model.description,
@@ -3534,6 +3544,12 @@ ViewModel.mappings = {
 						[...parents, "graffitiInspiration-GraffitiViewModel"]
 					);
 				},
+				get painter() {
+					return ViewModel.mappings[ArtistSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "painter-GraffitiViewModel"]
+					);
+				},
 				get railcar() {
 					return ViewModel.mappings[GraffitiRailcarViewModel.name].getPrefetchingProperties(
 						level,
@@ -3559,6 +3575,7 @@ ViewModel.mappings = {
 			"artist" in data && (item.artist = data.artist && ViewModel.mappings[ArtistSummaryModel.name].toViewModel(data.artist));
 			"captures" in data && (item.captures = data.captures && [...data.captures].map(i => ViewModel.mappings[GraffitiCaptureViewModel.name].toViewModel(i)));
 			"graffitiInspiration" in data && (item.graffitiInspiration = data.graffitiInspiration && ViewModel.mappings[GraffitiInspirationSummaryModel.name].toViewModel(data.graffitiInspiration));
+			"painter" in data && (item.painter = data.painter && ViewModel.mappings[ArtistSummaryModel.name].toViewModel(data.painter));
 			"railcar" in data && (item.railcar = data.railcar && ViewModel.mappings[GraffitiRailcarViewModel.name].toViewModel(data.railcar));
 			"type" in data && (item.type = data.type && ViewModel.mappings[GraffitiTypeViewModel.name].toViewModel(data.type));
 			"description" in data && (item.description = data.description === null ? null : `${data.description}`);
@@ -3582,6 +3599,7 @@ ViewModel.mappings = {
 			"artist" in viewModel && (model.artist.id = viewModel.artist ? viewModel.artist.id : null);
 			"captures" in viewModel && (null);
 			"graffitiInspiration" in viewModel && (model.graffitiInspiration.id = viewModel.graffitiInspiration ? viewModel.graffitiInspiration.id : null);
+			"painter" in viewModel && (model.painter.id = viewModel.painter ? viewModel.painter.id : null);
 			"railcar" in viewModel && (model.railcar.id = viewModel.railcar ? viewModel.railcar.id : null);
 			"type" in viewModel && (model.type.id = viewModel.type ? viewModel.type.id : null);
 			"description" in viewModel && (model.description = viewModel.description === null ? null : `${viewModel.description}`);

@@ -1,4 +1,4 @@
-import { root, child, padding, margin, display, position, top, backgroundColor, color, fontSize, rem, fontFamily, borderBottom, px, paddingBlock, paddingInline, flexGrow, alignItems, zIndex, boxShadow, hex, descendant, marginRight, lineHeight, percentage, maxWidth, marginInline, insetInline, after, content, inset, backdropFilter, grayscale, before, empty, blur, seconds, brightness, contrast, gap, paddingRight } from "@acryps/style";
+import { root, child, padding, margin, display, position, top, backgroundColor, color, fontSize, rem, fontFamily, borderBottom, px, paddingBlock, paddingInline, flexGrow, alignItems, zIndex, boxShadow, hex, descendant, marginRight, lineHeight, percentage, maxWidth, marginInline, insetInline, after, content, inset, backdropFilter, grayscale, before, empty, blur, seconds, brightness, contrast, gap, paddingRight, paddingLeft } from "@acryps/style";
 import { homeStyle } from "./home/index.style";
 import { pageColor, pageContrastColor, pageGutter, pageSpacing, primaryColor, primaryContrastColor } from "./index.style";
 import { boxed, maximumBoxedWidth } from "./shared/boxed";
@@ -70,9 +70,7 @@ export const applicationStyle = () => root() (
 
 					child('ui-logo') (
 						flexGrow(1),
-
-						paddingBlock(pageSpacing.divide(2)),
-						paddingRight(pageGutter),
+						padding(pageGutter, pageSpacing.divide(2)),
 
 						fontSize(rem(1.5))
 					),

@@ -8,7 +8,6 @@ import { InspirationComponent } from "./inspiration";
 
 export class GraffitiPage extends Component {
 	declare parameters: { id };
-	static shortcuts = ['graffiti', 'graff', 'g'];
 
 	graffiti: GraffitiViewModel;
 	sourceCaptures: CaptureViewModel[];
@@ -26,7 +25,9 @@ export class GraffitiPage extends Component {
 		}
 
 		return <ui-graffiti>
-			{this.graffiti.captures.length != 0 && <img src={`/capture/graffiti/${this.graffiti.id}`} />}
+			{this.graffiti.captures.length != 0 && <ui-preview>
+				<img src={`/capture/graffiti/${this.graffiti.id}`} />
+			</ui-preview>}
 
 			<ui-detail>
 				{Application.session.account && <ui-actions>
@@ -53,6 +54,7 @@ export class GraffitiPage extends Component {
 					</ui-summary>
 				</ui-artist>)
 					.addMetric('Painted', () => this.graffiti.painted.toLocaleDateString())
+					.addMetric('Painter', () => this.graffiti.painter?.name ?? '- REDACTED -', this.graffiti.painter && `/artist/${this.graffiti.painter.tag}`)
 					.addMetric('Class', () => this.graffiti.type.name)
 					.addMetric('Railcar', () => this.graffiti.railcar.givenName ?? this.graffiti.railcar.model?.shortname, `/railcar/${this.graffiti.railcar.tag}`)
 					.addMetric('Railcar Side', () => this.graffiti.direction == RailcarDirection.forward ? 'Left' : 'Right')

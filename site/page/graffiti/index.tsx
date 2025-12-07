@@ -3,6 +3,8 @@ import { ArtistSummaryModel, ArtistViewModel, GraffitiService, GraffitiSummaryMo
 import { goIcon } from "../.built/icons";
 
 export class GraffitisPage extends Component {
+	static shortcuts = ['graffiti', 'graff', 'g'];
+
 	artists: ArtistSummaryModel[];
 	graffitis: GraffitiSummaryModel[];
 

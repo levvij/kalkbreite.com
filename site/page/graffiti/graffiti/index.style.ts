@@ -1,4 +1,4 @@
-import { aspectRatio, backgroundColor, border, borderRadius, child, color, display, filter, flexDirection, fontSize, fontWeight, height, invert, marginBottom, marginTop, maxHeight, objectFit, objectPosition, overflow, padding, paddingBlock, paddingInline, percentage, px, rad, ratio, rem, vh, width } from "@acryps/style";
+import { aspectRatio, backgroundColor, border, borderRadius, child, color, display, filter, flexDirection, fontSize, fontWeight, height, invert, justifyContent, marginBottom, marginTop, maxHeight, maxWidth, objectFit, objectPosition, overflow, padding, paddingBlock, paddingInline, percentage, px, rad, ratio, rem, vh, width } from "@acryps/style";
 import { assignGraffitiInspirationStyle } from "./assign-inspiration/index.style";
 import { pageSpacing, pageGutter, radius, primaryColor, captureAspectRatio, captureBackgroundColor } from "../../index.style";
 import { boxed } from "../../shared/boxed";
@@ -14,12 +14,18 @@ export const graffitiStyle = () => child('ui-graffiti') (
 	assignStyle(),
 	assignGraffitiInspirationStyle(),
 
-	child('img') (
-		width(percentage(100)),
-		marginBottom(pageSpacing),
+	child('ui-preview') (
+		display('flex'),
+		justifyContent('flex-start'),
 
-		borderRadius(radius),
-		backgroundColor(captureBackgroundColor)
+		child('img') (
+			maxHeight(vh(60)),
+			maxWidth(percentage(100)),
+			marginBottom(pageSpacing),
+
+			borderRadius(radius),
+			backgroundColor(captureBackgroundColor)
+		)
 	),
 
 	child('ui-detail') (

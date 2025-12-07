@@ -55,6 +55,7 @@ export class ArtistQueryProxy extends QueryProxy {
 export class Artist extends Entity<ArtistQueryProxy> {
 	graffitis: PrimaryReference<Graffiti, GraffitiQueryProxy>;
 		originals: PrimaryReference<GraffitiInspiration, GraffitiInspirationQueryProxy>;
+		paintedGraffitis: PrimaryReference<Graffiti, GraffitiQueryProxy>;
 		description: string;
 	featured: number;
 	declare id: string;
@@ -88,6 +89,7 @@ export class Artist extends Entity<ArtistQueryProxy> {
 		
 		this.graffitis = new PrimaryReference<Graffiti, GraffitiQueryProxy>(this, "artistId", Graffiti);
 		this.originals = new PrimaryReference<GraffitiInspiration, GraffitiInspirationQueryProxy>(this, "artistId", GraffitiInspiration);
+		this.paintedGraffitis = new PrimaryReference<Graffiti, GraffitiQueryProxy>(this, "painterId", Graffiti);
 	}
 }
 			
@@ -759,6 +761,7 @@ export class DerailingIncident extends Entity<DerailingIncidentQueryProxy> {
 export class GraffitiQueryProxy extends QueryProxy {
 	get artist(): Partial<ArtistQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get graffitiInspiration(): Partial<GraffitiInspirationQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get painter(): Partial<ArtistQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get railcar(): Partial<RailcarQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get type(): Partial<GraffitiTypeQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get artistId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -768,6 +771,7 @@ export class GraffitiQueryProxy extends QueryProxy {
 	get graffitiInspirationId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get painted(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get painterId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get railcarId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get typeId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
@@ -776,6 +780,7 @@ export class Graffiti extends Entity<GraffitiQueryProxy> {
 	get artist(): Partial<ForeignReference<Artist>> { return this.$artist; }
 	captures: PrimaryReference<GraffitiCapture, GraffitiCaptureQueryProxy>;
 		get graffitiInspiration(): Partial<ForeignReference<GraffitiInspiration>> { return this.$graffitiInspiration; }
+	get painter(): Partial<ForeignReference<Artist>> { return this.$painter; }
 	get railcar(): Partial<ForeignReference<Railcar>> { return this.$railcar; }
 	get type(): Partial<ForeignReference<GraffitiType>> { return this.$type; }
 	artistId: string;
@@ -786,6 +791,7 @@ export class Graffiti extends Entity<GraffitiQueryProxy> {
 	declare id: string;
 	name: string;
 	painted: Date;
+	painterId: string;
 	railcarId: string;
 	typeId: string;
 	
@@ -800,6 +806,7 @@ export class Graffiti extends Entity<GraffitiQueryProxy> {
 			id: { type: "uuid", name: "id" },
 			name: { type: "text", name: "name" },
 			painted: { type: "timestamp", name: "painted" },
+			painterId: { type: "uuid", name: "painter_id" },
 			railcarId: { type: "uuid", name: "railcar_id" },
 			typeId: { type: "uuid", name: "type_id" }
 		},
@@ -814,6 +821,7 @@ export class Graffiti extends Entity<GraffitiQueryProxy> {
 		this.$artist = new ForeignReference<Artist>(this, "artistId", Artist);
 	this.captures = new PrimaryReference<GraffitiCapture, GraffitiCaptureQueryProxy>(this, "graffitiId", GraffitiCapture);
 		this.$graffitiInspiration = new ForeignReference<GraffitiInspiration>(this, "graffitiInspirationId", GraffitiInspiration);
+	this.$painter = new ForeignReference<Artist>(this, "painterId", Artist);
 	this.$railcar = new ForeignReference<Railcar>(this, "railcarId", Railcar);
 	this.$type = new ForeignReference<GraffitiType>(this, "typeId", GraffitiType);
 	}
@@ -839,6 +847,18 @@ export class Graffiti extends Entity<GraffitiQueryProxy> {
 			this.graffitiInspirationId = value.id as string;
 		} else {
 			this.graffitiInspirationId = null;
+		}
+	}
+
+	private $painter: ForeignReference<Artist>;
+
+	set painter(value: Partial<ForeignReference<Artist>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.painterId = value.id as string;
+		} else {
+			this.painterId = null;
 		}
 	}
 

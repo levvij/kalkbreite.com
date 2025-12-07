@@ -5,38 +5,38 @@ import { graffitiInspirationsStyle } from "./inspirations/index.style";
 import { captureBackgroundColor, pageColor, pageContrastColor, pageGutter, pageSpacing, radius } from "../index.style";
 import { clickable } from "../shared/interaction";
 
-export const graffitisStyle = () => child('ui-graffitis')(
+export const graffitisStyle = () => child('ui-graffitis') (
 	graffitiStyle(),
 	graffitiInspirationsStyle(),
 
 	boxed(),
 	padding(pageSpacing),
 
-	child('ui-overview')(
+	child('ui-overview') (
 		display('block'),
 
-		child('ui-hint')(
+		child('ui-hint') (
 			display('block'),
 			marginBottom(pageSpacing)
 		),
 
-		child('ui-section')(
+		child('ui-section') (
 			display('block'),
 			marginBlock(pageSpacing.multiply(2)),
 
-			child('ui-title')(
+			child('ui-title') (
 				display('block'),
 
 				fontSize(rem(1.5)),
 				fontWeight('bold')
 			),
 
-			child('ui-hint')(
+			child('ui-hint') (
 				display('block'),
 				marginBottom(pageGutter)
 			),
 
-			child('ui-artists')(
+			child('ui-artists') (
 				display('flex'),
 				flexWrap('wrap'),
 				alignItems('center'),
@@ -44,12 +44,14 @@ export const graffitisStyle = () => child('ui-graffitis')(
 
 				marginBlock(pageGutter.divide(2)),
 
-				child('ui-artist')(
-					child('img')(
+				child('ui-artist') (
+					clickable(),
+
+					child('img') (
 						height(rem(1.75))
 					),
 
-					child('ui-name')(
+					child('ui-name') (
 						display('block'),
 						padding(rem(0.25), rem(0.75)),
 
@@ -59,23 +61,25 @@ export const graffitisStyle = () => child('ui-graffitis')(
 				)
 			),
 
-			child('ui-graffitis')(
+			child('ui-graffitis') (
 				display('block'),
 
-				child('ui-date')(
+				child('ui-date') (
 					display('block'),
 					marginBottom(pageGutter),
 
 					fontWeight('bold')
 				),
 
-				child('ui-graffiti')(
+				child('ui-graffiti') (
+					clickable(),
+
 					display('flex'),
 					flexDirection('column'),
 					alignItems('flex-start'),
 					marginBottom(pageSpacing),
 
-					child('img')(
+					child('img') (
 						display('block'),
 						maxHeight(vh(25)),
 						maxWidth(percentage(100)),
@@ -88,7 +92,7 @@ export const graffitisStyle = () => child('ui-graffitis')(
 						backgroundColor(captureBackgroundColor)
 					),
 
-					child('ui-detail')(
+					child('ui-detail') (
 						display('flex'),
 						alignItems('center'),
 						flexWrap('wrap'),
@@ -96,7 +100,7 @@ export const graffitisStyle = () => child('ui-graffitis')(
 
 						marginTop(rem(0.25)),
 
-						child('ui-name')(
+						child('ui-name') (
 							fontWeight('bold')
 						)
 					)
