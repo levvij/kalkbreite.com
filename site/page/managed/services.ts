@@ -255,6 +255,61 @@ export class MaintenanceSummaryModel {
 	}
 }
 
+export class CargoSlotViewModel {
+	fixture: CargoFixtureViewModel;
+	clearanceHead: number;
+	clearanceTail: number;
+	direction: RailcarDirection;
+	id: string;
+	offset: number;
+
+	private static $build(raw) {
+		const item = new CargoSlotViewModel();
+		raw.fixture === undefined || (item.fixture = raw.fixture ? CargoFixtureViewModel["$build"](raw.fixture) : null)
+		raw.clearanceHead === undefined || (item.clearanceHead = raw.clearanceHead === null ? null : +raw.clearanceHead)
+		raw.clearanceTail === undefined || (item.clearanceTail = raw.clearanceTail === null ? null : +raw.clearanceTail)
+		raw.direction === undefined || (item.direction = raw.direction)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.offset === undefined || (item.offset = raw.offset === null ? null : +raw.offset)
+		
+		return item;
+	}
+}
+
+export class CargoFixtureViewModel {
+	loadTypes: CargoLoadTypeViewModel[];
+	id: string;
+	length: number;
+	name: string;
+
+	private static $build(raw) {
+		const item = new CargoFixtureViewModel();
+		raw.loadTypes === undefined || (item.loadTypes = raw.loadTypes ? raw.loadTypes.map(i => CargoLoadTypeViewModel["$build"](i)) : null)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.length === undefined || (item.length = raw.length === null ? null : +raw.length)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		
+		return item;
+	}
+}
+
+export class CargoLoadTypeViewModel {
+	id: string;
+	name: string;
+	oversizeHead: number;
+	oversizeTail: number;
+
+	private static $build(raw) {
+		const item = new CargoLoadTypeViewModel();
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		raw.oversizeHead === undefined || (item.oversizeHead = raw.oversizeHead === null ? null : +raw.oversizeHead)
+		raw.oversizeTail === undefined || (item.oversizeTail = raw.oversizeTail === null ? null : +raw.oversizeTail)
+		
+		return item;
+	}
+}
+
 export class UicIdentifierClassViewModel {
 	code: string;
 	name: string;
@@ -748,6 +803,7 @@ export class CouplerTypeViewModel {
 }
 
 export class RailcarModelViewModel {
+	cargoSlots: CargoSlotViewModel[];
 	drawings: RailcarModelSummaryModel[];
 	uicLocale: UicLocaleViewModel;
 	id: string;
@@ -761,6 +817,7 @@ export class RailcarModelViewModel {
 
 	private static $build(raw) {
 		const item = new RailcarModelViewModel();
+		raw.cargoSlots === undefined || (item.cargoSlots = raw.cargoSlots ? raw.cargoSlots.map(i => CargoSlotViewModel["$build"](i)) : null)
 		raw.drawings === undefined || (item.drawings = raw.drawings ? raw.drawings.map(i => RailcarModelSummaryModel["$build"](i)) : null)
 		raw.uicLocale === undefined || (item.uicLocale = raw.uicLocale ? UicLocaleViewModel["$build"](raw.uicLocale) : null)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)

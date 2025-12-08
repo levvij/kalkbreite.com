@@ -28,5 +28,9 @@ export const radius = rem(0.25);
 export const captureAspectRatio = ratio(3, 1);
 export const captureBackgroundColor = hex('eee');
 
+export const cargoSlotColor = hex('ff0');
+export const cargoSlotContrastColor = hex('000');
+export const cargoFixtureColor = hex('888');
+
 export const runningNumberFont = monospacedFont.name;
 export const tagFont = monospacedFont.name;
