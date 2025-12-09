@@ -13,3 +13,5 @@ export const uicIdentifierFont = monospacedFont;
 export const districtIdentifierFont = monospacedFont;
 export const sectionIdentifierFont = monospacedFont;
 export const powerDistrictIdentifierFont = monospacedFont;
+
+export const cargoLoadIdentifierFont = monospacedFont;

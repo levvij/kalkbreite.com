@@ -10,6 +10,7 @@ import { CaptureViewModel, CouplerViewModel, MaintenanceService, RailcarDirectio
 import { TrainLabelComponent } from "../../shared/train-label";
 import { InsetStyleShorthandBlockInline } from "@acryps/style";
 import { bufferAnchorOffset } from "./index.style";
+import { RailcarCargoComponent } from "./cargo";
 
 export class RailcarPage extends Component {
 	declare parameters: { tag };
@@ -236,6 +237,8 @@ export class RailcarPage extends Component {
 					.addMetric('Capture Count', () => this.railcar.captures.length.toString())
 					.addMetric('Scale Length Between Couplers', () => `${(this.railcar.model.lengthIncludingCouplers / 0.087).toFixed(0)}mm`)
 				}
+
+				{this.railcar.cargoLoads.length != 0 && new RailcarCargoComponent()}
 
 				{this.railcar.graffitis.length != 0 && new GraffitiCollectionComponent(this.railcar.graffitis)}
 

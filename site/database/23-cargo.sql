@@ -14,6 +14,8 @@ CREATE TABLE cargo_load_type (
 	name TEXT,
 	fixture_id UUID CONSTRAINT fixture__load_types REFERENCES cargo_fixture (id),
 
+	height REAL,
+
 	-- how much the item extends the fixture
 	-- for example, 45" containers use a 40" fixuture
 	oversize_head REAL,
@@ -37,5 +39,24 @@ CREATE TABLE cargo_slot (
 	-- null = can extend freely
 	-- 0 = end of trailer, cannot extend
 	clearance_head REAL,
-	clearance_tail REAL
+	clearance_tail REAL,
+
+	-- height over rail
+	baseline REAL
+);
+
+CREATE TABLE cargo_load (
+	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+	identifier TEXT,
+	tag TEXT,
+
+	name TEXT,
+	color TEXT,
+	logo_color TEXT,
+
+	owner_id UUID CONSTRAINT owner__cargo_containers REFERENCES company (id),
+
+	slot_id UUID CONSTRAINT slot__ REFERENCES cargo_slot (id),
+	type_id UUID CONSTRAINT type__loads REFERENCES cargo_load_type (id),
+	railcar_id UUID CONSTRAINT railcar__cargo_loads REFERENCES railcar (id)
 );

@@ -79,6 +79,7 @@ import { CargoSlotViewModel } from "./../model/cargo";
 import { CargoFixtureViewModel } from "./../model/cargo";
 import { CargoLoadTypeViewModel } from "./../model/cargo";
 import { UicLocaleViewModel } from "./../model/uic-identifier";
+import { RailcarCargoLoadViewModel } from "./../railcar/cargo";
 import { CouplerViewModel } from "./../railcar/coupler";
 import { RailcarModelDrawingSummaryModel } from "./../railcar/model";
 import { RailcarComissionViewModel } from "./../railcar/storage";
@@ -99,6 +100,7 @@ import { CargoFixture } from "./../managed/database";
 import { CargoLoadType } from "./../managed/database";
 import { UicIdentifierClass } from "./../managed/database";
 import { UicLocale } from "./../managed/database";
+import { CargoLoad } from "./../managed/database";
 import { CouplerType } from "./../managed/database";
 import { RailcarModel } from "./../managed/database";
 import { RailcarModelDrawing } from "./../managed/database";
@@ -935,6 +937,7 @@ ViewModel.mappings = {
 			return {
 				iconId: this.$$model.iconId,
 				id: this.$$model.id,
+				logoId: this.$$model.logoId,
 				name: this.$$model.name,
 				shortname: this.$$model.shortname,
 				tag: this.$$model.tag,
@@ -970,6 +973,7 @@ ViewModel.mappings = {
 			return {
 				iconId: true,
 				id: true,
+				logoId: true,
 				name: true,
 				shortname: true,
 				tag: true,
@@ -981,6 +985,7 @@ ViewModel.mappings = {
 			const item = new CompanySummaryModel(null);
 			"iconId" in data && (item.iconId = data.iconId === null ? null : `${data.iconId}`);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"logoId" in data && (item.logoId = data.logoId === null ? null : `${data.logoId}`);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"shortname" in data && (item.shortname = data.shortname === null ? null : `${data.shortname}`);
 			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
@@ -1000,6 +1005,7 @@ ViewModel.mappings = {
 
 			"iconId" in viewModel && (model.iconId = viewModel.iconId === null ? null : `${viewModel.iconId}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"logoId" in viewModel && (model.logoId = viewModel.logoId === null ? null : `${viewModel.logoId}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"shortname" in viewModel && (model.shortname = viewModel.shortname === null ? null : `${viewModel.shortname}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
@@ -1898,6 +1904,7 @@ ViewModel.mappings = {
 		async map() {
 			return {
 				fixture: new CargoFixtureViewModel(await BaseServer.unwrap(this.$$model.fixture)),
+				baseline: this.$$model.baseline,
 				clearanceHead: this.$$model.clearanceHead,
 				clearanceTail: this.$$model.clearanceTail,
 				direction: this.$$model.direction,
@@ -1938,6 +1945,7 @@ ViewModel.mappings = {
 						[...parents, "fixture-CargoSlotViewModel"]
 					);
 				},
+				baseline: true,
 				clearanceHead: true,
 				clearanceTail: true,
 				direction: true,
@@ -1949,6 +1957,7 @@ ViewModel.mappings = {
 		static toViewModel(data) {
 			const item = new CargoSlotViewModel(null);
 			"fixture" in data && (item.fixture = data.fixture && ViewModel.mappings[CargoFixtureViewModel.name].toViewModel(data.fixture));
+			"baseline" in data && (item.baseline = data.baseline === null ? null : +data.baseline);
 			"clearanceHead" in data && (item.clearanceHead = data.clearanceHead === null ? null : +data.clearanceHead);
 			"clearanceTail" in data && (item.clearanceTail = data.clearanceTail === null ? null : +data.clearanceTail);
 			"direction" in data && (item.direction = data.direction && (data.direction instanceof ViewModel ? data.direction : ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction)));
@@ -1968,6 +1977,7 @@ ViewModel.mappings = {
 			}
 
 			"fixture" in viewModel && (model.fixture.id = viewModel.fixture ? viewModel.fixture.id : null);
+			"baseline" in viewModel && (model.baseline = viewModel.baseline === null ? null : +viewModel.baseline);
 			"clearanceHead" in viewModel && (model.clearanceHead = viewModel.clearanceHead === null ? null : +viewModel.clearanceHead);
 			"clearanceTail" in viewModel && (model.clearanceTail = viewModel.clearanceTail === null ? null : +viewModel.clearanceTail);
 			"direction" in viewModel && (model.direction = viewModel.direction === null ? null : viewModel.direction);
@@ -2055,6 +2065,7 @@ ViewModel.mappings = {
 	[CargoLoadTypeViewModel.name]: class ComposedCargoLoadTypeViewModel extends CargoLoadTypeViewModel {
 		async map() {
 			return {
+				height: this.$$model.height,
 				id: this.$$model.id,
 				name: this.$$model.name,
 				oversizeHead: this.$$model.oversizeHead,
@@ -2088,6 +2099,7 @@ ViewModel.mappings = {
 			}
 
 			return {
+				height: true,
 				id: true,
 				name: true,
 				oversizeHead: true,
@@ -2097,6 +2109,7 @@ ViewModel.mappings = {
 
 		static toViewModel(data) {
 			const item = new CargoLoadTypeViewModel(null);
+			"height" in data && (item.height = data.height === null ? null : +data.height);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"oversizeHead" in data && (item.oversizeHead = data.oversizeHead === null ? null : +data.oversizeHead);
@@ -2114,6 +2127,7 @@ ViewModel.mappings = {
 				model = new CargoLoadType();
 			}
 
+			"height" in viewModel && (model.height = viewModel.height === null ? null : +viewModel.height);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"oversizeHead" in viewModel && (model.oversizeHead = viewModel.oversizeHead === null ? null : +viewModel.oversizeHead);
@@ -2299,6 +2313,107 @@ ViewModel.mappings = {
 			}
 
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
+
+			return model;
+		}
+	},
+	[RailcarCargoLoadViewModel.name]: class ComposedRailcarCargoLoadViewModel extends RailcarCargoLoadViewModel {
+		async map() {
+			return {
+				owner: new CompanySummaryModel(await BaseServer.unwrap(this.$$model.owner)),
+				slot: new CargoSlotViewModel(await BaseServer.unwrap(this.$$model.slot)),
+				type: new CargoLoadTypeViewModel(await BaseServer.unwrap(this.$$model.type)),
+				color: this.$$model.color,
+				id: this.$$model.id,
+				identifier: this.$$model.identifier,
+				logoColor: this.$$model.logoColor,
+				name: this.$$model.name
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				get owner() {
+					return ViewModel.mappings[CompanySummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "owner-RailcarCargoLoadViewModel"]
+					);
+				},
+				get slot() {
+					return ViewModel.mappings[CargoSlotViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "slot-RailcarCargoLoadViewModel"]
+					);
+				},
+				get type() {
+					return ViewModel.mappings[CargoLoadTypeViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "type-RailcarCargoLoadViewModel"]
+					);
+				},
+				color: true,
+				id: true,
+				identifier: true,
+				logoColor: true,
+				name: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new RailcarCargoLoadViewModel(null);
+			"owner" in data && (item.owner = data.owner && ViewModel.mappings[CompanySummaryModel.name].toViewModel(data.owner));
+			"slot" in data && (item.slot = data.slot && ViewModel.mappings[CargoSlotViewModel.name].toViewModel(data.slot));
+			"type" in data && (item.type = data.type && ViewModel.mappings[CargoLoadTypeViewModel.name].toViewModel(data.type));
+			"color" in data && (item.color = data.color === null ? null : `${data.color}`);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"identifier" in data && (item.identifier = data.identifier === null ? null : `${data.identifier}`);
+			"logoColor" in data && (item.logoColor = data.logoColor === null ? null : `${data.logoColor}`);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: RailcarCargoLoadViewModel) {
+			let model: CargoLoad;
+
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(CargoLoad).find(viewModel.id)
+			} else {
+				model = new CargoLoad();
+			}
+
+			"owner" in viewModel && (model.owner.id = viewModel.owner ? viewModel.owner.id : null);
+			"slot" in viewModel && (model.slot.id = viewModel.slot ? viewModel.slot.id : null);
+			"type" in viewModel && (model.type.id = viewModel.type ? viewModel.type.id : null);
+			"color" in viewModel && (model.color = viewModel.color === null ? null : `${viewModel.color}`);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"identifier" in viewModel && (model.identifier = viewModel.identifier === null ? null : `${viewModel.identifier}`);
+			"logoColor" in viewModel && (model.logoColor = viewModel.logoColor === null ? null : `${viewModel.logoColor}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 
 			return model;
@@ -3518,6 +3633,7 @@ ViewModel.mappings = {
 				description: this.$$model.description,
 				iconId: this.$$model.iconId,
 				id: this.$$model.id,
+				logoId: this.$$model.logoId,
 				name: this.$$model.name,
 				shortname: this.$$model.shortname,
 				tag: this.$$model.tag,
@@ -3578,6 +3694,7 @@ ViewModel.mappings = {
 				description: true,
 				iconId: true,
 				id: true,
+				logoId: true,
 				name: true,
 				shortname: true,
 				tag: true,
@@ -3594,6 +3711,7 @@ ViewModel.mappings = {
 			"description" in data && (item.description = data.description === null ? null : `${data.description}`);
 			"iconId" in data && (item.iconId = data.iconId === null ? null : `${data.iconId}`);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"logoId" in data && (item.logoId = data.logoId === null ? null : `${data.logoId}`);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"shortname" in data && (item.shortname = data.shortname === null ? null : `${data.shortname}`);
 			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
@@ -3618,6 +3736,7 @@ ViewModel.mappings = {
 			"description" in viewModel && (model.description = viewModel.description === null ? null : `${viewModel.description}`);
 			"iconId" in viewModel && (model.iconId = viewModel.iconId === null ? null : `${viewModel.iconId}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"logoId" in viewModel && (model.logoId = viewModel.logoId === null ? null : `${viewModel.logoId}`);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 			"shortname" in viewModel && (model.shortname = viewModel.shortname === null ? null : `${viewModel.shortname}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
@@ -4325,6 +4444,7 @@ ViewModel.mappings = {
 				operator: new CompanySummaryModel(await BaseServer.unwrap(this.$$model.operator)),
 				owner: new CompanySummaryModel(await BaseServer.unwrap(this.$$model.owner)),
 				captures: (await this.$$model.captures.includeTree(ViewModel.mappings[CaptureViewModel.name].items).toArray()).map(item => new CaptureViewModel(item)),
+				cargoLoads: (await this.$$model.cargoLoads.includeTree(ViewModel.mappings[RailcarCargoLoadViewModel.name].items).toArray()).map(item => new RailcarCargoLoadViewModel(item)),
 				comissions: (await this.$$model.comissions.includeTree(ViewModel.mappings[RailcarComissionViewModel.name].items).toArray()).map(item => new RailcarComissionViewModel(item)),
 				graffitis: (await this.$$model.graffitis.includeTree(ViewModel.mappings[GraffitiSummaryModel.name].items).toArray()).map(item => new GraffitiSummaryModel(item)),
 				maintenanceJobs: (await this.$$model.maintenanceJobs.includeTree(ViewModel.mappings[MaintenanceSummaryModel.name].items).toArray()).map(item => new MaintenanceSummaryModel(item)),
@@ -4402,6 +4522,12 @@ ViewModel.mappings = {
 						[...parents, "captures-RailcarViewModel"]
 					);
 				},
+				get cargoLoads() {
+					return ViewModel.mappings[RailcarCargoLoadViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "cargoLoads-RailcarViewModel"]
+					);
+				},
 				get comissions() {
 					return ViewModel.mappings[RailcarComissionViewModel.name].getPrefetchingProperties(
 						level,
@@ -4455,6 +4581,7 @@ ViewModel.mappings = {
 			"operator" in data && (item.operator = data.operator && ViewModel.mappings[CompanySummaryModel.name].toViewModel(data.operator));
 			"owner" in data && (item.owner = data.owner && ViewModel.mappings[CompanySummaryModel.name].toViewModel(data.owner));
 			"captures" in data && (item.captures = data.captures && [...data.captures].map(i => ViewModel.mappings[CaptureViewModel.name].toViewModel(i)));
+			"cargoLoads" in data && (item.cargoLoads = data.cargoLoads && [...data.cargoLoads].map(i => ViewModel.mappings[RailcarCargoLoadViewModel.name].toViewModel(i)));
 			"comissions" in data && (item.comissions = data.comissions && [...data.comissions].map(i => ViewModel.mappings[RailcarComissionViewModel.name].toViewModel(i)));
 			"graffitis" in data && (item.graffitis = data.graffitis && [...data.graffitis].map(i => ViewModel.mappings[GraffitiSummaryModel.name].toViewModel(i)));
 			"maintenanceJobs" in data && (item.maintenanceJobs = data.maintenanceJobs && [...data.maintenanceJobs].map(i => ViewModel.mappings[MaintenanceSummaryModel.name].toViewModel(i)));
@@ -4486,6 +4613,7 @@ ViewModel.mappings = {
 			"operator" in viewModel && (model.operator.id = viewModel.operator ? viewModel.operator.id : null);
 			"owner" in viewModel && (model.owner.id = viewModel.owner ? viewModel.owner.id : null);
 			"captures" in viewModel && (null);
+			"cargoLoads" in viewModel && (null);
 			"comissions" in viewModel && (null);
 			"graffitis" in viewModel && (null);
 			"maintenanceJobs" in viewModel && (null);

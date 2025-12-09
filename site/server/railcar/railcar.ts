@@ -8,6 +8,7 @@ import { CaptureViewModel } from "../capture/capture";
 import { CouplerViewModel } from "./coupler";
 import { MaintenanceSummaryModel } from "../maintenace/maintenace";
 import { RailcarComissionViewModel, RailcarWithdrawalViewModel } from "./storage";
+import { RailcarCargoLoadViewModel } from "./cargo";
 
 export class RailcarSummaryModel extends ViewModel<Railcar> {
 	id;
@@ -44,4 +45,6 @@ export class RailcarViewModel extends RailcarSummaryModel {
 
 	comissions: RailcarComissionViewModel[];
 	withdrawals: RailcarWithdrawalViewModel[];
+
+	cargoLoads: RailcarCargoLoadViewModel[];
 }

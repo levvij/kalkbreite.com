@@ -25,6 +25,7 @@ export class CaptureViewModel {
 export class CompanySummaryModel {
 	iconId: string;
 	id: string;
+	logoId: string;
 	name: string;
 	shortname: string;
 	tag: string;
@@ -34,6 +35,7 @@ export class CompanySummaryModel {
 		const item = new CompanySummaryModel();
 		raw.iconId === undefined || (item.iconId = raw.iconId === null ? null : `${raw.iconId}`)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.logoId === undefined || (item.logoId = raw.logoId === null ? null : `${raw.logoId}`)
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		raw.shortname === undefined || (item.shortname = raw.shortname === null ? null : `${raw.shortname}`)
 		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
@@ -257,6 +259,7 @@ export class MaintenanceSummaryModel {
 
 export class CargoSlotViewModel {
 	fixture: CargoFixtureViewModel;
+	baseline: number;
 	clearanceHead: number;
 	clearanceTail: number;
 	direction: RailcarDirection;
@@ -266,6 +269,7 @@ export class CargoSlotViewModel {
 	private static $build(raw) {
 		const item = new CargoSlotViewModel();
 		raw.fixture === undefined || (item.fixture = raw.fixture ? CargoFixtureViewModel["$build"](raw.fixture) : null)
+		raw.baseline === undefined || (item.baseline = raw.baseline === null ? null : +raw.baseline)
 		raw.clearanceHead === undefined || (item.clearanceHead = raw.clearanceHead === null ? null : +raw.clearanceHead)
 		raw.clearanceTail === undefined || (item.clearanceTail = raw.clearanceTail === null ? null : +raw.clearanceTail)
 		raw.direction === undefined || (item.direction = raw.direction)
@@ -294,6 +298,7 @@ export class CargoFixtureViewModel {
 }
 
 export class CargoLoadTypeViewModel {
+	height: number;
 	id: string;
 	name: string;
 	oversizeHead: number;
@@ -301,6 +306,7 @@ export class CargoLoadTypeViewModel {
 
 	private static $build(raw) {
 		const item = new CargoLoadTypeViewModel();
+		raw.height === undefined || (item.height = raw.height === null ? null : +raw.height)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		raw.oversizeHead === undefined || (item.oversizeHead = raw.oversizeHead === null ? null : +raw.oversizeHead)
@@ -347,6 +353,31 @@ export class UicLocaleViewModel {
 	private static $build(raw) {
 		const item = new UicLocaleViewModel();
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		
+		return item;
+	}
+}
+
+export class RailcarCargoLoadViewModel {
+	owner: CompanySummaryModel;
+	slot: CargoSlotViewModel;
+	type: CargoLoadTypeViewModel;
+	color: string;
+	id: string;
+	identifier: string;
+	logoColor: string;
+	name: string;
+
+	private static $build(raw) {
+		const item = new RailcarCargoLoadViewModel();
+		raw.owner === undefined || (item.owner = raw.owner ? CompanySummaryModel["$build"](raw.owner) : null)
+		raw.slot === undefined || (item.slot = raw.slot ? CargoSlotViewModel["$build"](raw.slot) : null)
+		raw.type === undefined || (item.type = raw.type ? CargoLoadTypeViewModel["$build"](raw.type) : null)
+		raw.color === undefined || (item.color = raw.color === null ? null : `${raw.color}`)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.identifier === undefined || (item.identifier = raw.identifier === null ? null : `${raw.identifier}`)
+		raw.logoColor === undefined || (item.logoColor = raw.logoColor === null ? null : `${raw.logoColor}`)
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		
 		return item;
@@ -652,6 +683,7 @@ export class CompanyViewModel {
 	description: string;
 	iconId: string;
 	id: string;
+	logoId: string;
 	name: string;
 	shortname: string;
 	tag: string;
@@ -666,6 +698,7 @@ export class CompanyViewModel {
 		raw.description === undefined || (item.description = raw.description === null ? null : `${raw.description}`)
 		raw.iconId === undefined || (item.iconId = raw.iconId === null ? null : `${raw.iconId}`)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.logoId === undefined || (item.logoId = raw.logoId === null ? null : `${raw.logoId}`)
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
 		raw.shortname === undefined || (item.shortname = raw.shortname === null ? null : `${raw.shortname}`)
 		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
@@ -861,6 +894,7 @@ export class RailcarViewModel {
 	operator: CompanySummaryModel;
 	owner: CompanySummaryModel;
 	captures: CaptureViewModel[];
+	cargoLoads: RailcarCargoLoadViewModel[];
 	comissions: RailcarComissionViewModel[];
 	graffitis: GraffitiSummaryModel[];
 	maintenanceJobs: MaintenanceSummaryModel[];
@@ -882,6 +916,7 @@ export class RailcarViewModel {
 		raw.operator === undefined || (item.operator = raw.operator ? CompanySummaryModel["$build"](raw.operator) : null)
 		raw.owner === undefined || (item.owner = raw.owner ? CompanySummaryModel["$build"](raw.owner) : null)
 		raw.captures === undefined || (item.captures = raw.captures ? raw.captures.map(i => CaptureViewModel["$build"](i)) : null)
+		raw.cargoLoads === undefined || (item.cargoLoads = raw.cargoLoads ? raw.cargoLoads.map(i => RailcarCargoLoadViewModel["$build"](i)) : null)
 		raw.comissions === undefined || (item.comissions = raw.comissions ? raw.comissions.map(i => RailcarComissionViewModel["$build"](i)) : null)
 		raw.graffitis === undefined || (item.graffitis = raw.graffitis ? raw.graffitis.map(i => GraffitiSummaryModel["$build"](i)) : null)
 		raw.maintenanceJobs === undefined || (item.maintenanceJobs = raw.maintenanceJobs ? raw.maintenanceJobs.map(i => MaintenanceSummaryModel["$build"](i)) : null)
