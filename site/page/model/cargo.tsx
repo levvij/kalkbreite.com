@@ -70,6 +70,7 @@ export class RailcarModelCargoComponent extends Component {
 		const overlap = this.overlappingLoadTypes.get(type.id);
 
 		return <ui-load-type
+			ui-click={() => console.log(slot.id)}
 			ui-overlap={overlap ? (overlap.indexOf(type) % 2 ? 'even' : 'odd') : 'none'}
 			style={[
 				cargoOffset.provide(percentage(100 / slot.fixture.length * -type.oversizeHead)),

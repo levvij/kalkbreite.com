@@ -353,9 +353,121 @@ export class CargoFixture extends Entity<CargoFixtureQueryProxy> {
 	}
 }
 			
+export class CargoLoadQueryProxy extends QueryProxy {
+	get owner(): Partial<CompanyQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get railcar(): Partial<RailcarQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get slot(): Partial<CargoSlotQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get type(): Partial<CargoLoadTypeQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get color(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get identifier(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get logoColor(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get ownerId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get railcarId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get slotId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get tag(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get typeId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+}
+
+export class CargoLoad extends Entity<CargoLoadQueryProxy> {
+	get owner(): Partial<ForeignReference<Company>> { return this.$owner; }
+	get railcar(): Partial<ForeignReference<Railcar>> { return this.$railcar; }
+	get slot(): Partial<ForeignReference<CargoSlot>> { return this.$slot; }
+	get type(): Partial<ForeignReference<CargoLoadType>> { return this.$type; }
+	color: string;
+	declare id: string;
+	identifier: string;
+	logoColor: string;
+	name: string;
+	ownerId: string;
+	railcarId: string;
+	slotId: string;
+	tag: string;
+	typeId: string;
+	
+	$$meta = {
+		source: "cargo_load",
+		columns: {
+			color: { type: "text", name: "color" },
+			id: { type: "uuid", name: "id" },
+			identifier: { type: "text", name: "identifier" },
+			logoColor: { type: "text", name: "logo_color" },
+			name: { type: "text", name: "name" },
+			ownerId: { type: "uuid", name: "owner_id" },
+			railcarId: { type: "uuid", name: "railcar_id" },
+			slotId: { type: "uuid", name: "slot_id" },
+			tag: { type: "text", name: "tag" },
+			typeId: { type: "uuid", name: "type_id" }
+		},
+		get set(): DbSet<CargoLoad, CargoLoadQueryProxy> { 
+			return new DbSet<CargoLoad, CargoLoadQueryProxy>(CargoLoad, null);
+		}
+	};
+	
+	constructor() {
+		super();
+		
+		this.$owner = new ForeignReference<Company>(this, "ownerId", Company);
+	this.$railcar = new ForeignReference<Railcar>(this, "railcarId", Railcar);
+	this.$slot = new ForeignReference<CargoSlot>(this, "slotId", CargoSlot);
+	this.$type = new ForeignReference<CargoLoadType>(this, "typeId", CargoLoadType);
+	}
+	
+	private $owner: ForeignReference<Company>;
+
+	set owner(value: Partial<ForeignReference<Company>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.ownerId = value.id as string;
+		} else {
+			this.ownerId = null;
+		}
+	}
+
+	private $railcar: ForeignReference<Railcar>;
+
+	set railcar(value: Partial<ForeignReference<Railcar>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.railcarId = value.id as string;
+		} else {
+			this.railcarId = null;
+		}
+	}
+
+	private $slot: ForeignReference<CargoSlot>;
+
+	set slot(value: Partial<ForeignReference<CargoSlot>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.slotId = value.id as string;
+		} else {
+			this.slotId = null;
+		}
+	}
+
+	private $type: ForeignReference<CargoLoadType>;
+
+	set type(value: Partial<ForeignReference<CargoLoadType>>) {
+		if (value) {
+			if (!value.id) { throw new Error("Invalid null id. Save the referenced model prior to creating a reference to it."); }
+
+			this.typeId = value.id as string;
+		} else {
+			this.typeId = null;
+		}
+	}
+
+	
+}
+			
 export class CargoLoadTypeQueryProxy extends QueryProxy {
 	get fixture(): Partial<CargoFixtureQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get fixtureId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get height(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get name(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get oversizeHead(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get oversizeTail(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -363,7 +475,9 @@ export class CargoLoadTypeQueryProxy extends QueryProxy {
 
 export class CargoLoadType extends Entity<CargoLoadTypeQueryProxy> {
 	get fixture(): Partial<ForeignReference<CargoFixture>> { return this.$fixture; }
-	fixtureId: string;
+	loads: PrimaryReference<CargoLoad, CargoLoadQueryProxy>;
+		fixtureId: string;
+	height: number;
 	declare id: string;
 	name: string;
 	oversizeHead: number;
@@ -373,6 +487,7 @@ export class CargoLoadType extends Entity<CargoLoadTypeQueryProxy> {
 		source: "cargo_load_type",
 		columns: {
 			fixtureId: { type: "uuid", name: "fixture_id" },
+			height: { type: "float4", name: "height" },
 			id: { type: "uuid", name: "id" },
 			name: { type: "text", name: "name" },
 			oversizeHead: { type: "float4", name: "oversize_head" },
@@ -387,6 +502,7 @@ export class CargoLoadType extends Entity<CargoLoadTypeQueryProxy> {
 		super();
 		
 		this.$fixture = new ForeignReference<CargoFixture>(this, "fixtureId", CargoFixture);
+	this.loads = new PrimaryReference<CargoLoad, CargoLoadQueryProxy>(this, "typeId", CargoLoad);
 	}
 	
 	private $fixture: ForeignReference<CargoFixture>;
@@ -407,6 +523,7 @@ export class CargoLoadType extends Entity<CargoLoadTypeQueryProxy> {
 export class CargoSlotQueryProxy extends QueryProxy {
 	get fixture(): Partial<CargoFixtureQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get railcarModel(): Partial<RailcarModelQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get baseline(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get clearanceHead(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get clearanceTail(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get direction(): "forward" | "reverse" { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -418,6 +535,7 @@ export class CargoSlotQueryProxy extends QueryProxy {
 export class CargoSlot extends Entity<CargoSlotQueryProxy> {
 	get fixture(): Partial<ForeignReference<CargoFixture>> { return this.$fixture; }
 	get railcarModel(): Partial<ForeignReference<RailcarModel>> { return this.$railcarModel; }
+	baseline: number;
 	clearanceHead: number;
 	clearanceTail: number;
 	direction: RailcarDirection;
@@ -429,6 +547,7 @@ export class CargoSlot extends Entity<CargoSlotQueryProxy> {
 	$$meta = {
 		source: "cargo_slot",
 		columns: {
+			baseline: { type: "float4", name: "baseline" },
 			clearanceHead: { type: "float4", name: "clearance_head" },
 			clearanceTail: { type: "float4", name: "clearance_tail" },
 			direction: { type: "railcar_direction", name: "direction" },
@@ -565,6 +684,7 @@ export class Company extends Entity<CompanyQueryProxy> {
 	manufacturedRailcars: PrimaryReference<Railcar, RailcarQueryProxy>;
 		operatedRailcars: PrimaryReference<Railcar, RailcarQueryProxy>;
 		operatedTrains: PrimaryReference<TrainLabel, TrainLabelQueryProxy>;
+		cargoContainers: PrimaryReference<CargoLoad, CargoLoadQueryProxy>;
 		ownedRailcars: PrimaryReference<Railcar, RailcarQueryProxy>;
 		get parent(): Partial<ForeignReference<Company>> { return this.$parent; }
 	children: PrimaryReference<Company, CompanyQueryProxy>;
@@ -604,6 +724,7 @@ export class Company extends Entity<CompanyQueryProxy> {
 	this.manufacturedRailcars = new PrimaryReference<Railcar, RailcarQueryProxy>(this, "manufacturerId", Railcar);
 		this.operatedRailcars = new PrimaryReference<Railcar, RailcarQueryProxy>(this, "operatorId", Railcar);
 		this.operatedTrains = new PrimaryReference<TrainLabel, TrainLabelQueryProxy>(this, "operatorId", TrainLabel);
+		this.cargoContainers = new PrimaryReference<CargoLoad, CargoLoadQueryProxy>(this, "ownerId", CargoLoad);
 		this.ownedRailcars = new PrimaryReference<Railcar, RailcarQueryProxy>(this, "ownerId", Railcar);
 		this.$parent = new ForeignReference<Company>(this, "parentId", Company);
 	this.children = new PrimaryReference<Company, CompanyQueryProxy>(this, "parentId", Company);
@@ -1409,6 +1530,7 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 	get operator(): Partial<ForeignReference<Company>> { return this.$operator; }
 	get owner(): Partial<ForeignReference<Company>> { return this.$owner; }
 	captures: PrimaryReference<Capture, CaptureQueryProxy>;
+		cargoLoads: PrimaryReference<CargoLoad, CargoLoadQueryProxy>;
 		comissions: PrimaryReference<RailcarComission, RailcarComissionQueryProxy>;
 		derailingIncidents: PrimaryReference<DerailingIncident, DerailingIncidentQueryProxy>;
 		graffitis: PrimaryReference<Graffiti, GraffitiQueryProxy>;
@@ -1469,6 +1591,7 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 	this.$operator = new ForeignReference<Company>(this, "operatorId", Company);
 	this.$owner = new ForeignReference<Company>(this, "ownerId", Company);
 	this.captures = new PrimaryReference<Capture, CaptureQueryProxy>(this, "railcarId", Capture);
+		this.cargoLoads = new PrimaryReference<CargoLoad, CargoLoadQueryProxy>(this, "railcarId", CargoLoad);
 		this.comissions = new PrimaryReference<RailcarComission, RailcarComissionQueryProxy>(this, "railcarId", RailcarComission);
 		this.derailingIncidents = new PrimaryReference<DerailingIncident, DerailingIncidentQueryProxy>(this, "railcarId", DerailingIncident);
 		this.graffitis = new PrimaryReference<Graffiti, GraffitiQueryProxy>(this, "railcarId", Graffiti);
@@ -2228,6 +2351,7 @@ export class DbContext {
 	captureFrame: DbSet<CaptureFrame, CaptureFrameQueryProxy>;
 	captureSession: DbSet<CaptureSession, CaptureSessionQueryProxy>;
 	cargoFixture: DbSet<CargoFixture, CargoFixtureQueryProxy>;
+	cargoLoad: DbSet<CargoLoad, CargoLoadQueryProxy>;
 	cargoLoadType: DbSet<CargoLoadType, CargoLoadTypeQueryProxy>;
 	cargoSlot: DbSet<CargoSlot, CargoSlotQueryProxy>;
 	collisionIncident: DbSet<CollisionIncident, CollisionIncidentQueryProxy>;
@@ -2270,6 +2394,7 @@ export class DbContext {
 		this.captureFrame = new DbSet<CaptureFrame, CaptureFrameQueryProxy>(CaptureFrame, this.runContext);
 		this.captureSession = new DbSet<CaptureSession, CaptureSessionQueryProxy>(CaptureSession, this.runContext);
 		this.cargoFixture = new DbSet<CargoFixture, CargoFixtureQueryProxy>(CargoFixture, this.runContext);
+		this.cargoLoad = new DbSet<CargoLoad, CargoLoadQueryProxy>(CargoLoad, this.runContext);
 		this.cargoLoadType = new DbSet<CargoLoadType, CargoLoadTypeQueryProxy>(CargoLoadType, this.runContext);
 		this.cargoSlot = new DbSet<CargoSlot, CargoSlotQueryProxy>(CargoSlot, this.runContext);
 		this.collisionIncident = new DbSet<CollisionIncident, CollisionIncidentQueryProxy>(CollisionIncident, this.runContext);

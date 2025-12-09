@@ -8,6 +8,7 @@ export class CargoSlotViewModel extends ViewModel<CargoSlot> {
 
 	direction;
 	offset;
+	baseline;
 
 	clearanceHead;
 	clearanceTail;
@@ -25,6 +26,7 @@ export class CargoLoadTypeViewModel extends ViewModel<CargoLoadType> {
 	id;
 	name;
 
+	height;
 	oversizeHead;
 	oversizeTail;
 }

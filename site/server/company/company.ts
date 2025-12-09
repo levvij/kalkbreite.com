@@ -7,6 +7,7 @@ export class CompanySummaryModel extends ViewModel<Company> {
 	tag;
 
 	iconId;
+	logoId;
 
 	name;
 	shortname;

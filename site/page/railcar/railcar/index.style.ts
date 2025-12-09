@@ -1,6 +1,6 @@
-import { rem, child, display, padding, marginBottom, fontSize, gap, alignItems, lineHeight, flexGrow, fontFamily, height, em, backgroundColor, hex, imageRendering, justifyContent, width, percentage, maxWidth, maxHeight, vh, objectFit, objectPosition, position, marginTop, paddingInline, alignContent, hover, filter, invert, attribute, transform, rotate, turn, borderRight, px, firstOfType, paddingTop, flexShrink, paddingBlock, whiteSpace, textAlign, marginLeft, paddingLeft, borderLeft, ch, color, scaleX, minHeight, firstChild, not, border, marginInline, descendant, empty, Variable, left, insetBlock } from "@acryps/style";
-import { trainIdentifierFont, monospacedFont } from "../../assets/font";
-import { pageSpacing, pageGutter, runningNumberFont, tagFont, captureBackgroundColor, pageColor, primaryContrastColor, primaryColor, pageContrastColor } from "../../index.style";
+import { rem, child, display, padding, marginBottom, fontSize, gap, alignItems, lineHeight, flexGrow, fontFamily, height, em, backgroundColor, hex, imageRendering, justifyContent, width, percentage, maxWidth, maxHeight, vh, objectFit, objectPosition, position, marginTop, paddingInline, alignContent, hover, filter, invert, attribute, transform, rotate, turn, borderRight, px, firstOfType, paddingTop, flexShrink, paddingBlock, whiteSpace, textAlign, marginLeft, paddingLeft, borderLeft, ch, color, scaleX, minHeight, firstChild, not, border, marginInline, descendant, empty, Variable, left, insetBlock, Ratio, Percentage, ColorValue, aspectRatio, BorderTopWidthStyleProperty, borderTop, bottom, borderBottom, insetInline, boxShadow, top, paddingBottom, flexDirection, marginBlock, media, minWidth, after, content, inset, borderInline } from "@acryps/style";
+import { trainIdentifierFont, monospacedFont, cargoLoadIdentifierFont } from "../../assets/font";
+import { pageSpacing, pageGutter, runningNumberFont, tagFont, captureBackgroundColor, pageColor, primaryContrastColor, primaryColor, pageContrastColor, cargoFixtureColor } from "../../index.style";
 import { boxed, maximumBoxedWidth } from "../../shared/boxed";
 import { activateButtonStyle, buttonGroupStyle, buttonStyle, mergedButtonGroup } from "../../shared/button";
 import { detailSectionStyle } from "../../shared/detail-section/index.style";
@@ -14,10 +14,17 @@ import { registerGraffitiStyle } from "./register-graffiti/index.style";
 import { trainLabelStyle } from "../../shared/train-label/index.style";
 import { couplerStyle } from "./coupler/index.style";
 import { comissionRailcarStyle } from "./comission/index.style";
+import { cargoLength, cargoOffset } from "../../model/index.style";
 
 const timeDayLength = rem(6);
 
 export const bufferAnchorOffset = new Variable<Number>('buffer-anchor-offset');
+
+export const cargoHeight = new Variable<Ratio>('cargo-height');
+export const cargoBaseline = new Variable<Percentage>('cargo-baseline');
+
+export const cargoLoadColor = new Variable<ColorValue>('cargo-color');
+export const cargoLoadLogoColor = new Variable<ColorValue>('cargo-logo-color');
 
 export const railcarStyle = () => child('ui-railcar')(
 	display('block'),
@@ -220,6 +227,129 @@ export const railcarStyle = () => child('ui-railcar')(
 					display('block')
 				)
 			),
+		),
+
+		child('ui-cargo') (
+			display('block'),
+			marginBottom(pageSpacing),
+
+			media(minWidth(px(750))) (
+				paddingTop(rem(1).add(px(2)).add(rem(0.5)).add(rem(0.25))), // fixture/slot labels
+			),
+
+			child('ui-bay') (
+				display('block'),
+				width(percentage(100)),
+				position('relative'),
+
+				media(maxWidth(px(750))) (
+					height(rem(10)),
+				),
+
+				media(minWidth(px(750))) (
+					aspectRatio(cargoHeight as any),
+				),
+
+				child('ui-load') (
+					position('absolute'),
+					left(cargoOffset),
+					width(cargoLength),
+					top(0),
+					height(percentage(100)),
+
+					after() (
+						content(''),
+
+						position('absolute'),
+						inset(0),
+						top(rem(-0.5)),
+
+						borderInline(px(1), 'dotted', cargoFixtureColor)
+					),
+
+					child('ui-fixture') (
+						media(minWidth(px(750))) (
+							position('absolute'),
+							insetInline(0),
+							bottom(percentage(100).add(rem(0.5))),
+						),
+
+						display('flex'),
+						justifyContent('space-between'),
+						paddingBottom(rem(0.25)),
+
+						color(cargoFixtureColor),
+						borderBottom(px(2), 'solid', cargoFixtureColor),
+						lineHeight(1)
+					),
+
+					child('ui-load') (
+						position('absolute'),
+						left(cargoOffset),
+						width(cargoLength),
+
+						media(minWidth(px(750))) (
+							aspectRatio(cargoHeight as any),
+							bottom(cargoBaseline),
+						),
+
+						media(maxWidth(px(750))) (
+							bottom(pageGutter)
+						),
+
+						display('flex'),
+						flexDirection('column'),
+						alignItems('center'),
+						justifyContent('space-between'),
+
+						color(cargoLoadLogoColor),
+						backgroundColor(cargoLoadColor),
+						boxShadow(pageContrastColor, 0, 0, 0, px(1), 'inset'),
+
+						child('ui-identifier') (
+							flexShrink(0),
+							marginBlock(rem(0.25)),
+
+							cargoLoadIdentifierFont,
+							fontSize(rem(0.75))
+						),
+
+						child('ui-logo') (
+							flexGrow(1),
+							width(percentage(70)),
+							marginBlock(rem(0.25)),
+
+							media(maxWidth(px(750))) (
+								height(rem(3))
+							),
+
+							backgroundColor(cargoLoadLogoColor)
+						),
+
+						child('ui-detail') (
+							flexShrink(0),
+
+							display('flex'),
+							alignItems('center'),
+							gap(rem(1)),
+							marginBlock(rem(0.25)),
+
+							fontSize(rem(0.75)),
+
+							media(maxWidth(px(750))) (
+								display('none').important()
+							)
+						)
+					)
+				)
+			),
+
+			child('ui-base') (
+				display('block'),
+
+				textAlign('center'),
+				borderTop(px(2), 'solid', pageContrastColor)
+			)
 		),
 
 		graffitiCollectionStyle(
