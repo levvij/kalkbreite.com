@@ -30,7 +30,15 @@ export class SearchComponent extends Component {
 					throw new Error(`Duplicate shortcut '${shortcut}'`);
 				}
 
-				this.shortcuts.set(shortcut, route.matchingPath);
+				let path = [route.matchingPath];
+				let parent = route.parent;
+
+				while (parent) {
+					path.unshift(parent.matchingPath);
+					parent = parent.parent;
+				}
+
+				this.shortcuts.set(shortcut, path.join(''));
 			}
 		}
 	}

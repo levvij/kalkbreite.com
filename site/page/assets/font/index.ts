@@ -1,4 +1,4 @@
-import { Font } from "@acryps/style";
+import { em, Font, letterSpacing } from "@acryps/style";
 
 export const displayFont = new Font('pressura-display')
 	.addSource('/assets/font/display.woff2');
@@ -14,4 +14,4 @@ export const districtIdentifierFont = monospacedFont;
 export const sectionIdentifierFont = monospacedFont;
 export const powerDistrictIdentifierFont = monospacedFont;
 
-export const cargoLoadIdentifierFont = monospacedFont;
+export const cargoLoadIdentifierFont = [monospacedFont, letterSpacing(em(0.05))];

@@ -14,11 +14,13 @@ export class CargoSlotViewModel extends ViewModel<CargoSlot> {
 	clearanceTail;
 }
 
-export class CargoFixtureViewModel extends ViewModel<CargoFixture> {
+export class CargoFixtureSummaryModel extends ViewModel<CargoFixture> {
 	id;
 	name;
 	length;
+}
 
+export class CargoFixtureViewModel extends CargoFixtureSummaryModel {
 	loadTypes: CargoLoadTypeViewModel[];
 }
 

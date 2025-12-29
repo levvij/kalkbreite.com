@@ -18,6 +18,7 @@ import { iconFont, icons } from "./.built/icons";
 import { artistsStyle } from "./artist/index.style";
 import { liveStyle } from "./live/index.style";
 import { searchStyle } from "./shared/search/index.style";
+import { cargoStyle } from "./cargo/index.style";
 
 export const applicationStyle = () => root() (
 	monospacedFont,
@@ -36,6 +37,7 @@ export const applicationStyle = () => root() (
 
 		child('ui-page') (
 			homeStyle(),
+			cargoStyle(),
 			loginStyle(),
 			trainsStyle(),
 			artistsStyle(),
@@ -70,7 +72,7 @@ export const applicationStyle = () => root() (
 
 					child('ui-logo') (
 						flexGrow(1),
-						padding(pageGutter, pageSpacing.divide(2)),
+						paddingBlock(pageSpacing.divide(2)),
 
 						fontSize(rem(1.5))
 					),
