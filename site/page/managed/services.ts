@@ -22,6 +22,52 @@ export class CaptureViewModel {
 	}
 }
 
+export class CargoLoadSummaryModel {
+	owner: CompanySummaryModel;
+	railcar: RailcarSummaryModel;
+	type: CargoLoadTypeSummarModel;
+	color: string;
+	id: string;
+	identifier: string;
+	logoColor: string;
+	tag: string;
+
+	private static $build(raw) {
+		const item = new CargoLoadSummaryModel();
+		raw.owner === undefined || (item.owner = raw.owner ? CompanySummaryModel["$build"](raw.owner) : null)
+		raw.railcar === undefined || (item.railcar = raw.railcar ? RailcarSummaryModel["$build"](raw.railcar) : null)
+		raw.type === undefined || (item.type = raw.type ? CargoLoadTypeSummarModel["$build"](raw.type) : null)
+		raw.color === undefined || (item.color = raw.color === null ? null : `${raw.color}`)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.identifier === undefined || (item.identifier = raw.identifier === null ? null : `${raw.identifier}`)
+		raw.logoColor === undefined || (item.logoColor = raw.logoColor === null ? null : `${raw.logoColor}`)
+		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
+		
+		return item;
+	}
+}
+
+export class CargoLoadTypeSummarModel {
+	fixture: CargoFixtureSummaryModel;
+	height: number;
+	id: string;
+	name: string;
+	oversizeHead: number;
+	oversizeTail: number;
+
+	private static $build(raw) {
+		const item = new CargoLoadTypeSummarModel();
+		raw.fixture === undefined || (item.fixture = raw.fixture ? CargoFixtureSummaryModel["$build"](raw.fixture) : null)
+		raw.height === undefined || (item.height = raw.height === null ? null : +raw.height)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		raw.oversizeHead === undefined || (item.oversizeHead = raw.oversizeHead === null ? null : +raw.oversizeHead)
+		raw.oversizeTail === undefined || (item.oversizeTail = raw.oversizeTail === null ? null : +raw.oversizeTail)
+		
+		return item;
+	}
+}
+
 export class CompanySummaryModel {
 	iconId: string;
 	id: string;
@@ -280,15 +326,13 @@ export class CargoSlotViewModel {
 	}
 }
 
-export class CargoFixtureViewModel {
-	loadTypes: CargoLoadTypeViewModel[];
+export class CargoFixtureSummaryModel {
 	id: string;
 	length: number;
 	name: string;
 
 	private static $build(raw) {
-		const item = new CargoFixtureViewModel();
-		raw.loadTypes === undefined || (item.loadTypes = raw.loadTypes ? raw.loadTypes.map(i => CargoLoadTypeViewModel["$build"](i)) : null)
+		const item = new CargoFixtureSummaryModel();
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.length === undefined || (item.length = raw.length === null ? null : +raw.length)
 		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
@@ -818,6 +862,23 @@ export class MaintenanceViewModel {
 	}
 }
 
+export class CargoFixtureViewModel {
+	loadTypes: CargoLoadTypeViewModel[];
+	id: string;
+	length: number;
+	name: string;
+
+	private static $build(raw) {
+		const item = new CargoFixtureViewModel();
+		raw.loadTypes === undefined || (item.loadTypes = raw.loadTypes ? raw.loadTypes.map(i => CargoLoadTypeViewModel["$build"](i)) : null)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.length === undefined || (item.length = raw.length === null ? null : +raw.length)
+		raw.name === undefined || (item.name = raw.name === null ? null : `${raw.name}`)
+		
+		return item;
+	}
+}
+
 export class CouplerTypeViewModel {
 	flippable: boolean;
 	icon: string;
@@ -1031,6 +1092,29 @@ export class Service {
 			}
 			
 			return value;
+		});
+	}
+}
+
+export class CargoService {
+	async getLoads(): Promise<Array<CargoLoadSummaryModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("R2MzlsZHJ0dzh4a3VodGtycTZxeGJicT"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : CargoLoadSummaryModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
 		});
 	}
 }

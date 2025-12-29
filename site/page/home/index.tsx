@@ -104,6 +104,20 @@ export class HomePage extends Component {
 
 					{goIcon()}
 				</ui-topic>
+
+				<ui-topic ui-href='/cargo'>
+					<img src='/assets/topics/cargo.jpg' />
+
+					<ui-title>
+						Cargo
+					</ui-title>
+
+					<ui-description>
+						Trains move cargo. See all the containers registered at Kalkbreite.
+					</ui-description>
+
+					{goIcon()}
+				</ui-topic>
 			</ui-topics>
 		</ui-home>
 	}

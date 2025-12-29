@@ -1,6 +1,8 @@
 import { BaseServer, ViewModel, Inject } from "vlserver";
 
 import { DbContext } from "././database";
+import { CargoLoadSummaryModel } from "././../cargo/cargo";
+import { CargoService } from "././../cargo/index";
 import { CompanySummaryModel } from "././../company/company";
 import { CompanyViewModel } from "././../company/company";
 import { CompanyService } from "././../company/index";
@@ -73,10 +75,11 @@ import { LastTrainHeadPositionViewModel } from "././../train/position";
 import { LastTrainPosition } from "././../train/position";
 import { TrainRailcarUnitViewModel } from "././../train/unit";
 import { TrainService } from "././../train/index";
+import { CargoLoadTypeSummarModel } from "./../cargo/cargo";
 import { GraffitiInspirationMediaViewModel } from "./../graffiti/inspiration";
 import { MaintenanceSummaryModel } from "./../maintenace/maintenace";
 import { CargoSlotViewModel } from "./../model/cargo";
-import { CargoFixtureViewModel } from "./../model/cargo";
+import { CargoFixtureSummaryModel } from "./../model/cargo";
 import { CargoLoadTypeViewModel } from "./../model/cargo";
 import { UicLocaleViewModel } from "./../model/uic-identifier";
 import { RailcarCargoLoadViewModel } from "./../railcar/cargo";
@@ -87,9 +90,12 @@ import { RailcarWithdrawalViewModel } from "./../railcar/storage";
 import { AccountViewModel } from "./../session/session";
 import { StorageContainerSummaryModel } from "./../storage/storage-contaiuner";
 import { TrainHeadPositionViewModel } from "./../train/position";
+import { CargoFixtureViewModel } from "./../model/cargo";
 import { GraffitiRailcarViewModel } from "./../railcar/railcar";
 import { TrainProductBrandViewModel } from "./../train/product-brand";
 import { Capture } from "./../managed/database";
+import { CargoLoad } from "./../managed/database";
+import { CargoLoadType } from "./../managed/database";
 import { Company } from "./../managed/database";
 import { Artist } from "./../managed/database";
 import { GraffitiCapture } from "./../managed/database";
@@ -97,10 +103,8 @@ import { GraffitiType } from "./../managed/database";
 import { Camera } from "./../managed/database";
 import { CargoSlot } from "./../managed/database";
 import { CargoFixture } from "./../managed/database";
-import { CargoLoadType } from "./../managed/database";
 import { UicIdentifierClass } from "./../managed/database";
 import { UicLocale } from "./../managed/database";
-import { CargoLoad } from "./../managed/database";
 import { CouplerType } from "./../managed/database";
 import { RailcarModel } from "./../managed/database";
 import { RailcarModelDrawing } from "./../managed/database";
@@ -110,13 +114,17 @@ import { TrainHeadPosition } from "./../managed/database";
 import { TrainProductBrand } from "./../managed/database";
 
 Inject.mappings = {
-	"CompanyService": {
-		objectConstructor: CompanyService,
+	"CargoService": {
+		objectConstructor: CargoService,
 		parameters: ["DbContext"]
 	},
 	"DbContext": {
 		objectConstructor: DbContext,
 		parameters: ["RunContext"]
+	},
+	"CompanyService": {
+		objectConstructor: CompanyService,
+		parameters: ["DbContext"]
 	},
 	"GraffitiService": {
 		objectConstructor: GraffitiService,
@@ -174,6 +182,15 @@ Inject.mappings = {
 
 export class ManagedServer extends BaseServer {
 	prepareRoutes() {
+		this.expose(
+			"R2MzlsZHJ0dzh4a3VodGtycTZxeGJicT",
+			{},
+			inject => inject.construct(CargoService),
+			(controller, params) => controller.getLoads(
+				
+			)
+		);
+
 		this.expose(
 			"UwcGBkdXY5NjVteXZ3NmF1bXZlMjcxM2",
 			{
@@ -928,6 +945,190 @@ ViewModel.mappings = {
 			"corrupted" in viewModel && (model.corrupted = !!viewModel.corrupted);
 			"direction" in viewModel && (model.direction = viewModel.direction === null ? null : viewModel.direction);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+
+			return model;
+		}
+	},
+	[CargoLoadSummaryModel.name]: class ComposedCargoLoadSummaryModel extends CargoLoadSummaryModel {
+		async map() {
+			return {
+				owner: new CompanySummaryModel(await BaseServer.unwrap(this.$$model.owner)),
+				railcar: new RailcarSummaryModel(await BaseServer.unwrap(this.$$model.railcar)),
+				type: new CargoLoadTypeSummarModel(await BaseServer.unwrap(this.$$model.type)),
+				color: this.$$model.color,
+				id: this.$$model.id,
+				identifier: this.$$model.identifier,
+				logoColor: this.$$model.logoColor,
+				tag: this.$$model.tag
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				get owner() {
+					return ViewModel.mappings[CompanySummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "owner-CargoLoadSummaryModel"]
+					);
+				},
+				get railcar() {
+					return ViewModel.mappings[RailcarSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "railcar-CargoLoadSummaryModel"]
+					);
+				},
+				get type() {
+					return ViewModel.mappings[CargoLoadTypeSummarModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "type-CargoLoadSummaryModel"]
+					);
+				},
+				color: true,
+				id: true,
+				identifier: true,
+				logoColor: true,
+				tag: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new CargoLoadSummaryModel(null);
+			"owner" in data && (item.owner = data.owner && ViewModel.mappings[CompanySummaryModel.name].toViewModel(data.owner));
+			"railcar" in data && (item.railcar = data.railcar && ViewModel.mappings[RailcarSummaryModel.name].toViewModel(data.railcar));
+			"type" in data && (item.type = data.type && ViewModel.mappings[CargoLoadTypeSummarModel.name].toViewModel(data.type));
+			"color" in data && (item.color = data.color === null ? null : `${data.color}`);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"identifier" in data && (item.identifier = data.identifier === null ? null : `${data.identifier}`);
+			"logoColor" in data && (item.logoColor = data.logoColor === null ? null : `${data.logoColor}`);
+			"tag" in data && (item.tag = data.tag === null ? null : `${data.tag}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: CargoLoadSummaryModel) {
+			let model: CargoLoad;
+
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(CargoLoad).find(viewModel.id)
+			} else {
+				model = new CargoLoad();
+			}
+
+			"owner" in viewModel && (model.owner.id = viewModel.owner ? viewModel.owner.id : null);
+			"railcar" in viewModel && (model.railcar.id = viewModel.railcar ? viewModel.railcar.id : null);
+			"type" in viewModel && (model.type.id = viewModel.type ? viewModel.type.id : null);
+			"color" in viewModel && (model.color = viewModel.color === null ? null : `${viewModel.color}`);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"identifier" in viewModel && (model.identifier = viewModel.identifier === null ? null : `${viewModel.identifier}`);
+			"logoColor" in viewModel && (model.logoColor = viewModel.logoColor === null ? null : `${viewModel.logoColor}`);
+			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
+
+			return model;
+		}
+	},
+	[CargoLoadTypeSummarModel.name]: class ComposedCargoLoadTypeSummarModel extends CargoLoadTypeSummarModel {
+		async map() {
+			return {
+				fixture: new CargoFixtureSummaryModel(await BaseServer.unwrap(this.$$model.fixture)),
+				height: this.$$model.height,
+				id: this.$$model.id,
+				name: this.$$model.name,
+				oversizeHead: this.$$model.oversizeHead,
+				oversizeTail: this.$$model.oversizeTail
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				get fixture() {
+					return ViewModel.mappings[CargoFixtureSummaryModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "fixture-CargoLoadTypeSummarModel"]
+					);
+				},
+				height: true,
+				id: true,
+				name: true,
+				oversizeHead: true,
+				oversizeTail: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new CargoLoadTypeSummarModel(null);
+			"fixture" in data && (item.fixture = data.fixture && ViewModel.mappings[CargoFixtureSummaryModel.name].toViewModel(data.fixture));
+			"height" in data && (item.height = data.height === null ? null : +data.height);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+			"oversizeHead" in data && (item.oversizeHead = data.oversizeHead === null ? null : +data.oversizeHead);
+			"oversizeTail" in data && (item.oversizeTail = data.oversizeTail === null ? null : +data.oversizeTail);
+
+			return item;
+		}
+
+		static async toModel(viewModel: CargoLoadTypeSummarModel) {
+			let model: CargoLoadType;
+
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(CargoLoadType).find(viewModel.id)
+			} else {
+				model = new CargoLoadType();
+			}
+
+			"fixture" in viewModel && (model.fixture.id = viewModel.fixture ? viewModel.fixture.id : null);
+			"height" in viewModel && (model.height = viewModel.height === null ? null : +viewModel.height);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
+			"oversizeHead" in viewModel && (model.oversizeHead = viewModel.oversizeHead === null ? null : +viewModel.oversizeHead);
+			"oversizeTail" in viewModel && (model.oversizeTail = viewModel.oversizeTail === null ? null : +viewModel.oversizeTail);
 
 			return model;
 		}
@@ -1987,10 +2188,9 @@ ViewModel.mappings = {
 			return model;
 		}
 	},
-	[CargoFixtureViewModel.name]: class ComposedCargoFixtureViewModel extends CargoFixtureViewModel {
+	[CargoFixtureSummaryModel.name]: class ComposedCargoFixtureSummaryModel extends CargoFixtureSummaryModel {
 		async map() {
 			return {
-				loadTypes: (await this.$$model.loadTypes.includeTree(ViewModel.mappings[CargoLoadTypeViewModel.name].items).toArray()).map(item => new CargoLoadTypeViewModel(item)),
 				id: this.$$model.id,
 				length: this.$$model.length,
 				name: this.$$model.name
@@ -2023,12 +2223,6 @@ ViewModel.mappings = {
 			}
 
 			return {
-				get loadTypes() {
-					return ViewModel.mappings[CargoLoadTypeViewModel.name].getPrefetchingProperties(
-						level,
-						[...parents, "loadTypes-CargoFixtureViewModel"]
-					);
-				},
 				id: true,
 				length: true,
 				name: true
@@ -2036,8 +2230,7 @@ ViewModel.mappings = {
 		};
 
 		static toViewModel(data) {
-			const item = new CargoFixtureViewModel(null);
-			"loadTypes" in data && (item.loadTypes = data.loadTypes && [...data.loadTypes].map(i => ViewModel.mappings[CargoLoadTypeViewModel.name].toViewModel(i)));
+			const item = new CargoFixtureSummaryModel(null);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"length" in data && (item.length = data.length === null ? null : +data.length);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
@@ -2045,7 +2238,7 @@ ViewModel.mappings = {
 			return item;
 		}
 
-		static async toModel(viewModel: CargoFixtureViewModel) {
+		static async toModel(viewModel: CargoFixtureSummaryModel) {
 			let model: CargoFixture;
 
 			if (viewModel.id) {
@@ -2054,7 +2247,6 @@ ViewModel.mappings = {
 				model = new CargoFixture();
 			}
 
-			"loadTypes" in viewModel && (null);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"length" in viewModel && (model.length = viewModel.length === null ? null : +viewModel.length);
 			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
@@ -4160,6 +4352,81 @@ ViewModel.mappings = {
 			"issue" in viewModel && (model.issue = viewModel.issue === null ? null : `${viewModel.issue}`);
 			"opened" in viewModel && (model.opened = viewModel.opened === null ? null : new Date(viewModel.opened));
 			"title" in viewModel && (model.title = viewModel.title === null ? null : `${viewModel.title}`);
+
+			return model;
+		}
+	},
+	[CargoFixtureViewModel.name]: class ComposedCargoFixtureViewModel extends CargoFixtureViewModel {
+		async map() {
+			return {
+				loadTypes: (await this.$$model.loadTypes.includeTree(ViewModel.mappings[CargoLoadTypeViewModel.name].items).toArray()).map(item => new CargoLoadTypeViewModel(item)),
+				id: this.$$model.id,
+				length: this.$$model.length,
+				name: this.$$model.name
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				get loadTypes() {
+					return ViewModel.mappings[CargoLoadTypeViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "loadTypes-CargoFixtureViewModel"]
+					);
+				},
+				id: true,
+				length: true,
+				name: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new CargoFixtureViewModel(null);
+			"loadTypes" in data && (item.loadTypes = data.loadTypes && [...data.loadTypes].map(i => ViewModel.mappings[CargoLoadTypeViewModel.name].toViewModel(i)));
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"length" in data && (item.length = data.length === null ? null : +data.length);
+			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: CargoFixtureViewModel) {
+			let model: CargoFixture;
+
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(CargoFixture).find(viewModel.id)
+			} else {
+				model = new CargoFixture();
+			}
+
+			"loadTypes" in viewModel && (null);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"length" in viewModel && (model.length = viewModel.length === null ? null : +viewModel.length);
+			"name" in viewModel && (model.name = viewModel.name === null ? null : `${viewModel.name}`);
 
 			return model;
 		}

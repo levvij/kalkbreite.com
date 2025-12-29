@@ -38,6 +38,8 @@ import { PowerDistrictPage } from "./layout/power-district";
 import { GraffitisPage } from "./graffiti";
 import { GraffitiInspirationsPage } from "./graffiti/inspirations";
 import { GraffitiInspirationPage } from "./graffiti/inspirations/inspiration";
+import { CargoPage } from "./cargo";
+import { CargoLoadPage } from "./cargo/load";
 
 // injected by esbuild
 declare const buildDate: string;
@@ -67,6 +69,10 @@ export class Application {
 
 			.route('/artist', ArtistsPage
 				.route('/:tag', ArtistPage)
+			)
+
+			.route('/cargo', CargoPage
+				.route('/load/:id', CargoLoadPage)
 			)
 
 			.route('/layout', LayoutPage
