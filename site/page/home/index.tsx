@@ -113,7 +113,7 @@ export class HomePage extends Component {
 					</ui-title>
 
 					<ui-description>
-						Trains move cargo. See all the containers registered at Kalkbreite.
+						Trains should move cargo. See all the containers registered at Kalkbreite.
 					</ui-description>
 
 					{goIcon()}
