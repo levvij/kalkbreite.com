@@ -15,6 +15,7 @@ import { trainLabelStyle } from "../../shared/train-label/index.style";
 import { couplerStyle } from "./coupler/index.style";
 import { comissionRailcarStyle } from "./comission/index.style";
 import { cargoLength, cargoOffset } from "../../model/index.style";
+import { tractionStyle } from "./traction/index.style";
 
 const timeDayLength = rem(6);
 
@@ -31,6 +32,7 @@ export const railcarStyle = () => child('ui-railcar')(
 	overflow('hidden'),
 
 	couplerStyle(),
+	tractionStyle(),
 	comissionRailcarStyle(),
 
 	backgroundImage(linearGradient(captureRotation,
@@ -40,6 +42,8 @@ export const railcarStyle = () => child('ui-railcar')(
 
 	backgroundSize([percentage(100), vw(100)]),
 	backgroundRepeat('no-repeat'),
+
+	minHeight(vh(75)),
 
 	child('ui-header') (
 		boxed(),
@@ -58,6 +62,8 @@ export const railcarStyle = () => child('ui-railcar')(
 			marginBottom(pageGutter),
 
 			trainLabelStyle(),
+
+			clickable(),
 
 			child('ui-identifier') (
 				trainIdentifierFont
@@ -157,6 +163,7 @@ export const railcarStyle = () => child('ui-railcar')(
 				display('flex'),
 				alignContent('center'),
 				gap(pageGutter),
+				position('relative'),
 
 				buttonStyle(),
 
@@ -184,7 +191,21 @@ export const railcarStyle = () => child('ui-railcar')(
 				),
 
 				child('ui-icon') (
-					fontSize(rem(1.25))
+					fontSize(rem(1.5))
+				),
+
+				child('ui-dcc-address') (
+					position('absolute'),
+					inset(0),
+					bottom(rem(0.125)),
+
+					display('flex'),
+					alignItems('center'),
+					justifyContent('center'),
+
+					color(primaryColor),
+					fontSize(rem(0.75)),
+					lineHeight(1)
 				)
 			)
 		)

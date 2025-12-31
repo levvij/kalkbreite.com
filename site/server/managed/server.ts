@@ -87,6 +87,7 @@ import { CouplerViewModel } from "./../railcar/coupler";
 import { RailcarModelDrawingSummaryModel } from "./../railcar/model";
 import { RailcarComissionViewModel } from "./../railcar/storage";
 import { RailcarWithdrawalViewModel } from "./../railcar/storage";
+import { TractionViewModel } from "./../railcar/traction";
 import { AccountViewModel } from "./../session/session";
 import { StorageContainerSummaryModel } from "./../storage/storage-contaiuner";
 import { TrainHeadPositionViewModel } from "./../train/position";
@@ -108,6 +109,7 @@ import { UicLocale } from "./../managed/database";
 import { CouplerType } from "./../managed/database";
 import { RailcarModel } from "./../managed/database";
 import { RailcarModelDrawing } from "./../managed/database";
+import { Traction } from "./../managed/database";
 import { Account } from "./../managed/database";
 import { StorageContainer } from "./../managed/database";
 import { TrainHeadPosition } from "./../managed/database";
@@ -3080,6 +3082,80 @@ ViewModel.mappings = {
 			return model;
 		}
 	},
+	[TractionViewModel.name]: class ComposedTractionViewModel extends TractionViewModel {
+		async map() {
+			return {
+				acceleration: this.$$model.acceleration,
+				dccAddress: this.$$model.dccAddress,
+				deceleration: this.$$model.deceleration,
+				id: this.$$model.id,
+				maximumSpeed: this.$$model.maximumSpeed
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				acceleration: true,
+				dccAddress: true,
+				deceleration: true,
+				id: true,
+				maximumSpeed: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new TractionViewModel(null);
+			"acceleration" in data && (item.acceleration = data.acceleration === null ? null : +data.acceleration);
+			"dccAddress" in data && (item.dccAddress = data.dccAddress === null ? null : +data.dccAddress);
+			"deceleration" in data && (item.deceleration = data.deceleration === null ? null : +data.deceleration);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"maximumSpeed" in data && (item.maximumSpeed = data.maximumSpeed === null ? null : +data.maximumSpeed);
+
+			return item;
+		}
+
+		static async toModel(viewModel: TractionViewModel) {
+			let model: Traction;
+
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(Traction).find(viewModel.id)
+			} else {
+				model = new Traction();
+			}
+
+			"acceleration" in viewModel && (model.acceleration = viewModel.acceleration === null ? null : +viewModel.acceleration);
+			"dccAddress" in viewModel && (model.dccAddress = viewModel.dccAddress === null ? null : +viewModel.dccAddress);
+			"deceleration" in viewModel && (model.deceleration = viewModel.deceleration === null ? null : +viewModel.deceleration);
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"maximumSpeed" in viewModel && (model.maximumSpeed = viewModel.maximumSpeed === null ? null : +viewModel.maximumSpeed);
+
+			return model;
+		}
+	},
 	[SessionViewModel.name]: class ComposedSessionViewModel extends SessionViewModel {
 		async map() {
 			return {
@@ -4724,6 +4800,7 @@ ViewModel.mappings = {
 				comissions: (await this.$$model.comissions.includeTree(ViewModel.mappings[RailcarComissionViewModel.name].items).toArray()).map(item => new RailcarComissionViewModel(item)),
 				graffitis: (await this.$$model.graffitis.includeTree(ViewModel.mappings[GraffitiSummaryModel.name].items).toArray()).map(item => new GraffitiSummaryModel(item)),
 				maintenanceJobs: (await this.$$model.maintenanceJobs.includeTree(ViewModel.mappings[MaintenanceSummaryModel.name].items).toArray()).map(item => new MaintenanceSummaryModel(item)),
+				tractionActors: (await this.$$model.tractionActors.includeTree(ViewModel.mappings[TractionViewModel.name].items).toArray()).map(item => new TractionViewModel(item)),
 				withdrawals: (await this.$$model.withdrawals.includeTree(ViewModel.mappings[RailcarWithdrawalViewModel.name].items).toArray()).map(item => new RailcarWithdrawalViewModel(item)),
 				storageContainer: new StorageContainerSummaryModel(await BaseServer.unwrap(this.$$model.storageContainer)),
 				tailCoupler: new CouplerViewModel(await BaseServer.unwrap(this.$$model.tailCoupler)),
@@ -4822,6 +4899,12 @@ ViewModel.mappings = {
 						[...parents, "maintenanceJobs-RailcarViewModel"]
 					);
 				},
+				get tractionActors() {
+					return ViewModel.mappings[TractionViewModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "tractionActors-RailcarViewModel"]
+					);
+				},
 				get withdrawals() {
 					return ViewModel.mappings[RailcarWithdrawalViewModel.name].getPrefetchingProperties(
 						level,
@@ -4861,6 +4944,7 @@ ViewModel.mappings = {
 			"comissions" in data && (item.comissions = data.comissions && [...data.comissions].map(i => ViewModel.mappings[RailcarComissionViewModel.name].toViewModel(i)));
 			"graffitis" in data && (item.graffitis = data.graffitis && [...data.graffitis].map(i => ViewModel.mappings[GraffitiSummaryModel.name].toViewModel(i)));
 			"maintenanceJobs" in data && (item.maintenanceJobs = data.maintenanceJobs && [...data.maintenanceJobs].map(i => ViewModel.mappings[MaintenanceSummaryModel.name].toViewModel(i)));
+			"tractionActors" in data && (item.tractionActors = data.tractionActors && [...data.tractionActors].map(i => ViewModel.mappings[TractionViewModel.name].toViewModel(i)));
 			"withdrawals" in data && (item.withdrawals = data.withdrawals && [...data.withdrawals].map(i => ViewModel.mappings[RailcarWithdrawalViewModel.name].toViewModel(i)));
 			"storageContainer" in data && (item.storageContainer = data.storageContainer && ViewModel.mappings[StorageContainerSummaryModel.name].toViewModel(data.storageContainer));
 			"tailCoupler" in data && (item.tailCoupler = data.tailCoupler && ViewModel.mappings[CouplerViewModel.name].toViewModel(data.tailCoupler));
@@ -4893,6 +4977,7 @@ ViewModel.mappings = {
 			"comissions" in viewModel && (null);
 			"graffitis" in viewModel && (null);
 			"maintenanceJobs" in viewModel && (null);
+			"tractionActors" in viewModel && (null);
 			"withdrawals" in viewModel && (null);
 			"storageContainer" in viewModel && (model.storageContainer.id = viewModel.storageContainer ? viewModel.storageContainer.id : null);
 			"tailCoupler" in viewModel && (model.tailCoupler.id = viewModel.tailCoupler ? viewModel.tailCoupler.id : null);

@@ -1,7 +1,7 @@
 import { Component, ComponentContent } from "@acryps/page";
 import { MetaProduct } from "@acryps/metadata";
 import { Application } from "../..";
-import { trainLinkupIcon, flipIcon, downloadIcon, goIcon } from "../../.built/icons";
+import { trainLinkupIcon, flipIcon, downloadIcon, goIcon, tractionIcon } from "../../.built/icons";
 import { DetailSectionComponent } from "../../shared/detail-section";
 import { GraffitiCollectionComponent } from "../../shared/graffiti-collection";
 import { StorageContainerTagComponent } from "../../shared/storage-container-tag";
@@ -11,6 +11,8 @@ import { TrainLabelComponent } from "../../shared/train-label";
 import { InsetStyleShorthandBlockInline } from "@acryps/style";
 import { bufferAnchorOffset } from "./index.style";
 import { RailcarCargoComponent } from "./cargo";
+import { TractionComponent } from "./traction";
+import { RailcarCouplerPage } from "./coupler";
 
 export class RailcarPage extends Component {
 	declare parameters: { tag };
@@ -156,6 +158,15 @@ export class RailcarPage extends Component {
 			<ui-toolbar>
 				<ui-group>
 					{this.renderCoupler('head', this.railcar.headCoupler)}
+
+					{this.railcar.tractionActors.map(traction => <ui-tool ui-href={this.child instanceof TractionComponent ? '.' : `traction/${traction.id}`} ui-href-active>
+						{tractionIcon()}
+
+						<ui-dcc-address>
+							{traction.dccAddress}
+						</ui-dcc-address>
+					</ui-tool>)}
+
 					{this.renderCoupler('tail', this.railcar.tailCoupler)}
 				</ui-group>
 
@@ -252,7 +263,9 @@ export class RailcarPage extends Component {
 			return;
 		}
 
-		const button = <ui-tool ui-href={`coupler/${side}`} ui-href-active ui-side={side} ui-flippable={coupler.type.flippable}></ui-tool>;
+		const active = this.child instanceof RailcarCouplerPage && this.child.parameters.direction == side;
+
+		const button = <ui-tool ui-href={active ? '.' : `coupler/${side}`} ui-href-active ui-side={side} ui-flippable={coupler.type.flippable}></ui-tool>;
 		button.innerHTML = coupler.type.icon;
 
 		return button;

@@ -1,10 +1,10 @@
 import { child, display, marginBottom, padding } from "@acryps/style";
 import { pageGutter, pageSpacing } from "../../../index.style";
 import { couplerIdentifierFont, trainIdentifierFont } from "../../../assets/font";
+import { boxed } from "../../../shared/boxed";
 
 export const couplerStyle = () => child('ui-coupler') (
-	display('block'),
-	padding(pageSpacing),
+	boxed(),
 
 	child('ui-type') (
 		display('block'),
