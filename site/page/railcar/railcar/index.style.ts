@@ -1,4 +1,4 @@
-import { rem, child, display, padding, marginBottom, fontSize, gap, alignItems, lineHeight, flexGrow, fontFamily, height, em, backgroundColor, hex, imageRendering, justifyContent, width, percentage, maxWidth, maxHeight, vh, objectFit, objectPosition, position, marginTop, paddingInline, alignContent, hover, filter, invert, attribute, transform, rotate, turn, borderRight, px, firstOfType, paddingTop, flexShrink, paddingBlock, whiteSpace, textAlign, marginLeft, paddingLeft, borderLeft, ch, color, scaleX, minHeight, firstChild, not, border, marginInline, descendant, empty, Variable, left, insetBlock, Ratio, Percentage, ColorValue, aspectRatio, BorderTopWidthStyleProperty, borderTop, bottom, borderBottom, insetInline, boxShadow, top, paddingBottom, flexDirection, marginBlock, media, minWidth, after, content, inset, borderInline, skew, deg, vw, alignSelf, zIndex, max, overflow } from "@acryps/style";
+import { rem, child, display, padding, marginBottom, fontSize, gap, alignItems, lineHeight, flexGrow, fontFamily, height, em, backgroundColor, hex, imageRendering, justifyContent, width, percentage, maxWidth, maxHeight, vh, objectFit, objectPosition, position, marginTop, paddingInline, alignContent, hover, filter, invert, attribute, transform, rotate, turn, borderRight, px, firstOfType, paddingTop, flexShrink, paddingBlock, whiteSpace, textAlign, marginLeft, paddingLeft, borderLeft, ch, color, scaleX, minHeight, firstChild, not, border, marginInline, descendant, empty, Variable, left, insetBlock, Ratio, Percentage, ColorValue, aspectRatio, BorderTopWidthStyleProperty, borderTop, bottom, borderBottom, insetInline, boxShadow, top, paddingBottom, flexDirection, marginBlock, media, minWidth, after, content, inset, borderInline, skew, deg, vw, alignSelf, zIndex, max, overflow, backgroundPosition, backgroundPositionY, linearGradient, ColorStop, colorStop, backgroundImage, backgroundSize, backgroundRepeat } from "@acryps/style";
 import { trainIdentifierFont, monospacedFont, cargoLoadIdentifierFont } from "../../assets/font";
 import { pageSpacing, pageGutter, runningNumberFont, tagFont, captureBackgroundColor, pageColor, primaryContrastColor, primaryColor, pageContrastColor, cargoFixtureColor, captureRotation } from "../../index.style";
 import { boxed, maximumBoxedWidth } from "../../shared/boxed";
@@ -32,6 +32,14 @@ export const railcarStyle = () => child('ui-railcar')(
 
 	couplerStyle(),
 	comissionRailcarStyle(),
+
+	backgroundImage(linearGradient(captureRotation,
+		colorStop(percentage(50), pageColor),
+		colorStop(percentage(60), captureBackgroundColor)
+	)),
+
+	backgroundSize([percentage(100), vw(100)]),
+	backgroundRepeat('no-repeat'),
 
 	child('ui-header') (
 		boxed(),
@@ -76,8 +84,6 @@ export const railcarStyle = () => child('ui-railcar')(
 		display('flex'),
 		justifyContent('center'),
 		marginTop(vh(-7.5)),
-
-		backgroundColor(captureBackgroundColor),
 
 		transform(rotate(captureRotation)),
 
