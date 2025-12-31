@@ -1,4 +1,4 @@
-import { aspectRatio, backgroundImage, colorStop, ColorValue, hex, linearGradient, percentage, ratio, rem, turn } from "@acryps/style";
+import { aspectRatio, backgroundImage, colorStop, ColorValue, deg, hex, linearGradient, percentage, ratio, rem, turn } from "@acryps/style";
 import { monospacedFont } from "./assets/font";
 import { DecouplingIncidentViewModel, DerailingIncidentViewModel, PowerLossIncidentViewModel, CollisionIncidentViewModel } from "./managed/services";
 
@@ -27,6 +27,7 @@ export const radius = rem(0.25);
 
 export const captureAspectRatio = ratio(3, 1);
 export const captureBackgroundColor = hex('eee');
+export const captureRotation = deg(-16);
 
 export const cargoSlotColor = hex('ff0');
 export const cargoSlotContrastColor = hex('000');
