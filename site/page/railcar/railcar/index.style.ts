@@ -1,6 +1,6 @@
-import { rem, child, display, padding, marginBottom, fontSize, gap, alignItems, lineHeight, flexGrow, fontFamily, height, em, backgroundColor, hex, imageRendering, justifyContent, width, percentage, maxWidth, maxHeight, vh, objectFit, objectPosition, position, marginTop, paddingInline, alignContent, hover, filter, invert, attribute, transform, rotate, turn, borderRight, px, firstOfType, paddingTop, flexShrink, paddingBlock, whiteSpace, textAlign, marginLeft, paddingLeft, borderLeft, ch, color, scaleX, minHeight, firstChild, not, border, marginInline, descendant, empty, Variable, left, insetBlock, Ratio, Percentage, ColorValue, aspectRatio, BorderTopWidthStyleProperty, borderTop, bottom, borderBottom, insetInline, boxShadow, top, paddingBottom, flexDirection, marginBlock, media, minWidth, after, content, inset, borderInline } from "@acryps/style";
+import { rem, child, display, padding, marginBottom, fontSize, gap, alignItems, lineHeight, flexGrow, fontFamily, height, em, backgroundColor, hex, imageRendering, justifyContent, width, percentage, maxWidth, maxHeight, vh, objectFit, objectPosition, position, marginTop, paddingInline, alignContent, hover, filter, invert, attribute, transform, rotate, turn, borderRight, px, firstOfType, paddingTop, flexShrink, paddingBlock, whiteSpace, textAlign, marginLeft, paddingLeft, borderLeft, ch, color, scaleX, minHeight, firstChild, not, border, marginInline, descendant, empty, Variable, left, insetBlock, Ratio, Percentage, ColorValue, aspectRatio, BorderTopWidthStyleProperty, borderTop, bottom, borderBottom, insetInline, boxShadow, top, paddingBottom, flexDirection, marginBlock, media, minWidth, after, content, inset, borderInline, skew, deg, vw, alignSelf, zIndex, max, overflow, backgroundPosition, backgroundPositionY, linearGradient, ColorStop, colorStop, backgroundImage, backgroundSize, backgroundRepeat } from "@acryps/style";
 import { trainIdentifierFont, monospacedFont, cargoLoadIdentifierFont } from "../../assets/font";
-import { pageSpacing, pageGutter, runningNumberFont, tagFont, captureBackgroundColor, pageColor, primaryContrastColor, primaryColor, pageContrastColor, cargoFixtureColor } from "../../index.style";
+import { pageSpacing, pageGutter, runningNumberFont, tagFont, captureBackgroundColor, pageColor, primaryContrastColor, primaryColor, pageContrastColor, cargoFixtureColor, captureRotation } from "../../index.style";
 import { boxed, maximumBoxedWidth } from "../../shared/boxed";
 import { activateButtonStyle, buttonGroupStyle, buttonStyle, mergedButtonGroup } from "../../shared/button";
 import { detailSectionStyle } from "../../shared/detail-section/index.style";
@@ -28,68 +28,64 @@ export const cargoLoadLogoColor = new Variable<ColorValue>('cargo-logo-color');
 
 export const railcarStyle = () => child('ui-railcar')(
 	display('block'),
+	overflow('hidden'),
 
 	couplerStyle(),
 	comissionRailcarStyle(),
 
+	backgroundImage(linearGradient(captureRotation,
+		colorStop(percentage(50), pageColor),
+		colorStop(percentage(60), captureBackgroundColor)
+	)),
+
+	backgroundSize([percentage(100), vw(100)]),
+	backgroundRepeat('no-repeat'),
+
 	child('ui-header') (
 		boxed(),
 
+		display('flex'),
+		flexDirection('column'),
 		padding(pageSpacing),
 
-		child('ui-name') (
-			display('block'),
-			marginBottom(pageGutter),
-
-			fontSize(rem(2))
-		),
-
-		child('ui-identifiers') (
-			display('flex'),
-			gap(pageGutter),
-			alignItems('center'),
-			marginBottom(pageGutter),
-
-			lineHeight(1),
-			fontSize(rem(1.5)),
-
-			child('ui-running-number') (
-				flexGrow(1),
-
-				fontFamily(runningNumberFont)
-			),
-
-			child('ui-tag') (
-				fontFamily(tagFont)
-			),
-
-			child('img') (
-				height(em(1).subtract(rem(0.4))),
-				padding(rem(0.2)),
-
-				backgroundColor(hex('fff')),
-				imageRendering('pixelated')
-			)
-		),
+		position('relative'),
+		zIndex(1),
 
 		child('ui-train') (
 			display('flex'),
 			justifyContent('flex-start'),
 			gap(pageGutter),
+			marginBottom(pageGutter),
 
 			trainLabelStyle(),
 
 			child('ui-identifier') (
 				trainIdentifierFont
 			)
+		),
+
+		child('ui-name') (
+			width(percentage(65)),
+
+			lineHeight(1.1),
+			fontSize(max(vw(8), rem(2))),
+		),
+
+		child('ui-running-number') (
+			width(percentage(50)),
+
+			lineHeight(1.2),
+			fontSize(max(vw(4), rem(1.25))),
+			fontFamily(runningNumberFont)
 		)
 	),
 
 	child('ui-capture') (
 		display('flex'),
 		justifyContent('center'),
+		marginTop(vh(-7.5)),
 
-		backgroundColor(captureBackgroundColor),
+		transform(rotate(captureRotation)),
 
 		child('ui-container') (
 			display('flex'),
@@ -123,6 +119,22 @@ export const railcarStyle = () => child('ui-railcar')(
 		)
 	),
 
+	child('ui-identifier') (
+		boxed(),
+		paddingInline(pageSpacing),
+
+		display('flex'),
+		justifyContent('flex-end'),
+
+		child('ui-tag') (
+			padding(vw(1)),
+			border(px(2), 'solid', 'currentColor'),
+
+			fontSize(vw(5)),
+			lineHeight(1)
+		)
+	),
+
 	anchorStyle(),
 	registerGraffitiStyle(),
 	maintenanceStyle(),
@@ -135,8 +147,7 @@ export const railcarStyle = () => child('ui-railcar')(
 
 		position('relative'),
 
-		marginTop(pageGutter.invert()),
-		marginBottom(pageGutter),
+		marginBlock(pageGutter),
 		paddingInline(pageSpacing),
 
 		child('ui-group') (

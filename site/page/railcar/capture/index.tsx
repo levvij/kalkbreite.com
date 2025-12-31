@@ -16,8 +16,6 @@ export class CapturesPage extends Component {
 
 	breadcrumb = 'Captures';
 	render() {
-		console.log(this.captures[0].corrupted)
-
 		return <ui-captures>
 			<ui-hint>
 				There is an automatic capturing station on the layout that creates images of every passing train.

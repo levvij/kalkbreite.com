@@ -123,22 +123,6 @@ export class RailcarPage extends Component {
 
 		return <ui-railcar>
 			<ui-header>
-				<ui-name>
-					{this.railcar.givenName ?? this.railcar.model?.name ?? '-'}
-				</ui-name>
-
-				<ui-identifiers>
-					<ui-running-number>
-						{this.railcar.runningNumber}
-					</ui-running-number>
-
-					<ui-tag>
-						{this.railcar.tag}
-					</ui-tag>
-
-					<img src={`/tag/${this.railcar.tag}`} />
-				</ui-identifiers>
-
 				{this.train && <ui-train ui-href={`/train/${this.train.identifier}`}>
 					{this.train.label ? new TrainLabelComponent(this.train.label) : <ui-identifier>
 						{this.train.identifier}
@@ -146,6 +130,14 @@ export class RailcarPage extends Component {
 
 					{goIcon()}
 				</ui-train>}
+
+				<ui-name>
+					{this.railcar.givenName ?? this.railcar.model?.name ?? '-'}
+				</ui-name>
+
+				<ui-running-number>
+					{this.railcar.runningNumber}
+				</ui-running-number>
 			</ui-header>
 
 			<ui-capture>
@@ -154,6 +146,12 @@ export class RailcarPage extends Component {
 					{this.bufferAnchorLine}
 				</ui-container>
 			</ui-capture>
+
+			<ui-identifier>
+				<ui-tag>
+					{this.railcar.tag}
+				</ui-tag>
+			</ui-identifier>
 
 			<ui-toolbar>
 				<ui-group>
