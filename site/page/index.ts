@@ -40,6 +40,7 @@ import { GraffitiInspirationsPage } from "./graffiti/inspirations";
 import { GraffitiInspirationPage } from "./graffiti/inspirations/inspiration";
 import { CargoPage } from "./cargo";
 import { CargoLoadPage } from "./cargo/load";
+import { CapturesPage } from "./railcar/capture";
 
 // injected by esbuild
 declare const buildDate: string;
@@ -88,6 +89,8 @@ export class Application {
 
 			.route('/railcar', RailcarsPage
 				.route('/register/:tag', RegisterRailcarPage)
+
+				.route('/captures', CapturesPage)
 
 				.route('/:tag', RailcarPage
 					.route('/anchor/:captureId', CaptureAnchorPage)

@@ -5,12 +5,14 @@ import { pageSpacing } from "../index.style";
 import { railcarStyle } from "./railcar/index.style";
 import { buttonGroupStyle, buttonStyle } from "../shared/button";
 import { registerRailcarStyle } from "./register/index.style";
+import { capturesStyle } from "./capture/index.style";
 
 export const railcarsStyle = () => child('ui-railcars') (
 	display('block'),
 
 	railcarStyle(),
 	registerRailcarStyle(),
+	capturesStyle(),
 
 	child('ui-overview') (
 		boxed(),

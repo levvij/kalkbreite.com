@@ -648,6 +648,15 @@ export class ManagedServer extends BaseServer {
 		);
 
 		this.expose(
+			"ZqemR4cDtobm4yaTo4MG0zbHY2bzduaX",
+			{},
+			inject => inject.construct(RailcarService),
+			(controller, params) => controller.getLatestCaptures(
+				
+			)
+		);
+
+		this.expose(
 			"M4a3A2amg4emIxeD5jNjFycTRmYXQxcD",
 			{
 			"JieHJpcHhvaTJ6bHMzMHJtY3F1bnl4MT": { type: "string", isArray: false, isOptional: false },
