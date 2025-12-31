@@ -41,6 +41,7 @@ import { GraffitiInspirationPage } from "./graffiti/inspirations/inspiration";
 import { CargoPage } from "./cargo";
 import { CargoLoadPage } from "./cargo/load";
 import { CapturesPage } from "./railcar/capture";
+import { TractionComponent } from "./railcar/railcar/traction";
 
 // injected by esbuild
 declare const buildDate: string;
@@ -99,6 +100,7 @@ export class Application {
 					.route('/comission', ComissionRailcarPage)
 
 					.route('/coupler/:direction', RailcarCouplerPage)
+					.route('/traction/:id', TractionComponent)
 				)
 			)
 

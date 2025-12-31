@@ -533,6 +533,25 @@ export class RailcarWithdrawalViewModel {
 	}
 }
 
+export class TractionViewModel {
+	acceleration: number;
+	dccAddress: number;
+	deceleration: number;
+	id: string;
+	maximumSpeed: number;
+
+	private static $build(raw) {
+		const item = new TractionViewModel();
+		raw.acceleration === undefined || (item.acceleration = raw.acceleration === null ? null : +raw.acceleration)
+		raw.dccAddress === undefined || (item.dccAddress = raw.dccAddress === null ? null : +raw.dccAddress)
+		raw.deceleration === undefined || (item.deceleration = raw.deceleration === null ? null : +raw.deceleration)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.maximumSpeed === undefined || (item.maximumSpeed = raw.maximumSpeed === null ? null : +raw.maximumSpeed)
+		
+		return item;
+	}
+}
+
 export class SessionViewModel {
 	account: AccountViewModel;
 	id: string;
@@ -959,6 +978,7 @@ export class RailcarViewModel {
 	comissions: RailcarComissionViewModel[];
 	graffitis: GraffitiSummaryModel[];
 	maintenanceJobs: MaintenanceSummaryModel[];
+	tractionActors: TractionViewModel[];
 	withdrawals: RailcarWithdrawalViewModel[];
 	storageContainer: StorageContainerSummaryModel;
 	tailCoupler: CouplerViewModel;
@@ -981,6 +1001,7 @@ export class RailcarViewModel {
 		raw.comissions === undefined || (item.comissions = raw.comissions ? raw.comissions.map(i => RailcarComissionViewModel["$build"](i)) : null)
 		raw.graffitis === undefined || (item.graffitis = raw.graffitis ? raw.graffitis.map(i => GraffitiSummaryModel["$build"](i)) : null)
 		raw.maintenanceJobs === undefined || (item.maintenanceJobs = raw.maintenanceJobs ? raw.maintenanceJobs.map(i => MaintenanceSummaryModel["$build"](i)) : null)
+		raw.tractionActors === undefined || (item.tractionActors = raw.tractionActors ? raw.tractionActors.map(i => TractionViewModel["$build"](i)) : null)
 		raw.withdrawals === undefined || (item.withdrawals = raw.withdrawals ? raw.withdrawals.map(i => RailcarWithdrawalViewModel["$build"](i)) : null)
 		raw.storageContainer === undefined || (item.storageContainer = raw.storageContainer ? StorageContainerSummaryModel["$build"](raw.storageContainer) : null)
 		raw.tailCoupler === undefined || (item.tailCoupler = raw.tailCoupler ? CouplerViewModel["$build"](raw.tailCoupler) : null)
