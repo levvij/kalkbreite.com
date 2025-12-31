@@ -27,11 +27,15 @@ export class RailcarsPage extends Component {
 					View their timeline, explore the high-resultion pictures and find operational details about them.
 				</ui-hint>
 
-				{Application.session.account && <ui-actions>
-					<ui-action ui-href={`/railcar/register/${(Math.max(...this.railcars.map(railcar => parseInt(railcar.tag, 36))) + 1).toString(36)}`}>
-						Register Railcar
+				<ui-actions>
+					<ui-action ui-href='captures'>
+						View Captures
 					</ui-action>
-				</ui-actions>}
+
+					{Application.session.account && <ui-action ui-href={`/railcar/register/${(Math.max(...this.railcars.map(railcar => parseInt(railcar.tag, 36))) + 1).toString(36)}`}>
+						Register Railcar
+					</ui-action>}
+				</ui-actions>
 
 				{new RailcarCollectionComponent(this.railcars)}
 			</ui-overview>

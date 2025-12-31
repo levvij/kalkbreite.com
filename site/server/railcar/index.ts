@@ -7,6 +7,7 @@ import { CouplerTypeSummaryModel, CouplerTypeViewModel } from "./coupler";
 import { CouplingViewModel } from "../train/coupling";
 import { Application } from "..";
 import { Section, SectionPosition } from "@packtrack/layout";
+import { CaptureViewModel } from "../capture/capture";
 
 export class RailcarService extends Service {
 	constructor(
@@ -77,6 +78,14 @@ export class RailcarService extends Service {
 
 	async getCouplerTypes() {
 		return CouplerTypeViewModel.from(this.database.couplerType);
+	}
+
+	async getLatestCaptures() {
+		return CaptureViewModel.from(
+			this.database.capture
+				.where(capture => capture.thumbnail != null)
+				.orderByDescending(capture => capture.captured)
+		)
 	}
 
 	async setAnchor(captureId: string, offset: number) {
