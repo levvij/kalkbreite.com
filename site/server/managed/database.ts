@@ -176,6 +176,7 @@ export class CameraBlackout extends Entity<CameraBlackoutQueryProxy> {
 			
 export class CaptureQueryProxy extends QueryProxy {
 	get railcar(): Partial<RailcarQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get session(): Partial<CaptureSessionQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get bufferAnchorOffset(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get captured(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get corrupted(): Partial<QueryBoolean> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -183,11 +184,14 @@ export class CaptureQueryProxy extends QueryProxy {
 	get direction(): "forward" | "reverse" { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get mimeType(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get railcarId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get sessionBufferOffset(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get sessionId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get thumbnail(): Partial<QueryBuffer> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
 
 export class Capture extends Entity<CaptureQueryProxy> {
 	get railcar(): Partial<ForeignReference<Railcar>> { return this.$railcar; }
+	get session(): Partial<ForeignReference<CaptureSession>> { return this.$session; }
 	bufferAnchorOffset: number;
 	captured: Date;
 	corrupted: boolean;
@@ -196,6 +200,8 @@ export class Capture extends Entity<CaptureQueryProxy> {
 	declare id: string;
 	mimeType: string;
 	railcarId: string;
+	sessionBufferOffset: number;
+	sessionId: string;
 	thumbnail: Buffer;
 	
 	$$meta = {
@@ -209,6 +215,8 @@ export class Capture extends Entity<CaptureQueryProxy> {
 			id: { type: "uuid", name: "id" },
 			mimeType: { type: "text", name: "mime_type" },
 			railcarId: { type: "uuid", name: "railcar_id" },
+			sessionBufferOffset: { type: "float4", name: "session_buffer_offset" },
+			sessionId: { type: "uuid", name: "session_id" },
 			thumbnail: { type: "bytea", name: "thumbnail" }
 		},
 		get set(): DbSet<Capture, CaptureQueryProxy> { 
@@ -220,6 +228,7 @@ export class Capture extends Entity<CaptureQueryProxy> {
 		super();
 		
 		this.$railcar = new ForeignReference<Railcar>(this, "railcarId", Railcar);
+	this.$session = new ForeignReference<CaptureSession>(this, "sessionId", CaptureSession);
 	}
 	
 	private $railcar: ForeignReference<Railcar>;
@@ -234,51 +243,6 @@ export class Capture extends Entity<CaptureQueryProxy> {
 		}
 	}
 
-	
-}
-			
-export class CaptureFrameQueryProxy extends QueryProxy {
-	get session(): Partial<CaptureSessionQueryProxy> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
-	get data(): Partial<QueryBuffer> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
-	get offsetX(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
-	get offsetY(): Partial<QueryNumber> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
-	get sessionId(): Partial<QueryUUID> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
-	get thumbnail(): Partial<QueryBuffer> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
-	get uploaded(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
-}
-
-export class CaptureFrame extends Entity<CaptureFrameQueryProxy> {
-	get session(): Partial<ForeignReference<CaptureSession>> { return this.$session; }
-	data: Buffer;
-	declare id: string;
-	offsetX: number;
-	offsetY: number;
-	sessionId: string;
-	thumbnail: Buffer;
-	uploaded: Date;
-	
-	$$meta = {
-		source: "capture_frame",
-		columns: {
-			data: { type: "bytea", name: "data" },
-			id: { type: "uuid", name: "id" },
-			offsetX: { type: "int4", name: "offset_x" },
-			offsetY: { type: "int4", name: "offset_y" },
-			sessionId: { type: "uuid", name: "session_id" },
-			thumbnail: { type: "bytea", name: "thumbnail" },
-			uploaded: { type: "timestamp", name: "uploaded" }
-		},
-		get set(): DbSet<CaptureFrame, CaptureFrameQueryProxy> { 
-			return new DbSet<CaptureFrame, CaptureFrameQueryProxy>(CaptureFrame, null);
-		}
-	};
-	
-	constructor() {
-		super();
-		
-		this.$session = new ForeignReference<CaptureSession>(this, "sessionId", CaptureSession);
-	}
-	
 	private $session: ForeignReference<CaptureSession>;
 
 	set session(value: Partial<ForeignReference<CaptureSession>>) {
@@ -295,19 +259,28 @@ export class CaptureFrame extends Entity<CaptureFrameQueryProxy> {
 }
 			
 export class CaptureSessionQueryProxy extends QueryProxy {
-	get created(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get captured(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get data(): Partial<QueryBuffer> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get mimeType(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get thumbnail(): Partial<QueryBuffer> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
 
 export class CaptureSession extends Entity<CaptureSessionQueryProxy> {
-	frames: PrimaryReference<CaptureFrame, CaptureFrameQueryProxy>;
-		created: Date;
+	railcarCaptures: PrimaryReference<Capture, CaptureQueryProxy>;
+		captured: Date;
+	data: Buffer;
 	declare id: string;
+	mimeType: string;
+	thumbnail: Buffer;
 	
 	$$meta = {
 		source: "capture_session",
 		columns: {
-			created: { type: "timestamp", name: "created" },
-			id: { type: "uuid", name: "id" }
+			captured: { type: "timestamp", name: "captured" },
+			data: { type: "bytea", name: "data" },
+			id: { type: "uuid", name: "id" },
+			mimeType: { type: "text", name: "mime_type" },
+			thumbnail: { type: "bytea", name: "thumbnail" }
 		},
 		get set(): DbSet<CaptureSession, CaptureSessionQueryProxy> { 
 			return new DbSet<CaptureSession, CaptureSessionQueryProxy>(CaptureSession, null);
@@ -317,7 +290,7 @@ export class CaptureSession extends Entity<CaptureSessionQueryProxy> {
 	constructor() {
 		super();
 		
-		this.frames = new PrimaryReference<CaptureFrame, CaptureFrameQueryProxy>(this, "sessionId", CaptureFrame);
+		this.railcarCaptures = new PrimaryReference<Capture, CaptureQueryProxy>(this, "sessionId", Capture);
 	}
 }
 			
@@ -2348,7 +2321,6 @@ export class DbContext {
 	camera: DbSet<Camera, CameraQueryProxy>;
 	cameraBlackout: DbSet<CameraBlackout, CameraBlackoutQueryProxy>;
 	capture: DbSet<Capture, CaptureQueryProxy>;
-	captureFrame: DbSet<CaptureFrame, CaptureFrameQueryProxy>;
 	captureSession: DbSet<CaptureSession, CaptureSessionQueryProxy>;
 	cargoFixture: DbSet<CargoFixture, CargoFixtureQueryProxy>;
 	cargoLoad: DbSet<CargoLoad, CargoLoadQueryProxy>;
@@ -2391,7 +2363,6 @@ export class DbContext {
 		this.camera = new DbSet<Camera, CameraQueryProxy>(Camera, this.runContext);
 		this.cameraBlackout = new DbSet<CameraBlackout, CameraBlackoutQueryProxy>(CameraBlackout, this.runContext);
 		this.capture = new DbSet<Capture, CaptureQueryProxy>(Capture, this.runContext);
-		this.captureFrame = new DbSet<CaptureFrame, CaptureFrameQueryProxy>(CaptureFrame, this.runContext);
 		this.captureSession = new DbSet<CaptureSession, CaptureSessionQueryProxy>(CaptureSession, this.runContext);
 		this.cargoFixture = new DbSet<CargoFixture, CargoFixtureQueryProxy>(CargoFixture, this.runContext);
 		this.cargoLoad = new DbSet<CargoLoad, CargoLoadQueryProxy>(CargoLoad, this.runContext);

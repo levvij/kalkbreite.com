@@ -198,34 +198,4 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 		response.contentType(capture.mimeType);
 		response.end(capture.data);
 	});
-
-	server.app.post('/capture/:tag/:direction', async (request, response) => {
-		const tag = request.params.tag;
-		const direction = request.params.direction as RailcarDirection;
-
-		const railcar = await database.railcar.first(railcar => railcar.tag.valueOf() == tag);
-
-		const capture = new Capture();
-		capture.direction = direction;
-		capture.captured = new Date();
-		capture.mimeType = 'image/png';
-		capture.railcar = railcar;
-
-		await capture.create();
-
-		const chunks = [];
-
-		request.on('data', chunk => {
-			chunks.push(chunk);
-		});
-
-		request.on('end', async () => {
-			capture.data = Buffer.concat(chunks);
-
-			await capture.update();
-			await updateThumbnail(capture);
-
-			response.sendStatus(200).end();
-		});
-	});
 }
