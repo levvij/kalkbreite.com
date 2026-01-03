@@ -19,6 +19,7 @@ import { artistsStyle } from "./artist/index.style";
 import { liveStyle } from "./live/index.style";
 import { searchStyle } from "./shared/search/index.style";
 import { cargoStyle } from "./cargo/index.style";
+import { captureSessionStyle } from "./capture-session/index.style";
 
 export const applicationStyle = () => root() (
 	monospacedFont,
@@ -38,6 +39,7 @@ export const applicationStyle = () => root() (
 		child('ui-page') (
 			homeStyle(),
 			cargoStyle(),
+			captureSessionStyle(),
 			loginStyle(),
 			trainsStyle(),
 			artistsStyle(),

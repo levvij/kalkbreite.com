@@ -260,26 +260,32 @@ export class Capture extends Entity<CaptureQueryProxy> {
 			
 export class CaptureSessionQueryProxy extends QueryProxy {
 	get captured(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get corrupted(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get data(): Partial<QueryBuffer> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get mimeType(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
+	get reviewed(): Partial<QueryTimeStamp> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 	get thumbnail(): Partial<QueryBuffer> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
 }
 
 export class CaptureSession extends Entity<CaptureSessionQueryProxy> {
 	railcarCaptures: PrimaryReference<Capture, CaptureQueryProxy>;
 		captured: Date;
+	corrupted: Date;
 	data: Buffer;
 	declare id: string;
 	mimeType: string;
+	reviewed: Date;
 	thumbnail: Buffer;
 	
 	$$meta = {
 		source: "capture_session",
 		columns: {
 			captured: { type: "timestamp", name: "captured" },
+			corrupted: { type: "timestamp", name: "corrupted" },
 			data: { type: "bytea", name: "data" },
 			id: { type: "uuid", name: "id" },
 			mimeType: { type: "text", name: "mime_type" },
+			reviewed: { type: "timestamp", name: "reviewed" },
 			thumbnail: { type: "bytea", name: "thumbnail" }
 		},
 		get set(): DbSet<CaptureSession, CaptureSessionQueryProxy> { 

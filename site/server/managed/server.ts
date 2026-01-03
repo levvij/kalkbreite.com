@@ -1,6 +1,11 @@
 import { BaseServer, ViewModel, Inject } from "vlserver";
 
+import { Capture } from "././database";
 import { DbContext } from "././database";
+import { RailcarDirection } from "././database";
+import { CaptureSessionViewModel } from "././../capture/capture";
+import { lengthMultiplier } from "././../../shared/anchor-shift";
+import { CaptureService } from "././../capture/index";
 import { CargoLoadSummaryModel } from "././../cargo/cargo";
 import { CargoService } from "././../cargo/index";
 import { CompanySummaryModel } from "././../company/company";
@@ -9,7 +14,6 @@ import { CompanyService } from "././../company/index";
 import { Graffiti } from "././database";
 import { GraffitiInspiration } from "././database";
 import { GraffitiInspirationMedia } from "././database";
-import { RailcarDirection } from "././database";
 import { GraffitiCaptureViewModel } from "././../graffiti/graffiti";
 import { GraffitiSummaryModel } from "././../graffiti/graffiti";
 import { GraffitiTypeViewModel } from "././../graffiti/graffiti";
@@ -94,7 +98,7 @@ import { TrainHeadPositionViewModel } from "./../train/position";
 import { CargoFixtureViewModel } from "./../model/cargo";
 import { GraffitiRailcarViewModel } from "./../railcar/railcar";
 import { TrainProductBrandViewModel } from "./../train/product-brand";
-import { Capture } from "./../managed/database";
+import { CaptureSession } from "./../managed/database";
 import { CargoLoad } from "./../managed/database";
 import { CargoLoadType } from "./../managed/database";
 import { Company } from "./../managed/database";
@@ -116,13 +120,17 @@ import { TrainHeadPosition } from "./../managed/database";
 import { TrainProductBrand } from "./../managed/database";
 
 Inject.mappings = {
-	"CargoService": {
-		objectConstructor: CargoService,
+	"CaptureService": {
+		objectConstructor: CaptureService,
 		parameters: ["DbContext"]
 	},
 	"DbContext": {
 		objectConstructor: DbContext,
 		parameters: ["RunContext"]
+	},
+	"CargoService": {
+		objectConstructor: CargoService,
+		parameters: ["DbContext"]
 	},
 	"CompanyService": {
 		objectConstructor: CompanyService,
@@ -184,6 +192,41 @@ Inject.mappings = {
 
 export class ManagedServer extends BaseServer {
 	prepareRoutes() {
+		this.expose(
+			"F3cHQxbmlvMXk2czprNHd0cTJ0ZTJsaH",
+			{},
+			inject => inject.construct(CaptureService),
+			(controller, params) => controller.listFreshCaptures(
+				
+			)
+		);
+
+		this.expose(
+			"hjdGFicWlvY2licHZ2emUxc2YyeTBsaW",
+			{},
+			inject => inject.construct(CaptureService),
+			(controller, params) => controller.listCaptures(
+				
+			)
+		);
+
+		this.expose(
+			"Y4N2RreH9lb3Rma2Y0Nzk2ejliZ3s0dW",
+			{
+			"lhNWdqcGcwMXNpcndmMDk0OWBpejZkNH": { type: "string", isArray: false, isOptional: false },
+				"U3djI3YTBocnBhdnpuZjJzb29kN3Ywej": { type: "number", isArray: false, isOptional: false },
+				"EwcHRrOTFrMXZueGg1amo5aXtqcGVuaT": { type: "string", isArray: false, isOptional: false },
+				"I2aHd4czlvbDMxZHpocjRyN2F5N2Fuc3": { type: RailcarDirection, isArray: false, isOptional: false }
+			},
+			inject => inject.construct(CaptureService),
+			(controller, params) => controller.assign(
+				params["lhNWdqcGcwMXNpcndmMDk0OWBpejZkNH"],
+				params["U3djI3YTBocnBhdnpuZjJzb29kN3Ywej"],
+				params["EwcHRrOTFrMXZueGg1amo5aXtqcGVuaT"],
+				params["I2aHd4czlvbDMxZHpocjRyN2F5N2Fuc3"]
+			)
+		);
+
 		this.expose(
 			"R2MzlsZHJ0dzh4a3VodGtycTZxeGJicT",
 			{},
@@ -936,7 +979,7 @@ ViewModel.mappings = {
 			"bufferAnchorOffset" in data && (item.bufferAnchorOffset = data.bufferAnchorOffset === null ? null : +data.bufferAnchorOffset);
 			"captured" in data && (item.captured = data.captured === null ? null : new Date(data.captured));
 			"corrupted" in data && (item.corrupted = !!data.corrupted);
-			"direction" in data && (item.direction = data.direction && (data.direction instanceof ViewModel ? data.direction : ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction)));
+			"direction" in data && (item.direction = data.direction === null ? null : data.direction);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 
 			return item;
@@ -956,6 +999,76 @@ ViewModel.mappings = {
 			"corrupted" in viewModel && (model.corrupted = !!viewModel.corrupted);
 			"direction" in viewModel && (model.direction = viewModel.direction === null ? null : viewModel.direction);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+
+			return model;
+		}
+	},
+	[CaptureSessionViewModel.name]: class ComposedCaptureSessionViewModel extends CaptureSessionViewModel {
+		async map() {
+			return {
+				captured: this.$$model.captured,
+				corrupted: this.$$model.corrupted,
+				id: this.$$model.id,
+				reviewed: this.$$model.reviewed
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				captured: true,
+				corrupted: true,
+				id: true,
+				reviewed: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new CaptureSessionViewModel(null);
+			"captured" in data && (item.captured = data.captured === null ? null : new Date(data.captured));
+			"corrupted" in data && (item.corrupted = data.corrupted === null ? null : new Date(data.corrupted));
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+			"reviewed" in data && (item.reviewed = data.reviewed === null ? null : new Date(data.reviewed));
+
+			return item;
+		}
+
+		static async toModel(viewModel: CaptureSessionViewModel) {
+			let model: CaptureSession;
+
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(CaptureSession).find(viewModel.id)
+			} else {
+				model = new CaptureSession();
+			}
+
+			"captured" in viewModel && (model.captured = viewModel.captured === null ? null : new Date(viewModel.captured));
+			"corrupted" in viewModel && (model.corrupted = viewModel.corrupted === null ? null : new Date(viewModel.corrupted));
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
+			"reviewed" in viewModel && (model.reviewed = viewModel.reviewed === null ? null : new Date(viewModel.reviewed));
 
 			return model;
 		}
@@ -1377,7 +1490,7 @@ ViewModel.mappings = {
 			"captures" in data && (item.captures = data.captures && [...data.captures].map(i => ViewModel.mappings[GraffitiCaptureViewModel.name].toViewModel(i)));
 			"painter" in data && (item.painter = data.painter && ViewModel.mappings[ArtistSummaryModel.name].toViewModel(data.painter));
 			"type" in data && (item.type = data.type && ViewModel.mappings[GraffitiTypeViewModel.name].toViewModel(data.type));
-			"direction" in data && (item.direction = data.direction && (data.direction instanceof ViewModel ? data.direction : ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction)));
+			"direction" in data && (item.direction = data.direction === null ? null : data.direction);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"painted" in data && (item.painted = data.painted === null ? null : new Date(data.painted));
@@ -2172,7 +2285,7 @@ ViewModel.mappings = {
 			"baseline" in data && (item.baseline = data.baseline === null ? null : +data.baseline);
 			"clearanceHead" in data && (item.clearanceHead = data.clearanceHead === null ? null : +data.clearanceHead);
 			"clearanceTail" in data && (item.clearanceTail = data.clearanceTail === null ? null : +data.clearanceTail);
-			"direction" in data && (item.direction = data.direction && (data.direction instanceof ViewModel ? data.direction : ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction)));
+			"direction" in data && (item.direction = data.direction === null ? null : data.direction);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"offset" in data && (item.offset = data.offset === null ? null : +data.offset);
 
@@ -4209,7 +4322,7 @@ ViewModel.mappings = {
 			"railcar" in data && (item.railcar = data.railcar && ViewModel.mappings[GraffitiRailcarViewModel.name].toViewModel(data.railcar));
 			"type" in data && (item.type = data.type && ViewModel.mappings[GraffitiTypeViewModel.name].toViewModel(data.type));
 			"description" in data && (item.description = data.description === null ? null : `${data.description}`);
-			"direction" in data && (item.direction = data.direction && (data.direction instanceof ViewModel ? data.direction : ViewModel.mappings[RailcarDirection.name].toViewModel(data.direction)));
+			"direction" in data && (item.direction = data.direction === null ? null : data.direction);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"name" in data && (item.name = data.name === null ? null : `${data.name}`);
 			"painted" in data && (item.painted = data.painted === null ? null : new Date(data.painted));
