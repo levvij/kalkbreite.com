@@ -1,13 +1,13 @@
 import { Component } from "@acryps/page";
 import { CouplerViewModel, RailcarDirection, RailcarService, RailcarSummaryModel, RailcarViewModel } from "../../managed/services";
 
-export class RailcarCouplerSelect extends Component {
-	coupler: CouplerViewModel;
+export class RailcarSideSelect extends Component {
+	selectedSide: RailcarDirection;
 	railcars: RailcarSummaryModel[];
 
 	constructor(
-		public railcar: RailcarViewModel | null,
-		public onSelect: (railcar: RailcarViewModel, side: RailcarDirection) => void
+		public railcar: RailcarSummaryModel | null,
+		public onSelect: (railcar: RailcarSummaryModel, side: RailcarDirection) => void
 	) {
 		super();
 	}
@@ -23,7 +23,7 @@ export class RailcarCouplerSelect extends Component {
 			railcar = this.railcars.find(railcar => railcar.id == this.railcar.id);
 		}
 
-		return <ui-railcar-coupler-select>
+		return <ui-railcar-side-select>
 			<select $ui-value={railcar} ui-change={async () => {
 				this.railcar = await new RailcarService().get(railcar.tag);
 
@@ -34,31 +34,28 @@ export class RailcarCouplerSelect extends Component {
 				</option>)}
 			</select>
 
-			{this.railcar && <ui-capture>
-				<img src={`/capture/railcar/${this.railcar.id}/forward`} />
-
-				<ui-couplers>
-					{this.renderCoupler(this.railcar.headCoupler)}
-					{this.renderCoupler(this.railcar.tailCoupler)}
-				</ui-couplers>
-			</ui-capture>}
-		</ui-railcar-coupler-select>
+			{this.railcar && <ui-sides>
+				{this.renderSide(RailcarDirection.forward, 'Forward')}
+				{this.renderSide(RailcarDirection.reverse, 'Reverse')}
+			</ui-sides>}
+		</ui-railcar-side-select>
 	}
 
-	renderCoupler(coupler: CouplerViewModel) {
-		if (!coupler) {
-			return;
-		}
+	renderSide(side: RailcarDirection, name: string) {
+		return <ui-side ui-selected={side == this.selectedSide}>
+			<img
+				src={`/capture/railcar/${this.railcar.id}/${side}`}
+				ui-click={() => {
+					this.selectedSide = side;
+					this.onSelect(this.railcar, side);
 
-		const element = <ui-coupler ui-selected={coupler.id == this.coupler?.id} ui-click={() => {
-			this.coupler = coupler;
-			this.onSelect(this.railcar, coupler);
+					this.update();
+				}}
+			/>
 
-			this.update();
-		}}></ui-coupler>;
-
-		element.innerHTML = coupler.type.icon;
-
-		return element;
+			<ui-name>
+				{name}
+			</ui-name>
+		</ui-side>;
 	}
 }

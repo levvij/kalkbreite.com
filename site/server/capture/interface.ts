@@ -5,6 +5,7 @@ import { updateThumbnail } from "./thumbnail";
 import { registerCaptureSessionInterface } from "./session";
 import { registerTrainCaptureInterface } from "./interface/train";
 import { registerTrainRailcarCaptureInterface } from "./interface/train-railcar";
+import { BlobService } from "../shared/blob-service";
 
 export const registerCaptureInterface = (server: ManagedServer, database: DbContext) => {
 	registerTrainCaptureInterface(server, database);
@@ -33,11 +34,6 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 
 	server.app.get('/capture/:id', async (request, response) => {
 		const id = request.params.id;
-
-		if (request.headers['if-none-match'] == id) {
-			return response.status(304).end();
-		}
-
 		let capture = thumbnailCache.get(id);
 
 		if (!capture) {
@@ -198,4 +194,16 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 		response.contentType(capture.mimeType);
 		response.end(capture.data);
 	});
+
+	new BlobService(
+		server, '/capture/session/:id',
+		async id => ({
+			data: await database.captureSession
+				.includeTree({ id: true, thumbnail: true })
+				.first(capture => capture.id == id)
+				.then(capture => capture.thumbnail),
+			mimeType: 'image/jpg'
+		})
+	)
+		.enableCache();
 }
