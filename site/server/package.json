@@ -1,6 +1,6 @@
 {
 	"scripts": {
-		"build": "npx vlserver compile && esbuild index.ts --bundle --outfile=.built/index.js --platform=node --target=es2018 --external:skia-canvas --external:express-ws --external:jsdom --external:puppeteer-core && vlquery compile",
+		"build": "npx vlserver compile && esbuild index.ts --bundle --outfile=.built/index.js --platform=node --target=es2018 --external:skia-canvas --external:express-ws --external:jsdom --external:puppeteer-core --external:postgrejs && vlquery compile",
 		"start": "npm run build && environment node .built/index.js",
 		"typecheck": "npx vlserver compile && tsc --noEmit",
 		"database:update": "environment vlquery create-context"
@@ -25,10 +25,12 @@
 		"cookie-parser": "^1.4.7",
 		"express-ws": "^5.0.2",
 		"jsdom": "^27.0.1",
+		"pg": "^8.16.3",
+		"postgrejs": "^2.22.9",
 		"puppeteer-core": "^24.27.0",
 		"skia-canvas": "^2.0.2",
-		"vlquery": "^7.2.0",
-		"vlserver": "^5.2.0"
+		"vlquery": "file:../../../vlquery",
+		"vlserver": "^5.3.0"
 	},
 	"devDependencies": {
 		"@types/express-ws": "^3.0.6",
