@@ -1,4 +1,4 @@
-import { rem, child, display, padding, marginBottom, fontSize, gap, alignItems, lineHeight, flexGrow, fontFamily, height, em, backgroundColor, hex, imageRendering, justifyContent, width, percentage, maxWidth, maxHeight, vh, objectFit, objectPosition, position, marginTop, paddingInline, alignContent, hover, filter, invert, attribute, transform, rotate, turn, borderRight, px, firstOfType, paddingTop, flexShrink, paddingBlock, whiteSpace, textAlign, marginLeft, paddingLeft, borderLeft, ch, color, scaleX, minHeight, firstChild, not, border, marginInline, descendant, empty, Variable, left, insetBlock, Ratio, Percentage, ColorValue, aspectRatio, BorderTopWidthStyleProperty, borderTop, bottom, borderBottom, insetInline, boxShadow, top, paddingBottom, flexDirection, marginBlock, media, minWidth, after, content, inset, borderInline, skew, deg, vw, alignSelf, zIndex, max, overflow, backgroundPosition, backgroundPositionY, linearGradient, ColorStop, colorStop, backgroundImage, backgroundSize, backgroundRepeat, mixBlendMode, right } from "@acryps/style";
+import { rem, child, display, padding, marginBottom, fontSize, gap, alignItems, lineHeight, flexGrow, fontFamily, height, em, backgroundColor, hex, imageRendering, justifyContent, width, percentage, maxWidth, maxHeight, vh, objectFit, objectPosition, position, marginTop, paddingInline, alignContent, hover, filter, invert, attribute, transform, rotate, turn, borderRight, px, firstOfType, paddingTop, flexShrink, paddingBlock, whiteSpace, textAlign, marginLeft, paddingLeft, borderLeft, ch, color, scaleX, minHeight, firstChild, not, border, marginInline, descendant, empty, Variable, left, insetBlock, Ratio, Percentage, ColorValue, aspectRatio, BorderTopWidthStyleProperty, borderTop, bottom, borderBottom, insetInline, boxShadow, top, paddingBottom, flexDirection, marginBlock, media, minWidth, after, content, inset, borderInline, skew, deg, vw, alignSelf, zIndex, max, overflow, backgroundPosition, backgroundPositionY, linearGradient, ColorStop, colorStop, backgroundImage, backgroundSize, backgroundRepeat } from "@acryps/style";
 import { trainIdentifierFont, monospacedFont, cargoLoadIdentifierFont } from "../../assets/font";
 import { pageSpacing, pageGutter, runningNumberFont, tagFont, captureBackgroundColor, pageColor, primaryContrastColor, primaryColor, pageContrastColor, cargoFixtureColor, captureRotation } from "../../index.style";
 import { boxed, maximumBoxedWidth } from "../../shared/boxed";
@@ -83,18 +83,6 @@ export const railcarStyle = () => child('ui-railcar')(
 			lineHeight(1.2),
 			fontSize(max(vw(4), rem(1.25))),
 			fontFamily(runningNumberFont)
-		),
-
-		child('ui-tag') (
-			position('absolute'),
-			right(0),
-			top(0),
-
-			padding(rem(0.25)),
-			border(px(2), 'solid', 'currentColor'),
-
-			fontSize(rem(1)),
-			lineHeight(1)
 		)
 	),
 
@@ -104,7 +92,6 @@ export const railcarStyle = () => child('ui-railcar')(
 		marginTop(vh(-7.5)),
 
 		transform(rotate(captureRotation)),
-		mixBlendMode('darken'),
 
 		child('ui-container') (
 			display('flex'),
@@ -135,6 +122,22 @@ export const railcarStyle = () => child('ui-railcar')(
 					borderRight(px(1), 'dashed', hex('fff4'))
 				)
 			)
+		)
+	),
+
+	child('ui-identifier') (
+		boxed(),
+		paddingInline(pageSpacing),
+
+		display('flex'),
+		justifyContent('flex-end'),
+
+		child('ui-tag') (
+			padding(vw(1)),
+			border(px(2), 'solid', 'currentColor'),
+
+			fontSize(vw(5)),
+			lineHeight(1)
 		)
 	),
 
