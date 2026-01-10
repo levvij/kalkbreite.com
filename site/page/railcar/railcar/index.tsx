@@ -140,6 +140,10 @@ export class RailcarPage extends Component {
 				<ui-running-number>
 					{this.railcar.runningNumber}
 				</ui-running-number>
+
+				<ui-tag>
+					{this.railcar.tag}
+				</ui-tag>
 			</ui-header>
 
 			<ui-capture>
@@ -148,12 +152,6 @@ export class RailcarPage extends Component {
 					{this.bufferAnchorLine}
 				</ui-container>
 			</ui-capture>
-
-			<ui-identifier>
-				<ui-tag>
-					{this.railcar.tag}
-				</ui-tag>
-			</ui-identifier>
 
 			<ui-toolbar>
 				<ui-group>
