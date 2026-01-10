@@ -38,7 +38,7 @@ export class Application {
 	static chainRestorer: ChainRestorer;
 
 	static async main() {
-		DbClient.connectedClient = new DbClient({});
+		DbClient.connectedClient = new DbClient();
 		await DbClient.connectedClient.connect();
 
 		const server = new ManagedServer();

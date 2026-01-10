@@ -1,5 +1,5 @@
 import { ViewModel } from "vlserver";
-import { Capture } from "../managed/database";
+import { Capture, CaptureSession } from "../managed/database";
 
 export class CaptureViewModel extends ViewModel<Capture> {
 	id;
@@ -8,4 +8,12 @@ export class CaptureViewModel extends ViewModel<Capture> {
 	direction;
 	corrupted;
 	bufferAnchorOffset;
+}
+
+export class CaptureSessionViewModel extends ViewModel<CaptureSession> {
+	id;
+	captured;
+
+	corrupted;
+	reviewed;
 }

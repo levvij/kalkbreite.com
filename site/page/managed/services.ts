@@ -22,6 +22,23 @@ export class CaptureViewModel {
 	}
 }
 
+export class CaptureSessionViewModel {
+	captured: Date;
+	corrupted: Date;
+	id: string;
+	reviewed: Date;
+
+	private static $build(raw) {
+		const item = new CaptureSessionViewModel();
+		raw.captured === undefined || (item.captured = raw.captured ? new Date(raw.captured) : null)
+		raw.corrupted === undefined || (item.corrupted = raw.corrupted ? new Date(raw.corrupted) : null)
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
+		raw.reviewed === undefined || (item.reviewed = raw.reviewed ? new Date(raw.reviewed) : null)
+		
+		return item;
+	}
+}
+
 export class CargoLoadSummaryModel {
 	owner: CompanySummaryModel;
 	railcar: RailcarSummaryModel;
@@ -1113,6 +1130,72 @@ export class Service {
 			}
 			
 			return value;
+		});
+	}
+}
+
+export class CaptureService {
+	async listFreshCaptures(): Promise<Array<CaptureSessionViewModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("F3cHQxbmlvMXk2czprNHd0cTJ0ZTJsaH"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : CaptureSessionViewModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async listCaptures(): Promise<Array<CaptureSessionViewModel>> {
+		const $data = new FormData();
+		
+
+		return await fetch(Service.toURL("hjdGFicWlvY2licHZ2emUxc2YyeTBsaW"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("data" in r) {
+				const d = r.data;
+
+				return d.map(d => d === null ? null : CaptureSessionViewModel["$build"](d));
+			} else if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			} else if ("error" in r) {
+				throw new Error(r.error);
+			}
+		});
+	}
+
+	async assign(sessionId: string, offset: number, railcarId: string, side: RailcarDirection): Promise<void> {
+		const $data = new FormData();
+		$data.append("lhNWdqcGcwMXNpcndmMDk0OWBpejZkNH", Service.stringify(sessionId))
+		$data.append("U3djI3YTBocnBhdnpuZjJzb29kN3Ywej", Service.stringify(offset))
+		$data.append("EwcHRrOTFrMXZueGg1amo5aXtqcGVuaT", Service.stringify(railcarId))
+		$data.append("I2aHd4czlvbDMxZHpocjRyN2F5N2Fuc3", Service.stringify(side))
+
+		return await fetch(Service.toURL("Y4N2RreH9lb3Rma2Y0Nzk2ejliZ3s0dW"), {
+			method: "post",
+			credentials: "include",
+			body: $data
+		}).then(res => res.json()).then(r => {
+			if ("error" in r) {
+				throw new Error(r.error);
+			}
+
+			if ("aborted" in r) {
+				throw new Error("request aborted by server");
+			}
 		});
 	}
 }

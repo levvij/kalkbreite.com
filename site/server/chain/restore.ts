@@ -23,7 +23,14 @@ export class ChainRestorer {
 			this.couplerTypes.set(type.id, new CouplerType(type.name));
 		}
 
-		for (let railcar of await this.database.railcar.toArray()) {
+		const railcars = await this.database.railcar
+			.include(railcar => railcar.model)
+			.include(railcar => railcar.headCoupler)
+			.include(railcar => railcar.tailCoupler)
+			.include(railcar => railcar.tractionActors)
+			.toArray();
+
+		for (let railcar of railcars) {
 			if (railcar.modelId) {
 				await this.importRailcar(railcar);
 			}
@@ -137,6 +144,12 @@ export class ChainRestorer {
 	}
 
 	private findRailcar(id: string) {
+		console.log(
+			this.railcars.find(railcar => railcar.identifier == id),
+			this.railcars.map(railcar => railcar.identifier),
+			id
+		)
+
 		return this.railcars.find(railcar => railcar.identifier == id);
 	}
 

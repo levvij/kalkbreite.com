@@ -42,6 +42,8 @@ import { CargoPage } from "./cargo";
 import { CargoLoadPage } from "./cargo/load";
 import { CapturesPage } from "./railcar/capture";
 import { TractionComponent } from "./railcar/railcar/traction";
+import { CaptureSessionsPage } from "./capture-session";
+import { CaptureSessionAssignPage } from "./capture-session/assign";
 
 // injected by esbuild
 declare const buildDate: string;
@@ -75,6 +77,10 @@ export class Application {
 
 			.route('/cargo', CargoPage
 				.route('/load/:id', CargoLoadPage)
+			)
+
+			.route('/capture-session', CaptureSessionsPage
+				.route('/assign/:sessionId/:offset', CaptureSessionAssignPage)
 			)
 
 			.route('/layout', LayoutPage

@@ -5,6 +5,7 @@ import { updateThumbnail } from "./thumbnail";
 import { registerCaptureSessionInterface } from "./session";
 import { registerTrainCaptureInterface } from "./interface/train";
 import { registerTrainRailcarCaptureInterface } from "./interface/train-railcar";
+import { BlobService } from "../shared/blob-service";
 
 export const registerCaptureInterface = (server: ManagedServer, database: DbContext) => {
 	registerTrainCaptureInterface(server, database);
@@ -33,11 +34,6 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 
 	server.app.get('/capture/:id', async (request, response) => {
 		const id = request.params.id;
-
-		if (request.headers['if-none-match'] == id) {
-			return response.status(304).end();
-		}
-
 		let capture = thumbnailCache.get(id);
 
 		if (!capture) {
@@ -199,33 +195,15 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 		response.end(capture.data);
 	});
 
-	server.app.post('/capture/:tag/:direction', async (request, response) => {
-		const tag = request.params.tag;
-		const direction = request.params.direction as RailcarDirection;
-
-		const railcar = await database.railcar.first(railcar => railcar.tag.valueOf() == tag);
-
-		const capture = new Capture();
-		capture.direction = direction;
-		capture.captured = new Date();
-		capture.mimeType = 'image/png';
-		capture.railcar = railcar;
-
-		await capture.create();
-
-		const chunks = [];
-
-		request.on('data', chunk => {
-			chunks.push(chunk);
-		});
-
-		request.on('end', async () => {
-			capture.data = Buffer.concat(chunks);
-
-			await capture.update();
-			await updateThumbnail(capture);
-
-			response.sendStatus(200).end();
-		});
-	});
+	new BlobService(
+		server, '/capture/session/:id',
+		async id => ({
+			data: await database.captureSession
+				.includeTree({ id: true, thumbnail: true })
+				.first(capture => capture.id == id)
+				.then(capture => capture.thumbnail),
+			mimeType: 'image/jpg'
+		})
+	)
+		.enableCache();
 }
