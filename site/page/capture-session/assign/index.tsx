@@ -21,7 +21,7 @@ export class CaptureSessionAssignPage extends Component {
 	}
 
 	render() {
-		const offset = +`0.${parseInt(this.parameters.offset)}`;
+		const offset = +`0.${this.parameters.offset}`;
 
 		const image = new Image();
 		image.src = `/capture/session/${this.session.id}`;
