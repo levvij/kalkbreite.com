@@ -1,6 +1,6 @@
 {
 	"scripts": {
-		"build": "npx vlserver compile && esbuild index.ts --bundle --outfile=.built/index.js --platform=node --target=es2018 --external:skia-canvas --external:express-ws --external:jsdom --external:puppeteer-core --external:postgrejs && vlquery compile",
+		"build": "npx vlserver compile && esbuild index.ts --bundle --outfile=.built/index.js --platform=node --target=es2018 --external:skia-canvas --external:express-ws --external:jsdom --external:puppeteer-core --external:postgrejs --external:pg-native --external:pg && vlquery compile",
 		"start": "npm run build && environment node .built/index.js",
 		"typecheck": "npx vlserver compile && tsc --noEmit",
 		"database:update": "environment vlquery create-context"
@@ -29,7 +29,7 @@
 		"postgrejs": "^2.22.9",
 		"puppeteer-core": "^24.27.0",
 		"skia-canvas": "^2.0.2",
-		"vlquery": "file:../../../vlquery",
+		"vlquery": "^7.3.1",
 		"vlserver": "^5.3.0"
 	},
 	"devDependencies": {

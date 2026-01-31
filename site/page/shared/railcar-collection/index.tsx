@@ -11,8 +11,6 @@ export class RailcarCollectionComponent extends Component {
 	render() {
 		return <ui-railcars>
 			{this.railcars.map(railcar => <ui-railcar ui-href={`/railcar/${railcar.tag}`}>
-				<img src={`/capture/railcar/${railcar.id}`} loading='lazy' />
-
 				<ui-header>
 					<ui-name>
 						{railcar.givenName || railcar.model?.name || '-'}
@@ -22,6 +20,8 @@ export class RailcarCollectionComponent extends Component {
 						{railcar.tag}
 					</ui-tag>
 				</ui-header>
+
+				<img src={`/capture/railcar/${railcar.id}`} loading='lazy' />
 
 				<ui-tagline>
 					<ui-running-number>
