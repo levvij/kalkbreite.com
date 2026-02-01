@@ -2,6 +2,8 @@ import { Component } from "@acryps/page";
 import { RailcarService, RailcarSummaryModel } from "../managed/services";
 import { RailcarCollectionComponent } from "../shared/railcar-collection";
 import { Application } from "..";
+import { BooleanFilter } from "../shared/filter/boolean";
+import { FilterContext } from "../shared/filter/context";
 
 export class RailcarsPage extends Component {
 	static shortcuts = ['railcars', 'r'];
@@ -37,7 +39,9 @@ export class RailcarsPage extends Component {
 					</ui-action>}
 				</ui-actions>
 
-				{new RailcarCollectionComponent(this.railcars)}
+				{new RailcarCollectionComponent(this.railcars, new FilterContext('railcars', [
+					new BooleanFilter('With Image', true, railcar => railcar.captures.length > 0)
+				]))}
 			</ui-overview>
 		</ui-railcars>
 	}

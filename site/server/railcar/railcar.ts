@@ -1,5 +1,5 @@
 import { ViewModel } from "vlserver";
-import { Railcar } from "../managed/database";
+import { Capture, Railcar } from "../managed/database";
 import { RailcarModelSummaryModel, RailcarModelViewModel } from "./model";
 import { CompanySummaryModel } from "../company/company";
 import { StorageContainerSummaryModel } from "../storage/storage-contaiuner";
@@ -19,6 +19,11 @@ export class RailcarSummaryModel extends ViewModel<Railcar> {
 	runningNumber;
 
 	model: RailcarModelSummaryModel;
+	captures: RailcarSummaryCaptureModel[];
+}
+
+export class RailcarSummaryCaptureModel extends ViewModel<Capture> {
+	id;
 }
 
 export class GraffitiRailcarViewModel extends RailcarSummaryModel {
