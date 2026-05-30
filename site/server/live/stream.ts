@@ -3,9 +3,11 @@ import { Camera, CameraBlackout } from "../managed/database";
 import { ManagedServer } from "../managed/server";
 import { Canvas, CanvasRenderingContext2D, loadImage, loadImageData } from "skia-canvas";
 import { randomUUID } from "crypto";
+import { Logger } from "@acryps/log";
 
 export class LiveStreamer {
 	static browser: Browser;
+	static logger = new Logger('live').child('stream');
 
 	readonly pageWidth = 1000;
 	readonly pageHeight = 700;
@@ -22,11 +24,33 @@ export class LiveStreamer {
 		public camera: Camera
 	) {}
 
-	static async start() {
+	static async start(server: ManagedServer, cameras: Camera[]) {
+		const executablePath = process.env.BROWSER_APPLICATION_PATH;
+		this.logger.log(`start browser using '${executablePath}'`);
+
 		this.browser = await launch({
-			executablePath: process.env.BROWSER_APPLICATION_PATH,
+			executablePath,
 			args: ['--no-sandbox', '--disable-setuid-sandbox']
 		});
+
+		this.logger.log(`browser started, tracking ${cameras.length} cameras`);
+
+		for (let camera of cameras) {
+			const stream = new LiveStreamer(camera);
+			stream.register(server);
+
+			// wait with streaming between updates
+			// the monitoring website needs quite some delay between sessions or it will not work
+			setTimeout(() => {
+				try {
+					stream.start();
+
+					this.logger.log(`stream started for '${camera.name}'`);
+				} catch (error) {
+					this.logger.error(`stream failed for '${camera.name}'`);
+				}
+			}, 1000 * 60);
+		}
 	}
 
 	async start() {

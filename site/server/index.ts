@@ -97,16 +97,7 @@ export class Application {
 		registerExportInterface(server);
 
 		if (streamCameras) {
-			await LiveStreamer.start();
-
-			for (let camera of await database.camera.toArray()) {
-				const stream = new LiveStreamer(camera);
-				stream.register(server);
-
-				// wait with streaming between updates
-				// the monitoring website needs quite some delay between sessions or it will not work
-				setTimeout(() => stream.start(), 1000 * 60);
-			}
+			await LiveStreamer.start(server, await database.camera.toArray());
 		}
 
 		server.prepareRoutes();

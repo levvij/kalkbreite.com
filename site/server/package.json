@@ -17,6 +17,7 @@
 	},
 	"dependencies": {
 		"@acryps/environment": "^2.7.2",
+		"@acryps/log": "^0.0.0",
 		"@packtrack/protocol": "^1.8.1",
 		"@packtrack/train": "^2.2.0",
 		"@types/jsdom": "^27.0.0",
