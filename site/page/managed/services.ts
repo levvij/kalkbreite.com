@@ -509,6 +509,7 @@ export class RailcarModelDrawingSummaryModel {
 
 export class RailcarSummaryModel {
 	model: RailcarModelSummaryModel;
+	captures: RailcarSummaryCaptureModel[];
 	givenName: string;
 	id: string;
 	runningNumber: string;
@@ -517,10 +518,22 @@ export class RailcarSummaryModel {
 	private static $build(raw) {
 		const item = new RailcarSummaryModel();
 		raw.model === undefined || (item.model = raw.model ? RailcarModelSummaryModel["$build"](raw.model) : null)
+		raw.captures === undefined || (item.captures = raw.captures ? raw.captures.map(i => RailcarSummaryCaptureModel["$build"](i)) : null)
 		raw.givenName === undefined || (item.givenName = raw.givenName === null ? null : `${raw.givenName}`)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		raw.runningNumber === undefined || (item.runningNumber = raw.runningNumber === null ? null : `${raw.runningNumber}`)
 		raw.tag === undefined || (item.tag = raw.tag === null ? null : `${raw.tag}`)
+		
+		return item;
+	}
+}
+
+export class RailcarSummaryCaptureModel {
+	id: string;
+
+	private static $build(raw) {
+		const item = new RailcarSummaryCaptureModel();
+		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
 		
 		return item;
 	}
@@ -965,6 +978,7 @@ export class RailcarModelViewModel {
 
 export class GraffitiRailcarViewModel {
 	model: RailcarModelSummaryModel;
+	captures: RailcarSummaryCaptureModel[];
 	graffitis: GraffitiSummaryModel[];
 	givenName: string;
 	id: string;
@@ -974,6 +988,7 @@ export class GraffitiRailcarViewModel {
 	private static $build(raw) {
 		const item = new GraffitiRailcarViewModel();
 		raw.model === undefined || (item.model = raw.model ? RailcarModelSummaryModel["$build"](raw.model) : null)
+		raw.captures === undefined || (item.captures = raw.captures ? raw.captures.map(i => RailcarSummaryCaptureModel["$build"](i)) : null)
 		raw.graffitis === undefined || (item.graffitis = raw.graffitis ? raw.graffitis.map(i => GraffitiSummaryModel["$build"](i)) : null)
 		raw.givenName === undefined || (item.givenName = raw.givenName === null ? null : `${raw.givenName}`)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)
@@ -1077,6 +1092,7 @@ export class TrainRailcarUnitViewModel {
 	model: RailcarModelSummaryModel;
 	operator: CompanySummaryModel;
 	owner: CompanySummaryModel;
+	captures: RailcarSummaryCaptureModel[];
 	storageContainer: StorageContainerSummaryModel;
 	givenName: string;
 	id: string;
@@ -1088,6 +1104,7 @@ export class TrainRailcarUnitViewModel {
 		raw.model === undefined || (item.model = raw.model ? RailcarModelSummaryModel["$build"](raw.model) : null)
 		raw.operator === undefined || (item.operator = raw.operator ? CompanySummaryModel["$build"](raw.operator) : null)
 		raw.owner === undefined || (item.owner = raw.owner ? CompanySummaryModel["$build"](raw.owner) : null)
+		raw.captures === undefined || (item.captures = raw.captures ? raw.captures.map(i => RailcarSummaryCaptureModel["$build"](i)) : null)
 		raw.storageContainer === undefined || (item.storageContainer = raw.storageContainer ? StorageContainerSummaryModel["$build"](raw.storageContainer) : null)
 		raw.givenName === undefined || (item.givenName = raw.givenName === null ? null : `${raw.givenName}`)
 		raw.id === undefined || (item.id = raw.id === null ? null : `${raw.id}`)

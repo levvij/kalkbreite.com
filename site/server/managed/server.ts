@@ -89,6 +89,7 @@ import { UicLocaleViewModel } from "./../model/uic-identifier";
 import { RailcarCargoLoadViewModel } from "./../railcar/cargo";
 import { CouplerViewModel } from "./../railcar/coupler";
 import { RailcarModelDrawingSummaryModel } from "./../railcar/model";
+import { RailcarSummaryCaptureModel } from "./../railcar/railcar";
 import { RailcarComissionViewModel } from "./../railcar/storage";
 import { RailcarWithdrawalViewModel } from "./../railcar/storage";
 import { TractionViewModel } from "./../railcar/traction";
@@ -3012,6 +3013,7 @@ ViewModel.mappings = {
 		async map() {
 			return {
 				model: new RailcarModelSummaryModel(await BaseServer.unwrap(this.$$model.model)),
+				captures: (await this.$$model.captures.includeTree(ViewModel.mappings[RailcarSummaryCaptureModel.name].items).toArray()).map(item => new RailcarSummaryCaptureModel(item)),
 				givenName: this.$$model.givenName,
 				id: this.$$model.id,
 				runningNumber: this.$$model.runningNumber,
@@ -3051,6 +3053,12 @@ ViewModel.mappings = {
 						[...parents, "model-RailcarSummaryModel"]
 					);
 				},
+				get captures() {
+					return ViewModel.mappings[RailcarSummaryCaptureModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "captures-RailcarSummaryModel"]
+					);
+				},
 				givenName: true,
 				id: true,
 				runningNumber: true,
@@ -3061,6 +3069,7 @@ ViewModel.mappings = {
 		static toViewModel(data) {
 			const item = new RailcarSummaryModel(null);
 			"model" in data && (item.model = data.model && ViewModel.mappings[RailcarModelSummaryModel.name].toViewModel(data.model));
+			"captures" in data && (item.captures = data.captures && [...data.captures].map(i => ViewModel.mappings[RailcarSummaryCaptureModel.name].toViewModel(i)));
 			"givenName" in data && (item.givenName = data.givenName === null ? null : `${data.givenName}`);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
 			"runningNumber" in data && (item.runningNumber = data.runningNumber === null ? null : `${data.runningNumber}`);
@@ -3079,10 +3088,69 @@ ViewModel.mappings = {
 			}
 
 			"model" in viewModel && (model.model.id = viewModel.model ? viewModel.model.id : null);
+			"captures" in viewModel && (null);
 			"givenName" in viewModel && (model.givenName = viewModel.givenName === null ? null : `${viewModel.givenName}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 			"runningNumber" in viewModel && (model.runningNumber = viewModel.runningNumber === null ? null : `${viewModel.runningNumber}`);
 			"tag" in viewModel && (model.tag = viewModel.tag === null ? null : `${viewModel.tag}`);
+
+			return model;
+		}
+	},
+	[RailcarSummaryCaptureModel.name]: class ComposedRailcarSummaryCaptureModel extends RailcarSummaryCaptureModel {
+		async map() {
+			return {
+				id: this.$$model.id
+			}
+		};
+
+		static get items() {
+			return this.getPrefetchingProperties(ViewModel.maximumPrefetchingRecursionDepth, []);
+		}
+
+		static getPrefetchingProperties(level: number, parents: string[]) {
+			let repeats = false;
+
+			for (let size = 1; size <= parents.length / 2; size++) {
+				if (!repeats) {
+					for (let index = 0; index < parents.length; index++) {
+						if (parents[parents.length - 1 - index] == parents[parents.length - 1 - index - size]) {
+							repeats = true;
+						}
+					}
+				}
+			}
+
+			if (repeats) {
+				level--;
+			}
+
+			if (!level) {
+				return {};
+			}
+
+			return {
+				id: true
+			};
+		};
+
+		static toViewModel(data) {
+			const item = new RailcarSummaryCaptureModel(null);
+			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
+
+			return item;
+		}
+
+		static async toModel(viewModel: RailcarSummaryCaptureModel) {
+			let model: Capture;
+
+			if (viewModel.id) {
+				model = await ViewModel.globalFetchingContext.findSet(Capture).find(viewModel.id)
+			} else {
+				model = new Capture();
+			}
+
+			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
 
 			return model;
 		}
@@ -4816,6 +4884,7 @@ ViewModel.mappings = {
 		async map() {
 			return {
 				model: new RailcarModelSummaryModel(await BaseServer.unwrap(this.$$model.model)),
+				captures: (await this.$$model.captures.includeTree(ViewModel.mappings[RailcarSummaryCaptureModel.name].items).toArray()).map(item => new RailcarSummaryCaptureModel(item)),
 				graffitis: (await this.$$model.graffitis.includeTree(ViewModel.mappings[GraffitiSummaryModel.name].items).toArray()).map(item => new GraffitiSummaryModel(item)),
 				givenName: this.$$model.givenName,
 				id: this.$$model.id,
@@ -4856,6 +4925,12 @@ ViewModel.mappings = {
 						[...parents, "model-GraffitiRailcarViewModel"]
 					);
 				},
+				get captures() {
+					return ViewModel.mappings[RailcarSummaryCaptureModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "captures-GraffitiRailcarViewModel"]
+					);
+				},
 				get graffitis() {
 					return ViewModel.mappings[GraffitiSummaryModel.name].getPrefetchingProperties(
 						level,
@@ -4872,6 +4947,7 @@ ViewModel.mappings = {
 		static toViewModel(data) {
 			const item = new GraffitiRailcarViewModel(null);
 			"model" in data && (item.model = data.model && ViewModel.mappings[RailcarModelSummaryModel.name].toViewModel(data.model));
+			"captures" in data && (item.captures = data.captures && [...data.captures].map(i => ViewModel.mappings[RailcarSummaryCaptureModel.name].toViewModel(i)));
 			"graffitis" in data && (item.graffitis = data.graffitis && [...data.graffitis].map(i => ViewModel.mappings[GraffitiSummaryModel.name].toViewModel(i)));
 			"givenName" in data && (item.givenName = data.givenName === null ? null : `${data.givenName}`);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
@@ -4891,6 +4967,7 @@ ViewModel.mappings = {
 			}
 
 			"model" in viewModel && (model.model.id = viewModel.model ? viewModel.model.id : null);
+			"captures" in viewModel && (null);
 			"graffitis" in viewModel && (null);
 			"givenName" in viewModel && (model.givenName = viewModel.givenName === null ? null : `${viewModel.givenName}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
@@ -5267,6 +5344,7 @@ ViewModel.mappings = {
 				model: new RailcarModelSummaryModel(await BaseServer.unwrap(this.$$model.model)),
 				operator: new CompanySummaryModel(await BaseServer.unwrap(this.$$model.operator)),
 				owner: new CompanySummaryModel(await BaseServer.unwrap(this.$$model.owner)),
+				captures: (await this.$$model.captures.includeTree(ViewModel.mappings[RailcarSummaryCaptureModel.name].items).toArray()).map(item => new RailcarSummaryCaptureModel(item)),
 				storageContainer: new StorageContainerSummaryModel(await BaseServer.unwrap(this.$$model.storageContainer)),
 				givenName: this.$$model.givenName,
 				id: this.$$model.id,
@@ -5319,6 +5397,12 @@ ViewModel.mappings = {
 						[...parents, "owner-TrainRailcarUnitViewModel"]
 					);
 				},
+				get captures() {
+					return ViewModel.mappings[RailcarSummaryCaptureModel.name].getPrefetchingProperties(
+						level,
+						[...parents, "captures-TrainRailcarUnitViewModel"]
+					);
+				},
 				get storageContainer() {
 					return ViewModel.mappings[StorageContainerSummaryModel.name].getPrefetchingProperties(
 						level,
@@ -5337,6 +5421,7 @@ ViewModel.mappings = {
 			"model" in data && (item.model = data.model && ViewModel.mappings[RailcarModelSummaryModel.name].toViewModel(data.model));
 			"operator" in data && (item.operator = data.operator && ViewModel.mappings[CompanySummaryModel.name].toViewModel(data.operator));
 			"owner" in data && (item.owner = data.owner && ViewModel.mappings[CompanySummaryModel.name].toViewModel(data.owner));
+			"captures" in data && (item.captures = data.captures && [...data.captures].map(i => ViewModel.mappings[RailcarSummaryCaptureModel.name].toViewModel(i)));
 			"storageContainer" in data && (item.storageContainer = data.storageContainer && ViewModel.mappings[StorageContainerSummaryModel.name].toViewModel(data.storageContainer));
 			"givenName" in data && (item.givenName = data.givenName === null ? null : `${data.givenName}`);
 			"id" in data && (item.id = data.id === null ? null : `${data.id}`);
@@ -5358,6 +5443,7 @@ ViewModel.mappings = {
 			"model" in viewModel && (model.model.id = viewModel.model ? viewModel.model.id : null);
 			"operator" in viewModel && (model.operator.id = viewModel.operator ? viewModel.operator.id : null);
 			"owner" in viewModel && (model.owner.id = viewModel.owner ? viewModel.owner.id : null);
+			"captures" in viewModel && (null);
 			"storageContainer" in viewModel && (model.storageContainer.id = viewModel.storageContainer ? viewModel.storageContainer.id : null);
 			"givenName" in viewModel && (model.givenName = viewModel.givenName === null ? null : `${viewModel.givenName}`);
 			"id" in viewModel && (model.id = viewModel.id === null ? null : `${viewModel.id}`);
