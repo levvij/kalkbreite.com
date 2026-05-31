@@ -41,9 +41,9 @@ export class LiveStreamer {
 
 			// wait with streaming between updates
 			// the monitoring website needs quite some delay between sessions or it will not work
-			setTimeout(() => {
+			setTimeout(async () => {
 				try {
-					stream.start();
+					await stream.start();
 
 					this.logger.log(`stream started for '${camera.name}'`);
 				} catch (error) {
