@@ -39,6 +39,7 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 		if (!capture) {
 			capture = await database.capture
 				.includeTree({ thumbnail: true })
+				.where(capture => capture.thumbnail != null)
 				.first(capture => capture.id == id);
 
 			if (!capture) {
@@ -68,6 +69,7 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 		if (!capture) {
 			capture = await database.graffitiCapture
 				.includeTree({ thumbnail: true })
+				.where(capture => capture.thumbnail != null)
 				.orderByDescending(capture => capture.capture.captured)
 				.first(capture => capture.graffitiId == id);
 
@@ -93,6 +95,7 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 		if (!capture) {
 			capture = await database.graffitiCapture
 				.includeTree({ thumbnail: true })
+				.where(capture => capture.thumbnail != null)
 				.orderByDescending(capture => capture.capture.captured)
 				.first(capture => capture.id == id);
 
@@ -116,6 +119,7 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 		const lastCapture = await database.capture
 			.orderByDescending(capture => capture.captured)
 			.includeTree({ id: true })
+			.where(capture => capture.thumbnail != null)
 			.first(capture => capture.railcarId == id);
 
 		if (!lastCapture) {
@@ -130,6 +134,7 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 		if (!capture) {
 			capture = await database.capture
 				.includeTree({ thumbnail: true })
+				.where(capture => capture.thumbnail != null)
 				.first(capture => capture.id == lastCapture.id);
 
 			thumbnailCache.set(lastCapture.id, capture);
@@ -146,6 +151,7 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 		const lastCapture = await database.capture
 			.orderByDescending(capture => capture.captured)
 			.includeTree({ id: true })
+			.where(capture => capture.thumbnail != null)
 			.where(capture => capture.direction == direction)
 			.first(capture => capture.railcarId == id);
 
@@ -161,6 +167,7 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 		if (!capture) {
 			capture = await database.capture
 				.includeTree({ thumbnail: true })
+				.where(capture => capture.thumbnail != null)
 				.first(capture => capture.id == lastCapture.id);
 
 			thumbnailCache.set(lastCapture.id, capture);
@@ -200,6 +207,7 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 		async id => ({
 			data: await database.captureSession
 				.includeTree({ id: true, thumbnail: true })
+				.where(capture => capture.thumbnail != null)
 				.first(capture => capture.id == id)
 				.then(capture => capture.thumbnail),
 			mimeType: 'image/jpg'
