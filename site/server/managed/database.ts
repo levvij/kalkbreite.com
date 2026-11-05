@@ -4,6 +4,10 @@ export class RailcarDirection extends QueryEnum {
 	static readonly forward = "forward";
 	static readonly reverse = "reverse";
 }
+QueryEnum.types = {
+	'railcar_direction': RailcarDirection,
+}
+
 
 export class AccountQueryProxy extends QueryProxy {
 	get email(): Partial<QueryString> { throw new Error("Invalid use of QueryModels. QueryModels cannot be used during runtime"); }
@@ -19,7 +23,7 @@ export class Account extends Entity<AccountQueryProxy> {
 	name: string;
 	passwordHash: string;
 	salt: string;
-	
+
 	$$meta = {
 		source: "account",
 		columns: {
@@ -29,14 +33,14 @@ export class Account extends Entity<AccountQueryProxy> {
 			passwordHash: { type: "text", name: "password_hash" },
 			salt: { type: "text", name: "salt" }
 		},
-		get set(): DbSet<Account, AccountQueryProxy> { 
+		get set(): DbSet<Account, AccountQueryProxy> {
 			return new DbSet<Account, AccountQueryProxy>(Account, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.sessions = new PrimaryReference<Session, SessionQueryProxy>(this, "accountId", Session);
 	}
 }
@@ -65,7 +69,7 @@ export class Artist extends Entity<ArtistQueryProxy> {
 	real: boolean;
 	summary: string;
 	tag: string;
-	
+
 	$$meta = {
 		source: "artist",
 		columns: {
@@ -79,14 +83,14 @@ export class Artist extends Entity<ArtistQueryProxy> {
 			summary: { type: "text", name: "summary" },
 			tag: { type: "text", name: "tag" }
 		},
-		get set(): DbSet<Artist, ArtistQueryProxy> { 
+		get set(): DbSet<Artist, ArtistQueryProxy> {
 			return new DbSet<Artist, ArtistQueryProxy>(Artist, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.graffitis = new PrimaryReference<Graffiti, GraffitiQueryProxy>(this, "artistId", Graffiti);
 		this.originals = new PrimaryReference<GraffitiInspiration, GraffitiInspirationQueryProxy>(this, "artistId", GraffitiInspiration);
 		this.paintedGraffitis = new PrimaryReference<Graffiti, GraffitiQueryProxy>(this, "painterId", Graffiti);
@@ -107,7 +111,7 @@ export class Camera extends Entity<CameraQueryProxy> {
 	name: string;
 	resolution: number;
 	streamSource: string;
-	
+
 	$$meta = {
 		source: "camera",
 		columns: {
@@ -117,14 +121,14 @@ export class Camera extends Entity<CameraQueryProxy> {
 			resolution: { type: "float4", name: "resolution" },
 			streamSource: { type: "text", name: "stream_source" }
 		},
-		get set(): DbSet<Camera, CameraQueryProxy> { 
+		get set(): DbSet<Camera, CameraQueryProxy> {
 			return new DbSet<Camera, CameraQueryProxy>(Camera, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.blackouts = new PrimaryReference<CameraBlackout, CameraBlackoutQueryProxy>(this, "cameraId", CameraBlackout);
 	}
 }
@@ -140,7 +144,7 @@ export class CameraBlackout extends Entity<CameraBlackoutQueryProxy> {
 	cameraId: string;
 	declare id: string;
 	path: string;
-	
+
 	$$meta = {
 		source: "camera_blackout",
 		columns: {
@@ -148,17 +152,17 @@ export class CameraBlackout extends Entity<CameraBlackoutQueryProxy> {
 			id: { type: "uuid", name: "id" },
 			path: { type: "text", name: "path" }
 		},
-		get set(): DbSet<CameraBlackout, CameraBlackoutQueryProxy> { 
+		get set(): DbSet<CameraBlackout, CameraBlackoutQueryProxy> {
 			return new DbSet<CameraBlackout, CameraBlackoutQueryProxy>(CameraBlackout, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$camera = new ForeignReference<Camera>(this, "cameraId", Camera);
 	}
-	
+
 	private $camera: ForeignReference<Camera>;
 
 	set camera(value: Partial<ForeignReference<Camera>>) {
@@ -203,7 +207,7 @@ export class Capture extends Entity<CaptureQueryProxy> {
 	sessionBufferOffset: number;
 	sessionId: string;
 	thumbnail: Buffer;
-	
+
 	$$meta = {
 		source: "capture",
 		columns: {
@@ -219,18 +223,18 @@ export class Capture extends Entity<CaptureQueryProxy> {
 			sessionId: { type: "uuid", name: "session_id" },
 			thumbnail: { type: "bytea", name: "thumbnail" }
 		},
-		get set(): DbSet<Capture, CaptureQueryProxy> { 
+		get set(): DbSet<Capture, CaptureQueryProxy> {
 			return new DbSet<Capture, CaptureQueryProxy>(Capture, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$railcar = new ForeignReference<Railcar>(this, "railcarId", Railcar);
 	this.$session = new ForeignReference<CaptureSession>(this, "sessionId", CaptureSession);
 	}
-	
+
 	private $railcar: ForeignReference<Railcar>;
 
 	set railcar(value: Partial<ForeignReference<Railcar>>) {
@@ -276,7 +280,7 @@ export class CaptureSession extends Entity<CaptureSessionQueryProxy> {
 	mimeType: string;
 	reviewed: Date;
 	thumbnail: Buffer;
-	
+
 	$$meta = {
 		source: "capture_session",
 		columns: {
@@ -288,14 +292,14 @@ export class CaptureSession extends Entity<CaptureSessionQueryProxy> {
 			reviewed: { type: "timestamp", name: "reviewed" },
 			thumbnail: { type: "bytea", name: "thumbnail" }
 		},
-		get set(): DbSet<CaptureSession, CaptureSessionQueryProxy> { 
+		get set(): DbSet<CaptureSession, CaptureSessionQueryProxy> {
 			return new DbSet<CaptureSession, CaptureSessionQueryProxy>(CaptureSession, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.railcarCaptures = new PrimaryReference<Capture, CaptureQueryProxy>(this, "sessionId", Capture);
 	}
 }
@@ -311,7 +315,7 @@ export class CargoFixture extends Entity<CargoFixtureQueryProxy> {
 		declare id: string;
 	length: number;
 	name: string;
-	
+
 	$$meta = {
 		source: "cargo_fixture",
 		columns: {
@@ -319,14 +323,14 @@ export class CargoFixture extends Entity<CargoFixtureQueryProxy> {
 			length: { type: "float4", name: "length" },
 			name: { type: "text", name: "name" }
 		},
-		get set(): DbSet<CargoFixture, CargoFixtureQueryProxy> { 
+		get set(): DbSet<CargoFixture, CargoFixtureQueryProxy> {
 			return new DbSet<CargoFixture, CargoFixtureQueryProxy>(CargoFixture, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.loadTypes = new PrimaryReference<CargoLoadType, CargoLoadTypeQueryProxy>(this, "fixtureId", CargoLoadType);
 		this.slots = new PrimaryReference<CargoSlot, CargoSlotQueryProxy>(this, "fixtureId", CargoSlot);
 	}
@@ -363,7 +367,7 @@ export class CargoLoad extends Entity<CargoLoadQueryProxy> {
 	slotId: string;
 	tag: string;
 	typeId: string;
-	
+
 	$$meta = {
 		source: "cargo_load",
 		columns: {
@@ -378,20 +382,20 @@ export class CargoLoad extends Entity<CargoLoadQueryProxy> {
 			tag: { type: "text", name: "tag" },
 			typeId: { type: "uuid", name: "type_id" }
 		},
-		get set(): DbSet<CargoLoad, CargoLoadQueryProxy> { 
+		get set(): DbSet<CargoLoad, CargoLoadQueryProxy> {
 			return new DbSet<CargoLoad, CargoLoadQueryProxy>(CargoLoad, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$owner = new ForeignReference<Company>(this, "ownerId", Company);
 	this.$railcar = new ForeignReference<Railcar>(this, "railcarId", Railcar);
 	this.$slot = new ForeignReference<CargoSlot>(this, "slotId", CargoSlot);
 	this.$type = new ForeignReference<CargoLoadType>(this, "typeId", CargoLoadType);
 	}
-	
+
 	private $owner: ForeignReference<Company>;
 
 	set owner(value: Partial<ForeignReference<Company>>) {
@@ -461,7 +465,7 @@ export class CargoLoadType extends Entity<CargoLoadTypeQueryProxy> {
 	name: string;
 	oversizeHead: number;
 	oversizeTail: number;
-	
+
 	$$meta = {
 		source: "cargo_load_type",
 		columns: {
@@ -472,18 +476,18 @@ export class CargoLoadType extends Entity<CargoLoadTypeQueryProxy> {
 			oversizeHead: { type: "float4", name: "oversize_head" },
 			oversizeTail: { type: "float4", name: "oversize_tail" }
 		},
-		get set(): DbSet<CargoLoadType, CargoLoadTypeQueryProxy> { 
+		get set(): DbSet<CargoLoadType, CargoLoadTypeQueryProxy> {
 			return new DbSet<CargoLoadType, CargoLoadTypeQueryProxy>(CargoLoadType, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$fixture = new ForeignReference<CargoFixture>(this, "fixtureId", CargoFixture);
 	this.loads = new PrimaryReference<CargoLoad, CargoLoadQueryProxy>(this, "typeId", CargoLoad);
 	}
-	
+
 	private $fixture: ForeignReference<CargoFixture>;
 
 	set fixture(value: Partial<ForeignReference<CargoFixture>>) {
@@ -522,7 +526,7 @@ export class CargoSlot extends Entity<CargoSlotQueryProxy> {
 	declare id: string;
 	offset: number;
 	railcarModelId: string;
-	
+
 	$$meta = {
 		source: "cargo_slot",
 		columns: {
@@ -535,18 +539,18 @@ export class CargoSlot extends Entity<CargoSlotQueryProxy> {
 			offset: { type: "float4", name: "offset" },
 			railcarModelId: { type: "uuid", name: "railcar_model_id" }
 		},
-		get set(): DbSet<CargoSlot, CargoSlotQueryProxy> { 
+		get set(): DbSet<CargoSlot, CargoSlotQueryProxy> {
 			return new DbSet<CargoSlot, CargoSlotQueryProxy>(CargoSlot, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$fixture = new ForeignReference<CargoFixture>(this, "fixtureId", CargoFixture);
 	this.$railcarModel = new ForeignReference<RailcarModel>(this, "railcarModelId", RailcarModel);
 	}
-	
+
 	private $fixture: ForeignReference<CargoFixture>;
 
 	set fixture(value: Partial<ForeignReference<CargoFixture>>) {
@@ -593,7 +597,7 @@ export class CollisionIncident extends Entity<CollisionIncidentQueryProxy> {
 	section: string;
 	sourceRailcarId: string;
 	targetRailcarId: string;
-	
+
 	$$meta = {
 		source: "collision_incident",
 		columns: {
@@ -604,18 +608,18 @@ export class CollisionIncident extends Entity<CollisionIncidentQueryProxy> {
 			sourceRailcarId: { type: "uuid", name: "source_railcar_id" },
 			targetRailcarId: { type: "uuid", name: "target_railcar_id" }
 		},
-		get set(): DbSet<CollisionIncident, CollisionIncidentQueryProxy> { 
+		get set(): DbSet<CollisionIncident, CollisionIncidentQueryProxy> {
 			return new DbSet<CollisionIncident, CollisionIncidentQueryProxy>(CollisionIncident, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$sourceRailcar = new ForeignReference<Railcar>(this, "sourceRailcarId", Railcar);
 	this.$targetRailcar = new ForeignReference<Railcar>(this, "targetRailcarId", Railcar);
 	}
-	
+
 	private $sourceRailcar: ForeignReference<Railcar>;
 
 	set sourceRailcar(value: Partial<ForeignReference<Railcar>>) {
@@ -676,7 +680,7 @@ export class Company extends Entity<CompanyQueryProxy> {
 	shortname: string;
 	tag: string;
 	trainPrefix: string;
-	
+
 	$$meta = {
 		source: "company",
 		columns: {
@@ -690,14 +694,14 @@ export class Company extends Entity<CompanyQueryProxy> {
 			tag: { type: "text", name: "tag" },
 			trainPrefix: { type: "text", name: "train_prefix" }
 		},
-		get set(): DbSet<Company, CompanyQueryProxy> { 
+		get set(): DbSet<Company, CompanyQueryProxy> {
 			return new DbSet<Company, CompanyQueryProxy>(Company, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$icon = new ForeignReference<CompanyLogo>(this, "iconId", CompanyLogo);
 	this.$logo = new ForeignReference<CompanyLogo>(this, "logoId", CompanyLogo);
 	this.manufacturedRailcars = new PrimaryReference<Railcar, RailcarQueryProxy>(this, "manufacturerId", Railcar);
@@ -708,7 +712,7 @@ export class Company extends Entity<CompanyQueryProxy> {
 		this.$parent = new ForeignReference<Company>(this, "parentId", Company);
 	this.children = new PrimaryReference<Company, CompanyQueryProxy>(this, "parentId", Company);
 	}
-	
+
 	private $icon: ForeignReference<CompanyLogo>;
 
 	set icon(value: Partial<ForeignReference<CompanyLogo>>) {
@@ -757,7 +761,7 @@ export class CompanyLogo extends Entity<CompanyLogoQueryProxy> {
 	data: Buffer;
 	declare id: string;
 	mimeType: string;
-	
+
 	$$meta = {
 		source: "company_logo",
 		columns: {
@@ -765,7 +769,7 @@ export class CompanyLogo extends Entity<CompanyLogoQueryProxy> {
 			id: { type: "uuid", name: "id" },
 			mimeType: { type: "text", name: "mime_type" }
 		},
-		get set(): DbSet<CompanyLogo, CompanyLogoQueryProxy> { 
+		get set(): DbSet<CompanyLogo, CompanyLogoQueryProxy> {
 			return new DbSet<CompanyLogo, CompanyLogoQueryProxy>(CompanyLogo, null);
 		}
 	};
@@ -781,25 +785,25 @@ export class Coupler extends Entity<CouplerQueryProxy> {
 		get type(): Partial<ForeignReference<CouplerType>> { return this.$type; }
 	declare id: string;
 	typeId: string;
-	
+
 	$$meta = {
 		source: "coupler",
 		columns: {
 			id: { type: "uuid", name: "id" },
 			typeId: { type: "uuid", name: "type_id" }
 		},
-		get set(): DbSet<Coupler, CouplerQueryProxy> { 
+		get set(): DbSet<Coupler, CouplerQueryProxy> {
 			return new DbSet<Coupler, CouplerQueryProxy>(Coupler, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.decouplingIncidents = new PrimaryReference<DecouplingIncident, DecouplingIncidentQueryProxy>(this, "couplerId", DecouplingIncident);
 		this.$type = new ForeignReference<CouplerType>(this, "typeId", CouplerType);
 	}
-	
+
 	private $type: ForeignReference<CouplerType>;
 
 	set type(value: Partial<ForeignReference<CouplerType>>) {
@@ -827,7 +831,7 @@ export class CouplerType extends Entity<CouplerTypeQueryProxy> {
 	icon: string;
 	declare id: string;
 	name: string;
-	
+
 	$$meta = {
 		source: "coupler_type",
 		columns: {
@@ -836,14 +840,14 @@ export class CouplerType extends Entity<CouplerTypeQueryProxy> {
 			id: { type: "uuid", name: "id" },
 			name: { type: "text", name: "name" }
 		},
-		get set(): DbSet<CouplerType, CouplerTypeQueryProxy> { 
+		get set(): DbSet<CouplerType, CouplerTypeQueryProxy> {
 			return new DbSet<CouplerType, CouplerTypeQueryProxy>(CouplerType, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.couplers = new PrimaryReference<Coupler, CouplerQueryProxy>(this, "typeId", Coupler);
 	}
 }
@@ -863,7 +867,7 @@ export class Coupling extends Entity<CouplingQueryProxy> {
 	declare id: string;
 	sourceId: string;
 	targetId: string;
-	
+
 	$$meta = {
 		source: "coupling",
 		columns: {
@@ -872,18 +876,18 @@ export class Coupling extends Entity<CouplingQueryProxy> {
 			sourceId: { type: "uuid", name: "source_id" },
 			targetId: { type: "uuid", name: "target_id" }
 		},
-		get set(): DbSet<Coupling, CouplingQueryProxy> { 
+		get set(): DbSet<Coupling, CouplingQueryProxy> {
 			return new DbSet<Coupling, CouplingQueryProxy>(Coupling, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$source = new ForeignReference<Coupler>(this, "sourceId", Coupler);
 	this.$target = new ForeignReference<Coupler>(this, "targetId", Coupler);
 	}
-	
+
 	private $source: ForeignReference<Coupler>;
 
 	set source(value: Partial<ForeignReference<Coupler>>) {
@@ -926,7 +930,7 @@ export class DecouplingIncident extends Entity<DecouplingIncidentQueryProxy> {
 	declare id: string;
 	position: number;
 	section: string;
-	
+
 	$$meta = {
 		source: "decoupling_incident",
 		columns: {
@@ -936,17 +940,17 @@ export class DecouplingIncident extends Entity<DecouplingIncidentQueryProxy> {
 			position: { type: "float4", name: "position" },
 			section: { type: "text", name: "section" }
 		},
-		get set(): DbSet<DecouplingIncident, DecouplingIncidentQueryProxy> { 
+		get set(): DbSet<DecouplingIncident, DecouplingIncidentQueryProxy> {
 			return new DbSet<DecouplingIncident, DecouplingIncidentQueryProxy>(DecouplingIncident, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$coupler = new ForeignReference<Coupler>(this, "couplerId", Coupler);
 	}
-	
+
 	private $coupler: ForeignReference<Coupler>;
 
 	set coupler(value: Partial<ForeignReference<Coupler>>) {
@@ -977,7 +981,7 @@ export class DerailingIncident extends Entity<DerailingIncidentQueryProxy> {
 	position: number;
 	railcarId: string;
 	section: string;
-	
+
 	$$meta = {
 		source: "derailing_incident",
 		columns: {
@@ -987,17 +991,17 @@ export class DerailingIncident extends Entity<DerailingIncidentQueryProxy> {
 			railcarId: { type: "uuid", name: "railcar_id" },
 			section: { type: "text", name: "section" }
 		},
-		get set(): DbSet<DerailingIncident, DerailingIncidentQueryProxy> { 
+		get set(): DbSet<DerailingIncident, DerailingIncidentQueryProxy> {
 			return new DbSet<DerailingIncident, DerailingIncidentQueryProxy>(DerailingIncident, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$railcar = new ForeignReference<Railcar>(this, "railcarId", Railcar);
 	}
-	
+
 	private $railcar: ForeignReference<Railcar>;
 
 	set railcar(value: Partial<ForeignReference<Railcar>>) {
@@ -1049,7 +1053,7 @@ export class Graffiti extends Entity<GraffitiQueryProxy> {
 	painterId: string;
 	railcarId: string;
 	typeId: string;
-	
+
 	$$meta = {
 		source: "graffiti",
 		columns: {
@@ -1065,14 +1069,14 @@ export class Graffiti extends Entity<GraffitiQueryProxy> {
 			railcarId: { type: "uuid", name: "railcar_id" },
 			typeId: { type: "uuid", name: "type_id" }
 		},
-		get set(): DbSet<Graffiti, GraffitiQueryProxy> { 
+		get set(): DbSet<Graffiti, GraffitiQueryProxy> {
 			return new DbSet<Graffiti, GraffitiQueryProxy>(Graffiti, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$artist = new ForeignReference<Artist>(this, "artistId", Artist);
 	this.captures = new PrimaryReference<GraffitiCapture, GraffitiCaptureQueryProxy>(this, "graffitiId", GraffitiCapture);
 		this.$graffitiInspiration = new ForeignReference<GraffitiInspiration>(this, "graffitiInspirationId", GraffitiInspiration);
@@ -1080,7 +1084,7 @@ export class Graffiti extends Entity<GraffitiQueryProxy> {
 	this.$railcar = new ForeignReference<Railcar>(this, "railcarId", Railcar);
 	this.$type = new ForeignReference<GraffitiType>(this, "typeId", GraffitiType);
 	}
-	
+
 	private $artist: ForeignReference<Artist>;
 
 	set artist(value: Partial<ForeignReference<Artist>>) {
@@ -1167,7 +1171,7 @@ export class GraffitiCapture extends Entity<GraffitiCaptureQueryProxy> {
 	thumbnail: Buffer;
 	top: number;
 	width: number;
-	
+
 	$$meta = {
 		source: "graffiti_capture",
 		columns: {
@@ -1180,18 +1184,18 @@ export class GraffitiCapture extends Entity<GraffitiCaptureQueryProxy> {
 			top: { type: "float4", name: "top" },
 			width: { type: "float4", name: "width" }
 		},
-		get set(): DbSet<GraffitiCapture, GraffitiCaptureQueryProxy> { 
+		get set(): DbSet<GraffitiCapture, GraffitiCaptureQueryProxy> {
 			return new DbSet<GraffitiCapture, GraffitiCaptureQueryProxy>(GraffitiCapture, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$capture = new ForeignReference<Capture>(this, "sourceId", Capture);
 	this.$graffiti = new ForeignReference<Graffiti>(this, "graffitiId", Graffiti);
 	}
-	
+
 	private $capture: ForeignReference<Capture>;
 
 	set capture(value: Partial<ForeignReference<Capture>>) {
@@ -1242,7 +1246,7 @@ export class GraffitiInspiration extends Entity<GraffitiInspirationQueryProxy> {
 	origin: string;
 	paintingEffort: number;
 	paintingUrge: number;
-	
+
 	$$meta = {
 		source: "graffiti_inspiration",
 		columns: {
@@ -1255,19 +1259,19 @@ export class GraffitiInspiration extends Entity<GraffitiInspirationQueryProxy> {
 			paintingEffort: { type: "float4", name: "painting_effort" },
 			paintingUrge: { type: "float4", name: "painting_urge" }
 		},
-		get set(): DbSet<GraffitiInspiration, GraffitiInspirationQueryProxy> { 
+		get set(): DbSet<GraffitiInspiration, GraffitiInspirationQueryProxy> {
 			return new DbSet<GraffitiInspiration, GraffitiInspirationQueryProxy>(GraffitiInspiration, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$artist = new ForeignReference<Artist>(this, "artistId", Artist);
 	this.media = new PrimaryReference<GraffitiInspirationMedia, GraffitiInspirationMediaQueryProxy>(this, "graffitiInspirationId", GraffitiInspirationMedia);
 		this.paintings = new PrimaryReference<Graffiti, GraffitiQueryProxy>(this, "graffitiInspirationId", Graffiti);
 	}
-	
+
 	private $artist: ForeignReference<Artist>;
 
 	set artist(value: Partial<ForeignReference<Artist>>) {
@@ -1300,7 +1304,7 @@ export class GraffitiInspirationMedia extends Entity<GraffitiInspirationMediaQue
 	mimeType: string;
 	thumbnail: Buffer;
 	uploaded: Date;
-	
+
 	$$meta = {
 		source: "graffiti_inspiration_media",
 		columns: {
@@ -1311,17 +1315,17 @@ export class GraffitiInspirationMedia extends Entity<GraffitiInspirationMediaQue
 			thumbnail: { type: "bytea", name: "thumbnail" },
 			uploaded: { type: "timestamp", name: "uploaded" }
 		},
-		get set(): DbSet<GraffitiInspirationMedia, GraffitiInspirationMediaQueryProxy> { 
+		get set(): DbSet<GraffitiInspirationMedia, GraffitiInspirationMediaQueryProxy> {
 			return new DbSet<GraffitiInspirationMedia, GraffitiInspirationMediaQueryProxy>(GraffitiInspirationMedia, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$graffitiInspiration = new ForeignReference<GraffitiInspiration>(this, "graffitiInspirationId", GraffitiInspiration);
 	}
-	
+
 	private $graffitiInspiration: ForeignReference<GraffitiInspiration>;
 
 	set graffitiInspiration(value: Partial<ForeignReference<GraffitiInspiration>>) {
@@ -1347,7 +1351,7 @@ export class GraffitiType extends Entity<GraffitiTypeQueryProxy> {
 		complexity: number;
 	declare id: string;
 	name: string;
-	
+
 	$$meta = {
 		source: "graffiti_type",
 		columns: {
@@ -1355,14 +1359,14 @@ export class GraffitiType extends Entity<GraffitiTypeQueryProxy> {
 			id: { type: "uuid", name: "id" },
 			name: { type: "text", name: "name" }
 		},
-		get set(): DbSet<GraffitiType, GraffitiTypeQueryProxy> { 
+		get set(): DbSet<GraffitiType, GraffitiTypeQueryProxy> {
 			return new DbSet<GraffitiType, GraffitiTypeQueryProxy>(GraffitiType, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.graffitis = new PrimaryReference<Graffiti, GraffitiQueryProxy>(this, "typeId", Graffiti);
 	}
 }
@@ -1388,7 +1392,7 @@ export class Maintenance extends Entity<MaintenanceQueryProxy> {
 	opened: Date;
 	railcarId: string;
 	title: string;
-	
+
 	$$meta = {
 		source: "maintenance",
 		columns: {
@@ -1401,17 +1405,17 @@ export class Maintenance extends Entity<MaintenanceQueryProxy> {
 			railcarId: { type: "uuid", name: "railcar_id" },
 			title: { type: "text", name: "title" }
 		},
-		get set(): DbSet<Maintenance, MaintenanceQueryProxy> { 
+		get set(): DbSet<Maintenance, MaintenanceQueryProxy> {
 			return new DbSet<Maintenance, MaintenanceQueryProxy>(Maintenance, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$railcar = new ForeignReference<Railcar>(this, "railcarId", Railcar);
 	}
-	
+
 	private $railcar: ForeignReference<Railcar>;
 
 	set railcar(value: Partial<ForeignReference<Railcar>>) {
@@ -1442,7 +1446,7 @@ export class PowerLossIncident extends Entity<PowerLossIncidentQueryProxy> {
 	position: number;
 	railcarId: string;
 	section: string;
-	
+
 	$$meta = {
 		source: "power_loss_incident",
 		columns: {
@@ -1452,17 +1456,17 @@ export class PowerLossIncident extends Entity<PowerLossIncidentQueryProxy> {
 			railcarId: { type: "uuid", name: "railcar_id" },
 			section: { type: "text", name: "section" }
 		},
-		get set(): DbSet<PowerLossIncident, PowerLossIncidentQueryProxy> { 
+		get set(): DbSet<PowerLossIncident, PowerLossIncidentQueryProxy> {
 			return new DbSet<PowerLossIncident, PowerLossIncidentQueryProxy>(PowerLossIncident, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$railcar = new ForeignReference<Railcar>(this, "railcarId", Railcar);
 	}
-	
+
 	private $railcar: ForeignReference<Railcar>;
 
 	set railcar(value: Partial<ForeignReference<Railcar>>) {
@@ -1536,7 +1540,7 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 	stored: boolean;
 	tag: string;
 	tailCouplerId: string;
-	
+
 	$$meta = {
 		source: "railcar",
 		columns: {
@@ -1556,14 +1560,14 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 			tag: { type: "text", name: "tag" },
 			tailCouplerId: { type: "uuid", name: "tail_coupler_id" }
 		},
-		get set(): DbSet<Railcar, RailcarQueryProxy> { 
+		get set(): DbSet<Railcar, RailcarQueryProxy> {
 			return new DbSet<Railcar, RailcarQueryProxy>(Railcar, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$headCoupler = new ForeignReference<Coupler>(this, "headCouplerId", Coupler);
 	this.$manufacturer = new ForeignReference<Company>(this, "manufacturerId", Company);
 	this.$model = new ForeignReference<RailcarModel>(this, "modelId", RailcarModel);
@@ -1583,7 +1587,7 @@ export class Railcar extends Entity<RailcarQueryProxy> {
 	this.$tailCoupler = new ForeignReference<Coupler>(this, "tailCouplerId", Coupler);
 	this.colisionTargetIncidents = new PrimaryReference<CollisionIncident, CollisionIncidentQueryProxy>(this, "targetRailcarId", CollisionIncident);
 	}
-	
+
 	private $headCoupler: ForeignReference<Coupler>;
 
 	set headCoupler(value: Partial<ForeignReference<Coupler>>) {
@@ -1688,7 +1692,7 @@ export class RailcarComission extends Entity<RailcarComissionQueryProxy> {
 	railcarId: string;
 	reversed: boolean;
 	section: string;
-	
+
 	$$meta = {
 		source: "railcar_comission",
 		columns: {
@@ -1699,17 +1703,17 @@ export class RailcarComission extends Entity<RailcarComissionQueryProxy> {
 			reversed: { type: "bool", name: "reversed" },
 			section: { type: "text", name: "section" }
 		},
-		get set(): DbSet<RailcarComission, RailcarComissionQueryProxy> { 
+		get set(): DbSet<RailcarComission, RailcarComissionQueryProxy> {
 			return new DbSet<RailcarComission, RailcarComissionQueryProxy>(RailcarComission, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$railcar = new ForeignReference<Railcar>(this, "railcarId", Railcar);
 	}
-	
+
 	private $railcar: ForeignReference<Railcar>;
 
 	set railcar(value: Partial<ForeignReference<Railcar>>) {
@@ -1753,7 +1757,7 @@ export class RailcarModel extends Entity<RailcarModelQueryProxy> {
 	tag: string;
 	uicIdentifier: string;
 	uicLocaleId: string;
-	
+
 	$$meta = {
 		source: "railcar_model",
 		columns: {
@@ -1768,20 +1772,20 @@ export class RailcarModel extends Entity<RailcarModelQueryProxy> {
 			uicIdentifier: { type: "text", name: "uic_identifier" },
 			uicLocaleId: { type: "uuid", name: "uic_locale_id" }
 		},
-		get set(): DbSet<RailcarModel, RailcarModelQueryProxy> { 
+		get set(): DbSet<RailcarModel, RailcarModelQueryProxy> {
 			return new DbSet<RailcarModel, RailcarModelQueryProxy>(RailcarModel, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.railcars = new PrimaryReference<Railcar, RailcarQueryProxy>(this, "modelId", Railcar);
 		this.cargoSlots = new PrimaryReference<CargoSlot, CargoSlotQueryProxy>(this, "railcarModelId", CargoSlot);
 		this.drawings = new PrimaryReference<RailcarModelDrawing, RailcarModelDrawingQueryProxy>(this, "railcarModelId", RailcarModelDrawing);
 		this.$uicLocale = new ForeignReference<UicLocale>(this, "uicLocaleId", UicLocale);
 	}
-	
+
 	private $uicLocale: ForeignReference<UicLocale>;
 
 	set uicLocale(value: Partial<ForeignReference<UicLocale>>) {
@@ -1812,7 +1816,7 @@ export class RailcarModelDrawing extends Entity<RailcarModelDrawingQueryProxy> {
 	name: string;
 	railcarModelId: string;
 	source: string;
-	
+
 	$$meta = {
 		source: "railcar_model_drawing",
 		columns: {
@@ -1822,17 +1826,17 @@ export class RailcarModelDrawing extends Entity<RailcarModelDrawingQueryProxy> {
 			railcarModelId: { type: "uuid", name: "railcar_model_id" },
 			source: { type: "text", name: "source" }
 		},
-		get set(): DbSet<RailcarModelDrawing, RailcarModelDrawingQueryProxy> { 
+		get set(): DbSet<RailcarModelDrawing, RailcarModelDrawingQueryProxy> {
 			return new DbSet<RailcarModelDrawing, RailcarModelDrawingQueryProxy>(RailcarModelDrawing, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$railcarModel = new ForeignReference<RailcarModel>(this, "railcarModelId", RailcarModel);
 	}
-	
+
 	private $railcarModel: ForeignReference<RailcarModel>;
 
 	set railcarModel(value: Partial<ForeignReference<RailcarModel>>) {
@@ -1859,7 +1863,7 @@ export class RailcarWithdrawal extends Entity<RailcarWithdrawalQueryProxy> {
 	declare id: string;
 	railcarId: string;
 	withdrawn: Date;
-	
+
 	$$meta = {
 		source: "railcar_withdrawal",
 		columns: {
@@ -1867,17 +1871,17 @@ export class RailcarWithdrawal extends Entity<RailcarWithdrawalQueryProxy> {
 			railcarId: { type: "uuid", name: "railcar_id" },
 			withdrawn: { type: "timestamp", name: "withdrawn" }
 		},
-		get set(): DbSet<RailcarWithdrawal, RailcarWithdrawalQueryProxy> { 
+		get set(): DbSet<RailcarWithdrawal, RailcarWithdrawalQueryProxy> {
 			return new DbSet<RailcarWithdrawal, RailcarWithdrawalQueryProxy>(RailcarWithdrawal, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$railcar = new ForeignReference<Railcar>(this, "railcarId", Railcar);
 	}
-	
+
 	private $railcar: ForeignReference<Railcar>;
 
 	set railcar(value: Partial<ForeignReference<Railcar>>) {
@@ -1906,7 +1910,7 @@ export class Session extends Entity<SessionQueryProxy> {
 	declare id: string;
 	key: string;
 	opened: Date;
-	
+
 	$$meta = {
 		source: "session",
 		columns: {
@@ -1915,17 +1919,17 @@ export class Session extends Entity<SessionQueryProxy> {
 			key: { type: "text", name: "key" },
 			opened: { type: "timestamp", name: "opened" }
 		},
-		get set(): DbSet<Session, SessionQueryProxy> { 
+		get set(): DbSet<Session, SessionQueryProxy> {
 			return new DbSet<Session, SessionQueryProxy>(Session, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$account = new ForeignReference<Account>(this, "accountId", Account);
 	}
-	
+
 	private $account: ForeignReference<Account>;
 
 	set account(value: Partial<ForeignReference<Account>>) {
@@ -1951,7 +1955,7 @@ export class StorageContainer extends Entity<StorageContainerQueryProxy> {
 		declare id: string;
 	name: string;
 	tag: string;
-	
+
 	$$meta = {
 		source: "storage_container",
 		columns: {
@@ -1959,14 +1963,14 @@ export class StorageContainer extends Entity<StorageContainerQueryProxy> {
 			name: { type: "text", name: "name" },
 			tag: { type: "text", name: "tag" }
 		},
-		get set(): DbSet<StorageContainer, StorageContainerQueryProxy> { 
+		get set(): DbSet<StorageContainer, StorageContainerQueryProxy> {
 			return new DbSet<StorageContainer, StorageContainerQueryProxy>(StorageContainer, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.railcars = new PrimaryReference<Railcar, RailcarQueryProxy>(this, "storageContainerId", Railcar);
 	}
 }
@@ -1988,7 +1992,7 @@ export class Traction extends Entity<TractionQueryProxy> {
 	declare id: string;
 	maximumSpeed: number;
 	railcarId: string;
-	
+
 	$$meta = {
 		source: "traction",
 		columns: {
@@ -1999,17 +2003,17 @@ export class Traction extends Entity<TractionQueryProxy> {
 			maximumSpeed: { type: "float4", name: "maximum_speed" },
 			railcarId: { type: "uuid", name: "railcar_id" }
 		},
-		get set(): DbSet<Traction, TractionQueryProxy> { 
+		get set(): DbSet<Traction, TractionQueryProxy> {
 			return new DbSet<Traction, TractionQueryProxy>(Traction, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$railcar = new ForeignReference<Railcar>(this, "railcarId", Railcar);
 	}
-	
+
 	private $railcar: ForeignReference<Railcar>;
 
 	set railcar(value: Partial<ForeignReference<Railcar>>) {
@@ -2040,7 +2044,7 @@ export class TrainHeadPosition extends Entity<TrainHeadPositionQueryProxy> {
 	section: string;
 	trainIdentifier: string;
 	updated: Date;
-	
+
 	$$meta = {
 		source: "train_head_position",
 		columns: {
@@ -2051,7 +2055,7 @@ export class TrainHeadPosition extends Entity<TrainHeadPositionQueryProxy> {
 			trainIdentifier: { type: "text", name: "train_identifier" },
 			updated: { type: "timestamp", name: "updated" }
 		},
-		get set(): DbSet<TrainHeadPosition, TrainHeadPositionQueryProxy> { 
+		get set(): DbSet<TrainHeadPosition, TrainHeadPositionQueryProxy> {
 			return new DbSet<TrainHeadPosition, TrainHeadPositionQueryProxy>(TrainHeadPosition, null);
 		}
 	};
@@ -2076,7 +2080,7 @@ export class TrainLabel extends Entity<TrainLabelQueryProxy> {
 	operatorId: string;
 	productBrandId: string;
 	trainIdentifier: string;
-	
+
 	$$meta = {
 		source: "train_label",
 		columns: {
@@ -2087,18 +2091,18 @@ export class TrainLabel extends Entity<TrainLabelQueryProxy> {
 			productBrandId: { type: "uuid", name: "product_brand_id" },
 			trainIdentifier: { type: "text", name: "train_identifier" }
 		},
-		get set(): DbSet<TrainLabel, TrainLabelQueryProxy> { 
+		get set(): DbSet<TrainLabel, TrainLabelQueryProxy> {
 			return new DbSet<TrainLabel, TrainLabelQueryProxy>(TrainLabel, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$operator = new ForeignReference<Company>(this, "operatorId", Company);
 	this.$productBrand = new ForeignReference<TrainProductBrand>(this, "productBrandId", TrainProductBrand);
 	}
-	
+
 	private $operator: ForeignReference<Company>;
 
 	set operator(value: Partial<ForeignReference<Company>>) {
@@ -2146,7 +2150,7 @@ export class TrainProductBrand extends Entity<TrainProductBrandQueryProxy> {
 	name: string;
 	shortName: string;
 	summary: string;
-	
+
 	$$meta = {
 		source: "train_product_brand",
 		columns: {
@@ -2159,14 +2163,14 @@ export class TrainProductBrand extends Entity<TrainProductBrandQueryProxy> {
 			shortName: { type: "text", name: "short_name" },
 			summary: { type: "text", name: "summary" }
 		},
-		get set(): DbSet<TrainProductBrand, TrainProductBrandQueryProxy> { 
+		get set(): DbSet<TrainProductBrand, TrainProductBrandQueryProxy> {
 			return new DbSet<TrainProductBrand, TrainProductBrandQueryProxy>(TrainProductBrand, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.trains = new PrimaryReference<TrainLabel, TrainLabelQueryProxy>(this, "productBrandId", TrainLabel);
 	}
 }
@@ -2182,7 +2186,7 @@ export class UicIdentifierClass extends Entity<UicIdentifierClassQueryProxy> {
 	description: string;
 	declare id: string;
 	name: string;
-	
+
 	$$meta = {
 		source: "uic_identifier_class",
 		columns: {
@@ -2191,7 +2195,7 @@ export class UicIdentifierClass extends Entity<UicIdentifierClassQueryProxy> {
 			id: { type: "uuid", name: "id" },
 			name: { type: "text", name: "name" }
 		},
-		get set(): DbSet<UicIdentifierClass, UicIdentifierClassQueryProxy> { 
+		get set(): DbSet<UicIdentifierClass, UicIdentifierClassQueryProxy> {
 			return new DbSet<UicIdentifierClass, UicIdentifierClassQueryProxy>(UicIdentifierClass, null);
 		}
 	};
@@ -2212,7 +2216,7 @@ export class UicIdentifierIndexLetter extends Entity<UicIdentifierIndexLetterQue
 	declare id: string;
 	name: string;
 	uicLocaleId: string;
-	
+
 	$$meta = {
 		source: "uic_identifier_index_letter",
 		columns: {
@@ -2222,17 +2226,17 @@ export class UicIdentifierIndexLetter extends Entity<UicIdentifierIndexLetterQue
 			name: { type: "text", name: "name" },
 			uicLocaleId: { type: "uuid", name: "uic_locale_id" }
 		},
-		get set(): DbSet<UicIdentifierIndexLetter, UicIdentifierIndexLetterQueryProxy> { 
+		get set(): DbSet<UicIdentifierIndexLetter, UicIdentifierIndexLetterQueryProxy> {
 			return new DbSet<UicIdentifierIndexLetter, UicIdentifierIndexLetterQueryProxy>(UicIdentifierIndexLetter, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$uicLocale = new ForeignReference<UicLocale>(this, "uicLocaleId", UicLocale);
 	}
-	
+
 	private $uicLocale: ForeignReference<UicLocale>;
 
 	set uicLocale(value: Partial<ForeignReference<UicLocale>>) {
@@ -2256,21 +2260,21 @@ export class UicLocale extends Entity<UicLocaleQueryProxy> {
 	indexLetters: PrimaryReference<UicIdentifierIndexLetter, UicIdentifierIndexLetterQueryProxy>;
 		declare id: string;
 	name: string;
-	
+
 	$$meta = {
 		source: "uic_locale",
 		columns: {
 			id: { type: "uuid", name: "id" },
 			name: { type: "text", name: "name" }
 		},
-		get set(): DbSet<UicLocale, UicLocaleQueryProxy> { 
+		get set(): DbSet<UicLocale, UicLocaleQueryProxy> {
 			return new DbSet<UicLocale, UicLocaleQueryProxy>(UicLocale, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.indexLetters = new PrimaryReference<UicIdentifierIndexLetter, UicIdentifierIndexLetterQueryProxy>(this, "uicLocaleId", UicIdentifierIndexLetter);
 	}
 }
@@ -2286,7 +2290,7 @@ export class Uncoupling extends Entity<UncouplingQueryProxy> {
 	declare id: string;
 	sourceId: string;
 	uncoupled: Date;
-	
+
 	$$meta = {
 		source: "uncoupling",
 		columns: {
@@ -2294,17 +2298,17 @@ export class Uncoupling extends Entity<UncouplingQueryProxy> {
 			sourceId: { type: "uuid", name: "source_id" },
 			uncoupled: { type: "timestamp", name: "uncoupled" }
 		},
-		get set(): DbSet<Uncoupling, UncouplingQueryProxy> { 
+		get set(): DbSet<Uncoupling, UncouplingQueryProxy> {
 			return new DbSet<Uncoupling, UncouplingQueryProxy>(Uncoupling, null);
 		}
 	};
-	
+
 	constructor() {
 		super();
-		
+
 		this.$source = new ForeignReference<Coupler>(this, "sourceId", Coupler);
 	}
-	
+
 	private $source: ForeignReference<Coupler>;
 
 	set source(value: Partial<ForeignReference<Coupler>>) {

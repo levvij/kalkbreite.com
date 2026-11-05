@@ -9,7 +9,7 @@ export const registerTrainRailcarCaptureInterface = (server: ManagedServer, data
 
 	server.app.get('/capture/train/railcar/:id/:direction', async (request, response) => {
 		const id = request.params.id;
-		const direction = request.params.direction as RailcarDirection;
+		const direction = RailcarDirection[request.params.direction];
 
 		const cacheId = `${id}${direction}`;
 
