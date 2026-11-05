@@ -209,7 +209,7 @@ export const registerCaptureInterface = (server: ManagedServer, database: DbCont
 				.includeTree({ id: true, thumbnail: true })
 				.where(capture => capture.thumbnail != null)
 				.first(capture => capture.id == id)
-				.then(capture => capture.thumbnail),
+				.then(capture => capture?.thumbnail),
 			mimeType: 'image/jpg'
 		})
 	)
